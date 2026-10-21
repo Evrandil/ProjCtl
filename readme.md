@@ -29,9 +29,10 @@ if (command == "reqs")							return CommandOption::RequestList;
 if (command == "reqcreate")						return CommandOption::RequestCreate;
 if (command == "reqmerge")						return CommandOption::RequestMerge;
 ```
+
 # Usage \[fast docs\]
 
-Overall concept
+Overall concept<br>
 ```bash
 projctl [option/s] [project_name] [argument/s]
 ```
@@ -43,6 +44,7 @@ With gits or git will list only git repos<br>
 projctl list 
 projctl list gits
 ```
+
 ### Status
 Gives status of project \(/ all projects if used with --all flag\)<br>
 Status contains<br>
@@ -58,6 +60,7 @@ Status contains<br>
 projctl status [name]
 projctl status --all
 ```
+
 ### Add
 Adds project to saved projects<br>
 You can set it to auto-add current directory as project with name of dir<br>
@@ -69,6 +72,7 @@ projctl add [name] [path]
 projctl add [name] .
 projctl add .
 ```
+
 ### Remove
 Removes project<br>
 \(Doesn't actually remove files, just from projctl list\)<br>
@@ -76,18 +80,21 @@ Removes project<br>
 projctl remove [name]
 projctl rm [name]
 ```
+
 ### Open
 Opens neovim in project location<br>
 Soon \(I hope\) will open editor set in config but well not on that stage yet<br>
 ```fish
 projctl open [name]
 ```
+
 ### Path
 Gives path of project<br>
 Nice for `cd (projctl path $argv[1])` terminal macro<br>
 ```fish
 projctl path [name]
 ```
+
 ### Build && run
 Respectively builds and runs projects that either have customely added `build` and `run` commands or have supported default commands \(Rust && node supported for both, CMake + Ninja does have build\)<br>
 Build also supports --all flag<br>
@@ -96,13 +103,15 @@ projctl build [name]
 projctl build --all
 projctl run [name]
 ```
+
 ## Git wrapper
-Here we go into the rabbithole
+Here we go into the rabbithole<br>
 ### Branch
-Switches / creates and switches to branch of given name
+Switches / creates and switches to branch of given name<br>
 ```fish
 projctl branch [name] [branch_name]
 ```
+
 ### Fetch
 Fetches project<br>
 Supports --all flag \(performs fetch to all git projects\)<br>
@@ -110,6 +119,7 @@ Supports --all flag \(performs fetch to all git projects\)<br>
 projctl fetch [name]
 projctl fetch --all
 ```
+
 ### Pull
 Updates project<br>
 Supports --all flag \(performs pull for all git projects\)<br>
@@ -118,36 +128,44 @@ projctl pull [name]
 projctl pull --all
 ```
 ### Commit
-Adds all changes and makes commit with provided message \(equivalent to `git add . && git commit -m \[commit_message\]`\)
+Adds all changes and makes commit with provided message \(equivalent to `git add . && git commit -m \[commit_message\]`\)<br>
+Without providing msg it's gonna open $EDITOR for you to write msg to \(equivalent to `git add . && git commit`\)<br>
 ```fish
+projctl commit [name]
 projctl commit [name] [commit_message]
 ```
+
 ### Push
-Pushes committed changes
-If used with branch pushes changes to uninitialized branch \(equivalent to `git push -u origin \[current_branch\]`\)
+Pushes committed changes<br>
+If used with branch pushes changes to uninitialized branch \(equivalent to `git push -u origin \[current_branch\]`\)<br>
 ```fish
 projctl push [name]
 projctl push branch [name]
 ```
+
 ### Commit push
-Performs both actions, you can combo it with branch as well to set upstream to new branch
+Performs both actions, you can combo it with branch as well to set upstream to new branch<br>
 ```fish
+projctl commit push [name]
 projctl commit push [name] [commit_message]
+projctl commit push branch [name]
 projctl commit push branch [name] [commit_message]
 ```
 
 ## Important note
-Just so you know it does wrap around all args so you can do mutliple actions in one prompt but just beware that for every action you do need to provide all needed components
+Just so you know it does wrap around all args so you can do mutliple actions in one prompt but just beware that for every action you do need to provide all needed components<br>
+BUT with commit you do need to provide commit_msg for it to work (maybe I'll implement more advanced option-end checker but for now it's conceptually not rly made for that wrapping, tho it does work)<br>
 ```fish
 projctl status project_1 commit push project_2 "commit_message" build project_3 rm project_4
 ```
 
-Will perform
+Will perform<br>
+
 ```fish
 projctl status project_1
 projctl commit push project_2 "commit_message"
 projctl build project_3
 projctl rm project_4
 ```
-In that exact order with those arguments provided
-Also minor thing but for process to be actually saving some time everything with --all flag is done in parrallel but for that to happen program stores output and when everything is done prints it in order so there's no classic `some console print -> some waiting -> some more printing` for example in pull command, everything gets printed all at once when waiting is done, but thanks to that all thing are async so it' kinda faster one could argue
+In that exact order with those arguments provided<br>
+Also minor thing but for process to be actually saving some time everything with --all flag is done in parrallel but for that to happen program stores output and when everything is done prints it in order so there's no classic `some console print -> some waiting -> some more printing` for example in pull command, everything gets printed all at once when waiting is done, but thanks to that all thing are async so it' kinda faster one could argue<br>
