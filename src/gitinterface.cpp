@@ -23,8 +23,8 @@ std::expected<std::string, std::string> GitInterface::changes(const ProjectConte
 }
 
 std::expected<std::string, std::string> GitInterface::branch(const ProjectContent& project) {
-	if (!is_repo(project))
-		[[unlikely]] return std::unexpected("Not a git repo");
+	if (!is_repo(project)) [[unlikely]]
+		return std::unexpected("Not a git repo");
 
 	std::string command = std::format("git -C \"{}\" branch --show-current", project.path.string());
 	std::optional<std::string> output = SystemInterface::run(command);
