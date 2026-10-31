@@ -1,3 +1,4 @@
+Just for record I did have [this](https://github.com/Projctl/projctl) repo stolen by some guy that got my auth token so until I get my org with repo back here's gonna be continuation
 # Project Control
 Have you ever wondered if you're in gh or glab repo so what command to run?<br>
 Have you ever mistook one for other?<br>
@@ -17,17 +18,6 @@ C++ standard is set to 2023 so I guess that's requirement for compiler<br>
 Also have $XDG_CONFIG_HOME and $XDG_CACHE_HOME set to some location<br>
 ```fish
 ./install.fish
-```
-
-```c++
-if (command == "automerge")						return CommandOption::AutoMerge;
-if (command == "repos")							return CommandOption::RepoList;
-if (command == "git")							return CommandOption::GStatus;
-if (command == "issues" || command == "ilist")	return CommandOption::IssueList;
-if (command == "icreate")						return CommandOption::IssueCreate;
-if (command == "reqs")							return CommandOption::RequestList;
-if (command == "reqcreate")						return CommandOption::RequestCreate;
-if (command == "reqmerge")						return CommandOption::RequestMerge;
 ```
 
 # Usage \[fast docs\]
