@@ -3,8 +3,9 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <cstdint>
 
-enum class IssueField {
+enum class IssueField : uint8_t {
 	Number,
 	Title,
 	State,
@@ -12,7 +13,7 @@ enum class IssueField {
 	Labels,
 	Created,
 	Updated,
-	Parent
+	Parent,
 };
 
 struct Issue {

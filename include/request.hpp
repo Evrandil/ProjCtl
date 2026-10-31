@@ -3,8 +3,9 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <cstdint>
 
-enum class RequestField {
+enum class RequestField : uint8_t {
 	Number,
 	Title,
 	State,
@@ -12,7 +13,7 @@ enum class RequestField {
 	Labels,
 	Created,
 	Updated,
-	Parent
+	Parent,
 };
 
 struct Request {

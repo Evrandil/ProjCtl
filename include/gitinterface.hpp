@@ -6,10 +6,10 @@
 #include <string>
 
 
-enum class HostOption {
+enum class HostOption : uint8_t {
 	GitHub,
 	GitLab,
-	Unknown
+	Unknown,
 };
 
 namespace GitInterface {

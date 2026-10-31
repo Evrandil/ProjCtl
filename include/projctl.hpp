@@ -33,7 +33,7 @@ class ProjCtl
 	void list() const;
 	void list_gits() const;
 	void path_show(const std::string&) const;
-	void add(const std::string, std::filesystem::path);
+	void add(const std::string&, std::filesystem::path);
 	void add_current();
 	void remove(const std::string&);
 	void status(const std::string&) const;
