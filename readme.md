@@ -161,9 +161,9 @@ Also git options will work in pieline \(as one option so you don't have to write
 automerge -> commit -> push \(with branch option\)
 ```fish
 projctl pull automerge commit push [name]
-projctl pull automerge commit push [name] [commit_message]
+projctl pull automerge commit [commit_msg] push [name]
 projctl pull automerge commit push branch [name]
-projctl pull automerge commit push branch [name] [commit_message]
+projctl pull automerge commit [commit_message] push branch [name]
 ```
 
 ## GitHub / GitLab
@@ -196,3 +196,4 @@ projctl reqcreate [name]
 
 <br><br><br>
 Also minor thing but for process to be actually saving some time everything with --all flag is done in parrallel but for that to happen program stores output and when everything is done prints it in order so there's no classic `some console print -> some waiting -> some more printing` for example in pull command, everything gets printed all at once when waiting is done, but thanks to that all thing are async so it' kinda faster one could argue<br>
+And just for record I do expect one to use this with some concept they wanna do so haven't tested any and every combination of commands / args you could do around that git pipeline so yeah beware
