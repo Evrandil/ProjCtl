@@ -7,7 +7,6 @@ And it was annoying<br>
 So here it is wrapper for git management \(haven't rly done anything on CodeBerg so I don't have that one wrapped\)<br>
 Tho honestly it's useful not only for git projects<br>
 
-`projctl branch has to be used at the end if you want branches to be listed`
 Dependencies:
 ```fish
 cmake 3.20
@@ -98,8 +97,10 @@ projctl run [name]
 Here we go into the rabbithole<br>
 ### Branch
 Switches / creates and switches to branch of given name<br>
+Or lists branches<br>
 ```fish
 projctl branch [name] [branch_name]
+projctl branch [name]
 ```
 
 ### Fetch
@@ -145,6 +146,7 @@ projctl commit push branch [name] [commit_message]
 ## Important note
 Just so you know it does wrap around all args so you can do mutliple actions in one prompt but just beware that for every action you do need to provide all needed components<br>
 BUT with commit you do need to provide commit_msg for it to work (maybe I'll implement more advanced option-end checker but for now it's conceptually not rly made for that wrapping, tho it does work)<br>
+AND `projctl branch` has to be used at the end if you want branches to be listed
 ```fish
 projctl status project_1 commit push project_2 "commit_message" build project_3 rm project_4
 ```
