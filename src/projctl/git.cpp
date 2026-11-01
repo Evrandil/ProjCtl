@@ -266,12 +266,10 @@ bool ProjCtl::git_merge(const std::string& name) const {
 }
 
 
-void ProjCtl::git_automerge(const std::string& name, std::string_view message) const {
+void ProjCtl::git_automerge(const std::string& name) const {
 	if (!git_merge(name)) {
 		return;
 	}
-	git_commit(name, message);
-	git_push(name);
 }
 
 

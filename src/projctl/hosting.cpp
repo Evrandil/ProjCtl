@@ -15,7 +15,7 @@ void ProjCtl::g_status () const {
 		std::format_to(std::back_inserter(output),
 				"{}{:<{}}{}{}{}{}\n",
 				color_code(config.header_color),
-				std::format("{} Cli", "GitLab"),
+				std::format("{} Cli", host == HostOption::GitHub ? "GitHub" : "GitLab"),
 				config.name_width,
 				installed ? color_code(config.tick_color) : color_code(config.error_color),
 				installed ? Style::TICK : Style::CROSS,
