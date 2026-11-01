@@ -3,6 +3,7 @@
 #include "config.hpp"
 #include "githubinterface.hpp"
 #include "gitlabinterface.hpp"
+#include "githostinterface.hpp"
 #include <future>
 #include <print>
 

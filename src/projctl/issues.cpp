@@ -44,20 +44,13 @@ void ProjCtl::issue_list(const std::string& name) const {
 		};
 		auto field_color = [&] (IssueField field, const Issue& issue) -> Style::Color {
 			switch (field) {
-				case IssueField::Number:
-					return config.issue_number_color;
-				case IssueField::Title:
-					return config.issue_title_color;
-				case IssueField::State:
-					return issue.state == "OPEN" || issue.state == "opened" ? config.issue_open_color : config.issue_closed_color;
-				case IssueField::Author:
-					return config.issue_author_color;
-				case IssueField::Labels:
-					return config.issue_labels_color;
-				case IssueField::Parent:
-					return config.issue_parent_color;
-				default:
-					return Style::Color::Default;
+				case IssueField::Number:	return config.issue_number_color;
+				case IssueField::Title:		return config.issue_title_color;
+				case IssueField::State:		return issue.state == "OPEN" || issue.state == "opened" ? config.issue_open_color : config.issue_closed_color;
+				case IssueField::Author:	return config.issue_author_color;
+				case IssueField::Labels:	return config.issue_labels_color;
+				case IssueField::Parent:	return config.issue_parent_color;
+				default:					return Style::Color::Default;
 			}
 		};
 		output += color_code(config.header_color);
@@ -101,7 +94,11 @@ void ProjCtl::issue_list(const std::string& name) const {
 						value = issue.parent ? std::format("#{}", *issue.parent) : "-";
 						break;
 				}
-				std::format_to(std::back_inserter(output), "{}{:<{}}{}", color_code(field_color(field, issue)), value, field_width(field), Style::RESET);
+				std::format_to(std::back_inserter(output),
+						"{}{:<{}}{}", color_code(field_color(field, issue)),
+						value, field_width(field),
+						Style::RESET
+						);
 			}
 			output += '\n';
 		}
