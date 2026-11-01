@@ -7,6 +7,7 @@
 #include <map>
 
 constexpr std::string_view MARGIN = "    ";
+constexpr int MARGIN_WIDTH = 20;
 
 ProjectType detect_project_type(const std::filesystem::path&);
 std::string trim(std::string_view);
@@ -15,8 +16,8 @@ std::string truncate(std::string_view, size_t);
 class ProjCtl {
 	std::map<std::string, ProjectContent> projects;
 	std::filesystem::path config_path;
-	Config config;
 	std::filesystem::path data_path;
+	Config config;
 	void load();
 	void save() const;
 	std::optional<std::map<std::string, ProjectContent>::const_iterator> project_find(const std::string&) const;

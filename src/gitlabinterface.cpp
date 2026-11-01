@@ -2,7 +2,6 @@
 
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
-//#include <print>
 
 bool GitLabInterface::installed() {
 	return SystemInterface::run("command -v glab").has_value();

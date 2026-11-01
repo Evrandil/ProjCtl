@@ -10,6 +10,7 @@ bool GitInterface::is_repo(const ProjectContent& project) {
 	return output && *output == "true";
 }
 
+
 std::expected<std::string, std::string> GitInterface::changes(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Not a git repo");
@@ -23,6 +24,7 @@ std::expected<std::string, std::string> GitInterface::changes(const ProjectConte
 	}
 	return *output;
 }
+
 
 std::expected<std::string, std::string> GitInterface::branch(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
@@ -38,6 +40,7 @@ std::expected<std::string, std::string> GitInterface::branch(const ProjectConten
 	return *output;
 }
 
+
 std::expected<std::string, std::string> GitInterface::branch_list(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Not a git repo");
@@ -51,6 +54,7 @@ std::expected<std::string, std::string> GitInterface::branch_list(const ProjectC
 	}
 	return *output;
 }
+
 
 std::expected<std::string, std::string> GitInterface::branch_switch(const ProjectContent& project, std::string_view branch) {
 	if (!is_repo(project)) [[unlikely]] {
@@ -72,6 +76,7 @@ std::expected<std::string, std::string> GitInterface::branch_switch(const Projec
 	return *output;
 }
 
+
 std::expected<std::string, std::string> GitInterface::remote(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Not a git repo");
@@ -85,6 +90,8 @@ std::expected<std::string, std::string> GitInterface::remote(const ProjectConten
 	}
 	return *output;
 }
+
+
 std::expected<std::string, std::string> GitInterface::remote_short(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Not a git repo");
@@ -117,6 +124,8 @@ std::expected<std::string, std::string> GitInterface::remote_short(const Project
 
 	return std::format("{}/{}", owner, repo);
 }
+
+
 std::expected<HostOption, std::string> GitInterface::host(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Not a git repo");
@@ -157,6 +166,7 @@ std::expected<HostOption, std::string> GitInterface::host(const ProjectContent& 
 	return HostOption::Unknown;
 }
 
+
 std::expected<std::string, std::string> GitInterface::add(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Not a git repo");
@@ -170,6 +180,7 @@ std::expected<std::string, std::string> GitInterface::add(const ProjectContent& 
 	}
 	return *result;
 }
+
 
 std::expected<std::string, std::string> GitInterface::commit(const ProjectContent& project, std::string_view message) {
 	if (!is_repo(project)) [[unlikely]] {
@@ -193,6 +204,8 @@ std::expected<std::string, std::string> GitInterface::commit(const ProjectConten
 
 	return *add_output;
 }
+
+
 std::expected<std::string, std::string> GitInterface::commit(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Project is not git repository");
@@ -216,6 +229,7 @@ std::expected<std::string, std::string> GitInterface::commit(const ProjectConten
 	return *add_output;
 }
 
+
 std::expected<std::string, std::string> GitInterface::default_merge(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Not a git repo");
@@ -229,6 +243,7 @@ std::expected<std::string, std::string> GitInterface::default_merge(const Projec
 	}
 	return *result;
 }
+
 
 std::expected<std::string, std::string> GitInterface::push(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
@@ -246,6 +261,7 @@ std::expected<std::string, std::string> GitInterface::push(const ProjectContent&
 	return *result;
 }
 
+
 std::expected<std::string, std::string> GitInterface::push_branch(const ProjectContent& project, std::string_view branch) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Not a git repo");
@@ -262,6 +278,7 @@ std::expected<std::string, std::string> GitInterface::push_branch(const ProjectC
 	return *result;
 }
 
+
 std::expected<std::string, std::string> GitInterface::pull(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Not a git repo");
@@ -277,6 +294,8 @@ std::expected<std::string, std::string> GitInterface::pull(const ProjectContent&
 
 	return *result;
 }
+
+
 std::expected<std::string, std::string> GitInterface::fetch(const ProjectContent& project) {
 	if (!is_repo(project)) [[unlikely]] {
 		return std::unexpected("Not a git repo");

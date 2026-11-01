@@ -25,7 +25,7 @@ enum class Color : uint8_t {
 	BaldWhite,
 };
 
-constexpr std::string_view color_code(Color color) {
+constexpr std::string_view color_code(const Color color) {
 	switch (color) {
 		case Color::Default:		return "\033[39m";
 		case Color::Black:			return "\033[30m";
@@ -45,7 +45,6 @@ constexpr std::string_view color_code(Color color) {
 		case Color::White:			return "\033[37m";
 		case Color::BaldWhite:		return "\033[1;37m";
 	}
-
 	return "\033[39m";
 }
 

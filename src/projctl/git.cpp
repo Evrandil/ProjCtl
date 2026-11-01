@@ -12,7 +12,7 @@
 
 
 void ProjCtl::list_gits() const {
-	auto list_one_git = [&](const std::string& name, const ProjectContent& content){
+	auto list_one_git = [&] (const std::string& name, const ProjectContent& content) {
 		return std::format(
 				"{}{:<{}}{}{:<{}}{}{:<{}}{}{:<{}}",
 				color_code(config.project_name_color),
@@ -42,7 +42,10 @@ void ProjCtl::list_gits() const {
 	}
 
 	if (tasks.empty()) [[unlikely]] {
-		std::println("{}There are no git projects saved{}", color_code(config.error_color), Style::RESET);
+		std::println(
+				"{}There are no git projects saved{}",
+				color_code(config.error_color),
+				Style::RESET);
 		return;
 	}
 
@@ -61,20 +64,27 @@ void ProjCtl::list_gits() const {
 			);
 
 	for (std::future<std::string>& task : tasks) {
-		std::println("{}", task.get());
+		std::println(
+				"{}",
+				task.get()
+				);
 	}
 }
 
 
 void ProjCtl::status(const std::string &name) const {
 	auto status_one = [&](const std::string& name, const ProjectContent& content){
+		constexpr uint8_t OUTPUT_SIZE = 250;
+		constexpr uint8_t CONTENT_WIDTH = 24;
+
 		std::string output;
 		bool exists = std::filesystem::exists(content.path);
-		std::expected<std::string, std::string> git = GitInterface::remote_short(content);
-		std::expected<std::string, std::string> branch = GitInterface::branch(content);
-		std::expected<std::string, std::string> remote = GitInterface::remote(content);
-		std::expected<std::string, std::string> changes = GitInterface::changes(content);
-		output.reserve(250);
+		std::expected<std::string, std::string> git		= GitInterface::remote_short(content);
+		std::expected<std::string, std::string> branch	= GitInterface::branch(content);
+		std::expected<std::string, std::string> remote	= GitInterface::remote(content);
+		std::expected<std::string, std::string> changes	= GitInterface::changes(content);
+
+		output.reserve(OUTPUT_SIZE);
 
 		std::format_to(std::back_inserter(output),
 				"{}{}{:<{}}{}{}{}\n",
@@ -83,7 +93,7 @@ void ProjCtl::status(const std::string &name) const {
 				"Name:",
 				config.name_width,
 				color_code(config.project_name_color),
-				truncate(name, config.max_width - 24),
+				truncate(name, config.max_width - CONTENT_WIDTH),
 				Style::RESET
 				);
 		std::format_to(std::back_inserter(output),
@@ -93,7 +103,7 @@ void ProjCtl::status(const std::string &name) const {
 				"Path:",
 				config.name_width,
 				color_code(config.project_path_color),
-				truncate(content.path.string(), config.max_width - 24),
+				truncate(content.path.string(), config.max_width - CONTENT_WIDTH),
 				Style::RESET
 				);
 		std::format_to(std::back_inserter(output),
@@ -125,39 +135,40 @@ void ProjCtl::status(const std::string &name) const {
 				config.name_width,
 				git ? color_code(config.tick_color) : color_code(config.cross_color),
 				git ? Style::TICK : Style::CROSS,
-				truncate(git ? *git : git.error(), config.max_width - 24),
+				truncate(git ? *git : git.error(), config.max_width - CONTENT_WIDTH),
 				Style::RESET
 				);
-		// TODO hide those if not a git repo
-		std::format_to(std::back_inserter(output),
-				"{}{}{:<{}}{}{}{}\n",
-				MARGIN,
-				color_code(config.header_color),
-				"Branch:",
-				config.name_width,
-				branch ? color_code(config.project_branch_color) : color_code(config.cross_color),
-				truncate(branch ? *branch : branch.error(), config.max_width - 24),
-				Style::RESET
-				);
-		std::format_to(std::back_inserter(output),
-				"{}{}{:<{}}{}{}{}\n",
-				MARGIN,
-				color_code(config.header_color),
-				"Full remote:",
-				config.name_width,
-				remote ? color_code(config.project_remote_color) : color_code(config.cross_color),
-				truncate(remote ? *remote: remote.error(), config.max_width - 24),
-				Style::RESET);
-		std::format_to(std::back_inserter(output),
-				"{}{}{:<{}}{}{}{}\n",
-				MARGIN,
-				color_code(config.header_color),
-				"Status:",
-				config.name_width,
-				changes ? changes -> empty() ? color_code(config.tick_color) : color_code(config.warning_color) : color_code(config.error_color),
-				changes ? changes->empty() ? "No changes" : "Changes:\n\n" + *changes : changes.error(),
-				Style::RESET
-				);
+		if (git) {
+			std::format_to(std::back_inserter(output),
+					"{}{}{:<{}}{}{}{}\n",
+					MARGIN,
+					color_code(config.header_color),
+					"Branch:",
+					config.name_width,
+					branch ? color_code(config.project_branch_color) : color_code(config.cross_color),
+					truncate(branch ? *branch : branch.error(), config.max_width - CONTENT_WIDTH),
+					Style::RESET
+					);
+			std::format_to(std::back_inserter(output),
+					"{}{}{:<{}}{}{}{}\n",
+					MARGIN,
+					color_code(config.header_color),
+					"Full remote:",
+					config.name_width,
+					remote ? color_code(config.project_remote_color) : color_code(config.cross_color),
+					truncate(remote ? *remote: remote.error(), config.max_width - CONTENT_WIDTH),
+					Style::RESET);
+			std::format_to(std::back_inserter(output),
+					"{}{}{:<{}}{}{}{}\n",
+					MARGIN,
+					color_code(config.header_color),
+					"Status:",
+					config.name_width,
+					changes ? changes -> empty() ? color_code(config.tick_color) : color_code(config.warning_color) : color_code(config.error_color),
+					changes ? changes->empty() ? "No changes" : "Changes:\n\n" + *changes : changes.error(),
+					Style::RESET
+					);
+		}
 		return output;
 	};
 
@@ -171,7 +182,10 @@ void ProjCtl::status(const std::string &name) const {
 						));
 		}
 		for (std::future<std::string>& task : tasks) {
-			println("{}", task.get());
+			println(
+					"{}",
+					task.get()
+					);
 		}
 		return;
 	}
@@ -181,7 +195,10 @@ void ProjCtl::status(const std::string &name) const {
 		return;
 	}
 	const ProjectContent& content = (*project)->second;
-	std::println("{}", status_one((*project)->first, content));
+	std::println(
+			"{}",
+			status_one((*project)->first, content)
+			);
 }
 
 

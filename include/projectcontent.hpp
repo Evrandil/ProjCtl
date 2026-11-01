@@ -46,8 +46,7 @@ constexpr std::optional<std::string_view> run_command_for(ProjectType type) {
 	}
 }
 
-struct ProjectContent
-{
+struct ProjectContent {
 	std::filesystem::path path;
 	ProjectType type;
 	std::optional<std::string> build_command = std::nullopt;

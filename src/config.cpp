@@ -26,19 +26,13 @@ std::vector<IssueField> parse_issue_fields(std::string_view value) {
 
 		std::string field = trim(value.substr(start, comma == std::string_view::npos ? value.size() - start : comma - start));
 
-		if (field == "number") {
-			fields.push_back(IssueField::Number);
-		} else if (field == "title") {
-			fields.push_back(IssueField::Title);
-		} else if (field == "state") {
-			fields.push_back(IssueField::State);
-		} else if (field == "author") {
-			fields.push_back(IssueField::Author);
-		} else if (field == "labels") {
-			fields.push_back(IssueField::Labels);
-		} else if (field == "parent") {
-			fields.push_back(IssueField::Parent);
-		}
+		if (field == "number")			{	fields.push_back(IssueField::Number);	}
+		else if (field == "title")		{	fields.push_back(IssueField::Title);	}
+		else if (field == "state")		{	fields.push_back(IssueField::State);	}
+		else if (field == "author")		{	fields.push_back(IssueField::Author);	}
+		else if (field == "labels")		{	fields.push_back(IssueField::Labels);	}
+		else if (field == "parent")		{	fields.push_back(IssueField::Parent);	}
+		
 		if (comma == std::string_view::npos) {
 			break;
 		}
@@ -64,6 +58,8 @@ std::optional<Style::Color> color_from_string(std::string_view value) {
 
 }
 
+
+// TODO Make this load func more readable ?
 void Config::load(const std::filesystem::path& path) {
 	std::ifstream config(path);
 
