@@ -3,14 +3,14 @@
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
 
-bool GitHubInterface::installed() const {
+bool GitHubInterface::installed() {
 	return SystemInterface::run("command -v gh").has_value();
 }
-bool GitHubInterface::authenticated() const {
+bool GitHubInterface::authenticated() {
 	return SystemInterface::run("gh auth status").has_value();
 }
 
-std::expected<std::string, std::string> GitHubInterface::repo_list() const {
+std::expected<std::string, std::string> GitHubInterface::repo_list() {
 	std::optional<std::string> output = SystemInterface::run("gh repo list | awk '{ print $1 }'");
 
 	if (!output) {
@@ -20,7 +20,7 @@ std::expected<std::string, std::string> GitHubInterface::repo_list() const {
 	return *output;
 }
 
-std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view remote_short) const {
+std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view remote_short) {
 	if (!installed()) {
 		return std::unexpected("GitHub not installed");
 	}
@@ -59,7 +59,7 @@ std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::
 	return issues;
 }
 
-std::expected<void, std::string> GitHubInterface::issue_create(std::string_view remote_short) const {
+std::expected<void, std::string> GitHubInterface::issue_create(std::string_view remote_short) {
 	if (!installed()) {
 		return std::unexpected("GitHub not installed");
 	}
@@ -72,7 +72,7 @@ std::expected<void, std::string> GitHubInterface::issue_create(std::string_view 
 }
 
 
-std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view remote_short) const {
+std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view remote_short) {
 	if (!installed()) {
 		return std::unexpected("GitHub not installed");
 	}
@@ -109,7 +109,7 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(s
 }
 
 
-std::expected<void, std::string> GitHubInterface::request_create(std::string_view path) const {
+std::expected<void, std::string> GitHubInterface::request_create(std::string_view path) {
 	if (!installed()) {
 		return std::unexpected("GitHub not installed");
 	}
@@ -122,7 +122,7 @@ std::expected<void, std::string> GitHubInterface::request_create(std::string_vie
 }
 
 
-std::expected<std::string, std::string> GitHubInterface::request_merge(std::string_view path) const {
+std::expected<std::string, std::string> GitHubInterface::request_merge(std::string_view path) {
 	if (!installed()) {
 		return std::unexpected("GitHub not installed");
 	}

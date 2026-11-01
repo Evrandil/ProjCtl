@@ -3,6 +3,8 @@
 #include <future>
 #include <print>
 #include "gitinterface.hpp"
+#include "githubinterface.hpp"
+#include "gitlabinterface.hpp"
 
 
 void ProjCtl::request_list(const std::string& name) const {
@@ -116,10 +118,10 @@ void ProjCtl::request_list(const std::string& name) const {
 		std::expected<std::vector<Request>, std::string> command_output;
 		switch (host) {
 			case HostOption::GitHub:
-				command_output = gh_interface.request_list(remote_short);
+				command_output = GitHubInterface::request_list(remote_short);
 				break;
 			case HostOption::GitLab:
-				command_output = glab_interface.request_list(remote_short);
+				command_output = GitLabInterface::request_list(remote_short);
 				break;
 			case HostOption::Unknown:
 				command_output = std::unexpected(std::format("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET));
@@ -183,10 +185,10 @@ void ProjCtl::request_create(const std::string& name) const {
 	std::expected<void, std::string> success;
 	switch (host) {
 		case HostOption::GitHub:
-			success = gh_interface.request_create(content.path.string());
+			success = GitHubInterface::request_create(content.path.string());
 			break;
 		case HostOption::GitLab:
-			success = glab_interface.request_create(content.path.string());
+			success = GitLabInterface::request_create(content.path.string());
 			break;
 		case HostOption::Unknown:
 			std::println("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET);
@@ -212,10 +214,10 @@ void ProjCtl::request_merge(const std::string& name) const {
 	std::expected<std::string, std::string> output;
 	switch (host) {
 		case HostOption::GitHub:
-			output = gh_interface.request_merge(content.path.string());
+			output = GitHubInterface::request_merge(content.path.string());
 			break;
 		case HostOption::GitLab:
-			output = glab_interface.request_merge(content.path.string());
+			output = GitLabInterface::request_merge(content.path.string());
 			break;
 		case HostOption::Unknown:
 			std::println("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET);

@@ -4,14 +4,14 @@
 #include <nlohmann/json.hpp>
 //#include <print>
 
-bool GitLabInterface::installed() const {
+bool GitLabInterface::installed() {
 	return SystemInterface::run("command -v glab").has_value();
 }
-bool GitLabInterface::authenticated() const {
+bool GitLabInterface::authenticated() {
 	return SystemInterface::run("glab auth status >/dev/null 2>&1").has_value();
 }
 
-std::expected<std::string, std::string> GitLabInterface::repo_list() const {
+std::expected<std::string, std::string> GitLabInterface::repo_list() {
 	std::optional<std::string> output = SystemInterface::run("glab repo list | awk 'NR > 3 { print $1 }'");
 
 	if (!output) {
@@ -20,7 +20,7 @@ std::expected<std::string, std::string> GitLabInterface::repo_list() const {
 	return *output;
 }
 
-std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::string_view remote_short) const {
+std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::string_view remote_short) {
 	if (!installed()) {
 		return std::unexpected("GitLab not installed");
 	}
@@ -53,7 +53,7 @@ std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::
 	return issues;
 }
 
-std::expected<void, std::string> GitLabInterface::issue_create(std::string_view remote_short) const {
+std::expected<void, std::string> GitLabInterface::issue_create(std::string_view remote_short) {
 	if (!installed()) {
 		return std::unexpected("GitLab not installed");
 	}
@@ -65,7 +65,7 @@ std::expected<void, std::string> GitLabInterface::issue_create(std::string_view 
 	return {};
 }
 
-std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(std::string_view remote_short) const {
+std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(std::string_view remote_short) {
 	if (!installed()) {
 		return std::unexpected("GitLab not installed");
 	}
@@ -98,7 +98,7 @@ std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(s
 	return requests;
 }
 
-std::expected<void, std::string> GitLabInterface::request_create(std::string_view path) const {
+std::expected<void, std::string> GitLabInterface::request_create(std::string_view path) {
 	if (!installed()) {
 		return std::unexpected("GitLab not installed");
 	}
@@ -110,7 +110,7 @@ std::expected<void, std::string> GitLabInterface::request_create(std::string_vie
 	return {};
 }
 
-std::expected<std::string, std::string> GitLabInterface::request_merge(std::string_view path) const {
+std::expected<std::string, std::string> GitLabInterface::request_merge(std::string_view path) {
 	if (!installed()) {
 		return std::unexpected("GitLab not installed");
 	}

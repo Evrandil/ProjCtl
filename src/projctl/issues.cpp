@@ -9,6 +9,8 @@
 #include <iterator>
 #include "config.hpp"
 #include "gitinterface.hpp"
+#include "githubinterface.hpp"
+#include "gitlabinterface.hpp"
 
 
 void ProjCtl::issue_list(const std::string& name) const {
@@ -122,10 +124,10 @@ void ProjCtl::issue_list(const std::string& name) const {
 		std::expected<std::vector<Issue>, std::string> command_output;
 		switch (host) {
 			case HostOption::GitHub:
-				command_output = gh_interface.issue_list(remote_short);
+				command_output = GitHubInterface::issue_list(remote_short);
 				break;
 			case HostOption::GitLab:
-				command_output = glab_interface.issue_list(remote_short);
+				command_output = GitLabInterface::issue_list(remote_short);
 				break;
 			case HostOption::Unknown:
 				command_output = std::unexpected(std::format("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET));
@@ -196,10 +198,10 @@ void ProjCtl::issue_create(const std::string& name) const {
 	std::expected<void, std::string> success;
 	switch (host) {
 		case HostOption::GitHub:
-			success = gh_interface.issue_create(remote_short);
+			success = GitHubInterface::issue_create(remote_short);
 			break;
 		case HostOption::GitLab:
-			success = glab_interface.issue_create(remote_short);
+			success = GitLabInterface::issue_create(remote_short);
 			break;
 		case HostOption::Unknown:
 			std::println("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET);
