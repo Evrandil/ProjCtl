@@ -2,29 +2,34 @@
 
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
-#include <print>
 
-bool GitLabInterface::installed() const {
+bool GitLabInterface::installed() {
 	return SystemInterface::run("command -v glab").has_value();
 }
-bool GitLabInterface::authenticated() const {
+bool GitLabInterface::authenticated() {
 	return SystemInterface::run("glab auth status >/dev/null 2>&1").has_value();
 }
 
-std::expected<std::string, std::string> GitLabInterface::repo_list() const {
+std::expected<std::string, std::string> GitLabInterface::repo_list() {
 	std::optional<std::string> output = SystemInterface::run("glab repo list | awk 'NR > 3 { print $1 }'");
 
-	if (!output) return std::unexpected("Failed to get GitLab repo list");
+	if (!output) {
+		return std::unexpected("Failed to get GitLab repo list");
+	}
 	return *output;
 }
 
-std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::string_view remote_short) const {
-	if (!installed()) return std::unexpected("GitLab not installed");
+std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::string_view remote_short) {
+	if (!installed()) {
+		return std::unexpected("GitLab not installed");
+	}
 
 	std::string command = std::format("glab issue list --repo {} --output json", remote_short);
 	std::optional<std::string> output = SystemInterface::run(command);
 
-	if (!output) return std::unexpected(std::format("Failed to get GitLab issue list for repo {}", remote_short));
+	if (!output) {
+		return std::unexpected(std::format("Failed to get GitLab issue list for repo {}", remote_short));
+	}
 	nlohmann::json json = nlohmann::json::parse(*output);
 	std::vector<Issue> issues;
 	issues.reserve(json.size());
@@ -37,7 +42,9 @@ std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::
 		issue.updated = json_issue.at("updated_at").get<std::string>();
 		issue.author = json_issue.at("author").at("username").get<std::string>();
 
-		for (const nlohmann::json& label : json_issue.at("labels")) issue.labels.push_back(label.get<std::string>());
+		for (const nlohmann::json& label : json_issue.at("labels")) {
+			issue.labels.push_back(label.get<std::string>());
+		}
 
 		issues.push_back(std::move(issue));
 	}
@@ -45,20 +52,29 @@ std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::
 	return issues;
 }
 
-std::expected<void, std::string> GitLabInterface::issue_create(std::string_view remote_short) const {
-	if (!installed()) return std::unexpected("GitLab not installed");
+std::expected<void, std::string> GitLabInterface::issue_create(std::string_view remote_short) {
+	if (!installed()) {
+		return std::unexpected("GitLab not installed");
+	}
 
 	std::string command = std::format("glab issue create --repo {}", remote_short);
+
 	SystemInterface::run_interactive(command);
+
+	return {};
 }
 
-std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(std::string_view remote_short) const {
-	if (!installed()) return std::unexpected("GitLab not installed");
+std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(std::string_view remote_short) {
+	if (!installed()) {
+		return std::unexpected("GitLab not installed");
+	}
 
 	std::string command = std::format("glab mr list --repo {} --output json", remote_short);
 	std::optional<std::string> output = SystemInterface::run(command);
 
-	if (!output) return std::unexpected(std::format("Failed to get GitLab mr list for repo {}", remote_short));
+	if (!output) {
+		return std::unexpected(std::format("Failed to get GitLab mr list for repo {}", remote_short));
+	}
 	nlohmann::json json = nlohmann::json::parse(*output);
 	std::vector<Request> requests;
 	requests.reserve(json.size());
@@ -71,7 +87,9 @@ std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(s
 		request.updated = json_request.at("updated_at").get<std::string>();
 		request.author = json_request.at("author").at("username").get<std::string>();
 
-		for (const nlohmann::json& label : json_request.at("labels")) request.labels.push_back(label.get<std::string>());
+		for (const nlohmann::json& label : json_request.at("labels")) {
+			request.labels.push_back(label.get<std::string>());
+		}
 
 		requests.push_back(std::move(request));
 	}
@@ -79,19 +97,30 @@ std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(s
 	return requests;
 }
 
-std::expected<void, std::string> GitLabInterface::request_create(std::string_view path) const {
-	if (!installed()) return std::unexpected("GitLab not installed");
+std::expected<void, std::string> GitLabInterface::request_create(std::string_view path) {
+	if (!installed()) {
+		return std::unexpected("GitLab not installed");
+	}
 
 	std::string command = std::format("cd {} && glab mr create", path);
+
 	SystemInterface::run_interactive(command);
+
+	return {};
 }
 
-std::expected<std::string, std::string> GitLabInterface::request_merge(std::string_view path) const {
-	if (!installed()) return std::unexpected("GitLab not installed");
+std::expected<std::string, std::string> GitLabInterface::request_merge(std::string_view path) {
+	if (!installed()) {
+		return std::unexpected("GitLab not installed");
+	}
 
 	std::string command = std::format("cd {} && glab mr merge --squash --remove-source-branch", path);
+
 	std::optional output = SystemInterface::run(command);
-	if (!output) return std::unexpected(std::format("Failed to run GitLab merge for repo {}", path));
+
+	if (!output) {
+		return std::unexpected(std::format("Failed to run GitLab merge for repo {}", path));
+	}
 
 	return *output;
 }

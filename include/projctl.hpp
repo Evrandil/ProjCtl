@@ -1,27 +1,23 @@
 #pragma once
 
 #include "projectcontent.hpp"
-#include "githubinterface.hpp"
-#include "gitlabinterface.hpp"
 #include "config.hpp"
 
 #include <filesystem>
 #include <map>
 
 constexpr std::string_view MARGIN = "    ";
+constexpr int MARGIN_WIDTH = 20;
 
 ProjectType detect_project_type(const std::filesystem::path&);
 std::string trim(std::string_view);
 std::string truncate(std::string_view, size_t);
 
-class ProjCtl
-{
+class ProjCtl {
 	std::map<std::string, ProjectContent> projects;
 	std::filesystem::path config_path;
-	Config config;
 	std::filesystem::path data_path;
-	GitHubInterface gh_interface;
-	GitLabInterface glab_interface;
+	Config config;
 	void load();
 	void save() const;
 	std::optional<std::map<std::string, ProjectContent>::const_iterator> project_find(const std::string&) const;
@@ -33,7 +29,7 @@ class ProjCtl
 	void list() const;
 	void list_gits() const;
 	void path_show(const std::string&) const;
-	void add(const std::string, std::filesystem::path);
+	void add(const std::string&, std::filesystem::path);
 	void add_current();
 	void remove(const std::string&);
 	void status(const std::string&) const;

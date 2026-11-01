@@ -40,6 +40,7 @@ add_library(projctl_core
 	src/projctl/helper.cpp
 	src/systeminterface.cpp
 	src/gitinterface.cpp
+	src/githostinterface.cpp
 	src/githubinterface.cpp
 	src/gitlabinterface.cpp
 	src/config.cpp

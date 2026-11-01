@@ -10,30 +10,52 @@
 #include "config.hpp"
 #include "systeminterface.hpp"
 
+namespace {
+	constexpr int MARGIN_SIZE = 20;
+}
+
+
 void ProjCtl::list() const {
-	auto list_one = [&](const std::string& name, const ProjectContent& content) { return std::format("{}{:<{}}{}{:<{}}{}", color_code(config.project_name_color), truncate(name, config.name_width), config.name_width, color_code(config.project_path_color), truncate(content.path.string(), config.path_width), config.path_width, Style::RESET); };
+	auto list_one = [&] (const std::string& name, const ProjectContent& content) {
+		return std::format("{}{:<{}}{}{:<{}}{}", color_code(config.project_name_color), truncate(name, config.name_width), config.name_width, color_code(config.project_path_color), truncate(content.path.string(), config.path_width), config.path_width, Style::RESET);
+	};
 	if (projects.empty()) [[unlikely]] {
 		std::println("{}There are no git projects saved{}", color_code(config.error_color), Style::RESET);
 		return;
 	}
 	std::println("{}{:<{}}{}{}", color_code(config.header_color), "Name", config.name_width, "Path", Style::RESET);
+
 	std::vector<std::future<std::string>> tasks;
 	tasks.reserve(projects.size());
-	for (const decltype(projects)::value_type& project : projects) tasks.push_back(std::async(std::launch::async, list_one, std::cref(project.first), std::cref(project.second)));
-	for (std::future<std::string>& task : tasks) std::println("{}", task.get());
+
+	for (const decltype(projects)::value_type& project : projects) {
+		tasks.push_back(std::async(
+					std::launch::async,
+					list_one, std::cref(project.first), std::cref(project.second)
+					));
+	}
+
+	for (std::future<std::string>& task : tasks) {
+		std::println("{}", task.get());
+	}
 }
 
-void ProjCtl::add(const std::string name, std::filesystem::path path) {
+
+void ProjCtl::add(const std::string &name, std::filesystem::path path) {
 	if (projects.contains(name)) {
 		std::println("{}Project with name {}{}{} already exists!{}", color_code(config.error_color), color_code(config.project_name_color), truncate(name, config.name_width), color_code(config.error_color), Style::RESET);
 		return;
 	}
-	if (path.string() == ".") path = std::filesystem::current_path();
+	if (path.string() == ".") {
+		path = std::filesystem::current_path();
+	}
 	std::pair<std::string, ProjectContent>  new_project = { name, ProjectContent { path, detect_project_type(path) } };
 	projects.emplace(new_project);
-	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Added project:", config.name_width, color_code(config.project_name_color), truncate(new_project.first, config.max_width - 20), Style::RESET);
-	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "With path:", config.name_width, color_code(config.project_path_color), truncate(new_project.second.path.string(), config.max_width - 20),Style::RESET);
+	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Added project:", config.name_width, color_code(config.project_name_color), truncate(new_project.first, config.max_width - MARGIN_SIZE), Style::RESET);
+	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "With path:", config.name_width, color_code(config.project_path_color), truncate(new_project.second.path.string(), config.max_width - MARGIN_SIZE),Style::RESET);
 }
+
+
 void ProjCtl::add_current() {
 	std::filesystem::path path = std::filesystem::current_path();
 	std::string name = std::filesystem::current_path().filename().string();
@@ -43,9 +65,10 @@ void ProjCtl::add_current() {
 	}
 	std::pair<std::string, ProjectContent> new_project = { name, { path, detect_project_type(path) } };
 	projects.emplace(new_project);
-	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Added project:", config.name_width, color_code(config.project_name_color), truncate(new_project.first, config.max_width - 20), Style::RESET);
-	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "With path:", config.name_width, color_code(config.project_path_color), truncate(new_project.second.path.string(), config.max_width - 20),Style::RESET);
+	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Added project:", config.name_width, color_code(config.project_name_color), truncate(new_project.first, config.max_width - MARGIN_SIZE), Style::RESET);
+	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "With path:", config.name_width, color_code(config.project_path_color), truncate(new_project.second.path.string(), config.max_width - MARGIN_SIZE),Style::RESET);
 }
+
 
 void ProjCtl::remove(const std::string& name) {
 	if (projects.erase(name) == 0) {
@@ -55,20 +78,38 @@ void ProjCtl::remove(const std::string& name) {
 	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Removed project:", config.name_width, color_code(config.project_name_color), name, Style::RESET);
 }
 
+
 void ProjCtl::path_show(const std::string& name) const {
 	std::optional project = project_find(name);
-	if (!project) return;
+	if (!project) {
+		return;
+	}
 
 	std::println("{}", (*project)->second.path.string());
 }
 
+
 void ProjCtl::open(const std::string& name) const {
 	std::optional project = project_find(name);
-	if (!project) return;
+	if (!project) {
+		return;
+	}
 
-	if (config.editor == "neovide" || config.editor == "emacs") SystemInterface::run_interactive(std::format("cd \"{}\" && {} . &", (*project)->second.path.string(), config.editor));
-	else SystemInterface::run_interactive(std::format("cd \"{}\" && {} .", (*project)->second.path.string(), config.editor));
+	if (config.editor == "neovide" || config.editor == "emacs") {
+		SystemInterface::run_interactive(std::format(
+					"cd \"{}\" && {} . &", 
+					(*project)->second.path.string(), 
+					config.editor
+					));
+	}
+	else {
+		SystemInterface::run_interactive(std::format(
+					"cd \"{}\" && {} .",
+					(*project)->second.path.string(),
+					config.editor));
+	}
 }
+
 
 void ProjCtl::build(const std::string& name) const {
 	auto build_one = [&](const std::string& name, const ProjectContent& content){
@@ -89,20 +130,29 @@ void ProjCtl::build(const std::string& name) const {
 	if (name == "--all") {
 		std::vector<std::future<std::string>> tasks;
 		tasks.reserve(projects.size());
-		for (const decltype(projects)::value_type& project : projects) tasks.push_back(std::async(std::launch::async, build_one, std::cref(project.first), std::cref(project.second)));
-		for (std::future<std::string>& task : tasks) println("{}", task.get());
+		for (const decltype(projects)::value_type& project : projects) {
+			tasks.push_back(std::async(std::launch::async, build_one, std::cref(project.first), std::cref(project.second)));
+		}
+		for (std::future<std::string>& task : tasks) {
+			println("{}", task.get());
+		}
 		return;
 	}
 
 	std::optional project = project_find(name);
-	if (!project) return;
+	if (!project) {
+		return;
+	}
 	const ProjectContent& content = (*project)->second;
 	std::println("{}", build_one(name, content));
 }
 
+
 void ProjCtl::run(const std::string& name) const {
 	std::optional project = project_find(name);
-	if (!project) return;
+	if (!project) {
+		return;
+	}
 	const ProjectContent& content = (*project)->second;
 
 	const std::optional<std::string_view> command_option = content.run_command ? content.run_command : run_command_for(content.type);

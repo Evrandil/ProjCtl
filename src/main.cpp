@@ -3,7 +3,7 @@
 
 #include "projctl.hpp"
 
-enum class CommandOption {
+enum class CommandOption : uint8_t {
 	List,
 	Status,
 	Add,
@@ -25,32 +25,32 @@ enum class CommandOption {
 	RequestList,
 	RequestCreate,
 	RequestMerge,
-	Idk
+	Idk,
 };
 
 namespace {
 	CommandOption get_option_from_command(const std::string& command) {
-		if (command == "list")							return CommandOption::List;
-		if (command == "status")						return CommandOption::Status;
-		if (command == "add")							return CommandOption::Add;
-		if (command == "automerge")						return CommandOption::AutoMerge;
-		if (command == "push")							return CommandOption::Push;
-		if (command == "path")							return CommandOption::Path;
-		if (command == "pull")							return CommandOption::Pull;
-		if (command == "repos")							return CommandOption::RepoList;
-		if (command == "run")							return CommandOption::Run;
-		if (command == "rm" || command == "remove")		return CommandOption::Remove;
-		if (command == "open")							return CommandOption::Open;
-		if (command == "branch")						return CommandOption::Branch;
-		if (command == "build")							return CommandOption::Build;
-		if (command == "commit")						return CommandOption::Commit;
-		if (command == "fetch")							return CommandOption::Fetch;
-		if (command == "git")							return CommandOption::GStatus;
-		if (command == "issues" || command == "ilist")	return CommandOption::IssueList;
-		if (command == "icreate")						return CommandOption::IssueCreate;
-		if (command == "reqs" || command == "reqlist")	return CommandOption::RequestList;
-		if (command == "reqcreate")						return CommandOption::RequestCreate;
-		if (command == "reqmerge")						return CommandOption::RequestMerge;
+		if (command == "list")							{	return CommandOption::List;				}
+		if (command == "status")						{	return CommandOption::Status;			}
+		if (command == "add")							{	return CommandOption::Add;				}
+		if (command == "automerge")						{	return CommandOption::AutoMerge;		}
+		if (command == "push")							{	return CommandOption::Push;				}
+		if (command == "path")							{	return CommandOption::Path;				}
+		if (command == "pull")							{	return CommandOption::Pull;				}
+		if (command == "repos")							{	return CommandOption::RepoList;			}
+		if (command == "run")							{	return CommandOption::Run;				}
+		if (command == "rm" || command == "remove")		{	return CommandOption::Remove;			}
+		if (command == "open")							{	return CommandOption::Open;				}
+		if (command == "branch")						{	return CommandOption::Branch;			}
+		if (command == "build")							{	return CommandOption::Build;			}
+		if (command == "commit")						{	return CommandOption::Commit;			}
+		if (command == "fetch")							{	return CommandOption::Fetch;			}
+		if (command == "git")							{	return CommandOption::GStatus;			}
+		if (command == "issues" || command == "ilist")	{	return CommandOption::IssueList;		}
+		if (command == "icreate")						{	return CommandOption::IssueCreate;		}
+		if (command == "reqs" || command == "reqlist")	{	return CommandOption::RequestList;		}
+		if (command == "reqcreate")						{	return CommandOption::RequestCreate;	}
+		if (command == "reqmerge")						{	return CommandOption::RequestMerge;		}
 		return CommandOption::Idk;
 	}
 }
@@ -61,14 +61,18 @@ int main(const int argc, const char **argv) {
 
 	while (arg_iterator < argc) {
 		std::string command = argv[arg_iterator++];
-		if (command != "path") std::print("\n");
+		if (command != "path") {
+			std::print("\n");
+		}
 		switch (get_option_from_command(command)) {
 			case CommandOption::List: {
 										  if (arg_iterator < argc && argv[arg_iterator][0] == 'g') {
 											  ++arg_iterator;
 											  proj_ctl.list_gits();
 										  }
-										  else proj_ctl.list();
+										  else {
+											  proj_ctl.list();
+										  }
 										  continue;
 									  }
 			case CommandOption::Status: {
@@ -76,7 +80,7 @@ int main(const int argc, const char **argv) {
 												std::println("You're missing some arguments!");
 												continue;
 											}
-											proj_ctl.status(std::string(argv[arg_iterator++]));
+											proj_ctl.status(std::string { argv[arg_iterator++] } );
 											continue;
 										}
 			case CommandOption::Add: {
@@ -84,7 +88,7 @@ int main(const int argc, const char **argv) {
 											 std::println("You're missing some arguments!");
 											 continue;
 										 }
-										 if (std::string_view(argv[arg_iterator]) == ".") {
+										 if (std::string_view { argv[arg_iterator] } == ".") {
 											 ++arg_iterator;
 											 proj_ctl.add_current();
 											 continue;
@@ -93,7 +97,7 @@ int main(const int argc, const char **argv) {
 											 std::println("You're missing some arguments!");
 											 continue;
 										 }
-										 std::string name = std::string(argv[arg_iterator++]);
+										 std::string name = std::string { argv[arg_iterator++] } ;
 										 std::filesystem::path path = argv[arg_iterator++];
 										 proj_ctl.add(name, path);
 										 continue;
@@ -103,7 +107,7 @@ int main(const int argc, const char **argv) {
 											  std::println("You're missing some arguments!");
 											  continue;
 										  }
-										  proj_ctl.path_show(std::string(argv[arg_iterator++]));
+										  proj_ctl.path_show(std::string { argv[arg_iterator++] } );
 										  continue;
 									  }
 			case CommandOption::Remove: {
@@ -111,7 +115,7 @@ int main(const int argc, const char **argv) {
 												std::println("You're missing some arguments!");
 												continue;
 											}
-											proj_ctl.remove(std::string(argv[arg_iterator++]));
+											proj_ctl.remove(std::string { argv[arg_iterator++] } );
 											continue;
 										}
 			case CommandOption::Open: {
@@ -119,7 +123,7 @@ int main(const int argc, const char **argv) {
 											  std::println("You're missing some arguments!");
 											  continue;
 										  }
-										  proj_ctl.open(std::string(argv[arg_iterator++]));
+										  proj_ctl.open(std::string { argv[arg_iterator++] } );
 										  continue;
 									  }
 			case CommandOption::Build: {
@@ -127,7 +131,7 @@ int main(const int argc, const char **argv) {
 											   std::println("You're missing some arguments!");
 											   continue;
 										   }
-										   proj_ctl.build(std::string(argv[arg_iterator++]));
+										   proj_ctl.build(std::string { argv[arg_iterator++] } );
 										   continue;
 									   }
 			case CommandOption::Run: {
@@ -135,16 +139,16 @@ int main(const int argc, const char **argv) {
 											 std::println("You're missing some arguments!");
 											 continue;
 										 }
-										 proj_ctl.run(std::string(argv[arg_iterator++]));
+										 proj_ctl.run(std::string { argv[arg_iterator++] } );
 										 continue;
 									 }
 			case CommandOption::Commit: {
 											bool push = false;
 											bool branch = false;
-											if (arg_iterator < argc && std::string(argv[arg_iterator]) == "push") {
+											if (arg_iterator < argc && std::string { argv[arg_iterator] } == "push") {
 												push = true;
 												++arg_iterator;
-												if (arg_iterator < argc && std::string(argv[arg_iterator]) == "branch") {
+												if (arg_iterator < argc && std::string { argv[arg_iterator] } == "branch") {
 													branch = true;
 													++arg_iterator;
 												}
@@ -154,15 +158,20 @@ int main(const int argc, const char **argv) {
 												continue;
 											}
 											std::string name = argv[arg_iterator++];
-											if (arg_iterator == argc)
+											if (arg_iterator == argc) {
 												proj_ctl.git_commit(name);
+											}
 											else {
 												std::string_view message = argv[arg_iterator++];
 												proj_ctl.git_commit(name, message);
 											}
 											if (push) {
-												if(branch) proj_ctl.git_push_branch(name);
-												else proj_ctl.git_push(name);
+												if (branch) {
+													proj_ctl.git_push_branch(name);
+												}
+												else {
+													proj_ctl.git_push(name);
+												}
 											}
 											continue;
 										}
@@ -173,19 +182,20 @@ int main(const int argc, const char **argv) {
 											   }
 											   std::string name = argv[arg_iterator++];
 											   std::string_view message = argv[arg_iterator++];
-											   proj_ctl.git_automerge(name, message);
+											   proj_ctl.git_automerge(name, message); // TODO change this so stirng and string_view are constucted in func line
 											   continue;
 										   }
 			case CommandOption::Push: {
-										  if (arg_iterator < argc && std::string(argv[arg_iterator]) == "branch") {
+										  if (arg_iterator < argc && std::string { argv[arg_iterator] } == "branch") {
 											  ++arg_iterator;
-											  proj_ctl.git_push_branch(std::string(argv[arg_iterator++]));
+											  proj_ctl.git_push_branch(std::string { argv[arg_iterator++] } );
 											  continue;
-										  } else if (arg_iterator >= argc) {
+										  }
+										  if (arg_iterator >= argc) {
 											  std::println("You're missing some arguments!");
 											  continue;
 										  }
-										  proj_ctl.git_push(std::string(argv[arg_iterator++]));
+										  proj_ctl.git_push(std::string { argv[arg_iterator++] } );
 										  continue;
 									  }
 			case CommandOption::Pull: {
@@ -193,7 +203,7 @@ int main(const int argc, const char **argv) {
 											  std::println("You're missing some arguments!");
 											  continue;
 										  }
-										  proj_ctl.git_pull(std::string(argv[arg_iterator++]));
+										  proj_ctl.git_pull(std::string { argv[arg_iterator++] } );
 										  continue;
 									  }
 			case CommandOption::Branch: {
@@ -202,11 +212,11 @@ int main(const int argc, const char **argv) {
 												continue;
 											}
 											if (arg_iterator + 1 == argc) {
-												proj_ctl.git_branch_list(std::string(argv[arg_iterator++]));
+												proj_ctl.git_branch_list(std::string { argv[arg_iterator++] } );
 												continue;
 											}
-											std::string name = std::string(argv[arg_iterator++]);
-											std::string_view branch = std::string_view(argv[arg_iterator++]);
+											std::string name = std::string { argv[arg_iterator++] } ;
+											std::string_view branch = std::string_view { argv[arg_iterator++] } ;
 											proj_ctl.git_branch(name, branch);
 											continue;
 										}
@@ -215,7 +225,7 @@ int main(const int argc, const char **argv) {
 											   std::println("You're missing some arguments!");
 											   continue;
 										   }
-										   proj_ctl.git_fetch(std::string(argv[arg_iterator++]));
+										   proj_ctl.git_fetch(std::string { argv[arg_iterator++] } );
 										   continue;
 									   }
 			case CommandOption::GStatus: {
@@ -231,7 +241,7 @@ int main(const int argc, const char **argv) {
 												   std::println("You're missing some arguments!");
 												   continue;
 											   }
-											   proj_ctl.issue_list(std::string(argv[arg_iterator++]));
+											   proj_ctl.issue_list(std::string { argv[arg_iterator++] } );
 											   continue;
 										   }
 			case CommandOption::IssueCreate: {
@@ -239,7 +249,7 @@ int main(const int argc, const char **argv) {
 													 std::println("You're missing some arguments!");
 													 continue;
 												 }
-												 proj_ctl.issue_create(std::string(argv[arg_iterator++]));
+												 proj_ctl.issue_create(std::string { argv[arg_iterator++] } );
 												 continue;
 											 }
 			case CommandOption::RequestCreate: {
@@ -247,7 +257,7 @@ int main(const int argc, const char **argv) {
 													   std::println("You're missing some arguments!");
 													   continue;
 												   }
-												   proj_ctl.request_create(std::string(argv[arg_iterator++]));
+												   proj_ctl.request_create(std::string { argv[arg_iterator++] } );
 												   continue;
 											   }
 			case CommandOption::RequestList: {
@@ -255,7 +265,7 @@ int main(const int argc, const char **argv) {
 													 std::println("You're missing some arguments");
 													 continue;
 												 }
-												 proj_ctl.request_list(std::string(argv[arg_iterator++]));
+												 proj_ctl.request_list(std::string { argv[arg_iterator++] } );
 												 continue;
 											 }
 			case CommandOption::RequestMerge: {
@@ -263,7 +273,7 @@ int main(const int argc, const char **argv) {
 													 std::println("You're missing some arguments");
 													 continue;
 												 }
-												 proj_ctl.request_merge(std::string(argv[arg_iterator++]));
+												 proj_ctl.request_merge(std::string { argv[arg_iterator++] } );
 												 continue;
 											  }
 			default: {
@@ -271,7 +281,9 @@ int main(const int argc, const char **argv) {
 						 continue;
 					 }
 		}
-		if (command != "path")	std::print("\n\n");
+		if (command != "path") {
+			std::print("\n\n");
+		}
 	}
 
 	return 0;

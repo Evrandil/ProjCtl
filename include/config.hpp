@@ -9,24 +9,34 @@
 
 
 struct Config {
-	std::size_t max_width			= 300;
-	std::size_t name_width			= 20;
-	std::size_t path_width			= 50;
-	std::size_t remote_width		= 50;
-	std::size_t branch_width		= 40;
-	std::size_t issue_number_width	= 8;
-	std::size_t issue_title_width	= 40;
-	std::size_t issue_author_width	= 20;
-	std::size_t issue_state_width	= 12;
-	std::size_t issue_labels_width	= 30;
+	std::size_t max_width				= 300;
+	std::size_t name_width				= 20;
+	std::size_t path_width				= 50;
+	std::size_t remote_width			= 50;
+	std::size_t branch_width			= 40;
+	std::size_t issue_number_width		= 8;
+	std::size_t issue_title_width		= 40;
+	std::size_t issue_author_width		= 20;
+	std::size_t issue_state_width		= 12;
+	std::size_t issue_labels_width		= 30;
 	std::size_t request_number_width	= 8;
-	std::size_t request_title_width	= 40;
+	std::size_t request_title_width		= 40;
 	std::size_t request_author_width	= 20;
-	std::size_t request_state_width	= 12;
+	std::size_t request_state_width		= 12;
 	std::size_t request_labels_width	= 30;
 
-	std::vector<IssueField> issue_columns { IssueField::Number, IssueField::Title, IssueField::State, IssueField::Author, IssueField::Labels };
-	std::vector<RequestField> request_columns { RequestField::Number, RequestField::Title, RequestField::Author };
+	std::vector<IssueField> issue_columns {
+		IssueField::Number,
+		IssueField::Title,
+		IssueField::State,
+		IssueField::Author,
+		IssueField::Labels,
+	};
+	std::vector<RequestField> request_columns {
+		RequestField::Number,
+		RequestField::Title,
+		RequestField::Author,
+	};
 
 	bool colors_enabled = true;
 
@@ -46,13 +56,13 @@ struct Config {
 	Style::Color issue_author_color			= Style::Color::Blue;
 	Style::Color issue_labels_color			= Style::Color::Magenta;
 	Style::Color issue_parent_color			= Style::Color::Cyan;
-	Style::Color request_number_color			= Style::Color::BaldMagenta;
-	Style::Color request_title_color			= Style::Color::White;
+	Style::Color request_number_color		= Style::Color::BaldMagenta;
+	Style::Color request_title_color		= Style::Color::White;
 	Style::Color request_open_color			= Style::Color::BaldGreen;
-	Style::Color request_closed_color			= Style::Color::BaldRed;
-	Style::Color request_author_color			= Style::Color::Blue;
-	Style::Color request_labels_color			= Style::Color::Magenta;
-	Style::Color request_parent_color			= Style::Color::Cyan;
+	Style::Color request_closed_color		= Style::Color::BaldRed;
+	Style::Color request_author_color		= Style::Color::Blue;
+	Style::Color request_labels_color		= Style::Color::Magenta;
+	Style::Color request_parent_color		= Style::Color::Cyan;
 	Style::Color error_color				= Style::Color::BaldRed;
 	Style::Color warning_color				= Style::Color::Yellow;
 
