@@ -5,7 +5,9 @@ Have you ever mistook one for other?<br>
 I did<br>
 And it was annoying<br>
 So here it is wrapper for git management \(haven't rly done anything on CodeBerg so I don't have that one wrapped\)<br>
-Tho honestly it's useful not only for git projects<br>
+Tho honestly it's useful not only for git projects<br><br>
+
+It's nice to alias `pc=projctl` and `p` as `cd (projctl path $argv[1])` \(I use fish Idrk about bash or zsh\)
 
 Dependencies:
 ```fish
@@ -95,7 +97,7 @@ projctl build --all
 projctl run [name]
 ```
 
-## Git wrapper
+## Git
 Here we go into the rabbithole<br>
 ### Branch
 Switches / creates and switches to branch of given name<br>
@@ -145,21 +147,52 @@ projctl commit push branch [name]
 projctl commit push branch [name] [commit_message]
 ```
 
-## Important note
-Just so you know it does wrap around all args so you can do mutliple actions in one prompt but just beware that for every action you do need to provide all needed components<br>
-BUT with commit you do need to provide commit_msg for it to work (maybe I'll implement more advanced option-end checker but for now it's conceptually not rly made for that wrapping, tho it does work)<br>
-AND `projctl branch` has to be used at the end if you want branches to be listed
+### Merge
+It performs just and only `git merge`, no other options tbh \(so for more specific merge options do use git command itself\), 
+I made this just to have quick pipe merge -> commit -> push in one pc command, not to be actual useful merge<br>
 ```fish
-projctl status project_1 commit push project_2 "commit_message" build project_3 rm project_4
+projctl automerge [name]
+projctl automerge commit [name]
+projctl automerge commit [name] [commit_msg]
 ```
 
-Will perform<br>
-
+### Git pipeline
+Also git options will work in pieline \(as one option so you don't have to write project name every time\) with this order:<br>
+automerge -> commit -> push \(with branch option\)
 ```fish
-projctl status project_1
-projctl commit push project_2 "commit_message"
-projctl build project_3
-projctl rm project_4
+projctl pull automerge commit push [name]
+projctl pull automerge commit push [name] [commit_message]
+projctl pull automerge commit push branch [name]
+projctl pull automerge commit push branch [name] [commit_message]
 ```
-In that exact order with those arguments provided<br>
+
+## GitHub / GitLab
+
+### Status
+To see installed and authenticated status
+```fish
+projctl git
+```
+
+### Repos
+To see all repos on both platforms
+```fish
+prjctl repos
+```
+
+### Issues
+List or create issues for repo<br>
+```fish
+projctl ilist [name]
+projctl icreate [name]
+```
+
+### Requests (PR \(GH\) / MR \(GLab\))
+List or create requests for repo<br>
+```fish
+projctl reqlist [name]
+projctl reqcreate [name]
+```
+
+<br><br><br>
 Also minor thing but for process to be actually saving some time everything with --all flag is done in parrallel but for that to happen program stores output and when everything is done prints it in order so there's no classic `some console print -> some waiting -> some more printing` for example in pull command, everything gets printed all at once when waiting is done, but thanks to that all thing are async so it' kinda faster one could argue<br>
