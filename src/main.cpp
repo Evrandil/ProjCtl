@@ -99,6 +99,7 @@ std::expected<void, bool> deal_with_it(std::vector<std::string>&args, ProjCtl& p
 				return std::unexpected(true);
 			}
 
+
 			// Rest of commands require at least one argument (project name for most)
 		default:
 			{
@@ -109,7 +110,7 @@ std::expected<void, bool> deal_with_it(std::vector<std::string>&args, ProjCtl& p
 				[[fallthrough]];
 			}
 
-			// Base functionality
+
 		case CommandOption::Path:
 			{
 				proj_ctl.path_show(name);
@@ -162,6 +163,7 @@ std::expected<void, bool> deal_with_it(std::vector<std::string>&args, ProjCtl& p
 				proj_ctl.add(add_name, *arg_iterator);
 				return {};
 			}
+
 
 		// GitHub/GitLab functionality
 		case CommandOption::IssueList:
