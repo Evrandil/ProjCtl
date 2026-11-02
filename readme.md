@@ -197,3 +197,5 @@ projctl reqcreate [name]
 <br><br><br>
 Also minor thing but for process to be actually saving some time everything with --all flag is done in parrallel but for that to happen program stores output and when everything is done prints it in order so there's no classic `some console print -> some waiting -> some more printing` for example in pull command, everything gets printed all at once when waiting is done, but thanks to that all thing are async so it' kinda faster one could argue<br>
 And just for record I do expect one to use this with some concept they wanna do so haven't tested any and every combination of commands / args you could do around that git pipeline so yeah beware
+# Beware
+No pipes currently work after refactor, it was good refactor but will take care of pipelines tomorrow or so<br>
