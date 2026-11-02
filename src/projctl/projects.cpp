@@ -173,11 +173,10 @@ std::expected<std::string, std::string> ProjCtl::remove(const std::string& name)
 
 
 
-/*
-void ProjCtl::open(const std::string& name) const {
-	std::optional project = project_find(name);
+std::expected<std::string, std::string> ProjCtl::open(const std::string& name) const {
+	std::expected project = project_find(name);
 	if (!project) {
-		return;
+		return std::unexpected(project.error());
 	}
 
 	if (config.editor == "neovide" || config.editor == "emacs") {
@@ -193,8 +192,15 @@ void ProjCtl::open(const std::string& name) const {
 					(*project)->second.path.string(),
 					config.editor));
 	}
+	return std::format(
+			"{}{}{}{}{}",
+			color_code(config.header_color),
+			"Opened project: ",
+			color_code(config.project_name_color),
+			name,
+			Style::RESET
+			);
 }
-*/
 
 
 /*

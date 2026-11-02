@@ -36,5 +36,12 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::Remove { std::string { args.at(1) } } ;
 	}
 
+	if (command == "open") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		return Cmd::Open { std::string { args.at(1) } } ;
+	}
+
 	return Cmd::Unknown { } ;
 }
