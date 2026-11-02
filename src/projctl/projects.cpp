@@ -76,37 +76,76 @@ std::expected<std::string, std::string> ProjCtl::path_show(const std::string& na
 }
 
 
-/*
-void ProjCtl::add(const std::string &name, std::filesystem::path path) {
+std::expected<std::string, std::string> ProjCtl::add(const std::string &name, std::filesystem::path path) {
 	if (projects.contains(name)) {
-		std::println("{}Project with name {}{}{} already exists!{}", color_code(config.error_color), color_code(config.project_name_color), truncate(name, config.name_width), color_code(config.error_color), Style::RESET);
-		return;
+		return std::unexpected(std::format(
+					"{}Project with name {}{}{} already exists!{}",
+					color_code(config.error_color),
+					color_code(config.project_name_color),
+					truncate(name, config.name_width),
+					color_code(config.error_color),
+					Style::RESET
+					));
 	}
 	if (path.string() == ".") {
 		path = std::filesystem::current_path();
 	}
 	std::pair<std::string, ProjectContent>  new_project = { name, ProjectContent { path, detect_project_type(path) } };
 	projects.emplace(new_project);
-	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Added project:", config.name_width, color_code(config.project_name_color), truncate(new_project.first, config.max_width - MARGIN_SIZE), Style::RESET);
-	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "With path:", config.name_width, color_code(config.project_path_color), truncate(new_project.second.path.string(), config.max_width - MARGIN_SIZE),Style::RESET);
+
+	return std::format(
+			"{}{:<{}}{}{}{}\n{}{:<{}}{}{}{}",
+			color_code(config.header_color),
+			"Added project:",
+			config.name_width,
+			color_code(config.project_name_color),
+			truncate(new_project.first, config.max_width - MARGIN_SIZE),
+			Style::RESET,
+			color_code(config.header_color),
+			"With path:",
+			config.name_width,
+			color_code(config.project_path_color),
+			truncate(new_project.second.path.string(), config.max_width - MARGIN_SIZE),
+			Style::RESET
+			);
 }
-*/
 
 
-/*
-void ProjCtl::add_current() {
+std::expected<std::string, std::string> ProjCtl::add_current() {
 	std::filesystem::path path = std::filesystem::current_path();
 	std::string name = std::filesystem::current_path().filename().string();
+
 	if (projects.contains(name)) {
-		std::println("{}Project with name {}{}{} already exists!{}", color_code(config.error_color), color_code(config.project_name_color), truncate(name, config.name_width), color_code(config.error_color), Style::RESET);
-		return;
+		return std::unexpected(std::format(
+					"{}Project with name {}{}{} already exists!{}",
+					color_code(config.error_color),
+					color_code(config.project_name_color),
+					truncate(name, config.name_width),
+					color_code(config.error_color),
+					Style::RESET
+					));
 	}
+
 	std::pair<std::string, ProjectContent> new_project = { name, { path, detect_project_type(path) } };
 	projects.emplace(new_project);
-	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Added project:", config.name_width, color_code(config.project_name_color), truncate(new_project.first, config.max_width - MARGIN_SIZE), Style::RESET);
-	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "With path:", config.name_width, color_code(config.project_path_color), truncate(new_project.second.path.string(), config.max_width - MARGIN_SIZE),Style::RESET);
+
+	return std::format(
+			"{}{:<{}}{}{}{}\n{}{:<{}}{}{}{}",
+			color_code(config.header_color),
+			"Added project:",
+			config.name_width,
+			color_code(config.project_name_color),
+			truncate(new_project.first, config.max_width - MARGIN_SIZE),
+			Style::RESET,
+			color_code(config.header_color),
+			"With path:",
+			config.name_width,
+			color_code(config.project_path_color),
+			truncate(new_project.second.path.string(), config.max_width - MARGIN_SIZE),
+			Style::RESET
+			);
+
 }
-*/
 
 
 /*

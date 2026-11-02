@@ -24,7 +24,7 @@ int ProjCtl::handle(const Cmd::List& cmd) const {
 
 	if (!result) {
 		std::println(
-				"{}{}{}{}",
+				"\n\n{}{}{}{}\n\n",
 				color_code(config.error_color),
 				Style::CROSS,
 				result.error(),
@@ -55,3 +55,31 @@ int ProjCtl::handle(const Cmd::Path& cmd) const {
 	std::println("{}", *result);
 	return 0;
 }
+
+
+int ProjCtl::handle(const Cmd::Add& cmd) {
+	std::expected<std::string, std::string> result;
+
+	if (cmd.name == ".") {
+		result = add_current();
+	} else {
+		result = add(cmd.name, cmd.path);
+	}
+
+	if (!result) {
+		std::println(
+				"\n\n{}{}{}{}\n\n",
+				color_code(config.error_color),
+				Style::CROSS,
+				result.error(),
+				Style::RESET
+				);
+		return 1;
+	}
+
+	std::println("\n\n{}\n\n", *result);
+	return 0;
+}
+
+
+

@@ -19,5 +19,15 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::Path { std::string { args.at(1) } } ;
 	}
 
+	if (command == "add") {
+		if (args.at(1) == ".") {
+			return Cmd::Add { std::string { "." }, std::filesystem::path { "." } } ;
+		}
+		if (args.size() < 3) {
+			return Cmd::Unknown { } ;
+		}
+		return Cmd::Add { std::string { args.at(1) }, std::filesystem::path { args.at(2) } } ;
+	}
+
 	return Cmd::Unknown { } ;
 }

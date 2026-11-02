@@ -134,10 +134,12 @@ std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string
 	std::map<std::string, ProjectContent>::const_iterator project = projects.find(*actual_name);
 	if (project == projects.end()) {
 		return std::unexpected(std::format(
-				"{}{}Project with name {} doesn't exist!{}",
+				"{}{}Project with name {}{}{} doesn't exist!{}",
 				color_code(config.error_color),
 				MARGIN,
+				color_code(config.project_name_color),
 				name,
+				color_code(config.error_color),
 				Style::RESET
 				));
 	}

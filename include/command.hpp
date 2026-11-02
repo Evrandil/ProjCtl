@@ -2,6 +2,7 @@
 
 #include <variant>
 #include <string>
+#include <filesystem>
 
 namespace Cmd {
 
@@ -16,10 +17,16 @@ namespace Cmd {
 		std::string name;
 	};
 
+	struct Add {
+		std::string name;
+		std::filesystem::path path;
+	};
+
 }
 
 using Command = std::variant<
 	Cmd::Unknown,
 	Cmd::List,
-	Cmd::Path
+	Cmd::Path,
+	Cmd::Add
 	>;
