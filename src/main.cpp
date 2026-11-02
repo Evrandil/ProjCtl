@@ -16,12 +16,9 @@ enum class CommandOption : uint8_t {
 	Open,
 	Build,
 	Run,
-	Pull,
 	Fetch,
 	Branch,
-	Commit,
-	Push,
-	AutoMerge,
+	GitPipeline,
 	IssueList,
 	IssueCreate,
 	RequestList,
@@ -34,17 +31,17 @@ CommandOption get_option_from_command(const std::string& command) {
 	if (command == "list")							{	return CommandOption::List;				}
 	if (command == "status")						{	return CommandOption::Status;			}
 	if (command == "add")							{	return CommandOption::Add;				}
-	if (command == "automerge")						{	return CommandOption::AutoMerge;		}
-	if (command == "push")							{	return CommandOption::Push;				}
+	if (command == "automerge")						{	return CommandOption::GitPipeline;		}
+	if (command == "push")							{	return CommandOption::GitPipeline;		}
 	if (command == "path")							{	return CommandOption::Path;				}
-	if (command == "pull")							{	return CommandOption::Pull;				}
+	if (command == "pull")							{	return CommandOption::GitPipeline;		}
 	if (command == "repos")							{	return CommandOption::RepoList;			}
 	if (command == "run")							{	return CommandOption::Run;				}
 	if (command == "rm" || command == "remove")		{	return CommandOption::Remove;			}
 	if (command == "open")							{	return CommandOption::Open;				}
 	if (command == "branch")						{	return CommandOption::Branch;			}
 	if (command == "build")							{	return CommandOption::Build;			}
-	if (command == "commit")						{	return CommandOption::Commit;			}
+	if (command == "commit")						{	return CommandOption::GitPipeline;		}
 	if (command == "fetch")							{	return CommandOption::Fetch;			}
 	if (command == "git")							{	return CommandOption::GStatus;			}
 	if (command == "issues" || command == "ilist")	{	return CommandOption::IssueList;		}
@@ -58,6 +55,11 @@ CommandOption get_option_from_command(const std::string& command) {
 
 // returns error = false if command was path and was handled, true if command was not handled, nothing if everything was handled successfully
 std::expected<void, bool> deal_with_it(std::vector<std::string>&args, ProjCtl& proj_ctl) {
+
+	if (args.empty()) {
+		std::println("No command given");
+		return std::unexpected(true);
+	}
 
 	std::vector<std::string>::iterator arg_iterator = args.begin();
 	CommandOption command_option = get_option_from_command(*arg_iterator++);
@@ -215,45 +217,43 @@ std::expected<void, bool> deal_with_it(std::vector<std::string>&args, ProjCtl& p
 				return {};
 			}
 
-		case CommandOption::Pull:
+		case CommandOption::GitPipeline:
 			{
-				proj_ctl.git_pull(name);
+				arg_iterator--;
+				auto take = [&] (std::string_view word) {
+					if (arg_iterator < args.end() && *arg_iterator == word) {
+						arg_iterator++;
+						return true;
+					}
+					return false;
+				};
 
-				if (*arg_iterator == "automerge")		{	command_option = CommandOption::AutoMerge;	}
-				else if (*arg_iterator == "commit")		{	command_option = CommandOption::Commit;		}
-				else if (*arg_iterator == "push")		{	command_option = CommandOption::Push;		}
-				[[fallthrough]];
-			}
-		case CommandOption::AutoMerge:
-			{
-				proj_ctl.git_automerge(name);
+				const bool do_pull = take("pull");
+				const bool do_automerge = take("automerge");
+				const bool do_commit = take("commit");
+				const bool do_push = take("push");
+				const bool push_branch = do_push && take("branch");
 
-				if (*arg_iterator == "commit")			{	command_option = CommandOption::Commit;		}
-				else if (*arg_iterator == "push")		{	command_option = CommandOption::Push;		}
-				arg_iterator++;
-				[[fallthrough]];
-			}
-		case CommandOption::Commit:
-			{
-				if (*arg_iterator == "push" || *arg_iterator == name) {
-					proj_ctl.git_commit(name);
-				} else {
-					proj_ctl.git_commit(name, *arg_iterator);
+				if (do_pull) {
+					proj_ctl.git_pull(name);
 				}
-				arg_iterator++;
-
-				if (*arg_iterator == "push") {
-					command_option = CommandOption::Push;
+				if (do_automerge) {
+					proj_ctl.git_automerge(name);
 				}
-				[[fallthrough]];
-			}
-		case CommandOption::Push:
-			{
-				if (*arg_iterator == "branch") {
-					proj_ctl.git_push_branch(name);
-					return {};
+				if (do_commit) {
+					if (*arg_iterator == "push" || *arg_iterator == name) {
+						proj_ctl.git_commit(name);
+					} else {
+						proj_ctl.git_commit(name, *arg_iterator++);
+					}
 				}
-				proj_ctl.git_push(name);
+				if (do_push) {
+					if (push_branch) {
+						proj_ctl.git_push_branch(name);
+						return {};
+					}
+					proj_ctl.git_push(name);
+				}
 			}
 	}
 	return {};
@@ -269,6 +269,6 @@ int main(const int arg_count, const char **argv) {
 
 	if (result || result.error()) {
 		std::print("\n\n");
-		return 0;
+		return result ? 0 : 1;
 	}
 }
