@@ -59,16 +59,14 @@ std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::
 	return issues;
 }
 
-std::expected<void, std::string> GitHubInterface::issue_create(std::string_view remote_short) {
+std::expected<int, std::string> GitHubInterface::issue_create(std::string_view remote_short) {
 	if (!installed()) {
 		return std::unexpected("GitHub not installed");
 	}
 
 	std::string command = std::format("gh issue create --repo {}", remote_short);
 
-	SystemInterface::run_interactive(command);
-
-	return {};
+	return SystemInterface::run_interactive(command);
 }
 
 

@@ -1,7 +1,6 @@
 #include "projctl.hpp"
 
 #include <format>
-#include <print>
 #include <string_view>
 #include <future>
 #include <vector>
@@ -172,29 +171,36 @@ std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& n
 }
 
 
-/*
-void ProjCtl::issue_create(const std::string& name) const {
-	std::optional project_option = project_find(name);
+std::expected<int, std::string> ProjCtl::issue_create(const std::string& name) const {
+	std::expected project_option = project_find(name);
 	if (!project_option) {
-		return;
+		return std::unexpected(project_option.error());
 	}
 
 	const ProjectContent& content = (*project_option)->second;
 	std::expected<HostOption, std::string> host_option = GitInterface::host(content);
 	if (!host_option) {
-		std::println("{}Failed to get host {}{}", color_code(config.error_color), host_option.error(), Style::RESET);
-		return;
+		return std::unexpected(std::format(
+				"{}Failed to get host {}{}\n",
+				color_code(config.error_color),
+				host_option.error(),
+				Style::RESET
+				));
 	}
 	HostOption host = *host_option;
 
 	std::expected<std::string, std::string> remote_short_option = GitInterface::remote_short(content);
 	if (!remote_short_option) {
-		std::println("{}Failed to get short remote for {}{}", color_code(config.error_color), name, Style::RESET);
-		return;
+		return std::unexpected(std::format(
+				"{}Failed to get short remote for {}{}\n",
+				color_code(config.error_color),
+				name,
+				Style::RESET
+				));
 	}
 	std::string_view remote_short = *remote_short_option;
 
-	std::expected<void, std::string> success;
+	std::expected<int, std::string> success;
 	switch (host) {
 		case HostOption::GitHub:
 			success = GitHubInterface::issue_create(remote_short);
@@ -203,11 +209,16 @@ void ProjCtl::issue_create(const std::string& name) const {
 			success = GitLabInterface::issue_create(remote_short);
 			break;
 		case HostOption::Unknown:
-			std::println("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET);
+			return std::unexpected(std::format(
+						"{}No host found for {}{}\n",
+						color_code(config.error_color),
+						name,
+						Style::RESET
+						));
 			break;
 	}
 	if (!success) {
-		std::println("Failed to create issue for {}", name);
+		return std::unexpected(std::format("Failed to create issue for {}", name));
 	}
+	return success;
 }
-*/

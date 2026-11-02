@@ -1,7 +1,6 @@
 #include "projctl.hpp"
 
 #include <future>
-#include <print>
 #include "gitinterface.hpp"
 #include "githubinterface.hpp"
 #include "gitlabinterface.hpp"

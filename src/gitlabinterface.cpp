@@ -52,16 +52,14 @@ std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::
 	return issues;
 }
 
-std::expected<void, std::string> GitLabInterface::issue_create(std::string_view remote_short) {
+std::expected<int, std::string> GitLabInterface::issue_create(std::string_view remote_short) {
 	if (!installed()) {
 		return std::unexpected("GitLab not installed");
 	}
 
 	std::string command = std::format("glab issue create --repo {}", remote_short);
 
-	SystemInterface::run_interactive(command);
-
-	return {};
+	return SystemInterface::run_interactive(command);
 }
 
 std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(std::string_view remote_short) {

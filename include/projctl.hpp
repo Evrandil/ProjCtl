@@ -24,6 +24,9 @@ class ProjCtl {
 	std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string> project_find(const std::string&) const;
 	std::optional<std::string> current_project_name() const;
 
+
+	int handle(const Cmd::Unknown&) const;
+
 	// Base functionality
 	[[nodiscard]] std::expected<std::string,	std::string> list() const;
 	[[nodiscard]] std::expected<std::string,	std::string> list_gits() const;
@@ -34,7 +37,6 @@ class ProjCtl {
 	[[nodiscard]] std::expected<std::string,	std::string> open(const std::string&) const;
 	[[nodiscard]] std::expected<int,			std::string> build(const std::string&) const;
 	[[nodiscard]] std::expected<int,			std::string> run(const std::string&) const;
-	int handle(const Cmd::Unknown&) const;
 	int handle(const Cmd::Base::List&) const;
 	int handle(const Cmd::Base::Path&) const;
 	int handle(const Cmd::Base::Add&);
@@ -44,15 +46,15 @@ class ProjCtl {
 	int handle(const Cmd::Base::Run&) const;
 
 	// Git functionality
-	[[nodiscard]] std::expected<std::string, std::string> status(const std::string&) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_commit(const std::string&, std::optional<std::string_view>) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_push(const std::string&) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_push_branch(const std::string&) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_pull(const std::string&) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_fetch(const std::string&) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_branch_list(const std::string&) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_branch(const std::string&, std::string_view) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_merge(const std::string&) const;
+	[[nodiscard]] std::expected<std::string,	std::string> status(const std::string&) const;
+	[[nodiscard]] std::expected<std::string,	std::string> git_commit(const std::string&, std::optional<std::string_view>) const;
+	[[nodiscard]] std::expected<std::string,	std::string> git_push(const std::string&) const;
+	[[nodiscard]] std::expected<std::string,	std::string> git_push_branch(const std::string&) const;
+	[[nodiscard]] std::expected<std::string,	std::string> git_pull(const std::string&) const;
+	[[nodiscard]] std::expected<std::string,	std::string> git_fetch(const std::string&) const;
+	[[nodiscard]] std::expected<std::string,	std::string> git_branch_list(const std::string&) const;
+	[[nodiscard]] std::expected<std::string,	std::string> git_branch(const std::string&, std::string_view) const;
+	[[nodiscard]] std::expected<std::string,	std::string> git_merge(const std::string&) const;
 	int handle(const Cmd::Git::Status&) const;
 	int handle(const Cmd::Git::Commit&) const;
 	int handle(const Cmd::Git::Push&) const;
@@ -62,16 +64,17 @@ class ProjCtl {
 	int handle(const Cmd::Git::Merge&) const;
 
 	// GH functionality
-	[[nodiscard]] std::expected<std::string, std::string> g_status() const;
-	[[nodiscard]] std::expected<std::string, std::string> repo_list() const;
-	[[nodiscard]] std::expected<std::string, std::string> issue_list(const std::string&) const;
-//	[[nodiscard]] std::expected<std::string, std::string> issue_create(const std::string&) const;
-	[[nodiscard]] std::expected<std::string, std::string> request_list(const std::string&) const;
-//	[[nodiscard]] std::expected<std::string, std::string> request_create(const std::string&) const;
-//	[[nodiscard]] std::expected<std::string, std::string> request_merge(const std::string&) const;
+	[[nodiscard]] std::expected<std::string,	std::string> g_status() const;
+	[[nodiscard]] std::expected<std::string,	std::string> repo_list() const;
+	[[nodiscard]] std::expected<std::string,	std::string> issue_list(const std::string&) const;
+	[[nodiscard]] std::expected<int,			std::string> issue_create(const std::string&) const;
+	[[nodiscard]] std::expected<std::string,	std::string> request_list(const std::string&) const;
+//	[[nodiscard]] std::expected<int,			std::string> request_create(const std::string&) const;
+//	[[nodiscard]] std::expected<std::string,	std::string> request_merge(const std::string&) const;
 	int handle(const Cmd::GH::Status&) const;
 	int handle(const Cmd::GH::RepoList&) const;
 	int handle(const Cmd::GH::IssueList&) const;
+	int handle(const Cmd::GH::IssueCreate&) const;
 	int handle(const Cmd::GH::RequestList&) const;
 
 	public:

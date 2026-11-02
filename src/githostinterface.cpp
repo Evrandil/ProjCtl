@@ -40,7 +40,7 @@ std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(Host
 }
 
 
-std::expected<void, std::string> GitHostInterface::issue_create(HostOption host, std::string_view remote_short) {
+std::expected<int, std::string> GitHostInterface::issue_create(HostOption host, std::string_view remote_short) {
 	switch (host) {
 		case HostOption::GitHub:		return GitHubInterface::issue_create(remote_short);
 		case HostOption::GitLab:	 	return GitLabInterface::issue_create(remote_short);
