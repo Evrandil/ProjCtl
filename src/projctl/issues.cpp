@@ -1,7 +1,6 @@
 #include "projctl.hpp"
 
 #include <format>
-#include <print>
 #include <string_view>
 #include <future>
 #include <vector>
@@ -13,7 +12,7 @@
 #include "gitlabinterface.hpp"
 
 
-void ProjCtl::issue_list(const std::string& name) const {
+std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& name) const {
 	auto format_issues = [&] (const std::vector<Issue>& issues) -> std::string {
 		std::string output;
 		auto field_name = [&](IssueField field) -> std::string_view {
@@ -145,6 +144,7 @@ void ProjCtl::issue_list(const std::string& name) const {
 		return output;
 	};
 	if (name == "--all") {
+		std::string output;
 		std::vector<std::future<std::string>> tasks;
 		tasks.reserve(projects.size());
 		for (const decltype(projects)::value_type& project : projects) {
@@ -156,55 +156,49 @@ void ProjCtl::issue_list(const std::string& name) const {
 			}
 		}
 		for (std::future<std::string>& task : tasks) {
-			println("{}", task.get());
+			std::format_to(std::back_inserter(output), "{}\n", task.get());
 		}
-		return;
+		return output;
 	}
 
-	std::optional project_option = project_find(name);
+	std::expected project_option = project_find(name);
 	if (!project_option) {
-		return;
+		return std::unexpected(project_option.error());
 	}
 
 	const ProjectContent& content = (*project_option)->second;
-	std::println("{}", issue_one((*project_option)->first, content));
+	return std::format("{}\n", issue_one((*project_option)->first, content));
 }
 
 
-void ProjCtl::issue_create(const std::string& name) const {
-	std::optional project_option = project_find(name);
+std::expected<int, std::string> ProjCtl::issue_create(const std::string& name) const {
+	std::expected project_option = project_find(name);
 	if (!project_option) {
-		return;
+		return std::unexpected(project_option.error());
 	}
 
 	const ProjectContent& content = (*project_option)->second;
 	std::expected<HostOption, std::string> host_option = GitInterface::host(content);
 	if (!host_option) {
-		std::println("{}Failed to get host {}{}", color_code(config.error_color), host_option.error(), Style::RESET);
-		return;
+		return std::unexpected(std::format(
+				"{}Failed to get host {}{}\n",
+				color_code(config.error_color),
+				host_option.error(),
+				Style::RESET
+				));
 	}
 	HostOption host = *host_option;
 
 	std::expected<std::string, std::string> remote_short_option = GitInterface::remote_short(content);
 	if (!remote_short_option) {
-		std::println("{}Failed to get short remote for {}{}", color_code(config.error_color), name, Style::RESET);
-		return;
+		return std::unexpected(std::format(
+				"{}Failed to get short remote for {}{}\n",
+				color_code(config.error_color),
+				name,
+				Style::RESET
+				));
 	}
 	std::string_view remote_short = *remote_short_option;
 
-	std::expected<void, std::string> success;
-	switch (host) {
-		case HostOption::GitHub:
-			success = GitHubInterface::issue_create(remote_short);
-			break;
-		case HostOption::GitLab:
-			success = GitLabInterface::issue_create(remote_short);
-			break;
-		case HostOption::Unknown:
-			std::println("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET);
-			break;
-	}
-	if (!success) {
-		std::println("Failed to create issue for {}", name);
-	}
+	return GitHostInterface::issue_create(host, remote_short);
 }

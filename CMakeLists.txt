@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 
 # Json
@@ -33,13 +34,13 @@ endif()
 add_library(projctl_core
 	src/parser.cpp
 	src/projctl/core.cpp
-	src/projctl/commands.cpp
+	src/projctl/handle.cpp
 	src/projctl/helper.cpp
 	src/projctl/projects.cpp
 	src/projctl/git.cpp
-#	src/projctl/hosting.cpp
-#	src/projctl/issues.cpp
-#	src/projctl/requests.cpp
+	src/projctl/hosting.cpp
+	src/projctl/issues.cpp
+	src/projctl/requests.cpp
 	src/systeminterface.cpp
 	src/gitinterface/branch.cpp
 	src/gitinterface/changes.cpp

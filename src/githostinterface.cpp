@@ -4,6 +4,7 @@
 #include "gitlabinterface.hpp"
 
 
+// TODO Make all either take remote_short or path
 bool GitHostInterface::installed(HostOption host) {
 	switch (host) {
 		case HostOption::GitHub:		return GitHubInterface::installed();
@@ -40,7 +41,7 @@ std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(Host
 }
 
 
-std::expected<void, std::string> GitHostInterface::issue_create(HostOption host, std::string_view remote_short) {
+std::expected<int, std::string> GitHostInterface::issue_create(HostOption host, std::string_view remote_short) {
 	switch (host) {
 		case HostOption::GitHub:		return GitHubInterface::issue_create(remote_short);
 		case HostOption::GitLab:	 	return GitLabInterface::issue_create(remote_short);
@@ -58,7 +59,7 @@ std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(
 }
 
 
-std::expected<void, std::string> GitHostInterface::request_create(HostOption host, std::string_view path) {
+std::expected<int, std::string> GitHostInterface::request_create(HostOption host, std::string_view path) {
 	switch (host) {
 		case HostOption::GitHub:		return GitHubInterface::request_create(path);
 		case HostOption::GitLab:	 	return GitLabInterface::request_create(path);
