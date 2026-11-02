@@ -11,10 +11,10 @@
 #include "gitinterface.hpp"
 
 
-void ProjCtl::list_gits() const {
+std::expected<std::string, std::string> ProjCtl::list_gits() const {
 	auto list_one_git = [&] (const std::string& name, const ProjectContent& content) {
 		return std::format(
-				"{}{:<{}}{}{:<{}}{}{:<{}}{}{:<{}}",
+				"{}{:<{}}{}{:<{}}{}{:<{}}{}{:<{}}\n",
 				color_code(config.project_name_color),
 				truncate(name, config.name_width),
 				config.name_width,
@@ -32,6 +32,7 @@ void ProjCtl::list_gits() const {
 
 	std::vector<std::future<std::string>> tasks;
 	tasks.reserve(projects.size());
+
 	for (const decltype(projects)::value_type& project : projects) {
 		if (GitInterface::is_repo(project.second)) {
 			tasks.push_back(std::async(
@@ -42,15 +43,17 @@ void ProjCtl::list_gits() const {
 	}
 
 	if (tasks.empty()) [[unlikely]] {
-		std::println(
-				"{}There are no git projects saved{}",
+		return std::unexpected(std::format(
+				"{}There are no git projects saved{}\n",
 				color_code(config.error_color),
-				Style::RESET);
-		return;
+				Style::RESET
+				));
 	}
 
-	std::println(
-			"{}{:<{}}{:<{}}{:<{}}{:<{}}{}",
+	std::string output;
+
+	std::format_to(std::back_inserter(output),
+			"{}{:<{}}{:<{}}{:<{}}{:<{}}{}\n",
 			color_code(config.header_color),
 			"Name",
 			config.name_width,
@@ -64,14 +67,16 @@ void ProjCtl::list_gits() const {
 			);
 
 	for (std::future<std::string>& task : tasks) {
-		std::println(
+		std::format_to(std::back_inserter(output),
 				"{}",
 				task.get()
 				);
 	}
+	return output;
 }
 
 
+/*
 void ProjCtl::status(const std::string &name) const {
 	auto status_one = [&](const std::string& name, const ProjectContent& content){
 		constexpr uint8_t OUTPUT_SIZE = 250;
@@ -200,8 +205,10 @@ void ProjCtl::status(const std::string &name) const {
 			status_one((*project)->first, content)
 			);
 }
+*/
 
 
+/*
 void ProjCtl::git_commit(const std::string& name, std::string_view message) const {
 	std::optional project = project_find(name);
 	if (!project) {
@@ -219,6 +226,8 @@ void ProjCtl::git_commit(const std::string& name, std::string_view message) cons
 			Style::RESET
 			);
 }
+*/
+/*
 void ProjCtl::git_commit(const std::string& name) const {
 	std::optional project = project_find(name);
 	if (!project) {
@@ -236,8 +245,10 @@ void ProjCtl::git_commit(const std::string& name) const {
 			Style::RESET
 			);
 }
+*/
 
 
+/*
 bool ProjCtl::git_merge(const std::string& name) const {
 	std::optional project = project_find(name);
 	if (!project) {
@@ -264,15 +275,19 @@ bool ProjCtl::git_merge(const std::string& name) const {
 			);
 	return true;
 }
+*/
 
 
+/*
 void ProjCtl::git_automerge(const std::string& name) const {
 	if (!git_merge(name)) {
 		return;
 	}
 }
+*/
 
 
+/*
 void ProjCtl::git_push(const std::string& name) const {
 	std::optional project = project_find(name);
 	if (!project) {
@@ -290,8 +305,10 @@ void ProjCtl::git_push(const std::string& name) const {
 			Style::RESET
 			);
 }
+*/
 
 
+/*
 void ProjCtl::git_push_branch(const std::string& name) const {
 	std::optional project = project_find(name);
 	if (!project) {
@@ -323,8 +340,10 @@ void ProjCtl::git_push_branch(const std::string& name) const {
 			Style::RESET
 			);
 }
+*/
 
 
+/*
 void ProjCtl::git_pull(const std::string& name) const {
 	auto pull_one = [&] (const std::string& project_name, const ProjectContent& content) {
 		std::string output;
@@ -375,8 +394,10 @@ void ProjCtl::git_pull(const std::string& name) const {
 			pull_one((*project)->first, (*project)->second)
 			);
 }
+*/
 
 
+/*
 void ProjCtl::git_fetch(const std::string& name) const {
 	auto fetch_one = [&](const std::string& project_name, const ProjectContent& content) {
 		std::string output;
@@ -428,8 +449,10 @@ void ProjCtl::git_fetch(const std::string& name) const {
 			fetch_one((*project)->first, (*project)->second)
 			);
 }
+*/
 
 
+/*
 void ProjCtl::git_branch_list(const std::string& name) const {
 	std::optional project = project_find(name);
 	if (!project) {
@@ -446,8 +469,10 @@ void ProjCtl::git_branch_list(const std::string& name) const {
 			Style::RESET
 			);
 }
+*/
 
 
+/*
 void ProjCtl::git_branch(const std::string& name, std::string_view branch) const {
 	std::optional project = project_find(name);
 	if (!project) {
@@ -465,3 +490,4 @@ void ProjCtl::git_branch(const std::string& name, std::string_view branch) const
 			Style::RESET
 			);
 }
+*/

@@ -15,15 +15,26 @@ namespace {
 }
 
 
-void ProjCtl::list() const {
+std::expected<std::string, std::string> ProjCtl::list() const {
 	auto list_one = [&] (const std::string& name, const ProjectContent& content) {
-		return std::format("{}{:<{}}{}{:<{}}{}", color_code(config.project_name_color), truncate(name, config.name_width), config.name_width, color_code(config.project_path_color), truncate(content.path.string(), config.path_width), config.path_width, Style::RESET);
+		return std::format(
+				"{}{:<{}}{}{:<{}}{}\n",
+				color_code(config.project_name_color),
+				truncate(name, config.name_width),
+				config.name_width,
+				color_code(config.project_path_color),
+				truncate(content.path.string(), config.path_width),
+				config.path_width,
+				Style::RESET
+				);
 	};
 	if (projects.empty()) [[unlikely]] {
-		std::println("{}There are no git projects saved{}", color_code(config.error_color), Style::RESET);
-		return;
+		return std::unexpected(std::format(
+				"{}There are no projects saved{}\n",
+				color_code(config.error_color),
+				Style::RESET
+				));
 	}
-	std::println("{}{:<{}}{}{}", color_code(config.header_color), "Name", config.name_width, "Path", Style::RESET);
 
 	std::vector<std::future<std::string>> tasks;
 	tasks.reserve(projects.size());
@@ -35,12 +46,38 @@ void ProjCtl::list() const {
 					));
 	}
 
+
+	std::string output;
+
+	std::format_to(std::back_inserter(output),
+			"{}{:<{}}{}{}\n",
+			color_code(config.header_color),
+			"Name", config.name_width,
+			"Path",
+			Style::RESET
+			);
+
 	for (std::future<std::string>& task : tasks) {
-		std::println("{}", task.get());
+		std::format_to(std::back_inserter(output), "{}", task.get());
 	}
+
+	return output;
 }
 
 
+/*
+int ProjCtl::path_show(const std::string& name) const {
+	std::optional project = project_find(name);
+	if (!project) {
+		return;
+	}
+
+	std::println("{}", (*project)->second.path.string());
+}
+*/
+
+
+/*
 void ProjCtl::add(const std::string &name, std::filesystem::path path) {
 	if (projects.contains(name)) {
 		std::println("{}Project with name {}{}{} already exists!{}", color_code(config.error_color), color_code(config.project_name_color), truncate(name, config.name_width), color_code(config.error_color), Style::RESET);
@@ -54,8 +91,10 @@ void ProjCtl::add(const std::string &name, std::filesystem::path path) {
 	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Added project:", config.name_width, color_code(config.project_name_color), truncate(new_project.first, config.max_width - MARGIN_SIZE), Style::RESET);
 	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "With path:", config.name_width, color_code(config.project_path_color), truncate(new_project.second.path.string(), config.max_width - MARGIN_SIZE),Style::RESET);
 }
+*/
 
 
+/*
 void ProjCtl::add_current() {
 	std::filesystem::path path = std::filesystem::current_path();
 	std::string name = std::filesystem::current_path().filename().string();
@@ -68,8 +107,10 @@ void ProjCtl::add_current() {
 	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Added project:", config.name_width, color_code(config.project_name_color), truncate(new_project.first, config.max_width - MARGIN_SIZE), Style::RESET);
 	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "With path:", config.name_width, color_code(config.project_path_color), truncate(new_project.second.path.string(), config.max_width - MARGIN_SIZE),Style::RESET);
 }
+*/
 
 
+/*
 void ProjCtl::remove(const std::string& name) {
 	if (projects.erase(name) == 0) {
 		std::println("{}Project with name {}{}{} doesn't exist!{}", color_code(config.error_color), color_code(config.project_name_color), truncate(name, config.name_width), color_code(config.error_color), Style::RESET);
@@ -77,18 +118,12 @@ void ProjCtl::remove(const std::string& name) {
 	}
 	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Removed project:", config.name_width, color_code(config.project_name_color), name, Style::RESET);
 }
+*/
 
 
-void ProjCtl::path_show(const std::string& name) const {
-	std::optional project = project_find(name);
-	if (!project) {
-		return;
-	}
-
-	std::println("{}", (*project)->second.path.string());
-}
 
 
+/*
 void ProjCtl::open(const std::string& name) const {
 	std::optional project = project_find(name);
 	if (!project) {
@@ -109,8 +144,10 @@ void ProjCtl::open(const std::string& name) const {
 					config.editor));
 	}
 }
+*/
 
 
+/*
 void ProjCtl::build(const std::string& name) const {
 	auto build_one = [&](const std::string& name, const ProjectContent& content){
 		std::string output;
@@ -146,8 +183,9 @@ void ProjCtl::build(const std::string& name) const {
 	const ProjectContent& content = (*project)->second;
 	std::println("{}", build_one(name, content));
 }
+*/
 
-
+/*
 void ProjCtl::run(const std::string& name) const {
 	std::optional project = project_find(name);
 	if (!project) {
@@ -165,3 +203,4 @@ void ProjCtl::run(const std::string& name) const {
 
 	std::println("{}", *SystemInterface::run(command));
 }
+*/
