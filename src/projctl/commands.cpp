@@ -82,4 +82,23 @@ int ProjCtl::handle(const Cmd::Add& cmd) {
 }
 
 
+int ProjCtl::handle(const Cmd::Remove& cmd) {
+	std::expected<std::string, std::string> result = remove(cmd.name);
+
+	if (!result) {
+		std::println(
+				"\n\n{}{}{}{}\n\n",
+				color_code(config.error_color),
+				Style::CROSS,
+				result.error(),
+				Style::RESET
+				);
+		return 1;
+	}
+
+	std::println("\n\n{}\n\n", *result);
+	return 0;
+}
+
+
 

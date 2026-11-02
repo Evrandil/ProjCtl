@@ -22,11 +22,16 @@ namespace Cmd {
 		std::filesystem::path path;
 	};
 
+	struct Remove {
+		std::string name;
+	};
+
 }
 
 using Command = std::variant<
 	Cmd::Unknown,
 	Cmd::List,
 	Cmd::Path,
-	Cmd::Add
-	>;
+	Cmd::Add,
+	Cmd::Remove
+>;

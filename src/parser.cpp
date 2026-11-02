@@ -29,5 +29,12 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::Add { std::string { args.at(1) }, std::filesystem::path { args.at(2) } } ;
 	}
 
+	if (command == "remove" || command == "rm") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		return Cmd::Remove { std::string { args.at(1) } } ;
+	}
+
 	return Cmd::Unknown { } ;
 }

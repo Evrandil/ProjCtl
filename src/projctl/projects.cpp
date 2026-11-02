@@ -148,15 +148,27 @@ std::expected<std::string, std::string> ProjCtl::add_current() {
 }
 
 
-/*
-void ProjCtl::remove(const std::string& name) {
+std::expected<std::string, std::string> ProjCtl::remove(const std::string& name) {
 	if (projects.erase(name) == 0) {
-		std::println("{}Project with name {}{}{} doesn't exist!{}", color_code(config.error_color), color_code(config.project_name_color), truncate(name, config.name_width), color_code(config.error_color), Style::RESET);
-		return;
+		return std::unexpected(std::format(
+					"{}Project with name {}{}{} doesn't exist!{}",
+					color_code(config.error_color),
+					color_code(config.project_name_color),
+					truncate(name, config.name_width),
+					color_code(config.error_color),
+					Style::RESET));
 	}
-	std::println("{}{:<{}}{}{}{}", color_code(config.header_color), "Removed project:", config.name_width, color_code(config.project_name_color), name, Style::RESET);
+
+	return std::format(
+			"{}{:<{}}{}{}{}",
+			color_code(config.header_color),
+			"Removed project:",
+			config.name_width,
+			color_code(config.project_name_color),
+			name,
+			Style::RESET
+			);
 }
-*/
 
 
 
