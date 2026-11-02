@@ -1,11 +1,12 @@
+#include "projctl.hpp"
+#include "parser.hpp"
 #include <print>
 #include <string>
-#include <expected>
-
-#include "projctl.hpp"
-#include "config.hpp"
+#include <string_view>
+#include <vector>
 
 
+/*
 enum class CommandOption : uint8_t {
 	Path,
 	List,
@@ -271,18 +272,13 @@ std::expected<void, bool> deal_with_it(std::vector<std::string>&args, ProjCtl& p
 			}
 
 	}
-}
+}*/
 
 
-int main(const int arg_count, const char **argv) {
+int main(const int argc, const char **argv) {
+	std::vector<std::string_view> args { argv + 1, argv + argc } ;
+
 	ProjCtl proj_ctl;
-	const size_t argc = static_cast<size_t>(arg_count);
-	std::vector<std::string> args { argv + 1, argv + argc } ;
 
-	std::expected<void, bool> result = deal_with_it(args, proj_ctl);
-
-	if (result || result.error()) {
-		std::print("\n\n");
-		return result ? 0 : 1;
-	}
+	return proj_ctl.execute(parser(args));
 }

@@ -12,7 +12,7 @@ struct Config {
 	std::size_t name_width				= 20;
 	std::size_t path_width				= 50;
 	std::size_t remote_width			= 50;
-	std::size_t branch_width			= 40;
+	std::size_t branch_width			= 15;
 	std::size_t issue_number_width		= 8;
 	std::size_t issue_title_width		= 40;
 	std::size_t issue_author_width		= 20;

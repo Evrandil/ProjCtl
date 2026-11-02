@@ -115,13 +115,17 @@ std::optional<std::string> ProjCtl::current_project_name() const {
 }
 
 
-std::optional<std::map<std::string, ProjectContent>::const_iterator> ProjCtl::project_find(const std::string& name) const {
+std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string> ProjCtl::project_find(const std::string& name) const {
 	std::optional<std::string> actual_name;
 	if (name == ".") {
 		actual_name = current_project_name();
 		if (!actual_name) {
-			std::println("{}{}Current directory isn't a saved project!{}", color_code(config.error_color), MARGIN, Style::RESET);
-			return std::nullopt;
+			return std::unexpected(std::format(
+						"{}{}Current directory isn't a saved project!{}",
+						color_code(config.error_color),
+						MARGIN,
+						Style::RESET
+						));
 		}
 	}
 	else {
@@ -129,14 +133,15 @@ std::optional<std::map<std::string, ProjectContent>::const_iterator> ProjCtl::pr
 	}
 	std::map<std::string, ProjectContent>::const_iterator project = projects.find(*actual_name);
 	if (project == projects.end()) {
-		std::println(
-				"{}{}Project with name {} doesn't exist!{}",
+		return std::unexpected(std::format(
+				"{}{}Project with name {}{}{} doesn't exist!{}",
 				color_code(config.error_color),
 				MARGIN,
+				color_code(config.project_name_color),
 				name,
+				color_code(config.error_color),
 				Style::RESET
-				);
-		return std::nullopt;
+				));
 	}
 	return project;
 }

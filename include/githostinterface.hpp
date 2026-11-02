@@ -15,13 +15,13 @@ enum class HostOption : uint8_t {
 };
 
 
-namespace GitHostInterface {
+namespace GitHostInterface { // TODO use this interface lmao
 	[[nodiscard]] bool installed(HostOption);
 	[[nodiscard]] bool authenticated(HostOption);
 	[[nodiscard]] std::expected<std::string, std::string>repo_list(HostOption);
 	[[nodiscard]] std::expected<std::vector<Issue>, std::string>issue_list(HostOption, std::string_view);
-	[[nodiscard]] std::expected<void, std::string>issue_create(HostOption, std::string_view);
+	[[nodiscard]] std::expected<int, std::string>issue_create(HostOption, std::string_view);
 	[[nodiscard]] std::expected<std::vector<Request>, std::string> request_list(HostOption, std::string_view);
-	[[nodiscard]] std::expected<void, std::string> request_create(HostOption, std::string_view);
+	[[nodiscard]] std::expected<int, std::string> request_create(HostOption, std::string_view);
 	[[nodiscard]] std::expected<std::string, std::string> request_merge(HostOption, std::string_view);
 };
