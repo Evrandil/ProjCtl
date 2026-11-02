@@ -1,11 +1,10 @@
 #pragma once
 
-#include "issue.hpp"
-#include "request.hpp"
-
 #include <vector>
 #include <filesystem>
 #include "style.hpp"
+#include "issue.hpp"
+#include "request.hpp"
 
 
 struct Config {

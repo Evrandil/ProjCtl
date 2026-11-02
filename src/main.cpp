@@ -3,6 +3,7 @@
 #include <expected>
 
 #include "projctl.hpp"
+#include "config.hpp"
 
 
 enum class CommandOption : uint8_t {
@@ -26,6 +27,7 @@ enum class CommandOption : uint8_t {
 	RequestMerge,
 	Idk,
 };
+
 
 CommandOption get_option_from_command(const std::string& command) {
 	if (command == "list")							{	return CommandOption::List;				}
@@ -56,6 +58,8 @@ CommandOption get_option_from_command(const std::string& command) {
 // returns error = false if command was path and was handled, true if command was not handled, nothing if everything was handled successfully
 std::expected<void, bool> deal_with_it(std::vector<std::string>&args, ProjCtl& proj_ctl) {
 
+	// TODO config management
+
 	if (args.empty()) {
 		std::println("No command given");
 		return std::unexpected(true);
@@ -63,14 +67,12 @@ std::expected<void, bool> deal_with_it(std::vector<std::string>&args, ProjCtl& p
 
 	std::vector<std::string>::iterator arg_iterator = args.begin();
 	CommandOption command_option = get_option_from_command(*arg_iterator++);
-	const std::string& name = *args.rbegin();
 
 
 	if (command_option != CommandOption::Path) {
 		std::println("\n\n");
 	}
 
-	// Let's get rid of commands that don't require any arguments
 	switch (command_option) {
 
 		case CommandOption::GStatus:
@@ -101,17 +103,21 @@ std::expected<void, bool> deal_with_it(std::vector<std::string>&args, ProjCtl& p
 				return std::unexpected(true);
 			}
 
-
-			// Rest of commands require at least one argument (project name for most)
 		default:
 			{
-				if (arg_iterator < args.end()) {
-					std::println("Unrecognized command");
+				if (arg_iterator >= args.end()) {
+					std::println("You're missing some arguments!");
 					return std::unexpected(true);
 				}
-				[[fallthrough]];
 			}
 
+	}
+
+
+	const std::string& name = *args.rbegin();
+
+
+	switch (command_option) {
 
 		case CommandOption::Path:
 			{
@@ -254,9 +260,17 @@ std::expected<void, bool> deal_with_it(std::vector<std::string>&args, ProjCtl& p
 					}
 					proj_ctl.git_push(name);
 				}
+				return {};
 			}
+
+
+		default:
+			{
+				std::println("Unrecognized command");
+				return std::unexpected(true);
+			}
+
 	}
-	return {};
 }
 
 
