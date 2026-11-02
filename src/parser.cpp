@@ -43,5 +43,12 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::Open { std::string { args.at(1) } } ;
 	}
 
+	if (command == "build") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		return Cmd::Build { std::string { args.at(1) } } ;
+	}
+
 	return Cmd::Unknown { } ;
 }

@@ -31,6 +31,7 @@ class ProjCtl {
 	std::expected<std::string, std::string> add_current();
 	std::expected<std::string, std::string> remove(const std::string&);
 	std::expected<std::string, std::string> open(const std::string&) const;
+	std::expected<int, std::string> build(const std::string&) const;
 
 	int handle(const Cmd::Unknown&) const;
 	int handle(const Cmd::List&) const;
@@ -38,6 +39,7 @@ class ProjCtl {
 	int handle(const Cmd::Add&);
 	int handle(const Cmd::Remove&);
 	int handle(const Cmd::Open&) const;
+	int handle(const Cmd::Build&) const;
 
 	public:
 	ProjCtl();
@@ -46,9 +48,8 @@ class ProjCtl {
 		return std::visit([this] (const auto& cmd) { return handle(cmd); }, command);
 	}
 
-//	std::expected<std::string, std::string> status(const std::string&) const;
-//	void build(const std::string&) const;
 //	void run(const std::string&) const;
+//	std::expected<std::string, std::string> status(const std::string&) const;
 //	void git_commit(const std::string&, std::string_view) const;
 //	void git_commit(const std::string&) const;
 //	void git_push(const std::string&) const;

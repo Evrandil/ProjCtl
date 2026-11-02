@@ -203,43 +203,34 @@ std::expected<std::string, std::string> ProjCtl::open(const std::string& name) c
 }
 
 
-/*
-void ProjCtl::build(const std::string& name) const {
-	auto build_one = [&](const std::string& name, const ProjectContent& content){
-		std::string output;
-		std::format_to(std::back_inserter(output), "{}Building {}{}{}\n", color_code(config.header_color), color_code(config.project_name_color), name, Style::RESET);
-
-		const std::optional<std::string_view> command_option = content.build_command ? content.build_command : build_command_for(content.type);
-		if (!command_option) {
-			std::format_to(std::back_inserter(output),"{}{}There's no default command for {}{}{} as type of project {}{}{}", color_code(config.error_color), MARGIN, color_code(config.project_type_color), project_type_to_string(content.type), color_code(config.error_color), color_code(config.project_name_color), name, Style::RESET);
-			return output;
-		}
-
-		std::string command = std::format("cd \"{}\" && {}", content.path.string(), *command_option);
-
-		std::format_to(std::back_inserter(output), "{}\n", *SystemInterface::run(command));
-		return output;
-	};
-	if (name == "--all") {
-		std::vector<std::future<std::string>> tasks;
-		tasks.reserve(projects.size());
-		for (const decltype(projects)::value_type& project : projects) {
-			tasks.push_back(std::async(std::launch::async, build_one, std::cref(project.first), std::cref(project.second)));
-		}
-		for (std::future<std::string>& task : tasks) {
-			println("{}", task.get());
-		}
-		return;
-	}
-
-	std::optional project = project_find(name);
+// TODO remove that lmabda
+std::expected<int, std::string> ProjCtl::build(const std::string& name) const {
+	std::expected project = project_find(name);
 	if (!project) {
-		return;
+		return std::unexpected(project.error());
 	}
+
 	const ProjectContent& content = (*project)->second;
-	std::println("{}", build_one(name, content));
+
+	const std::optional<std::string_view> command_option = content.build_command ? content.build_command : build_command_for(content.type);
+
+	if (!command_option) {
+		return std::unexpected(std::format(
+					"{}There's no default command for {}{}{} as type of project {}{}{}",
+					color_code(config.error_color),
+					color_code(config.project_type_color),
+					project_type_to_string(content.type),
+					color_code(config.error_color),
+					color_code(config.project_name_color),
+					name,
+					Style::RESET
+					));
+	}
+
+	std::string command = std::format("cd \"{}\" && {}", content.path.string(), *command_option);
+
+	return SystemInterface::run_interactive(command);
 }
-*/
 
 /*
 void ProjCtl::run(const std::string& name) const {
