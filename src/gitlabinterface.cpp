@@ -95,7 +95,7 @@ std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(s
 	return requests;
 }
 
-std::expected<void, std::string> GitLabInterface::request_create(std::string_view path) {
+std::expected<int, std::string> GitLabInterface::request_create(std::string_view path) {
 	if (!installed()) {
 		return std::unexpected("GitLab not installed");
 	}

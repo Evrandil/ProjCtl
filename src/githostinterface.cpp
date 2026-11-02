@@ -58,7 +58,7 @@ std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(
 }
 
 
-std::expected<void, std::string> GitHostInterface::request_create(HostOption host, std::string_view path) {
+std::expected<int, std::string> GitHostInterface::request_create(HostOption host, std::string_view path) {
 	switch (host) {
 		case HostOption::GitHub:		return GitHubInterface::request_create(path);
 		case HostOption::GitLab:	 	return GitLabInterface::request_create(path);

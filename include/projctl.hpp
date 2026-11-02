@@ -69,13 +69,14 @@ class ProjCtl {
 	[[nodiscard]] std::expected<std::string,	std::string> issue_list(const std::string&) const;
 	[[nodiscard]] std::expected<int,			std::string> issue_create(const std::string&) const;
 	[[nodiscard]] std::expected<std::string,	std::string> request_list(const std::string&) const;
-//	[[nodiscard]] std::expected<int,			std::string> request_create(const std::string&) const;
+	[[nodiscard]] std::expected<int,			std::string> request_create(const std::string&) const;
 //	[[nodiscard]] std::expected<std::string,	std::string> request_merge(const std::string&) const;
 	int handle(const Cmd::GH::Status&) const;
 	int handle(const Cmd::GH::RepoList&) const;
 	int handle(const Cmd::GH::IssueList&) const;
 	int handle(const Cmd::GH::IssueCreate&) const;
 	int handle(const Cmd::GH::RequestList&) const;
+	int handle(const Cmd::GH::RequestCreate&) const;
 
 	public:
 	ProjCtl();

@@ -14,6 +14,6 @@ namespace GitLabInterface {
 	std::expected<std::vector<Issue>, std::string> issue_list(std::string_view);
 	std::expected<int, std::string> issue_create(std::string_view);
 	std::expected<std::vector<Request>, std::string> request_list(std::string_view);
-	std::expected<void, std::string> request_create(std::string_view);
+	std::expected<int, std::string> request_create(std::string_view);
 	std::expected<std::string, std::string> request_merge(std::string_view);
 };

@@ -129,5 +129,6 @@ using Command = std::variant<
 	Cmd::GH::RepoList,
 	Cmd::GH::IssueList,
 	Cmd::GH::IssueCreate,
-	Cmd::GH::RequestList
+	Cmd::GH::RequestList,
+	Cmd::GH::RequestCreate
 >;

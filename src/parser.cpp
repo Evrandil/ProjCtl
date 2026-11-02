@@ -165,5 +165,12 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::GH::RequestList { std::string { args.at(1) } } ;
 	}
 
+	if (command == "reqcreate") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		return Cmd::GH::RequestCreate { std::string { args.at(1) } } ;
+	}
+
 	return Cmd::Unknown { } ;
 }

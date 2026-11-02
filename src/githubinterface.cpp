@@ -107,7 +107,7 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(s
 }
 
 
-std::expected<void, std::string> GitHubInterface::request_create(std::string_view path) {
+std::expected<int, std::string> GitHubInterface::request_create(std::string_view path) {
 	if (!installed()) {
 		return std::unexpected("GitHub not installed");
 	}

@@ -200,25 +200,5 @@ std::expected<int, std::string> ProjCtl::issue_create(const std::string& name) c
 	}
 	std::string_view remote_short = *remote_short_option;
 
-	std::expected<int, std::string> success;
-	switch (host) {
-		case HostOption::GitHub:
-			success = GitHubInterface::issue_create(remote_short);
-			break;
-		case HostOption::GitLab:
-			success = GitLabInterface::issue_create(remote_short);
-			break;
-		case HostOption::Unknown:
-			return std::unexpected(std::format(
-						"{}No host found for {}{}\n",
-						color_code(config.error_color),
-						name,
-						Style::RESET
-						));
-			break;
-	}
-	if (!success) {
-		return std::unexpected(std::format("Failed to create issue for {}", name));
-	}
-	return success;
+	return GitHostInterface::issue_create(host, remote_short);
 }

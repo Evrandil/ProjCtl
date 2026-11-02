@@ -393,3 +393,21 @@ int ProjCtl::handle(const Cmd::GH::RequestList& cmd) const {
 	std::println("\n\n{}\n\n", *result);
 	return 0;
 }
+
+
+int ProjCtl::handle(const Cmd::GH::RequestCreate& cmd) const {
+	std::expected<int, std::string> result = request_create(cmd.name);
+
+	if (!result) {
+		std::println(
+				"\n\n{}{}{}{}\n\n",
+				color_code(config.error_color),
+				Style::CROSS,
+				result.error(),
+				Style::RESET
+				);
+		return 1;
+	}
+
+	return *result;
+}
