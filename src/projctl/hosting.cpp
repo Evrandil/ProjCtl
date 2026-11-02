@@ -57,7 +57,7 @@ void ProjCtl::repo_list() const {
 		std::format_to(std::back_inserter(output),
 				"{}{} {}repos\n{}{}{}",
 				color_code(config.project_name_color),
-				"GitHub", color_code(config.header_color),
+				host == HostOption::GitHub ? "GitHub" : "GitLab", color_code(config.header_color),
 				repo_list ? color_code(config.project_short_remote_color) : color_code(config.error_color),
 				repo_list ? *repo_list : repo_list.error(),
 				Style::RESET
