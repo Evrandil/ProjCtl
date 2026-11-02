@@ -96,5 +96,12 @@ Command parser(std::span<const std::string_view> args) {
 		};
 	}
 
+	if (command == "pull") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		return Cmd::Git::Pull { std::string { args.at(1) } } ;
+	}
+
 	return Cmd::Unknown { } ;
 }

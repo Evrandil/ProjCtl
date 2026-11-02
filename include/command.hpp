@@ -58,6 +58,10 @@ namespace Cmd {
 			bool branch_upstream;
 		};
 
+		struct Pull {
+			std::string name;
+		};
+
 	}
 
 }
@@ -73,5 +77,6 @@ using Command = std::variant<
 	Cmd::Base::Run,
 	Cmd::Git::Status,
 	Cmd::Git::Commit,
-	Cmd::Git::Push
+	Cmd::Git::Push,
+	Cmd::Git::Pull
 >;

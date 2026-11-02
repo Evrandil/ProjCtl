@@ -77,7 +77,7 @@ std::expected<std::string, std::string> ProjCtl::list_gits() const {
 
 
 std::expected<std::string, std::string> ProjCtl::status(const std::string &name) const {
-	auto status_one = [&] (const std::string& name, const ProjectContent& content) {
+	auto status_one = [&] (const std::string& project_name, const ProjectContent& content) {
 		constexpr uint8_t OUTPUT_SIZE = 250;
 		constexpr uint8_t CONTENT_WIDTH = 24;
 
@@ -97,7 +97,7 @@ std::expected<std::string, std::string> ProjCtl::status(const std::string &name)
 				"Name:",
 				config.name_width,
 				color_code(config.project_name_color),
-				truncate(name, config.max_width - CONTENT_WIDTH),
+				truncate(project_name, config.max_width - CONTENT_WIDTH),
 				Style::RESET
 				);
 		std::format_to(std::back_inserter(output),
@@ -232,45 +232,6 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::string& n
 }
 
 
-/*
-bool ProjCtl::git_merge(const std::string& name) const {
-	std::optional project = project_find(name);
-	if (!project) {
-		return false;
-	}
-	const ProjectContent& content = (*project)->second;
-
-	std::expected<std::string, std::string> result = GitInterface::default_merge(content);
-	if (!result) {
-		std::println(
-				"{}{}{}",
-				color_code(config.error_color),
-				Style::CROSS,
-				result.error()
-				);
-		return false;
-	}
-
-	std::println(
-			"{}{}{}",
-			color_code(config.tick_color),
-			Style::TICK,
-			*result
-			);
-	return true;
-}
-*/
-
-
-/*
-void ProjCtl::git_automerge(const std::string& name) const {
-	if (!git_merge(name)) {
-		return;
-	}
-}
-*/
-
-
 std::expected<std::string, std::string> ProjCtl::git_push(const std::string& name) const {
 	std::expected project = project_find(name);
 	if (!project) {
@@ -320,8 +281,8 @@ std::expected<std::string, std::string> ProjCtl::git_push_branch(const std::stri
 }
 
 
-/*
-void ProjCtl::git_pull(const std::string& name) const {
+// TODO that one also get rid of --all flag and make another func for all I think
+std::expected<std::string, std::string> ProjCtl::git_pull(const std::string& name) const {
 	auto pull_one = [&] (const std::string& project_name, const ProjectContent& content) {
 		std::string output;
 		std::format_to(std::back_inserter(output),
@@ -343,6 +304,7 @@ void ProjCtl::git_pull(const std::string& name) const {
 	};
 
 	if (name == "--all") {
+	std::string output;
 		std::vector<std::future<std::string>> tasks;
 		tasks.reserve(projects.size());
 		for (const decltype(projects)::value_type& project: projects) {
@@ -354,22 +316,60 @@ void ProjCtl::git_pull(const std::string& name) const {
 			}
 		}
 		for (std::future<std::string>& task : tasks) {
-			std::println(
+			std::format_to(std::back_inserter(output),
 					"{}\n",
 					task.get()
 					);
 		}
-		return;
+		return output;
 	}
-	std::optional project = project_find(name);
+	std::expected project = project_find(name);
 	if (!project) {
-		return;
+		return std::unexpected(project.error());
 	}
 
-	std::println(
+	return std::format(
 			"{}",
 			pull_one((*project)->first, (*project)->second)
 			);
+}
+
+
+/*
+bool ProjCtl::git_merge(const std::string& name) const {
+	std::optional project = project_find(name);
+	if (!project) {
+		return false;
+	}
+	const ProjectContent& content = (*project)->second;
+
+	std::expected<std::string, std::string> result = GitInterface::default_merge(content);
+	if (!result) {
+		std::println(
+				"{}{}{}",
+				color_code(config.error_color),
+				Style::CROSS,
+				result.error()
+				);
+		return false;
+	}
+
+	std::println(
+			"{}{}{}",
+			color_code(config.tick_color),
+			Style::TICK,
+			*result
+			);
+	return true;
+}
+*/
+
+
+/*
+void ProjCtl::git_automerge(const std::string& name) const {
+	if (!git_merge(name)) {
+		return;
+	}
 }
 */
 
