@@ -3,11 +3,10 @@
 #include "config.hpp"
 #include "githostinterface.hpp"
 #include <future>
-#include <print>
 #include <array>
 
 
-void ProjCtl::g_status () const {
+std::expected<std::string, std::string> ProjCtl::g_status () const {
 	auto status_one = [&] (HostOption host) {
 		std::string output;
 		bool installed = GitHostInterface::installed(host);
@@ -38,20 +37,33 @@ void ProjCtl::g_status () const {
 		std::async(std::launch::async, status_one, HostOption::GitHub),
 		std::async(std::launch::async, status_one, HostOption::GitLab),
 	};
+
+	std::string output;
 	for (auto& task : tasks) {
-		std::println("{}", task.get());
+		std::format_to(std::back_inserter(output), "{}\n", task.get());
 	}
+	return output;
 }
 
 
-void ProjCtl::repo_list() const {
+std::expected<std::string, std::string> ProjCtl::repo_list() const {
 	auto list_one = [&] (HostOption host) {
 		std::string output;
 		if (!GitHostInterface::installed(host)) { // TODO is this needed? Could have just authenticated check if is installed as well
-			return std::format("{}{}{} is not installed{}", color_code(config.error_color), Style::CROSS, "GitHub", Style::RESET);
+			return std::format(
+					"{}{}{} is not installed{}",
+					color_code(config.error_color),
+					Style::CROSS,
+					host == HostOption::GitHub ? "GitHub" : "GitLab",
+					Style::RESET);
 		}
 		if (!GitHostInterface::authenticated(host)) {
-			return std::format("{}{}{} is not authenticated{}", color_code(config.error_color), Style::CROSS, "GitHub", Style::RESET);
+			return std::format(
+					"{}{}{} is not authenticated{}",
+					color_code(config.error_color),
+					Style::CROSS,
+					host == HostOption::GitHub ? "GitHub" : "GitLab",
+					Style::RESET);
 		}
 		std::expected<std::string, std::string> repo_list = GitHostInterface::repo_list(host);
 		std::format_to(std::back_inserter(output),
@@ -70,7 +82,9 @@ void ProjCtl::repo_list() const {
 		std::async(std::launch::async, list_one, HostOption::GitLab),
 	};
 
+	std::string output;
 	for (auto& task : tasks) {
-		std::println("{}", task.get());
+		std::format_to(std::back_inserter(output), "{}\n\n", task.get());
 	}
+	return output;
 }

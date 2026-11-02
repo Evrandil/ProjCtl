@@ -299,3 +299,41 @@ int ProjCtl::handle(const Cmd::Git::Merge& cmd) const {
 	std::println("\n\n{}\n\n", *result);
 	return 0;
 }
+
+
+int ProjCtl::handle(const Cmd::GH::Status& cmd) const {
+	std::expected<std::string, std::string> result = g_status();
+
+	if (!result) {
+		std::println(
+				"\n\n{}{}{}{}\n\n",
+				color_code(config.error_color),
+				Style::CROSS,
+				result.error(),
+				Style::RESET
+				);
+		return 1;
+	}
+
+	std::println("\n\n{}\n\n", *result);
+	return 0;
+}
+
+
+int ProjCtl::handle(const Cmd::GH::RepoList& cmd) const {
+	std::expected<std::string, std::string> result = repo_list();
+
+	if (!result) {
+		std::println(
+				"\n\n{}{}{}{}\n\n",
+				color_code(config.error_color),
+				Style::CROSS,
+				result.error(),
+				Style::RESET
+				);
+		return 1;
+	}
+
+	std::println("\n\n{}", *result);
+	return 0;
+}

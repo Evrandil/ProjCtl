@@ -77,6 +77,36 @@ namespace Cmd {
 
 	}
 
+	namespace GH {
+
+		struct Status {
+		};
+
+		struct RepoList {
+		};
+
+//		struct IssueList {
+//			std::string name;
+//		};
+
+//		struct IssueCreate {
+//			std::string name;
+//		};
+
+//		struct RequestList {
+//			std::string name;
+//		};
+
+//		struct RequestCreate {
+//			std::string name;
+//		};
+
+//		struct RequestMerge {
+//			std::string name;
+//		};
+
+	}
+
 }
 
 using Command = std::variant<
@@ -94,5 +124,7 @@ using Command = std::variant<
 	Cmd::Git::Pull,
 	Cmd::Git::Fetch,
 	Cmd::Git::Branch,
-	Cmd::Git::Merge
+	Cmd::Git::Merge,
+	Cmd::GH::Status,
+	Cmd::GH::RepoList
 >;

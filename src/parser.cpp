@@ -133,5 +133,14 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::Git::Merge { std::string { args.at(1) } } ;
 	}
 
+	if (command == "git") {
+		return Cmd::GH::Status { } ;
+	}
+
+
+	if (command == "repos") {
+		return Cmd::GH::RepoList { } ;
+	}
+
 	return Cmd::Unknown { } ;
 }
