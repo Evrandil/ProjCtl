@@ -26,9 +26,11 @@ class ProjCtl {
 
 	std::expected<std::string, std::string> list() const;
 	std::expected<std::string, std::string> list_gits() const;
+	std::expected<std::string, std::string> path_show(const std::string&) const;
 
 	int handle(const Cmd::Unknown&) const;
 	int handle(const Cmd::List&) const;
+	int handle(const Cmd::Path&) const;
 
 	public:
 	ProjCtl();
@@ -37,7 +39,6 @@ class ProjCtl {
 		return std::visit([this] (const auto& cmd) { return handle(cmd); }, command);
 	}
 
-//	int path_show(const std::string&) const;
 //	void add(const std::string&, std::filesystem::path);
 //	void add_current();
 //	void remove(const std::string&);

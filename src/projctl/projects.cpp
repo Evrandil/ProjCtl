@@ -52,7 +52,8 @@ std::expected<std::string, std::string> ProjCtl::list() const {
 	std::format_to(std::back_inserter(output),
 			"{}{:<{}}{}{}\n",
 			color_code(config.header_color),
-			"Name", config.name_width,
+			"Name",
+			config.name_width,
 			"Path",
 			Style::RESET
 			);
@@ -65,16 +66,14 @@ std::expected<std::string, std::string> ProjCtl::list() const {
 }
 
 
-/*
-int ProjCtl::path_show(const std::string& name) const {
-	std::optional project = project_find(name);
+std::expected<std::string, std::string> ProjCtl::path_show(const std::string& name) const {
+	std::expected project = project_find(name);
 	if (!project) {
-		return;
+		return std::unexpected(project.error());
 	}
 
-	std::println("{}", (*project)->second.path.string());
+	return (*project)->second.path.string();
 }
-*/
 
 
 /*
