@@ -411,3 +411,22 @@ int ProjCtl::handle(const Cmd::GH::RequestCreate& cmd) const {
 
 	return *result;
 }
+
+
+int ProjCtl::handle(const Cmd::GH::RequestMerge& cmd) const {
+	std::expected<std::string, std::string> result = request_merge(cmd.name);
+
+	if (!result) {
+		std::println(
+				"\n\n{}{}{}{}\n\n",
+				color_code(config.error_color),
+				Style::CROSS,
+				result.error(),
+				Style::RESET
+				);
+		return 1;
+	}
+
+	std::println("\n\n{}\n\n", *result);
+	return 0;
+}

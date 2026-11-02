@@ -191,37 +191,22 @@ std::expected<int, std::string> ProjCtl::request_create(const std::string& name)
 }
 
 
-/*
-void ProjCtl::request_merge(const std::string& name) const {
-	std::optional project_option = project_find(name);
+std::expected<std::string, std::string> ProjCtl::request_merge(const std::string& name) const {
+	std::expected project_option = project_find(name);
 	if (!project_option) {
-		return;
+		return std::unexpected(project_option.error());
 	}
 
 	const ProjectContent& content = (*project_option)->second;
 	std::expected<HostOption, std::string> host_option = GitInterface::host(content);
 	if (!host_option) {
-		std::println("{}Failed to get host {}{}", color_code(config.error_color), host_option.error(), Style::RESET);
-		return;
+		return std::unexpected(std::format(
+					"{}Failed to get host {}{}",
+					color_code(config.error_color),
+					host_option.error(),
+					Style::RESET));
 	}
 	HostOption host = *host_option;
 
-	std::expected<std::string, std::string> output;
-	switch (host) {
-		case HostOption::GitHub:
-			output = GitHubInterface::request_merge(content.path.string());
-			break;
-		case HostOption::GitLab:
-			output = GitLabInterface::request_merge(content.path.string());
-			break;
-		case HostOption::Unknown:
-			std::println("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET);
-			break;
-	}
-
-	if (!output) {
-		std::println("Failed to merge request in {}\n{}", name, output.error());
-	}
-	std::println("{}{}{}{}", output ? color_code(config.tick_color) : color_code(config.error_color), output ? Style::TICK : Style::CROSS, output ? *output : output.error(), Style::RESET);
+	return GitHostInterface::request_merge(host, content.path.string());
 }
-*/

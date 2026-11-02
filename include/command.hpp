@@ -101,9 +101,9 @@ namespace Cmd {
 			std::string name;
 		};
 
-//		struct RequestMerge {
-//			std::string name;
-//		};
+		struct RequestMerge {
+			std::string name;
+		};
 
 	}
 
@@ -130,5 +130,6 @@ using Command = std::variant<
 	Cmd::GH::IssueList,
 	Cmd::GH::IssueCreate,
 	Cmd::GH::RequestList,
-	Cmd::GH::RequestCreate
+	Cmd::GH::RequestCreate,
+	Cmd::GH::RequestMerge
 >;
