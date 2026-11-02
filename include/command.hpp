@@ -6,47 +6,59 @@
 
 namespace Cmd {
 
-	struct Unknown {
-	};
+	namespace Base {
 
-	struct List {
-		bool gits_only;
-	};
+		struct Unknown {
+		};
 
-	struct Path {
-		std::string name;
-	};
+		struct List {
+			bool gits_only;
+		};
 
-	struct Add {
-		std::string name;
-		std::filesystem::path path;
-	};
+		struct Path {
+			std::string name;
+		};
 
-	struct Remove {
-		std::string name;
-	};
+		struct Add {
+			std::string name;
+			std::filesystem::path path;
+		};
 
-	struct Open {
-		std::string name;
-	};
+		struct Remove {
+			std::string name;
+		};
 
-	struct Build {
-		std::string name;
-	};
+		struct Open {
+			std::string name;
+		};
 
-	struct Run {
-		std::string name;
-	};
+		struct Build {
+			std::string name;
+		};
+
+		struct Run {
+			std::string name;
+		};
+
+	}
+
+	namespace Git {
+		struct Status {
+			std::string name;
+		};
+
+	}
 
 }
 
 using Command = std::variant<
-	Cmd::Unknown,
-	Cmd::List,
-	Cmd::Path,
-	Cmd::Add,
-	Cmd::Remove,
-	Cmd::Open,
-	Cmd::Build,
-	Cmd::Run
+	Cmd::Base::Unknown,
+	Cmd::Base::List,
+	Cmd::Base::Path,
+	Cmd::Base::Add,
+	Cmd::Base::Remove,
+	Cmd::Base::Open,
+	Cmd::Base::Build,
+	Cmd::Base::Run,
+	Cmd::Git::Status
 >;

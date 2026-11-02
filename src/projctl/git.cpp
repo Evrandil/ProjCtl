@@ -76,14 +76,13 @@ std::expected<std::string, std::string> ProjCtl::list_gits() const {
 }
 
 
-/*
-void ProjCtl::status(const std::string &name) const {
-	auto status_one = [&](const std::string& name, const ProjectContent& content){
+std::expected<std::string, std::string> ProjCtl::status(const std::string &name) const {
+	auto status_one = [&] (const std::string& name, const ProjectContent& content) {
 		constexpr uint8_t OUTPUT_SIZE = 250;
 		constexpr uint8_t CONTENT_WIDTH = 24;
 
 		std::string output;
-		bool exists = std::filesystem::exists(content.path);
+		const bool exists = std::filesystem::exists(content.path);
 		std::expected<std::string, std::string> git		= GitInterface::remote_short(content);
 		std::expected<std::string, std::string> branch	= GitInterface::branch(content);
 		std::expected<std::string, std::string> remote	= GitInterface::remote(content);
@@ -178,6 +177,7 @@ void ProjCtl::status(const std::string &name) const {
 	};
 
 	if (name == "--all") {
+		std::string output;
 		std::vector<std::future<std::string>> tasks;
 		tasks.reserve(projects.size());
 		for (const decltype(projects)::value_type& project : projects) {
@@ -187,25 +187,24 @@ void ProjCtl::status(const std::string &name) const {
 						));
 		}
 		for (std::future<std::string>& task : tasks) {
-			println(
-					"{}",
+			std::format_to(std::back_inserter(output),
+					"{}\n",
 					task.get()
 					);
 		}
-		return;
+		return output;
 	}
 
-	std::optional project = project_find(name);
+	std::expected project = project_find(name);
 	if (!project) {
-		return;
+		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
-	std::println(
+	return std::format(
 			"{}",
 			status_one((*project)->first, content)
 			);
 }
-*/
 
 
 /*
