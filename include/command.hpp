@@ -66,6 +66,15 @@ namespace Cmd {
 			std::string name;
 		};
 
+		struct Branch {
+			std::string name;
+			std::optional<std::string> branch_name;
+		};
+
+		struct Merge {
+			std::string name;
+		};
+
 	}
 
 }
@@ -83,5 +92,7 @@ using Command = std::variant<
 	Cmd::Git::Commit,
 	Cmd::Git::Push,
 	Cmd::Git::Pull,
-	Cmd::Git::Fetch
+	Cmd::Git::Fetch,
+	Cmd::Git::Branch,
+	Cmd::Git::Merge
 >;

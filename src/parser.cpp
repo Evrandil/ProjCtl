@@ -110,5 +110,28 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::Git::Fetch { std::string { args.at(1) } } ;
 	}
 
+	if (command == "branch") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		if (args.size() < 3) {
+			return Cmd::Git::Branch {
+				std::string { args.at(1) },
+				std::nullopt,
+			};
+		}
+		return Cmd::Git::Branch {
+			std::string { args.at(2) },
+			std::string { args.at(1) },
+		};
+	}
+
+	if (command == "merge") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		return Cmd::Git::Merge { std::string { args.at(1) } } ;
+	}
+
 	return Cmd::Unknown { } ;
 }

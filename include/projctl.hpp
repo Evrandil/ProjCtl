@@ -42,13 +42,12 @@ class ProjCtl {
 	std::expected<std::string, std::string> git_push_branch(const std::string&) const;
 	std::expected<std::string, std::string> git_pull(const std::string&) const;
 	std::expected<std::string, std::string> git_fetch(const std::string&) const;
-//	void git_branch_list(const std::string&) const;
-//	void git_branch(const std::string&, std::string_view) const;
-//	bool git_merge(const std::string&) const;
-//	void git_automerge(const std::string&) const;
-//	void g_status() const;
+	std::expected<std::string, std::string> git_branch_list(const std::string&) const;
+	std::expected<std::string, std::string> git_branch(const std::string&, std::string_view) const;
+	std::expected<std::string, std::string> git_merge(const std::string&) const;
 
 	// GH/GLab functionality
+//	void g_status() const;
 //	void repo_list() const;
 //	void issue_list(const std::string&) const;
 //	void issue_create(const std::string&) const;
@@ -70,6 +69,8 @@ class ProjCtl {
 	int handle(const Cmd::Git::Push&) const;
 	int handle(const Cmd::Git::Pull&) const;
 	int handle(const Cmd::Git::Fetch&) const;
+	int handle(const Cmd::Git::Branch&) const;
+	int handle(const Cmd::Git::Merge&) const;
 
 	public:
 	ProjCtl();
