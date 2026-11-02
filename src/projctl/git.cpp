@@ -335,6 +335,64 @@ std::expected<std::string, std::string> ProjCtl::git_pull(const std::string& nam
 }
 
 
+// TODO that one also get rid of --all flag and make another func for all I think
+std::expected<std::string, std::string> ProjCtl::git_fetch(const std::string& name) const {
+	auto fetch_one = [&](const std::string& project_name, const ProjectContent& content) {
+		std::string output;
+		std::format_to(std::back_inserter(output),
+				"{}Fetching: {}{}{}\n",
+				color_code(config.header_color),
+				color_code(config.project_name_color),
+				project_name,
+				Style::RESET
+				);
+		std::expected<std::string, std::string> result = GitInterface::fetch(content);
+
+		std::format_to(std::back_inserter(output),
+				"{}{}{}{}",
+				result ? color_code(config.tick_color) : color_code(config.error_color),
+				result ? Style::TICK : Style::CROSS,
+				result ? *result : result.error(),
+				Style::RESET
+				);
+		return output;
+	};
+
+
+	if (name == "--all") {
+		std::string output;
+		std::vector<std::future<std::string>> tasks;
+		tasks.reserve(projects.size());
+		for (const decltype(projects)::value_type& project : projects) {
+			if (GitInterface::is_repo(project.second)) {
+				tasks.push_back(std::async(
+							std::launch::async,
+							fetch_one, std::cref(project.first), std::cref(project.second)
+							));
+			}
+		}
+		for (std::future<std::string>& task : tasks) {
+			std::format_to(std::back_inserter(output),
+					"{}\n",
+					task.get()
+					);
+		}
+		return output;
+	}
+
+
+	std::expected project = project_find(name);
+	if (!project) {
+		return std::unexpected(project.error());
+	}
+
+	return std::format(
+			"{}",
+			fetch_one((*project)->first, (*project)->second)
+			);
+}
+
+
 /*
 bool ProjCtl::git_merge(const std::string& name) const {
 	std::optional project = project_find(name);
@@ -374,59 +432,6 @@ void ProjCtl::git_automerge(const std::string& name) const {
 */
 
 
-/*
-void ProjCtl::git_fetch(const std::string& name) const {
-	auto fetch_one = [&](const std::string& project_name, const ProjectContent& content) {
-		std::string output;
-		std::format_to(std::back_inserter(output),
-				"{}Fetching: {}{}{}\n",
-				color_code(config.header_color),
-				color_code(config.project_name_color),
-				project_name,
-				Style::RESET
-				);
-		std::expected<std::string, std::string> result = GitInterface::fetch(content);
-
-		std::format_to(std::back_inserter(output),
-				"{}{}{}{}",
-				result ? color_code(config.tick_color) : color_code(config.error_color),
-				result ? Style::TICK : Style::CROSS,
-				result ? *result : result.error(),
-				Style::RESET
-				);
-		return output;
-	};
-
-	if (name == "--all") {
-		std::vector<std::future<std::string>> tasks;
-		tasks.reserve(projects.size());
-		for (const decltype(projects)::value_type& project : projects) {
-			if (GitInterface::is_repo(project.second)) {
-				tasks.push_back(std::async(
-							std::launch::async,
-							fetch_one, std::cref(project.first), std::cref(project.second)
-							));
-			}
-		}
-		for (std::future<std::string>& task : tasks) {
-			std::println(
-					"{}\n",
-					task.get()
-					);
-		}
-		return;
-	}
-	std::optional project = project_find(name);
-	if (!project) {
-		return;
-	}
-
-	std::println(
-			"{}",
-			fetch_one((*project)->first, (*project)->second)
-			);
-}
-*/
 
 
 /*

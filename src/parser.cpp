@@ -103,5 +103,12 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::Git::Pull { std::string { args.at(1) } } ;
 	}
 
+	if (command == "fetch") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		return Cmd::Git::Fetch { std::string { args.at(1) } } ;
+	}
+
 	return Cmd::Unknown { } ;
 }

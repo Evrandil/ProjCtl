@@ -62,6 +62,10 @@ namespace Cmd {
 			std::string name;
 		};
 
+		struct Fetch {
+			std::string name;
+		};
+
 	}
 
 }
@@ -78,5 +82,6 @@ using Command = std::variant<
 	Cmd::Git::Status,
 	Cmd::Git::Commit,
 	Cmd::Git::Push,
-	Cmd::Git::Pull
+	Cmd::Git::Pull,
+	Cmd::Git::Fetch
 >;
