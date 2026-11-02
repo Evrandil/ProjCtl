@@ -6,10 +6,10 @@
 
 namespace Cmd {
 
-	namespace Base {
+	struct Unknown {
+	};
 
-		struct Unknown {
-		};
+	namespace Base {
 
 		struct List {
 			bool gits_only;
@@ -43,8 +43,14 @@ namespace Cmd {
 	}
 
 	namespace Git {
+
 		struct Status {
 			std::string name;
+		};
+
+		struct Commit {
+			std::string name;
+			std::optional<std::string> message;
 		};
 
 	}
@@ -52,7 +58,7 @@ namespace Cmd {
 }
 
 using Command = std::variant<
-	Cmd::Base::Unknown,
+	Cmd::Unknown,
 	Cmd::Base::List,
 	Cmd::Base::Path,
 	Cmd::Base::Add,
@@ -60,5 +66,6 @@ using Command = std::variant<
 	Cmd::Base::Open,
 	Cmd::Base::Build,
 	Cmd::Base::Run,
-	Cmd::Git::Status
+	Cmd::Git::Status,
+	Cmd::Git::Commit
 >;

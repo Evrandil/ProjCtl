@@ -3,7 +3,7 @@
 #include <print>
 
 
-int ProjCtl::handle(const Cmd::Base::Unknown& cmd) const {
+int ProjCtl::handle(const Cmd::Unknown& cmd) const {
 	std::println(
 			"\n\n{}Unrecognized command{}\n\n",
 			color_code(config.error_color),
@@ -158,6 +158,25 @@ int ProjCtl::handle(const Cmd::Base::Run& cmd) const {
 
 int ProjCtl::handle(const Cmd::Git::Status& cmd) const {
 	std::expected<std::string, std::string> result = status(cmd.name);
+
+	if (!result) {
+		std::println(
+				"\n\n{}{}{}{}\n\n",
+				color_code(config.error_color),
+				Style::CROSS,
+				result.error(),
+				Style::RESET
+				);
+		return 1;
+	}
+
+	std::println("\n\n{}\n\n", *result);
+	return 0;
+}
+
+
+int ProjCtl::handle(const Cmd::Git::Commit& cmd) const {
+	std::expected<std::string, std::string> result = git_commit(cmd.name, cmd.message);
 
 	if (!result) {
 		std::println(

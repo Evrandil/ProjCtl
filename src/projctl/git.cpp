@@ -200,6 +200,7 @@ std::expected<std::string, std::string> ProjCtl::status(const std::string &name)
 		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
+
 	return std::format(
 			"{}",
 			status_one((*project)->first, content)
@@ -207,17 +208,21 @@ std::expected<std::string, std::string> ProjCtl::status(const std::string &name)
 }
 
 
-/*
-void ProjCtl::git_commit(const std::string& name, std::string_view message) const {
-	std::optional project = project_find(name);
+std::expected<std::string, std::string> ProjCtl::git_commit(const std::string& name, std::optional<std::string_view> message) const {
+	std::expected project = project_find(name);
 	if (!project) {
-		return;
+		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
 
-	std::expected<std::string, std::string> result = GitInterface::commit(content, message);
+	std::expected<std::string, std::string> result;
+	if (message) {
+		result = GitInterface::commit(content, *message);
+	} else {
+		result = GitInterface::commit(content);
+	}
 
-	std::println(
+	return std::format(
 			"{}{}{}{}",
 			result ? color_code(config.tick_color) : color_code(config.error_color),
 			result ? Style::TICK : Style::CROSS,
@@ -225,26 +230,6 @@ void ProjCtl::git_commit(const std::string& name, std::string_view message) cons
 			Style::RESET
 			);
 }
-*/
-/*
-void ProjCtl::git_commit(const std::string& name) const {
-	std::optional project = project_find(name);
-	if (!project) {
-		return;
-	}
-	const ProjectContent& content = (*project)->second;
-
-	std::expected<std::string, std::string> result = GitInterface::commit(content);
-
-	std::println(
-			"{}{}{}{}",
-			result ? color_code(config.tick_color) : color_code(config.error_color),
-			result ? Style::TICK : Style::CROSS,
-			result ? *result : result.error(),
-			Style::RESET
-			);
-}
-*/
 
 
 /*

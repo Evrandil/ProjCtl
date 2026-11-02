@@ -14,7 +14,7 @@ Command parser(std::span<const std::string_view> args) {
 
 	if (command == "path") {
 		if (args.size() < 2) {
-			return Cmd::Base::Unknown { } ;
+			return Cmd::Unknown { } ;
 		}
 		return Cmd::Base::Path { std::string { args.at(1) } } ;
 	}
@@ -24,45 +24,61 @@ Command parser(std::span<const std::string_view> args) {
 			return Cmd::Base::Add { std::string { "." }, std::filesystem::path { "." } } ;
 		}
 		if (args.size() < 3) {
-			return Cmd::Base::Unknown { } ;
+			return Cmd::Unknown { } ;
 		}
 		return Cmd::Base::Add { std::string { args.at(1) }, std::filesystem::path { args.at(2) } } ;
 	}
 
 	if (command == "remove" || command == "rm") {
 		if (args.size() < 2) {
-			return Cmd::Base::Unknown { } ;
+			return Cmd::Unknown { } ;
 		}
 		return Cmd::Base::Remove { std::string { args.at(1) } } ;
 	}
 
 	if (command == "open") {
 		if (args.size() < 2) {
-			return Cmd::Base::Unknown { } ;
+			return Cmd::Unknown { } ;
 		}
 		return Cmd::Base::Open { std::string { args.at(1) } } ;
 	}
 
 	if (command == "build") {
 		if (args.size() < 2) {
-			return Cmd::Base::Unknown { } ;
+			return Cmd::Unknown { } ;
 		}
 		return Cmd::Base::Build { std::string { args.at(1) } } ;
 	}
 
 	if (command == "run") {
 		if (args.size() < 2) {
-			return Cmd::Base::Unknown { } ;
+			return Cmd::Unknown { } ;
 		}
 		return Cmd::Base::Run { std::string { args.at(1) } } ;
 	}
 
 	if (command == "status") {
 		if (args.size() < 2) {
-			return Cmd::Base::Unknown { } ;
+			return Cmd::Unknown { } ;
 		}
 		return Cmd::Git::Status { std::string { args.at(1) } } ;
 	}
 
-	return Cmd::Base::Unknown { } ;
+	if (command == "commit") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		if (args.size() < 3) {
+			return Cmd::Git::Commit {
+				std::string { args.at(1) },
+				std::nullopt,
+			};
+		}
+		return Cmd::Git::Commit {
+			std::string { args.at(1) },
+			std::string { args.at(2) },
+		};
+	}
+
+	return Cmd::Unknown { } ;
 }

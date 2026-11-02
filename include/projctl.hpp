@@ -37,8 +37,7 @@ class ProjCtl {
 
 	// Git functionality
 	std::expected<std::string, std::string> status(const std::string&) const;
-//	void git_commit(const std::string&, std::string_view) const;
-//	void git_commit(const std::string&) const;
+	std::expected<std::string, std::string> git_commit(const std::string&, std::optional<std::string_view>) const;
 //	void git_push(const std::string&) const;
 //	void git_push_branch(const std::string&) const;
 //	void git_pull(const std::string&) const;
@@ -58,7 +57,7 @@ class ProjCtl {
 //	void request_merge(const std::string&) const;
 
 	// Base functionality
-	int handle(const Cmd::Base::Unknown&) const;
+	int handle(const Cmd::Unknown&) const;
 	int handle(const Cmd::Base::List&) const;
 	int handle(const Cmd::Base::Path&) const;
 	int handle(const Cmd::Base::Add&);
@@ -67,6 +66,7 @@ class ProjCtl {
 	int handle(const Cmd::Base::Build&) const;
 	int handle(const Cmd::Base::Run&) const;
 	int handle(const Cmd::Git::Status&) const;
+	int handle(const Cmd::Git::Commit&) const;
 
 	public:
 	ProjCtl();
