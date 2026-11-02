@@ -38,8 +38,8 @@ add_library(projctl_core
 	src/projctl/projects.cpp
 	src/projctl/git.cpp
 	src/projctl/hosting.cpp
-#	src/projctl/issues.cpp
-#	src/projctl/requests.cpp
+	src/projctl/issues.cpp
+	src/projctl/requests.cpp
 	src/systeminterface.cpp
 	src/gitinterface/branch.cpp
 	src/gitinterface/changes.cpp

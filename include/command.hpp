@@ -85,17 +85,17 @@ namespace Cmd {
 		struct RepoList {
 		};
 
-//		struct IssueList {
-//			std::string name;
-//		};
+		struct IssueList {
+			std::string name;
+		};
 
 //		struct IssueCreate {
 //			std::string name;
 //		};
 
-//		struct RequestList {
-//			std::string name;
-//		};
+		struct RequestList {
+			std::string name;
+		};
 
 //		struct RequestCreate {
 //			std::string name;
@@ -126,5 +126,7 @@ using Command = std::variant<
 	Cmd::Git::Branch,
 	Cmd::Git::Merge,
 	Cmd::GH::Status,
-	Cmd::GH::RepoList
+	Cmd::GH::RepoList,
+	Cmd::GH::IssueList,
+	Cmd::GH::RequestList
 >;

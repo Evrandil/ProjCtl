@@ -7,7 +7,7 @@
 #include "gitlabinterface.hpp"
 
 
-void ProjCtl::request_list(const std::string& name) const {
+std::expected<std::string, std::string> ProjCtl::request_list(const std::string& name) const {
 	auto format_requests = [&] (const std::vector<Request>& requests) -> std::string {
 		std::string output;
 		auto field_name = [&](RequestField field) -> std::string_view {
@@ -141,7 +141,9 @@ void ProjCtl::request_list(const std::string& name) const {
 
 		return output;
 	};
+
 	if (name == "--all") {
+		std::string output;
 		std::vector<std::future<std::string>> tasks;
 		tasks.reserve(projects.size());
 		for (const decltype(projects)::value_type& project : projects) {
@@ -153,21 +155,22 @@ void ProjCtl::request_list(const std::string& name) const {
 			}
 		}
 		for (std::future<std::string>& task : tasks) {
-			std::println("{}", task.get());
+			std::format_to(std::back_inserter(output), "{}\n", task.get());
 		}
-		return;
+		return output;
 	}
 
-	std::optional project_option = project_find(name);
+	std::expected project_option = project_find(name);
 	if (!project_option) {
-		return;
+		return std::unexpected(project_option.error());
 	}
 
 	const ProjectContent& content = (*project_option)->second;
-	std::println("{}", request_one((*project_option)->first, content));
+	return std::format("{}\n", request_one((*project_option)->first, content));
 }
 
 
+/*
 void ProjCtl::request_create(const std::string& name) const {
 	std::optional project_option = project_find(name);
 	if (!project_option) {
@@ -229,3 +232,4 @@ void ProjCtl::request_merge(const std::string& name) const {
 	}
 	std::println("{}{}{}{}", output ? color_code(config.tick_color) : color_code(config.error_color), output ? Style::TICK : Style::CROSS, output ? *output : output.error(), Style::RESET);
 }
+*/

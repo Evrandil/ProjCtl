@@ -142,5 +142,22 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::GH::RepoList { } ;
 	}
 
+	if (command == "issues" || command == "ilist") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		return Cmd::GH::IssueList { std::string { args.at(1) } } ;
+	}
+
+	//
+
+
+	if (command == "reqs" || command == "reqlist") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		return Cmd::GH::RequestList { std::string { args.at(1) } } ;
+	}
+
 	return Cmd::Unknown { } ;
 }
