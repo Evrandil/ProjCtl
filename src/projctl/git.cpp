@@ -271,17 +271,16 @@ void ProjCtl::git_automerge(const std::string& name) const {
 */
 
 
-/*
-void ProjCtl::git_push(const std::string& name) const {
-	std::optional project = project_find(name);
+std::expected<std::string, std::string> ProjCtl::git_push(const std::string& name) const {
+	std::expected project = project_find(name);
 	if (!project) {
-		return;
+		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
 
 	std::expected<std::string, std::string> result = GitInterface::push(content);
 
-	std::println(
+	return std::format(
 			"{}{}{}{}",
 			result ? color_code(config.tick_color) : color_code(config.error_color),
 			result ? Style::TICK : Style::CROSS,
@@ -289,34 +288,29 @@ void ProjCtl::git_push(const std::string& name) const {
 			Style::RESET
 			);
 }
-*/
 
-
-/*
-void ProjCtl::git_push_branch(const std::string& name) const {
-	std::optional project = project_find(name);
+std::expected<std::string, std::string> ProjCtl::git_push_branch(const std::string& name) const {
+	std::expected project = project_find(name);
 	if (!project) {
-		return;
+		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
 
+
+	// TODO just make gitinterface push_branch return the branch name instead of taking it as an argument or do some optional funky stuff here too
 	std::expected<std::string, std::string> result = GitInterface::branch(content);
 	if (!result) {
-		std::println(
-				"{}{}{}{}",
-				color_code(config.error_color),
-				Style::CROSS,
-				result.error(), 
-				Style::RESET
-				);
-		return;
+		return std::unexpected(result.error());
 	}
 
 	std::string branch = *result;
 
 	result = GitInterface::push_branch(content, branch);
+	if (!result) {
+		return std::unexpected(result.error());
+	}
 
-	std::println(
+	return std::format(
 			"{}{}{}{}",
 			result ? color_code(config.tick_color) : color_code(config.error_color),
 			result ? Style::TICK : Style::CROSS,
@@ -324,7 +318,6 @@ void ProjCtl::git_push_branch(const std::string& name) const {
 			Style::RESET
 			);
 }
-*/
 
 
 /*

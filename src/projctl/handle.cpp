@@ -192,3 +192,28 @@ int ProjCtl::handle(const Cmd::Git::Commit& cmd) const {
 	std::println("\n\n{}\n\n", *result);
 	return 0;
 }
+
+
+int ProjCtl::handle(const Cmd::Git::Push& cmd) const {
+	std::expected<std::string, std::string> result;
+
+	if (cmd.branch_upstream) {
+		result = git_push_branch(cmd.name);
+	} else {
+		result = git_push(cmd.name);
+	}
+
+	if (!result) {
+		std::println(
+				"\n\n{}{}{}{}\n\n",
+				color_code(config.error_color),
+				Style::CROSS,
+				result.error(),
+				Style::RESET
+				);
+		return 1;
+	}
+
+	std::println("\n\n{}\n\n", *result);
+	return 0;
+}

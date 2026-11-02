@@ -75,8 +75,24 @@ Command parser(std::span<const std::string_view> args) {
 			};
 		}
 		return Cmd::Git::Commit {
-			std::string { args.at(1) },
 			std::string { args.at(2) },
+			std::string { args.at(1) },
+		};
+	}
+
+	if (command == "push") {
+		if (args.size() < 2) {
+			return Cmd::Unknown { } ;
+		}
+		if (args.size() > 2 && args.at(1) == "branch") {
+			return Cmd::Git::Push {
+				std::string { args.at(2) },
+				true,
+			};
+		}
+		return Cmd::Git::Push {
+			std::string { args.at(1) },
+			false,
 		};
 	}
 

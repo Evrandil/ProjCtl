@@ -53,6 +53,11 @@ namespace Cmd {
 			std::optional<std::string> message;
 		};
 
+		struct Push {
+			std::string name;
+			bool branch_upstream;
+		};
+
 	}
 
 }
@@ -67,5 +72,6 @@ using Command = std::variant<
 	Cmd::Base::Build,
 	Cmd::Base::Run,
 	Cmd::Git::Status,
-	Cmd::Git::Commit
+	Cmd::Git::Commit,
+	Cmd::Git::Push
 >;
