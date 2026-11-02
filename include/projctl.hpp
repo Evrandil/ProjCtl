@@ -24,14 +24,15 @@ class ProjCtl {
 	std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string> project_find(const std::string&) const;
 	std::optional<std::string> current_project_name() const;
 
-	std::expected<std::string, std::string> list() const;
-	std::expected<std::string, std::string> list_gits() const;
-	std::expected<std::string, std::string> path_show(const std::string&) const;
-	std::expected<std::string, std::string> add(const std::string&, std::filesystem::path);
-	std::expected<std::string, std::string> add_current();
-	std::expected<std::string, std::string> remove(const std::string&);
-	std::expected<std::string, std::string> open(const std::string&) const;
-	std::expected<int, std::string> build(const std::string&) const;
+	std::expected<std::string,	std::string> list() const;
+	std::expected<std::string,	std::string> list_gits() const;
+	std::expected<std::string,	std::string> path_show(const std::string&) const;
+	std::expected<std::string,	std::string> add(const std::string&, std::filesystem::path);
+	std::expected<std::string,	std::string> add_current();
+	std::expected<std::string,	std::string> remove(const std::string&);
+	std::expected<std::string,	std::string> open(const std::string&) const;
+	std::expected<int,			std::string> build(const std::string&) const;
+	std::expected<int,			std::string> run(const std::string&) const;
 
 	int handle(const Cmd::Unknown&) const;
 	int handle(const Cmd::List&) const;
@@ -40,6 +41,7 @@ class ProjCtl {
 	int handle(const Cmd::Remove&);
 	int handle(const Cmd::Open&) const;
 	int handle(const Cmd::Build&) const;
+	int handle(const Cmd::Run&) const;
 
 	public:
 	ProjCtl();
@@ -48,7 +50,6 @@ class ProjCtl {
 		return std::visit([this] (const auto& cmd) { return handle(cmd); }, command);
 	}
 
-//	void run(const std::string&) const;
 //	std::expected<std::string, std::string> status(const std::string&) const;
 //	void git_commit(const std::string&, std::string_view) const;
 //	void git_commit(const std::string&) const;

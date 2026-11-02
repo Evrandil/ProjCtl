@@ -34,6 +34,10 @@ namespace Cmd {
 		std::string name;
 	};
 
+	struct Run {
+		std::string name;
+	};
+
 }
 
 using Command = std::variant<
@@ -43,5 +47,6 @@ using Command = std::variant<
 	Cmd::Add,
 	Cmd::Remove,
 	Cmd::Open,
-	Cmd::Build
+	Cmd::Build,
+	Cmd::Run
 >;

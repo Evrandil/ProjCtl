@@ -136,3 +136,21 @@ int ProjCtl::handle(const Cmd::Build& cmd) const {
 
 	return *result;
 }
+
+
+int ProjCtl::handle(const Cmd::Run& cmd) const {
+	std::expected<int, std::string> result = run(cmd.name);
+
+	if (!result) {
+		std::println(
+				"\n\n{}{}{}{}\n\n",
+				color_code(config.error_color),
+				Style::CROSS,
+				result.error(),
+				Style::RESET
+				);
+		return 1;
+	}
+
+	return *result;
+}

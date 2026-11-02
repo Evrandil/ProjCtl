@@ -216,7 +216,7 @@ std::expected<int, std::string> ProjCtl::build(const std::string& name) const {
 
 	if (!command_option) {
 		return std::unexpected(std::format(
-					"{}There's no default command for {}{}{} as type of project {}{}{}",
+					"{}There's no default build command for {}{}{} as type of project {}{}{}",
 					color_code(config.error_color),
 					color_code(config.project_type_color),
 					project_type_to_string(content.type),
@@ -232,22 +232,29 @@ std::expected<int, std::string> ProjCtl::build(const std::string& name) const {
 	return SystemInterface::run_interactive(command);
 }
 
-/*
-void ProjCtl::run(const std::string& name) const {
-	std::optional project = project_find(name);
+std::expected<int, std::string> ProjCtl::run(const std::string& name) const {
+	std::expected project = project_find(name);
 	if (!project) {
-		return;
+		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
 
 	const std::optional<std::string_view> command_option = content.run_command ? content.run_command : run_command_for(content.type);
+
 	if (!command_option) {
-		std::println("{}{}There's no default command for {}{}{} as type of project {}{}{}", color_code(config.header_color), MARGIN, color_code(config.project_type_color), project_type_to_string(content.type), color_code(config.header_color), color_code(config.project_name_color), name, Style::RESET);
-		return;
+		return std::unexpected(std::format(
+					"{}There's no default run command for {}{}{} as type of project {}{}{}",
+					color_code(config.error_color),
+					color_code(config.project_type_color),
+					project_type_to_string(content.type),
+					color_code(config.error_color),
+					color_code(config.project_name_color),
+					name,
+					Style::RESET
+					));
 	}
 
-	std::string command = std::format("cd \"{}\" && ", content.path.string(), *command_option);
+	std::string command = std::format("cd \"{}\" && {}", content.path.string(), *command_option);
 
-	std::println("{}", *SystemInterface::run(command));
+	return SystemInterface::run_interactive(command);
 }
-*/

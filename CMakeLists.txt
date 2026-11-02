@@ -33,7 +33,7 @@ endif()
 add_library(projctl_core
 	src/parser.cpp
 	src/projctl/core.cpp
-	src/projctl/commands.cpp
+	src/projctl/handle.cpp
 	src/projctl/helper.cpp
 	src/projctl/projects.cpp
 	src/projctl/git.cpp
