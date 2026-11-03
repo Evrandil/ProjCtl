@@ -14,6 +14,8 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::GH::RepoList { };
 	}
 
+
+
 	if (command == "list") {
 		try {
 			if (args.at(1) == "gits") {
@@ -31,7 +33,6 @@ Command parser(std::span<const std::string_view> args) {
 
 	if (args.size() < 2) {
 		name = ".";
-//		return Cmd::Unknown { };
 	} else {
 		name = std::string { *args.rbegin() };
 	}
@@ -42,7 +43,7 @@ Command parser(std::span<const std::string_view> args) {
 	}
 
 	if (command == "add") {
-		if (args.at(1) == ".") {
+		if (name == ".") {
 			return Cmd::Base::Add {
 				name,
 				std::filesystem::path { "." },
@@ -69,6 +70,8 @@ Command parser(std::span<const std::string_view> args) {
 	if (command == "run") {
 		return Cmd::Base::Run { name };
 	}
+
+
 
 	if (command == "status") {
 		return Cmd::Git::Status { name };
@@ -121,6 +124,8 @@ Command parser(std::span<const std::string_view> args) {
 		};
 	}
 
+
+
 	if (command == "merge") {
 		return Cmd::Git::Merge { name };
 	}
@@ -128,7 +133,6 @@ Command parser(std::span<const std::string_view> args) {
 	if (command == "issues" || command == "ilist") {
 		return Cmd::GH::IssueList { name };
 	}
-
 
 	if (command == "icreate") {
 		return Cmd::GH::IssueCreate { name };
