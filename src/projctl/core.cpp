@@ -42,13 +42,12 @@ void ProjCtl::load()
 			case '[':
 				if (!name.empty()) [[likely]]
 				{
-					this->projects.emplace(
-						name, ProjectContent{
-								  std::filesystem::path{path_str},
-								  detect_project_type(path_str),
-								  build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
-								  run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
-							  });
+					this->projects.emplace(name, ProjectContent{
+													 std::filesystem::path{path_str},
+													 detect_project_type(path_str),
+													 build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
+													 run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
+												 });
 					path_str.clear();
 					build_command.clear();
 					run_command.clear();
@@ -72,13 +71,12 @@ void ProjCtl::load()
 	}
 	if (!name.empty()) [[likely]]
 	{
-		this->projects.emplace(name,
-							   ProjectContent{
-								   std::filesystem::path{path_str},
-								   detect_project_type(path_str),
-								   build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
-								   run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
-							   });
+		this->projects.emplace(name, ProjectContent{
+										 std::filesystem::path{path_str},
+										 detect_project_type(path_str),
+										 build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
+										 run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
+									 });
 	}
 }
 
@@ -122,8 +120,7 @@ std::optional<std::string> ProjCtl::current_project_name() const
 }
 
 
-std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string>
-ProjCtl::project_find(const std::string& name) const
+std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string> ProjCtl::project_find(const std::string& name) const
 {
 	std::optional<std::string> actual_name;
 	if (name == ".")
@@ -131,8 +128,7 @@ ProjCtl::project_find(const std::string& name) const
 		actual_name = current_project_name();
 		if (!actual_name)
 		{
-			return std::unexpected(std::format("{}{}Current directory isn't a saved project!{}",
-											   color_code(config.error_color), MARGIN, Style::RESET));
+			return std::unexpected(std::format("{}{}Current directory isn't a saved project!{}", color_code(config.error_color), MARGIN, Style::RESET));
 		}
 	}
 	else
@@ -142,9 +138,7 @@ ProjCtl::project_find(const std::string& name) const
 	std::map<std::string, ProjectContent>::const_iterator project = projects.find(*actual_name);
 	if (project == projects.end())
 	{
-		return std::unexpected(
-			std::format("{}{}Project with name {}{}{} doesn't exist!{}", color_code(config.error_color), MARGIN,
-						color_code(config.project_name_color), name, color_code(config.error_color), Style::RESET));
+		return std::unexpected(std::format("{}{}Project with name {}{}{} doesn't exist!{}", color_code(config.error_color), MARGIN, color_code(config.project_name_color), name, color_code(config.error_color), Style::RESET));
 	}
 	return project;
 }

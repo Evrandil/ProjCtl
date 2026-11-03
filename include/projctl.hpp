@@ -22,8 +22,7 @@ class ProjCtl
 	Config config;
 	void load();
 	void save() const;
-	std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string>
-	project_find(const std::string&) const;
+	std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string> project_find(const std::string&) const;
 	std::optional<std::string> current_project_name() const;
 
 
@@ -49,8 +48,7 @@ class ProjCtl
 
 	// Git functionality
 	[[nodiscard]] std::expected<std::string, std::string> status(const std::string&) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_commit(const std::string&,
-																	 std::optional<std::string_view>) const;
+	[[nodiscard]] std::expected<std::string, std::string> git_commit(const std::string&, std::optional<std::string_view>) const;
 	[[nodiscard]] std::expected<std::string, std::string> git_push(const std::string&) const;
 	[[nodiscard]] std::expected<std::string, std::string> git_push_branch(const std::string&) const;
 	[[nodiscard]] std::expected<std::string, std::string> git_pull(const std::string&) const;

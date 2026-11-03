@@ -86,9 +86,7 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(s
 		return std::unexpected("GitHub not installed");
 	}
 
-	std::string command = std::format(
-		"CLICOLOR_FORCE=0 NO_COLOR=1 gh pr list --repo {} --json number,title,state,author,labels,createdAt,updatedAt",
-		remote_short);
+	std::string command               = std::format("CLICOLOR_FORCE=0 NO_COLOR=1 gh pr list --repo {} --json number,title,state,author,labels,createdAt,updatedAt", remote_short);
 	std::optional<std::string> output = SystemInterface::run(command);
 
 	if (!output)

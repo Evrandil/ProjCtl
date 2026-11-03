@@ -23,8 +23,7 @@ std::expected<std::string, std::string> GitInterface::push(const ProjectContent&
 }
 
 
-std::expected<std::string, std::string> GitInterface::push_branch(const ProjectContent& project,
-																  std::string_view branch)
+std::expected<std::string, std::string> GitInterface::push_branch(const ProjectContent& project, std::string_view branch)
 {
 	if (!is_repo(project)) [[unlikely]]
 	{

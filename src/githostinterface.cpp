@@ -38,8 +38,7 @@ std::expected<std::string, std::string> GitHostInterface::repo_list(HostOption h
 }
 
 
-std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(HostOption host,
-																			std::string_view remote_short)
+std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(HostOption host, std::string_view remote_short)
 {
 	switch (host)
 	{
@@ -61,8 +60,7 @@ std::expected<int, std::string> GitHostInterface::issue_create(HostOption host, 
 }
 
 
-std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(HostOption host,
-																				std::string_view remote_short)
+std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(HostOption host, std::string_view remote_short)
 {
 	switch (host)
 	{

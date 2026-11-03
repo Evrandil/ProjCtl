@@ -47,9 +47,7 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 			{
 				case RequestField::Number: return config.request_number_color;
 				case RequestField::Title: return config.request_title_color;
-				case RequestField::State:
-					return request.state == "OPEN" || request.state == "opened" ? config.request_open_color
-																				: config.request_closed_color;
+				case RequestField::State: return request.state == "OPEN" || request.state == "opened" ? config.request_open_color : config.request_closed_color;
 				case RequestField::Author: return config.request_author_color;
 				case RequestField::Labels: return config.request_labels_color;
 				case RequestField::Parent: return config.request_parent_color;
@@ -87,12 +85,9 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 						break;
 					case RequestField::Created: value = request.created; break;
 					case RequestField::Updated: value = request.updated; break;
-					case RequestField::Parent:
-						value = request.parent ? std::format("#{}", *request.parent) : "-";
-						break;
+					case RequestField::Parent: value = request.parent ? std::format("#{}", *request.parent) : "-"; break;
 				}
-				std::format_to(std::back_inserter(output), "{}{:<{}}{}", color_code(field_color(field, request)), value,
-							   field_width(field), Style::RESET);
+				std::format_to(std::back_inserter(output), "{}{:<{}}{}", color_code(field_color(field, request)), value, field_width(field), Style::RESET);
 			}
 			output += '\n';
 		}
@@ -103,41 +98,33 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 		std::expected<HostOption, std::string> host_option = GitInterface::host(content);
 		if (!host_option)
 		{
-			return std::format("{}Failed to get host {}{}", color_code(config.error_color), host_option.error(),
-							   Style::RESET);
+			return std::format("{}Failed to get host {}{}", color_code(config.error_color), host_option.error(), Style::RESET);
 		}
 		HostOption host = *host_option;
 
 		std::expected<std::string, std::string> remote_short_option = GitInterface::remote_short(content);
 		if (!remote_short_option)
 		{
-			return std::format("{}Failed to get short remote for {}{}", color_code(config.error_color), name,
-							   Style::RESET);
+			return std::format("{}Failed to get short remote for {}{}", color_code(config.error_color), name, Style::RESET);
 		}
 		std::string_view remote_short = *remote_short_option;
 
-		std::string output = std::format("{}Requests for {}{}{}:\n", color_code(config.header_color),
-										 color_code(config.project_name_color), name, Style::RESET);
+		std::string output = std::format("{}Requests for {}{}{}:\n", color_code(config.header_color), color_code(config.project_name_color), name, Style::RESET);
 		std::expected<std::vector<Request>, std::string> command_output;
 		switch (host)
 		{
 			case HostOption::GitHub: command_output = GitHubInterface::request_list(remote_short); break;
 			case HostOption::GitLab: command_output = GitLabInterface::request_list(remote_short); break;
-			case HostOption::Unknown:
-				command_output = std::unexpected(
-					std::format("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET));
-				break;
+			case HostOption::Unknown: command_output = std::unexpected(std::format("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET)); break;
 		}
 		if (!command_output)
 		{
-			std::format_to(std::back_inserter(output), "{}Failed to list requests\n{}{}",
-						   color_code(config.error_color), command_output.error(), Style::RESET);
+			std::format_to(std::back_inserter(output), "{}Failed to list requests\n{}{}", color_code(config.error_color), command_output.error(), Style::RESET);
 			return output;
 		}
 		if (command_output->empty())
 		{
-			std::format_to(std::back_inserter(output), "{}No requests found{}\n", color_code(config.error_color),
-						   Style::RESET);
+			std::format_to(std::back_inserter(output), "{}No requests found{}\n", color_code(config.error_color), Style::RESET);
 			return output;
 		}
 		std::vector<Request> requests = *command_output;
@@ -156,8 +143,7 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 		{
 			if (GitInterface::is_repo(project.second))
 			{
-				tasks.push_back(
-					std::async(std::launch::async, request_one, std::cref(project.first), std::cref(project.second)));
+				tasks.push_back(std::async(std::launch::async, request_one, std::cref(project.first), std::cref(project.second)));
 			}
 		}
 		for (std::future<std::string>& task : tasks)
@@ -190,8 +176,7 @@ std::expected<int, std::string> ProjCtl::request_create(const std::string& name)
 	std::expected<HostOption, std::string> host_option = GitInterface::host(content);
 	if (!host_option)
 	{
-		return std::unexpected(std::format("{}Failed to get host {}{}", color_code(config.error_color),
-										   host_option.error(), Style::RESET));
+		return std::unexpected(std::format("{}Failed to get host {}{}", color_code(config.error_color), host_option.error(), Style::RESET));
 	}
 	HostOption host = *host_option;
 
@@ -211,8 +196,7 @@ std::expected<std::string, std::string> ProjCtl::request_merge(const std::string
 	std::expected<HostOption, std::string> host_option = GitInterface::host(content);
 	if (!host_option)
 	{
-		return std::unexpected(std::format("{}Failed to get host {}{}", color_code(config.error_color),
-										   host_option.error(), Style::RESET));
+		return std::unexpected(std::format("{}Failed to get host {}{}", color_code(config.error_color), host_option.error(), Style::RESET));
 	}
 	HostOption host = *host_option;
 
