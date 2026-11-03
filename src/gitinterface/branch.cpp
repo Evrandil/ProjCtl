@@ -3,62 +3,72 @@
 #include "systeminterface.hpp"
 
 
+namespace
+{
+	// Does this exact ref exist? e.g. "refs/heads/main" or "refs/remotes/origin/feature"
+	bool ref_exists(const std::filesystem::path& repo, const std::string& ref)
+	{
+		auto result = SystemInterface::run(std::vector<std::string>{"git", "show-ref", "--verify", "--quiet", ref}, repo);
+		return result && result->exit_code == 0;
+	}
+} // namespace
+
+
 std::expected<std::string, std::string> GitInterface::branch(const ProjectContent& project)
 {
-	if (!is_repo(project)) [[unlikely]]
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "branch", "--show-current"}, project.path.string());
+
+	if (!result) [[unlikely]]
 	{
-		return std::unexpected("Not a git repo");
+		return std::unexpected(std::format("Git not available: {}", result.error()));
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
 	}
 
-	std::string command               = std::format("git -C \"{}\" branch --show-current", project.path.string());
-	std::optional<std::string> output = SystemInterface::run(command);
-
-	if (!output) [[unlikely]]
-	{
-		return std::unexpected("Git remote failed");
-	}
-	return *output;
+	return result->text;
 }
 
 
 std::expected<std::string, std::string> GitInterface::branch_list(const ProjectContent& project)
 {
-	if (!is_repo(project)) [[unlikely]]
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "branch", "--list"}, project.path.string());
+
+	if (!result) [[unlikely]]
 	{
-		return std::unexpected("Not a git repo");
+		return std::unexpected(std::format("Git not available: {}", result.error()));
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
 	}
 
-	std::string command               = std::format("git -C \"{}\" branch --list", project.path.string());
-	std::optional<std::string> output = SystemInterface::run(command);
-
-	if (!output) [[unlikely]]
-	{
-		return std::unexpected("Git remote failed");
-	}
-	return *output;
+	return result->text;
 }
 
 
 std::expected<std::string, std::string> GitInterface::branch_switch(const ProjectContent& project, std::string_view branch)
 {
-	if (!is_repo(project)) [[unlikely]]
-	{
-		return std::unexpected("Not a git repo");
-	}
+	const std::string name{branch};
 
-	std::string command               = std::format("git -C \"{}\" branch --list \"{}\" 2>&1", project.path.string(), branch);
-	std::optional<std::string> output = SystemInterface::run(command);
-	if (!output) [[unlikely]]
-	{
-		return std::unexpected("Git branch --list failed");
-	}
+	const bool exists = ref_exists(project.path, "refs/heads/" + name) || ref_exists(project.path, "refs/remotes/origin/" + name);
 
-	bool branch_exists = !output->empty();
-	command            = std::format("git -C \"{}\" switch {}\"{}\" 2>&1", project.path.string(), branch_exists ? "" : "-c ", branch);
-	output             = SystemInterface::run(command);
-	if (!output) [[unlikely]]
+	std::vector<std::string> args{"git", "switch"};
+	if (!exists)
 	{
-		return std::unexpected(branch_exists ? "Git branch switch failed" : "Git branch creation failed");
+		args.emplace_back("-c");
 	}
-	return *output;
+	args.push_back(name);
+
+	auto result = SystemInterface::run(args, project.path);
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
+	}
+	return result->text;
 }

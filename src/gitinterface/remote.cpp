@@ -5,11 +5,6 @@
 
 std::expected<std::string, std::string> GitInterface::remote(const ProjectContent& project)
 {
-	if (!is_repo(project)) [[unlikely]]
-	{
-		return std::unexpected("Not a git repo");
-	}
-
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "remote", "get-url", "origin"}, project.path.string());
 
 	if (!result) [[unlikely]]
@@ -27,11 +22,6 @@ std::expected<std::string, std::string> GitInterface::remote(const ProjectConten
 
 std::expected<std::string, std::string> GitInterface::remote_short(const ProjectContent& project)
 {
-	if (!is_repo(project)) [[unlikely]]
-	{
-		return std::unexpected("Not a git repo");
-	}
-
 	std::expected<std::string, std::string> remote_output = remote(project);
 	if (!remote_output) [[unlikely]]
 	{

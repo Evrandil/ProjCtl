@@ -3,11 +3,6 @@
 
 std::expected<HostOption, std::string> GitInterface::host(const ProjectContent& project)
 {
-	if (!is_repo(project)) [[unlikely]]
-	{
-		return std::unexpected("Not a git repo");
-	}
-
 	std::expected<std::string, std::string> remote_output = remote(project);
 	if (!remote_output) [[unlikely]]
 	{

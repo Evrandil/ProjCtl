@@ -5,11 +5,6 @@
 
 std::expected<std::string, std::string> GitInterface::add(const ProjectContent& project)
 {
-	if (!is_repo(project)) [[unlikely]]
-	{
-		return std::unexpected("Not a git repo");
-	}
-
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "add", "."}, project.path.string());
 
 	if (!result) [[unlikely]]
@@ -27,11 +22,6 @@ std::expected<std::string, std::string> GitInterface::add(const ProjectContent& 
 
 std::expected<std::string, std::string> GitInterface::commit(const ProjectContent& project, std::string_view message)
 {
-	if (!is_repo(project)) [[unlikely]]
-	{
-		return std::unexpected("Project is not git repository");
-	}
-
 	std::expected add_result = add(project);
 	if (!add_result) [[unlikely]]
 	{
@@ -57,11 +47,6 @@ std::expected<std::string, std::string> GitInterface::commit(const ProjectConten
 
 std::expected<std::string, std::string> GitInterface::commit(const ProjectContent& project)
 {
-	if (!is_repo(project)) [[unlikely]]
-	{
-		return std::unexpected("Project is not git repository");
-	}
-
 	std::expected add_result = add(project);
 	if (!add_result) [[unlikely]]
 	{

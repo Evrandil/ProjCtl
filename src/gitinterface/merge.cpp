@@ -5,11 +5,6 @@
 
 std::expected<std::string, std::string> GitInterface::default_merge(const ProjectContent& project)
 {
-	if (!is_repo(project)) [[unlikely]]
-	{
-		return std::unexpected("Not a git repo");
-	}
-
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "merge"}, project.path.string());
 
 	if (!result) [[unlikely]]
