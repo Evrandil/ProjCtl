@@ -6,11 +6,11 @@ int ProjCtl::report(const std::expected<std::string, std::string>& result) const
 {
 	if (!result)
 	{
-		std::println("\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
+		std::println(stderr, "\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
 		return 1;
 	}
 
-	std::println("\n\n{}\n\n", *result);
+	std::println(stdout, "\n\n{}\n\n", *result);
 	return 0;
 }
 

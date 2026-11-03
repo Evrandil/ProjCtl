@@ -3,42 +3,81 @@
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
 
-bool GitHubInterface::installed() { return SystemInterface::run("command -v gh").has_value(); }
-bool GitHubInterface::authenticated() { return SystemInterface::run("gh auth status").has_value(); }
+
+/*
+namespace
+{
+	std::vector<std::string> colors_helper(std::vector<std::string> args)
+	{
+		return std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1"};
+	}
+}
+*/
+
+
+CliState GitHubInterface::state()
+{
+	std::expected result = SystemInterface::run(std::vector<std::string>{"gh", "auth", "status"});
+
+	if (!result)
+	{
+		return CliState::NotInstalled;
+	}
+
+	return result->exit_code == 0 ? CliState::Ready : CliState::NotAuthenticated;
+}
 
 
 std::expected<std::string, std::string> GitHubInterface::repo_list()
 {
-	std::optional<std::string> output = SystemInterface::run("gh repo list | awk '{ print $1 }'");
+	std::expected result = SystemInterface::run(std::vector<std::string>{"gh", "repo", "list", "--json", "nameWithOwner", "--jq", ".[].nameWithOwner", "--limit", "100"});
 
-	if (!output)
+	if (!result)
 	{
-		return std::unexpected("Failed to get GitHub repo list");
+		return std::unexpected(std::format("gh not available: {}", result.error()));
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
 	}
 
-	return *output;
+	std::string output;
+	for (const nlohmann::json& repo : nlohmann::json::parse(result->text))
+	{
+		output += repo.get<std::string>();
+		output += '\n';
+	}
+	if (!output.empty())
+	{
+		output.pop_back();
+	}
+
+	return output;
 }
 
 
-std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view remote_short)
+std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view path)
 {
-	if (!installed())
+	std::expected result = SystemInterface::run(std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1", "gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}, path);
+
+	if (!result)
 	{
-		return std::unexpected("GitHub not installed");
+		return std::unexpected(std::format("gh not available: {}", result.error()));
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
 	}
 
-	std::string command               = std::format("CLICOLOR_FORCE=0 NO_COLOR=1 gh issue list --repo {} --json "
-													"number,title,state,author,labels,createdAt,updatedAt,parent",
-													remote_short);
-	std::optional<std::string> output = SystemInterface::run(command);
-
-	if (!output)
+	nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
+	if (json.is_discarded())
 	{
-		return std::unexpected(std::format("Failed to get GitHub issue list for repo {}", remote_short));
+		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
 	}
-	nlohmann::json json = nlohmann::json::parse(*output);
+
 	std::vector<Issue> issues;
 	issues.reserve(json.size());
+
 	for (const nlohmann::json& json_issue : json)
 	{
 		Issue issue;
@@ -69,36 +108,34 @@ std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::
 }
 
 
-std::expected<int, std::string> GitHubInterface::issue_create(std::string_view remote_short)
+std::expected<int, std::string> GitHubInterface::issue_create(std::string_view path)
 {
-	if (!installed())
-	{
-		return std::unexpected("GitHub not installed");
-	}
-
-	std::string command = std::format("gh issue create --repo {}", remote_short);
-
-	return SystemInterface::run_interactive(command);
+	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "create"}, path);
 }
 
 
-std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view remote_short)
+std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view path)
 {
-	if (!installed())
+	std::expected result = SystemInterface::run(std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1", "gh", "pr", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}, path);
+
+	if (!result)
 	{
-		return std::unexpected("GitHub not installed");
+		return std::unexpected(std::format("gh not available: {}", result.error()));
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
 	}
 
-	std::string command               = std::format("CLICOLOR_FORCE=0 NO_COLOR=1 gh pr list --repo {} --json number,title,state,author,labels,createdAt,updatedAt", remote_short);
-	std::optional<std::string> output = SystemInterface::run(command);
-
-	if (!output)
+	nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
+	if (json.is_discarded())
 	{
-		return std::unexpected(std::format("Failed to get GitHub pr list for repo {}", remote_short));
+		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
 	}
-	nlohmann::json json = nlohmann::json::parse(*output);
+
 	std::vector<Request> requests;
 	requests.reserve(json.size());
+
 	for (const nlohmann::json& json_request : json)
 	{
 		Request request;
@@ -127,30 +164,21 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(s
 
 std::expected<int, std::string> GitHubInterface::request_create(std::string_view path)
 {
-	if (!installed())
-	{
-		return std::unexpected("GitHub not installed");
-	}
-
-	std::string command = std::format("cd {} && gh pr create", path);
-
-	return SystemInterface::run_interactive(command);
+	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "create"}, path);
 }
 
 
 std::expected<std::string, std::string> GitHubInterface::request_merge(std::string_view path)
 {
-	if (!installed())
+	std::expected result = SystemInterface::run(std::vector<std::string>{"gh", "pr", "merge", "--squash", "--delete-branch"}, path);
+	if (!result)
 	{
-		return std::unexpected("GitHub not installed");
+		return std::unexpected(std::format("gh not available: {}", result.error()));
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
 	}
 
-	std::string command  = std::format("cd {} && gh pr merge --squash --delete-branch", path);
-	std::optional output = SystemInterface::run(command);
-	if (!output)
-	{
-		return std::unexpected(std::format("Failed to run GitHub merge for repo {}", path));
-	}
-
-	return *output;
+	return result->text;
 }

@@ -10,14 +10,16 @@ std::expected<std::string, std::string> GitInterface::pull(const ProjectContent&
 		return std::unexpected("Not a git repo");
 	}
 
-	std::string command = std::format("git -C \"{}\" pull 2>&1", project.path.string());
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "pull"}, project.path.string());
 
-	std::optional<std::string> result = SystemInterface::run(command);
-
-	if (!result) [[unlikely]]
+	if (!result)
 	{
-		return std::unexpected("Git pull failed");
+		return std::unexpected(std::format("Git pull failed: {}", result.error()));
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
 	}
 
-	return *result;
+	return result->text;
 }

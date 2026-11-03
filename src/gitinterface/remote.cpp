@@ -10,14 +10,18 @@ std::expected<std::string, std::string> GitInterface::remote(const ProjectConten
 		return std::unexpected("Not a git repo");
 	}
 
-	std::string command               = std::format("git -C \"{}\" remote get-url origin", project.path.string());
-	std::optional<std::string> output = SystemInterface::run(command);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "remote", "get-url", "origin"}, project.path.string());
 
-	if (!output) [[unlikely]]
+	if (!result)
 	{
-		return std::unexpected("Git remote failed");
+		return std::unexpected(std::format("Git remote failed: {}", result.error()));
 	}
-	return *output;
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
+	}
+
+	return result->text;
 }
 
 

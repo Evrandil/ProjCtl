@@ -10,16 +10,18 @@ std::expected<std::string, std::string> GitInterface::push(const ProjectContent&
 		return std::unexpected("Not a git repo");
 	}
 
-	std::string command = std::format("git -C \"{}\" push 2>&1", project.path.string());
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "push"}, project.path.string());
 
-	std::optional<std::string> result = SystemInterface::run(command);
-
-	if (!result) [[unlikely]]
+	if (!result)
 	{
-		return std::unexpected("Git push failed");
+		return std::unexpected(std::format("Git push failed: {}", result.error()));
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
 	}
 
-	return *result;
+	return result->text;
 }
 
 
@@ -30,14 +32,16 @@ std::expected<std::string, std::string> GitInterface::push_branch(const ProjectC
 		return std::unexpected("Not a git repo");
 	}
 
-	std::string command = std::format("git -C \"{}\" push -u origin {} 2>&1", project.path.string(), branch);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "push", "-u", "origin", std::string(branch)}, project.path.string());
 
-	std::optional<std::string> result = SystemInterface::run(command);
-
-	if (!result) [[unlikely]]
+	if (!result)
 	{
-		return std::unexpected("Git push failed");
+		return std::unexpected(std::format("Git push failed: {}", result.error()));
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
 	}
 
-	return *result;
+	return result->text;
 }

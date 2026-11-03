@@ -4,30 +4,16 @@
 #include "gitlabinterface.hpp"
 
 
-bool GitHostInterface::installed(HostOption host)
+CliState GitHostInterface::state(HostOption host)
 {
 	switch (host)
 	{
 		case HostOption::GitHub:
-			return GitHubInterface::installed();
+			return GitHubInterface::state();
 		case HostOption::GitLab:
-			return GitLabInterface::installed();
+			return GitLabInterface::state();
 		default:
-			return false;
-	}
-}
-
-
-bool GitHostInterface::authenticated(HostOption host)
-{
-	switch (host)
-	{
-		case HostOption::GitHub:
-			return GitHubInterface::authenticated();
-		case HostOption::GitLab:
-			return GitLabInterface::authenticated();
-		default:
-			return false;
+			return CliState::NotInstalled;
 	}
 }
 
@@ -46,42 +32,42 @@ std::expected<std::string, std::string> GitHostInterface::repo_list(HostOption h
 }
 
 
-std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(HostOption host, std::string_view remote_short)
+std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(HostOption host, std::string_view path)
 {
 	switch (host)
 	{
 		case HostOption::GitHub:
-			return GitHubInterface::issue_list(remote_short);
+			return GitHubInterface::issue_list(path);
 		case HostOption::GitLab:
-			return GitLabInterface::issue_list(remote_short);
+			return GitLabInterface::issue_list(path);
 		default:
 			return std::unexpected("Unknown host");
 	}
 }
 
 
-std::expected<int, std::string> GitHostInterface::issue_create(HostOption host, std::string_view remote_short)
+std::expected<int, std::string> GitHostInterface::issue_create(HostOption host, std::string_view path)
 {
 	switch (host)
 	{
 		case HostOption::GitHub:
-			return GitHubInterface::issue_create(remote_short);
+			return GitHubInterface::issue_create(path);
 		case HostOption::GitLab:
-			return GitLabInterface::issue_create(remote_short);
+			return GitLabInterface::issue_create(path);
 		default:
 			return std::unexpected("Unknown host");
 	}
 }
 
 
-std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(HostOption host, std::string_view remote_short)
+std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(HostOption host, std::string_view path)
 {
 	switch (host)
 	{
 		case HostOption::GitHub:
-			return GitHubInterface::request_list(remote_short);
+			return GitHubInterface::request_list(path);
 		case HostOption::GitLab:
-			return GitLabInterface::request_list(remote_short);
+			return GitLabInterface::request_list(path);
 		default:
 			return std::unexpected("Unknown host");
 	}

@@ -16,10 +16,17 @@ enum class HostOption : uint8_t
 };
 
 
+enum class CliState : uint8_t
+{
+	NotInstalled,
+	NotAuthenticated,
+	Ready,
+};
+
+
 namespace GitHostInterface
 {
-	[[nodiscard]] bool installed(HostOption);
-	[[nodiscard]] bool authenticated(HostOption);
+	[[nodiscard]] CliState state(HostOption);
 	[[nodiscard]] std::expected<std::string, std::string> repo_list(HostOption);
 	[[nodiscard]] std::expected<std::vector<Issue>, std::string> issue_list(HostOption, std::string_view);
 	[[nodiscard]] std::expected<int, std::string> issue_create(HostOption, std::string_view);
