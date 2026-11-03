@@ -66,7 +66,8 @@ void ProjCtl::load()
 				separator     = line.find('=');
 				build_command = trim(line.substr(separator + 1));
 				continue;
-			default: continue;
+			default:
+				continue;
 		}
 	}
 	if (!name.empty()) [[likely]]

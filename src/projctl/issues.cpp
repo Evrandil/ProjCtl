@@ -21,43 +21,68 @@ std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& n
 		{
 			switch (field)
 			{
-				case IssueField::Number: return "Number";
-				case IssueField::Title: return "Title";
-				case IssueField::State: return "State";
-				case IssueField::Author: return "Author";
-				case IssueField::Labels: return "Labels";
-				case IssueField::Created: return "Created";
-				case IssueField::Updated: return "Updated";
-				case IssueField::Parent: return "Parent";
-				default: return "";
+				case IssueField::Number:
+					return "Number";
+				case IssueField::Title:
+					return "Title";
+				case IssueField::State:
+					return "State";
+				case IssueField::Author:
+					return "Author";
+				case IssueField::Labels:
+					return "Labels";
+				case IssueField::Created:
+					return "Created";
+				case IssueField::Updated:
+					return "Updated";
+				case IssueField::Parent:
+					return "Parent";
+				default:
+					return "";
 			}
 		};
 		auto field_width = [&](IssueField field) -> std::size_t
 		{
 			switch (field)
 			{
-				case IssueField::Number: return 8;
-				case IssueField::Title: return config.issue_title_width;
-				case IssueField::State: return config.issue_state_width;
-				case IssueField::Author: return config.issue_author_width;
-				case IssueField::Labels: return 20;
-				case IssueField::Created: return 22;
-				case IssueField::Updated: return 22;
-				case IssueField::Parent: return 10;
-				default: return 0;
+				case IssueField::Number:
+					return 8;
+				case IssueField::Title:
+					return config.issue_title_width;
+				case IssueField::State:
+					return config.issue_state_width;
+				case IssueField::Author:
+					return config.issue_author_width;
+				case IssueField::Labels:
+					return 20;
+				case IssueField::Created:
+					return 22;
+				case IssueField::Updated:
+					return 22;
+				case IssueField::Parent:
+					return 10;
+				default:
+					return 0;
 			}
 		};
 		auto field_color = [&](IssueField field, const Issue& issue) -> Style::Color
 		{
 			switch (field)
 			{
-				case IssueField::Number: return config.issue_number_color;
-				case IssueField::Title: return config.issue_title_color;
-				case IssueField::State: return issue.state == "OPEN" || issue.state == "opened" ? config.issue_open_color : config.issue_closed_color;
-				case IssueField::Author: return config.issue_author_color;
-				case IssueField::Labels: return config.issue_labels_color;
-				case IssueField::Parent: return config.issue_parent_color;
-				default: return Style::Color::Default;
+				case IssueField::Number:
+					return config.issue_number_color;
+				case IssueField::Title:
+					return config.issue_title_color;
+				case IssueField::State:
+					return issue.state == "OPEN" || issue.state == "opened" ? config.issue_open_color : config.issue_closed_color;
+				case IssueField::Author:
+					return config.issue_author_color;
+				case IssueField::Labels:
+					return config.issue_labels_color;
+				case IssueField::Parent:
+					return config.issue_parent_color;
+				default:
+					return Style::Color::Default;
 			}
 		};
 		output += color_code(config.header_color);
@@ -75,10 +100,18 @@ std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& n
 
 				switch (field)
 				{
-					case IssueField::Number: value = std::format("#{}", issue.number); break;
-					case IssueField::Title: value = truncate(issue.title, config.issue_title_width - 1); break;
-					case IssueField::State: value = issue.state; break;
-					case IssueField::Author: value = issue.author; break;
+					case IssueField::Number:
+						value = std::format("#{}", issue.number);
+						break;
+					case IssueField::Title:
+						value = truncate(issue.title, config.issue_title_width - 1);
+						break;
+					case IssueField::State:
+						value = issue.state;
+						break;
+					case IssueField::Author:
+						value = issue.author;
+						break;
 					case IssueField::Labels:
 						for (std::size_t i = 0; i < issue.labels.size(); ++i)
 						{
@@ -89,9 +122,15 @@ std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& n
 							value += issue.labels[i];
 						}
 						break;
-					case IssueField::Created: value = issue.created; break;
-					case IssueField::Updated: value = issue.updated; break;
-					case IssueField::Parent: value = issue.parent ? std::format("#{}", *issue.parent) : "-"; break;
+					case IssueField::Created:
+						value = issue.created;
+						break;
+					case IssueField::Updated:
+						value = issue.updated;
+						break;
+					case IssueField::Parent:
+						value = issue.parent ? std::format("#{}", *issue.parent) : "-";
+						break;
 				}
 				std::format_to(std::back_inserter(output), "{}{:<{}}{}", color_code(field_color(field, issue)), value, field_width(field), Style::RESET);
 			}
@@ -119,9 +158,15 @@ std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& n
 		std::expected<std::vector<Issue>, std::string> command_output;
 		switch (host)
 		{
-			case HostOption::GitHub: command_output = GitHubInterface::issue_list(remote_short); break;
-			case HostOption::GitLab: command_output = GitLabInterface::issue_list(remote_short); break;
-			case HostOption::Unknown: command_output = std::unexpected(std::format("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET)); break;
+			case HostOption::GitHub:
+				command_output = GitHubInterface::issue_list(remote_short);
+				break;
+			case HostOption::GitLab:
+				command_output = GitLabInterface::issue_list(remote_short);
+				break;
+			case HostOption::Unknown:
+				command_output = std::unexpected(std::format("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET));
+				break;
 		}
 		if (!command_output)
 		{

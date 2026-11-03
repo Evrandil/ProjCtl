@@ -13,13 +13,11 @@ PointerAlignment: Left
 ReferenceAlignment: Left
 DerivePointerAlignment: false
 
-# keep your one-liners and aligned fields
-# AllowShortBlocksOnASingleLine: Always
-# AllowShortIfStatementsOnASingleLine: AllIfsAndElse
-AllowShortCaseLabelsOnASingleLine: true
+#AllowShortBlocksOnASingleLine: Always
+#AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+#AllowShortCaseLabelsOnASingleLine: true
 AlignConsecutiveAssignments: Consecutive
 
-# match how your code is already laid out
 IndentCaseLabels: true
 NamespaceIndentation: All
 AccessModifierOffset: 0
