@@ -14,7 +14,7 @@ std::expected<std::string, std::string> GitInterface::remote(const ProjectConten
 
 	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git not accessible: {}", result.error()));
+		return std::unexpected(std::format("Git not available: {}", result.error()));
 	}
 	if (result->exit_code != 0)
 	{
