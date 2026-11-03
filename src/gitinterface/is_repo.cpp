@@ -5,7 +5,6 @@
 
 bool GitInterface::is_repo(const ProjectContent& project)
 {
-	std::string command               = std::format("git -C \"{}\" rev-parse --is-inside-work-tree", project.path.string());
-	std::optional<std::string> output = SystemInterface::run(command);
-	return output && *output == "true";
+	std::expected result= SystemInterface::run(std::vector<std::string>{"git", "rev-parse", "--is-inside-work-tree"}, project.path.string());
+	return result && result->text == "true";
 }
