@@ -113,14 +113,21 @@ std::expected<std::string, std::string> ProjCtl::open(const std::string& name) c
 		return std::unexpected(project.error());
 	}
 
-	if (config.editor == "neovide" || config.editor == "emacs")
+	const bool background = config.editor == "neovide" || config.editor == "emacs";
+
+	const std::string shell_command = std::format("{} .{}", config.editor, background ? " &" : "");
+
+	std::expected<int, std::string> result = SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", shell_command}, (*project)->second.path);
+
+	if (!result)
 	{
-		SystemInterface::run_interactive(std::format("cd \"{}\" && {} . &", (*project)->second.path.string(), config.editor));
+		return std::unexpected(result.error());
 	}
-	else
+	if (*result != 0)
 	{
-		SystemInterface::run_interactive(std::format("cd \"{}\" && {} .", (*project)->second.path.string(), config.editor));
+		return std::unexpected(std::format("{} exited with code {}", config.editor, *result));
 	}
+
 	return std::format("{}{}{}{}{}", color_code(config.header_color), "Opened project: ", color_code(config.project_name_color), name, Style::RESET);
 }
 
@@ -144,9 +151,7 @@ std::expected<int, std::string> ProjCtl::build(const std::string& name) const
 			std::format("{}There's no default build command for {}{}{} as type of project {}{}{}", color_code(config.error_color), color_code(config.project_type_color), project_type_to_string(content.type), color_code(config.error_color), color_code(config.project_name_color), name, Style::RESET));
 	}
 
-	std::string command = std::format("cd \"{}\" && {}", content.path.string(), *command_option);
-
-	return SystemInterface::run_interactive(command);
+	return SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", std::string{*command_option}}, content.path);
 }
 
 std::expected<int, std::string> ProjCtl::run(const std::string& name) const
@@ -166,7 +171,5 @@ std::expected<int, std::string> ProjCtl::run(const std::string& name) const
 			std::format("{}There's no default run command for {}{}{} as type of project {}{}{}", color_code(config.error_color), color_code(config.project_type_color), project_type_to_string(content.type), color_code(config.error_color), color_code(config.project_name_color), name, Style::RESET));
 	}
 
-	std::string command = std::format("cd \"{}\" && {}", content.path.string(), *command_option);
-
-	return SystemInterface::run_interactive(command);
+	return SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", std::string{*command_option}}, content.path);
 }
