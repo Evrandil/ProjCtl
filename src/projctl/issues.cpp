@@ -8,8 +8,6 @@
 #include <iterator>
 #include "config.hpp"
 #include "gitinterface.hpp"
-#include "githubinterface.hpp"
-#include "gitlabinterface.hpp"
 
 
 std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& name) const
@@ -155,19 +153,7 @@ std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& n
 		std::string_view remote_short = *remote_short_option;
 
 		std::string output = std::format("{}Issues for {}{}{}:\n", color_code(config.header_color), color_code(config.project_name_color), name, Style::RESET);
-		std::expected<std::vector<Issue>, std::string> command_output;
-		switch (host)
-		{
-			case HostOption::GitHub:
-				command_output = GitHubInterface::issue_list(remote_short);
-				break;
-			case HostOption::GitLab:
-				command_output = GitLabInterface::issue_list(remote_short);
-				break;
-			case HostOption::Unknown:
-				command_output = std::unexpected(std::format("{}No host found for {}{}", color_code(config.error_color), name, Style::RESET));
-				break;
-		}
+		std::expected<std::vector<Issue>, std::string> command_output = GitHostInterface::issue_list(host, remote_short);
 		if (!command_output)
 		{
 			std::format_to(std::back_inserter(output), "{}Failed to list issues\n{}{}", color_code(config.error_color), command_output.error(), Style::RESET);

@@ -17,7 +17,7 @@ enum class HostOption : uint8_t
 
 
 namespace GitHostInterface
-{ // TODO use this interface lmao
+{
 	[[nodiscard]] bool installed(HostOption);
 	[[nodiscard]] bool authenticated(HostOption);
 	[[nodiscard]] std::expected<std::string, std::string> repo_list(HostOption);

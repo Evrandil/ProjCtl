@@ -4,7 +4,6 @@
 #include "gitlabinterface.hpp"
 
 
-// TODO Make all either take remote_short or path
 bool GitHostInterface::installed(HostOption host)
 {
 	switch (host)

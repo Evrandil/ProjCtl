@@ -1,8 +1,6 @@
 #include "parser.hpp"
 
 
-// TODO put implicitly "." as name whenever name isn't specified and makes sense
-
 Command parser(std::span<const std::string_view> args)
 {
 	const std::string_view command = args.at(0);
