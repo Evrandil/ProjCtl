@@ -7,7 +7,8 @@
 #include <string>
 
 
-namespace GitInterface {
+namespace GitInterface
+{
 	[[nodiscard]] std::expected<std::string, std::string> add(const ProjectContent&);
 	[[nodiscard]] bool is_repo(const ProjectContent&);
 	[[nodiscard]] std::expected<HostOption, std::string> host(const ProjectContent&);
@@ -24,4 +25,4 @@ namespace GitInterface {
 	[[nodiscard]] std::expected<std::string, std::string> pull(const ProjectContent&);
 	[[nodiscard]] std::expected<std::string, std::string> fetch(const ProjectContent&);
 	[[nodiscard]] std::expected<std::string, std::string> default_merge(const ProjectContent&);
-};
+}; // namespace GitInterface

@@ -7,7 +7,8 @@
 #include <string>
 
 
-namespace GitLabInterface {
+namespace GitLabInterface
+{
 	bool installed();
 	bool authenticated();
 	std::expected<std::string, std::string> repo_list();
@@ -16,4 +17,4 @@ namespace GitLabInterface {
 	std::expected<std::vector<Request>, std::string> request_list(std::string_view);
 	std::expected<int, std::string> request_create(std::string_view);
 	std::expected<std::string, std::string> request_merge(std::string_view);
-};
+}; // namespace GitLabInterface

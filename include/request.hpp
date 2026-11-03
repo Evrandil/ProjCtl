@@ -5,7 +5,8 @@
 #include <optional>
 #include <cstdint>
 
-enum class RequestField : uint8_t {
+enum class RequestField : uint8_t
+{
 	Number,
 	Title,
 	State,
@@ -16,7 +17,8 @@ enum class RequestField : uint8_t {
 	Parent,
 };
 
-struct Request {
+struct Request
+{
 	int number;
 	std::string title;
 	std::string state;

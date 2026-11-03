@@ -1,13 +1,28 @@
 BasedOnStyle: LLVM
 
-
 IndentWidth: 4
 TabWidth: 4
-UseTab: ForIndentation
+UseTab: ForContinuationAndIndentation
+ContinuationIndentWidth: 4
 
-BreakBeforeBraces: Attach
-ColumnLimit: 300
+BreakBeforeBraces: Allman
+InsertBraces: true
+ColumnLimit: 120
 
 PointerAlignment: Left
 ReferenceAlignment: Left
 DerivePointerAlignment: false
+
+# keep your one-liners and aligned fields
+AllowShortBlocksOnASingleLine: Always
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortCaseLabelsOnASingleLine: true
+AlignConsecutiveAssignments: Consecutive
+
+# match how your code is already laid out
+IndentCaseLabels: true
+NamespaceIndentation: All
+AccessModifierOffset: 0
+EmptyLineBeforeAccessModifier: Leave
+MaxEmptyLinesToKeep: 2
+SortIncludes: Never

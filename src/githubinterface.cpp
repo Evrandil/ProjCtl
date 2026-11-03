@@ -3,53 +3,51 @@
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
 
-bool GitHubInterface::installed() {
-	return SystemInterface::run("command -v gh").has_value();
-}
-bool GitHubInterface::authenticated() {
-	return SystemInterface::run("gh auth status").has_value();
-}
+bool GitHubInterface::installed() { return SystemInterface::run("command -v gh").has_value(); }
+bool GitHubInterface::authenticated() { return SystemInterface::run("gh auth status").has_value(); }
 
-std::expected<std::string, std::string> GitHubInterface::repo_list() {
+std::expected<std::string, std::string> GitHubInterface::repo_list()
+{
 	std::optional<std::string> output = SystemInterface::run("gh repo list | awk '{ print $1 }'");
 
-	if (!output) {
-		return std::unexpected("Failed to get GitHub repo list");
-	}
+	if (!output) { return std::unexpected("Failed to get GitHub repo list"); }
 
 	return *output;
 }
 
-std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view remote_short) {
-	if (!installed()) {
-		return std::unexpected("GitHub not installed");
-	}
+std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view remote_short)
+{
+	if (!installed()) { return std::unexpected("GitHub not installed"); }
 
-	std::string command = std::format("CLICOLOR_FORCE=0 NO_COLOR=1 gh issue list --repo {} --json number,title,state,author,labels,createdAt,updatedAt,parent", remote_short);
+	std::string command               = std::format("CLICOLOR_FORCE=0 NO_COLOR=1 gh issue list --repo {} --json "
+									  "number,title,state,author,labels,createdAt,updatedAt,parent",
+									  remote_short);
 	std::optional<std::string> output = SystemInterface::run(command);
 
-	if (!output) {
-		return std::unexpected(std::format("Failed to get GitHub issue list for repo {}", remote_short));
-	}
+	if (!output) { return std::unexpected(std::format("Failed to get GitHub issue list for repo {}", remote_short)); }
 	nlohmann::json json = nlohmann::json::parse(*output);
 	std::vector<Issue> issues;
 	issues.reserve(json.size());
-	for (const nlohmann::json& json_issue : json) {
+	for (const nlohmann::json& json_issue : json)
+	{
 		Issue issue;
-		issue.number = json_issue.at("number").get<int>();
-		issue.title = json_issue.at("title").get<std::string>();
-		issue.state = json_issue.at("state").get<std::string>();
+		issue.number  = json_issue.at("number").get<int>();
+		issue.title   = json_issue.at("title").get<std::string>();
+		issue.state   = json_issue.at("state").get<std::string>();
 		issue.created = json_issue.at("createdAt").get<std::string>();
 		issue.updated = json_issue.at("updatedAt").get<std::string>();
-		if(!json_issue.at("parent").is_null()) {
+		if (!json_issue.at("parent").is_null())
+		{
 			issue.parent = json_issue.at("parent").at("title").get<std::string>();
 		}
 
-		if (!json_issue.at("author").is_null()) {
+		if (!json_issue.at("author").is_null())
+		{
 			issue.author = json_issue.at("author").at("name").get<std::string>();
 		}
 
-		for (const nlohmann::json& label : json_issue.at("labels")) {
+		for (const nlohmann::json& label : json_issue.at("labels"))
+		{
 			issue.labels.push_back(label.at("name").get<std::string>());
 		}
 
@@ -59,10 +57,9 @@ std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::
 	return issues;
 }
 
-std::expected<int, std::string> GitHubInterface::issue_create(std::string_view remote_short) {
-	if (!installed()) {
-		return std::unexpected("GitHub not installed");
-	}
+std::expected<int, std::string> GitHubInterface::issue_create(std::string_view remote_short)
+{
+	if (!installed()) { return std::unexpected("GitHub not installed"); }
 
 	std::string command = std::format("gh issue create --repo {}", remote_short);
 
@@ -70,33 +67,35 @@ std::expected<int, std::string> GitHubInterface::issue_create(std::string_view r
 }
 
 
-std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view remote_short) {
-	if (!installed()) {
-		return std::unexpected("GitHub not installed");
-	}
+std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view remote_short)
+{
+	if (!installed()) { return std::unexpected("GitHub not installed"); }
 
-	std::string command = std::format("CLICOLOR_FORCE=0 NO_COLOR=1 gh pr list --repo {} --json number,title,state,author,labels,createdAt,updatedAt", remote_short);
+	std::string command = std::format(
+		"CLICOLOR_FORCE=0 NO_COLOR=1 gh pr list --repo {} --json number,title,state,author,labels,createdAt,updatedAt",
+		remote_short);
 	std::optional<std::string> output = SystemInterface::run(command);
 
-	if (!output) {
-		return std::unexpected(std::format("Failed to get GitHub pr list for repo {}", remote_short));
-	}
+	if (!output) { return std::unexpected(std::format("Failed to get GitHub pr list for repo {}", remote_short)); }
 	nlohmann::json json = nlohmann::json::parse(*output);
 	std::vector<Request> requests;
 	requests.reserve(json.size());
-	for (const nlohmann::json& json_request : json) {
+	for (const nlohmann::json& json_request : json)
+	{
 		Request request;
-		request.number = json_request.at("number").get<int>();
-		request.title = json_request.at("title").get<std::string>();
-		request.state = json_request.at("state").get<std::string>();
+		request.number  = json_request.at("number").get<int>();
+		request.title   = json_request.at("title").get<std::string>();
+		request.state   = json_request.at("state").get<std::string>();
 		request.created = json_request.at("createdAt").get<std::string>();
 		request.updated = json_request.at("updatedAt").get<std::string>();
 
-		if (!json_request.at("author").is_null()) {
+		if (!json_request.at("author").is_null())
+		{
 			request.author = json_request.at("author").at("name").get<std::string>();
 		}
 
-		for (const nlohmann::json& label : json_request.at("labels")) {
+		for (const nlohmann::json& label : json_request.at("labels"))
+		{
 			request.labels.push_back(label.at("name").get<std::string>());
 		}
 
@@ -107,10 +106,9 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(s
 }
 
 
-std::expected<int, std::string> GitHubInterface::request_create(std::string_view path) {
-	if (!installed()) {
-		return std::unexpected("GitHub not installed");
-	}
+std::expected<int, std::string> GitHubInterface::request_create(std::string_view path)
+{
+	if (!installed()) { return std::unexpected("GitHub not installed"); }
 
 	std::string command = std::format("cd {} && gh pr create", path);
 
@@ -120,16 +118,13 @@ std::expected<int, std::string> GitHubInterface::request_create(std::string_view
 }
 
 
-std::expected<std::string, std::string> GitHubInterface::request_merge(std::string_view path) {
-	if (!installed()) {
-		return std::unexpected("GitHub not installed");
-	}
+std::expected<std::string, std::string> GitHubInterface::request_merge(std::string_view path)
+{
+	if (!installed()) { return std::unexpected("GitHub not installed"); }
 
-	std::string command = std::format("cd {} && gh pr merge --squash --delete-branch", path);
+	std::string command  = std::format("cd {} && gh pr merge --squash --delete-branch", path);
 	std::optional output = SystemInterface::run(command);
-	if (!output) {
-		return std::unexpected(std::format("Failed to run GitHub merge for repo {}", path));
-	}
+	if (!output) { return std::unexpected(std::format("Failed to run GitHub merge for repo {}", path)); }
 
 	return *output;
 }

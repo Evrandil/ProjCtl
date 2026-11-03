@@ -5,7 +5,8 @@
 #include <optional>
 #include <cstdint>
 
-enum class IssueField : uint8_t {
+enum class IssueField : uint8_t
+{
 	Number,
 	Title,
 	State,
@@ -16,7 +17,8 @@ enum class IssueField : uint8_t {
 	Parent,
 };
 
-struct Issue {
+struct Issue
+{
 	int number;
 	std::string title;
 	std::string state;
