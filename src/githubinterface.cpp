@@ -58,7 +58,7 @@ std::expected<std::string, std::string> GitHubInterface::repo_list()
 
 std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1", "gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}, path);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1", "gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt,parent"}, path);
 
 	if (!result)
 	{
