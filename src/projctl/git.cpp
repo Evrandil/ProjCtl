@@ -1,7 +1,6 @@
 #include "projctl.hpp"
 
 #include <format>
-#include <print>
 #include <string_view>
 #include <future>
 #include <vector>
