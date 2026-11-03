@@ -1,183 +1,151 @@
 #include "parser.hpp"
 
 
+// TODO put implicitly "." as name whenever name isn't specified and makes sense
+
 Command parser(std::span<const std::string_view> args) {
 	const std::string_view command = args.at(0);
 
-	if (command == "list") {
-		bool gits_only = false;
-		if (args.size() > 1 && args.at(1) == "gits") {
-			gits_only = true;
-		}
-		return Cmd::Base::List { gits_only } ;
+	if (command == "git") {
+		return Cmd::GH::Status { };
 	}
 
-	if (command == "path") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
+	if (command == "repos") {
+		return Cmd::GH::RepoList { };
+	}
+
+	if (command == "list") {
+		try {
+			if (args.at(1) == "gits") {
+				return Cmd::Base::List { true };
+			}
 		}
-		return Cmd::Base::Path { std::string { args.at(1) } } ;
+		catch (const std::out_of_range &err) {
+			return Cmd::Base::List { false };
+		}
+		return Cmd::Unknown { };
+	}
+
+
+	std::string name;
+
+	if (args.size() < 2) {
+		name = ".";
+//		return Cmd::Unknown { };
+	} else {
+		name = std::string { *args.rbegin() };
+	}
+
+
+	if (command == "path") {
+		return Cmd::Base::Path { name };
 	}
 
 	if (command == "add") {
 		if (args.at(1) == ".") {
-			return Cmd::Base::Add { std::string { "." }, std::filesystem::path { "." } } ;
+			return Cmd::Base::Add {
+				name,
+				std::filesystem::path { "." },
+			};
 		}
 		if (args.size() < 3) {
-			return Cmd::Unknown { } ;
+			return Cmd::Unknown { };
 		}
-		return Cmd::Base::Add { std::string { args.at(1) }, std::filesystem::path { args.at(2) } } ;
+		return Cmd::Base::Add { std::string { args.at(1) }, std::filesystem::path { args.at(2) } };
 	}
 
 	if (command == "remove" || command == "rm") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::Base::Remove { std::string { args.at(1) } } ;
+		return Cmd::Base::Remove { name };
 	}
 
 	if (command == "open") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::Base::Open { std::string { args.at(1) } } ;
+		return Cmd::Base::Open { name };
 	}
 
 	if (command == "build") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::Base::Build { std::string { args.at(1) } } ;
+		return Cmd::Base::Build { name };
 	}
 
 	if (command == "run") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::Base::Run { std::string { args.at(1) } } ;
+		return Cmd::Base::Run { name };
 	}
 
 	if (command == "status") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::Git::Status { std::string { args.at(1) } } ;
+		return Cmd::Git::Status { name };
 	}
 
 	if (command == "commit") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
 		if (args.size() < 3) {
 			return Cmd::Git::Commit {
-				std::string { args.at(1) },
+				name,
 				std::nullopt,
 			};
 		}
 		return Cmd::Git::Commit {
-			std::string { args.at(2) },
+			name,
 			std::string { args.at(1) },
 		};
 	}
 
 	if (command == "push") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
 		if (args.size() > 2 && args.at(1) == "branch") {
 			return Cmd::Git::Push {
-				std::string { args.at(2) },
+				name,
 				true,
 			};
 		}
 		return Cmd::Git::Push {
-			std::string { args.at(1) },
+			name,
 			false,
 		};
 	}
 
 	if (command == "pull") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::Git::Pull { std::string { args.at(1) } } ;
+		return Cmd::Git::Pull { name };
 	}
 
 	if (command == "fetch") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::Git::Fetch { std::string { args.at(1) } } ;
+		return Cmd::Git::Fetch { name };
 	}
 
 	if (command == "branch") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
 		if (args.size() < 3) {
 			return Cmd::Git::Branch {
-				std::string { args.at(1) },
+				name,
 				std::nullopt,
 			};
 		}
 		return Cmd::Git::Branch {
-			std::string { args.at(2) },
+			name,
 			std::string { args.at(1) },
 		};
 	}
 
 	if (command == "merge") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::Git::Merge { std::string { args.at(1) } } ;
-	}
-
-	if (command == "git") {
-		return Cmd::GH::Status { } ;
-	}
-
-
-	if (command == "repos") {
-		return Cmd::GH::RepoList { } ;
+		return Cmd::Git::Merge { name };
 	}
 
 	if (command == "issues" || command == "ilist") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::GH::IssueList { std::string { args.at(1) } } ;
+		return Cmd::GH::IssueList { name };
 	}
 
 
 	if (command == "icreate") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::GH::IssueCreate { std::string { args.at(1) } } ;
+		return Cmd::GH::IssueCreate { name };
 	}
 
 
 	if (command == "reqs" || command == "reqlist") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::GH::RequestList { std::string { args.at(1) } } ;
+		return Cmd::GH::RequestList { name };
 	}
 
 	if (command == "reqcreate") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::GH::RequestCreate { std::string { args.at(1) } } ;
+		return Cmd::GH::RequestCreate { name };
 	}
 
 	if (command == "reqmerge") {
-		if (args.size() < 2) {
-			return Cmd::Unknown { } ;
-		}
-		return Cmd::GH::RequestMerge { std::string { args.at(1) } } ;
+		return Cmd::GH::RequestMerge { name };
 	}
 
-	return Cmd::Unknown { } ;
+	return Cmd::Unknown { };
 }
