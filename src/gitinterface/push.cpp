@@ -12,9 +12,9 @@ std::expected<std::string, std::string> GitInterface::push(const ProjectContent&
 
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "push"}, project.path.string());
 
-	if (!result)
+	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git push failed: {}", result.error()));
+		return std::unexpected(std::format("Git not accessible: {}", result.error()));
 	}
 	if (result->exit_code != 0)
 	{
@@ -34,9 +34,9 @@ std::expected<std::string, std::string> GitInterface::push_branch(const ProjectC
 
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "push", "-u", "origin", std::string(branch)}, project.path.string());
 
-	if (!result)
+	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git push failed: {}", result.error()));
+		return std::unexpected(std::format("Git not accessible: {}", result.error()));
 	}
 	if (result->exit_code != 0)
 	{

@@ -12,9 +12,9 @@ std::expected<std::string, std::string> GitInterface::default_merge(const Projec
 
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "merge"}, project.path.string());
 
-	if (!result)
+	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git merge failed: {}", result.error()));
+		return std::unexpected(std::format("Git not accessible: {}", result.error()));
 	}
 	if (result->exit_code != 0)
 	{

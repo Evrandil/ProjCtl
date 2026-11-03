@@ -12,9 +12,9 @@ std::expected<std::string, std::string> GitInterface::remote(const ProjectConten
 
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "remote", "get-url", "origin"}, project.path.string());
 
-	if (!result)
+	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git remote failed: {}", result.error()));
+		return std::unexpected(std::format("Git not accessible: {}", result.error()));
 	}
 	if (result->exit_code != 0)
 	{

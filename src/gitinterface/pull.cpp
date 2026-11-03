@@ -12,9 +12,9 @@ std::expected<std::string, std::string> GitInterface::pull(const ProjectContent&
 
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "pull"}, project.path.string());
 
-	if (!result)
+	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git pull failed: {}", result.error()));
+		return std::unexpected(std::format("Git not accessible: {}", result.error()));
 	}
 	if (result->exit_code != 0)
 	{

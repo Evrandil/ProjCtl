@@ -10,14 +10,16 @@ std::expected<std::string, std::string> GitInterface::fetch(const ProjectContent
 		return std::unexpected("Not a git repo");
 	}
 
-	std::string command = std::format("git -C \"{}\" fetch 2>&1", project.path.string());
-
-	std::optional<std::string> result = SystemInterface::run(command);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "fetch"}, project.path.string());
 
 	if (!result) [[unlikely]]
 	{
-		return std::unexpected("Git fetch failed");
+		return std::unexpected(std::format("Git not accessible: {}", result.error()));
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
 	}
 
-	return *result;
+	return result->text;
 }
