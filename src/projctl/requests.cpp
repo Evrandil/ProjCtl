@@ -130,7 +130,7 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 		}
 		return output;
 	};
-	auto request_one = [&](const std::string& name, const ProjectContent& content) -> std::string
+	auto request_one = [&](const std::string& project_name, const ProjectContent& content) -> std::string
 	{
 		std::expected<HostOption, std::string> host_option = GitInterface::host(content);
 		if (!host_option)
@@ -138,16 +138,8 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 			return std::format("{}Failed to get host {}{}", color_code(config.error_color), host_option.error(), Style::RESET);
 		}
 		HostOption host = *host_option;
-
-		std::expected<std::string, std::string> remote_short_option = GitInterface::remote_short(content);
-		if (!remote_short_option)
-		{
-			return std::format("{}Failed to get short remote for {}{}", color_code(config.error_color), name, Style::RESET);
-		}
-		std::string_view remote_short = *remote_short_option;
-
-		std::string output = std::format("{}Requests for {}{}{}:\n", color_code(config.header_color), color_code(config.project_name_color), name, Style::RESET);
-		std::expected<std::vector<Request>, std::string> command_output = GitHostInterface::request_list(host, remote_short);
+		std::string output = std::format("{}Requests for {}{}{}:\n", color_code(config.header_color), color_code(config.project_name_color), project_name, Style::RESET);
+		std::expected<std::vector<Request>, std::string> command_output = GitHostInterface::request_list(host, content.path.string());
 		if (!command_output)
 		{
 			std::format_to(std::back_inserter(output), "{}Failed to list requests\n{}{}", color_code(config.error_color), command_output.error(), Style::RESET);
