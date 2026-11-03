@@ -6,9 +6,9 @@
 namespace
 {
 	// Does this exact ref exist? e.g. "refs/heads/main" or "refs/remotes/origin/feature"
-	bool ref_exists(const std::filesystem::path& repo, const std::string& ref)
+	bool ref_exists(const std::filesystem::path& path, const std::string& branch)
 	{
-		auto result = SystemInterface::run(std::vector<std::string>{"git", "show-ref", "--verify", "--quiet", ref}, repo);
+		std::expected result = SystemInterface::run(std::vector<std::string>{"git", "show-ref", "--verify", "--quiet", branch}, path);
 		return result && result->exit_code == 0;
 	}
 } // namespace
@@ -20,7 +20,7 @@ std::expected<std::string, std::string> GitInterface::branch(const ProjectConten
 
 	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{
@@ -37,7 +37,7 @@ std::expected<std::string, std::string> GitInterface::branch_list(const ProjectC
 
 	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{
@@ -62,7 +62,7 @@ std::expected<std::string, std::string> GitInterface::branch_switch(const Projec
 	args.push_back(name);
 
 	auto result = SystemInterface::run(args, project.path);
-	if (!result)
+	if (!result) [[unlikely]]
 	{
 		return std::unexpected(result.error());
 	}
@@ -70,5 +70,6 @@ std::expected<std::string, std::string> GitInterface::branch_switch(const Projec
 	{
 		return std::unexpected(result->text);
 	}
+
 	return result->text;
 }

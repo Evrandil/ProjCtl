@@ -9,7 +9,7 @@ std::expected<std::string, std::string> GitInterface::add(const ProjectContent& 
 
 	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{
@@ -31,7 +31,7 @@ std::expected<std::string, std::string> GitInterface::commit(const ProjectConten
 	std::expected commit_result = SystemInterface::run(std::vector<std::string>{"git", "-C", "commit", "-m", std::string(message)}, project.path.string());
 	if (!commit_result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git not available: {}", commit_result.error()));
+		return std::unexpected(commit_result.error());
 	}
 	if (commit_result->exit_code != 0)
 	{
@@ -56,7 +56,7 @@ std::expected<std::string, std::string> GitInterface::commit(const ProjectConten
 	std::expected commit_result = SystemInterface::run_interactive(std::vector<std::string>{"git", "commit"}, project.path.string());
 	if (!commit_result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git not available: {}", commit_result.error()));
+		return std::unexpected(commit_result.error());
 	}
 	if (*commit_result != 0)
 	{

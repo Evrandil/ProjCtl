@@ -9,7 +9,7 @@ std::expected<std::string, std::string> GitInterface::push(const ProjectContent&
 
 	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{
@@ -26,7 +26,7 @@ std::expected<std::string, std::string> GitInterface::push_branch(const ProjectC
 
 	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{

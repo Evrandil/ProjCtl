@@ -34,7 +34,7 @@ std::expected<std::string, std::string> GitHubInterface::repo_list()
 
 	if (!result)
 	{
-		return std::unexpected(std::format("gh not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{
@@ -62,7 +62,7 @@ std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::
 
 	if (!result)
 	{
-		return std::unexpected(std::format("gh not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{
@@ -120,7 +120,7 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(s
 
 	if (!result)
 	{
-		return std::unexpected(std::format("gh not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{
@@ -173,7 +173,7 @@ std::expected<std::string, std::string> GitHubInterface::request_merge(std::stri
 	std::expected result = SystemInterface::run(std::vector<std::string>{"gh", "pr", "merge", "--squash", "--delete-branch"}, path);
 	if (!result)
 	{
-		return std::unexpected(std::format("gh not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{

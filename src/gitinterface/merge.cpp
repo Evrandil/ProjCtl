@@ -9,7 +9,7 @@ std::expected<std::string, std::string> GitInterface::default_merge(const Projec
 
 	if (!result) [[unlikely]]
 	{
-		return std::unexpected(std::format("Git not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{

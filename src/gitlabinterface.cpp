@@ -50,7 +50,7 @@ std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::
 
 	if (!result)
 	{
-		return std::unexpected(std::format("glab not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{
@@ -100,7 +100,7 @@ std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(s
 
 	if (!result)
 	{
-		return std::unexpected(std::format("glab not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{
@@ -149,7 +149,7 @@ std::expected<std::string, std::string> GitLabInterface::request_merge(std::stri
 	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "merge", "--squash", "--remove-source-branch"}, path);
 	if (!result)
 	{
-		return std::unexpected(std::format("glab not available: {}", result.error()));
+		return std::unexpected(result.error());
 	}
 	if (result->exit_code != 0)
 	{
