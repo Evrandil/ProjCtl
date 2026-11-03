@@ -10,14 +10,18 @@ std::expected<std::string, std::string> GitInterface::add(const ProjectContent& 
 		return std::unexpected("Not a git repo");
 	}
 
-	std::string command               = std::format("git -C \"{}\" add . 2>&1", project.path.string());
-	std::optional<std::string> result = SystemInterface::run(command);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "add", "."}, project.path.string());
 
 	if (!result) [[unlikely]]
 	{
-		return std::unexpected("Git add failed");
+		return std::unexpected(std::format("Git not available: {}", result.error()));
 	}
-	return *result;
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
+	}
+
+	return result->text;
 }
 
 
@@ -28,24 +32,26 @@ std::expected<std::string, std::string> GitInterface::commit(const ProjectConten
 		return std::unexpected("Project is not git repository");
 	}
 
-	std::expected<std::string, std::string> add_output = add(project);
-	if (!add_output) [[unlikely]]
+	std::expected add_result = add(project);
+	if (!add_result) [[unlikely]]
 	{
-		return std::unexpected(add_output.error());
+		return std::unexpected(add_result.error());
 	}
 
-	std::string command = std::format("git -C \"{}\" commit -m \"{}\" 2>&1", project.path.string(), message);
-
-	std::optional<std::string> commit_output = SystemInterface::run(command);
-	if (!commit_output) [[unlikely]]
+	std::expected commit_result = SystemInterface::run(std::vector<std::string>{"git", "-C", "commit", "-m", std::string(message)}, project.path.string());
+	if (!commit_result) [[unlikely]]
 	{
-		return std::unexpected("Git commit failed");
+		return std::unexpected(std::format("Git not available: {}", commit_result.error()));
+	}
+	if (commit_result->exit_code != 0)
+	{
+		return std::unexpected(commit_result->text);
 	}
 
-	add_output->append("\n");
-	add_output->append(*commit_output);
+	add_result->append("\n");
+	add_result->append(commit_result->text);
 
-	return *add_output;
+	return *add_result;
 }
 
 
@@ -56,22 +62,21 @@ std::expected<std::string, std::string> GitInterface::commit(const ProjectConten
 		return std::unexpected("Project is not git repository");
 	}
 
-	std::expected<std::string, std::string> add_output = add(project);
-	if (!add_output) [[unlikely]]
+	std::expected add_result = add(project);
+	if (!add_result) [[unlikely]]
 	{
-		return std::unexpected(add_output.error());
+		return std::unexpected(add_result.error());
 	}
 
-	std::string command = std::format("git -C \"{}\" commit 2>&1", project.path.string());
-
-	int commit_output = SystemInterface::run_interactive(command);
-	if (commit_output != 0)
+	std::expected commit_result = SystemInterface::run_interactive(std::vector<std::string>{"git", "commit"}, project.path.string());
+	if (!commit_result) [[unlikely]]
+	{
+		return std::unexpected(std::format("Git not available: {}", commit_result.error()));
+	}
+	if (*commit_result != 0)
 	{
 		return std::unexpected("Git commit failed");
 	}
 
-	add_output->append("\n");
-	add_output->append("Git commit completed successfully");
-
-	return *add_output;
+	return *add_result;
 }
