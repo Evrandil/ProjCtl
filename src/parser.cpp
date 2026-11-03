@@ -3,6 +3,11 @@
 
 Command parser(std::span<const std::string_view> args)
 {
+	if (args.empty())
+	{
+		return Cmd::Unknown{};
+	}
+
 	const std::string_view command = args.at(0);
 
 	if (command == "git")

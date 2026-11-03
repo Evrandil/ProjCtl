@@ -28,6 +28,7 @@ class ProjCtl
 	std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string> project_find(const std::string&) const;
 	std::optional<std::string> current_project_name() const;
 
+	int report(const std::expected<std::string, std::string>&) const;
 
 	// Bug functionality
 	int handle(const Cmd::Unknown&) const;

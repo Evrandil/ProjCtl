@@ -70,6 +70,7 @@ target_compile_options(projctl_core PRIVATE
 	-Wconversion
 	-Wsign-conversion
 	-Wshadow
+#	-O3
 )
 
 target_link_libraries(projctl_core
@@ -96,6 +97,7 @@ target_compile_options(projctl PRIVATE
 	-Wshadow
 	-Wconversion
 	-Wsign-conversion
+#	-O3
 )
 
 
