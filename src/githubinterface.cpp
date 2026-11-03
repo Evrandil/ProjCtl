@@ -6,6 +6,7 @@
 bool GitHubInterface::installed() { return SystemInterface::run("command -v gh").has_value(); }
 bool GitHubInterface::authenticated() { return SystemInterface::run("gh auth status").has_value(); }
 
+
 std::expected<std::string, std::string> GitHubInterface::repo_list()
 {
 	std::optional<std::string> output = SystemInterface::run("gh repo list | awk '{ print $1 }'");
@@ -17,6 +18,7 @@ std::expected<std::string, std::string> GitHubInterface::repo_list()
 
 	return *output;
 }
+
 
 std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view remote_short)
 {
@@ -65,6 +67,7 @@ std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::
 
 	return issues;
 }
+
 
 std::expected<int, std::string> GitHubInterface::issue_create(std::string_view remote_short)
 {
@@ -131,9 +134,7 @@ std::expected<int, std::string> GitHubInterface::request_create(std::string_view
 
 	std::string command = std::format("cd {} && gh pr create", path);
 
-	SystemInterface::run_interactive(command);
-
-	return {};
+	return SystemInterface::run_interactive(command);
 }
 
 

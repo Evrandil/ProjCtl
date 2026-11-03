@@ -5,6 +5,7 @@
 #include <optional>
 #include <cstdint>
 
+
 enum class IssueField : uint8_t
 {
 	Number,
@@ -16,6 +17,7 @@ enum class IssueField : uint8_t
 	Updated,
 	Parent,
 };
+
 
 struct Issue
 {

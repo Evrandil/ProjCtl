@@ -33,7 +33,9 @@ std::optional<std::string> SystemInterface::run(const std::string& command)
 	return output;
 }
 
+
 int SystemInterface::run_interactive(const std::string& command) { return std::system(command.c_str()); }
+
 
 std::filesystem::path SystemInterface::config_home()
 {
@@ -54,6 +56,7 @@ std::filesystem::path SystemInterface::config_home()
 	return {};
 }
 
+
 std::filesystem::path SystemInterface::data_home()
 {
 	const char* xdg = std::getenv("XDG_DATA_HOME");
@@ -72,6 +75,7 @@ std::filesystem::path SystemInterface::data_home()
 
 	return {};
 }
+
 
 std::filesystem::path SystemInterface::cache_home()
 {

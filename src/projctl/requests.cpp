@@ -80,7 +80,7 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 							{
 								value += ", ";
 							}
-							value += request.labels[i];
+							value += request.labels.at(i);
 						}
 						break;
 					case RequestField::Created: value = request.created; break;

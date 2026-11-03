@@ -7,12 +7,15 @@
 #include <map>
 #include <expected>
 
+
 constexpr std::string_view MARGIN = "    ";
 constexpr int MARGIN_WIDTH        = 20;
+
 
 ProjectType detect_project_type(const std::filesystem::path&);
 std::string trim(std::string_view);
 std::string truncate(std::string_view, size_t);
+
 
 class ProjCtl
 {
@@ -26,6 +29,7 @@ class ProjCtl
 	std::optional<std::string> current_project_name() const;
 
 
+	// Bug functionality
 	int handle(const Cmd::Unknown&) const;
 
 	// Base functionality

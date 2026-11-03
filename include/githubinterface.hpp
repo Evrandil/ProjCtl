@@ -7,6 +7,7 @@
 #include <expected>
 #include <string>
 
+
 namespace GitHubInterface
 {
 	bool installed();

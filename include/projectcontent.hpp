@@ -4,6 +4,7 @@
 #include <string>
 #include <string_view>
 
+
 enum class ProjectType : uint8_t
 {
 	Rust,
@@ -13,6 +14,7 @@ enum class ProjectType : uint8_t
 	Zig,
 	Unknown,
 };
+
 
 constexpr std::string_view project_type_to_string(ProjectType type)
 {
@@ -29,6 +31,7 @@ constexpr std::string_view project_type_to_string(ProjectType type)
 	return "No type";
 }
 
+
 constexpr std::optional<std::string_view> build_command_for(ProjectType type)
 {
 	switch (type)
@@ -41,6 +44,7 @@ constexpr std::optional<std::string_view> build_command_for(ProjectType type)
 	}
 }
 
+
 constexpr std::optional<std::string_view> run_command_for(ProjectType type)
 {
 	switch (type)
@@ -52,6 +56,7 @@ constexpr std::optional<std::string_view> run_command_for(ProjectType type)
 		default: return std::nullopt;
 	}
 }
+
 
 struct ProjectContent
 {

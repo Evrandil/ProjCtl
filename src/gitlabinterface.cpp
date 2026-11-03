@@ -3,8 +3,10 @@
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
 
+
 bool GitLabInterface::installed() { return SystemInterface::run("command -v glab").has_value(); }
 bool GitLabInterface::authenticated() { return SystemInterface::run("glab auth status >/dev/null 2>&1").has_value(); }
+
 
 std::expected<std::string, std::string> GitLabInterface::repo_list()
 {
@@ -16,6 +18,7 @@ std::expected<std::string, std::string> GitLabInterface::repo_list()
 	}
 	return *output;
 }
+
 
 std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::string_view remote_short)
 {
@@ -55,6 +58,7 @@ std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::
 	return issues;
 }
 
+
 std::expected<int, std::string> GitLabInterface::issue_create(std::string_view remote_short)
 {
 	if (!installed())
@@ -66,6 +70,7 @@ std::expected<int, std::string> GitLabInterface::issue_create(std::string_view r
 
 	return SystemInterface::run_interactive(command);
 }
+
 
 std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(std::string_view remote_short)
 {
@@ -105,6 +110,7 @@ std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(s
 	return requests;
 }
 
+
 std::expected<int, std::string> GitLabInterface::request_create(std::string_view path)
 {
 	if (!installed())
@@ -114,10 +120,9 @@ std::expected<int, std::string> GitLabInterface::request_create(std::string_view
 
 	std::string command = std::format("cd {} && glab mr create", path);
 
-	SystemInterface::run_interactive(command);
-
-	return {};
+	return SystemInterface::run_interactive(command);
 }
+
 
 std::expected<std::string, std::string> GitLabInterface::request_merge(std::string_view path)
 {
