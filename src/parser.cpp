@@ -42,6 +42,7 @@ Command parser(std::span<const std::string_view> args) {
 		return Cmd::Base::Path { name };
 	}
 
+	// TODO figure out this one XD
 	if (command == "add") {
 		if (name == ".") {
 			return Cmd::Base::Add {
@@ -91,16 +92,20 @@ Command parser(std::span<const std::string_view> args) {
 	}
 
 	if (command == "push") {
-		if (args.size() > 2 && args.at(1) == "branch") {
+		try {
+			if (args.at(1) == "branch") {
+				return Cmd::Git::Push {
+					name,
+					true,
+				};
+			}
+		}
+		catch (const std::out_of_range &err) {
 			return Cmd::Git::Push {
 				name,
-				true,
+				false,
 			};
 		}
-		return Cmd::Git::Push {
-			name,
-			false,
-		};
 	}
 
 	if (command == "pull") {

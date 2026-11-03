@@ -199,3 +199,4 @@ Also minor thing but for process to be actually saving some time everything with
 And just for record I do expect one to use this with some concept they wanna do so haven't tested any and every combination of commands / args you could do around that git pipeline so yeah beware
 # Beware
 No pipes currently work after refactor, it was good refactor but will take care of pipelines tomorrow or so<br>
+For switching branch and committing with commit msg \(not interactive editor\) use names of projects
