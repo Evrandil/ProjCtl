@@ -14,8 +14,8 @@ ReferenceAlignment: Left
 DerivePointerAlignment: false
 
 # keep your one-liners and aligned fields
-AllowShortBlocksOnASingleLine: Always
-AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+# AllowShortBlocksOnASingleLine: Always
+# AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 AllowShortCaseLabelsOnASingleLine: true
 AlignConsecutiveAssignments: Consecutive
 

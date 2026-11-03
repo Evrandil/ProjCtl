@@ -127,7 +127,10 @@ std::expected<std::string, std::string> ProjCtl::status(const std::string& name)
 	}
 
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 	const ProjectContent& content = (*project)->second;
 
 	return std::format("{}", status_one((*project)->first, content));
@@ -138,11 +141,17 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::string& n
 															std::optional<std::string_view> message) const
 {
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 	const ProjectContent& content = (*project)->second;
 
 	std::expected<std::string, std::string> result;
-	if (message) { result = GitInterface::commit(content, *message); }
+	if (message)
+	{
+		result = GitInterface::commit(content, *message);
+	}
 	else
 	{
 		result = GitInterface::commit(content);
@@ -156,7 +165,10 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::string& n
 std::expected<std::string, std::string> ProjCtl::git_push(const std::string& name) const
 {
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 	const ProjectContent& content = (*project)->second;
 
 	std::expected<std::string, std::string> result = GitInterface::push(content);
@@ -168,19 +180,28 @@ std::expected<std::string, std::string> ProjCtl::git_push(const std::string& nam
 std::expected<std::string, std::string> ProjCtl::git_push_branch(const std::string& name) const
 {
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 	const ProjectContent& content = (*project)->second;
 
 
 	// TODO just make gitinterface push_branch return the branch name instead of taking it as an argument or do some
 	// optional funky stuff here too
 	std::expected<std::string, std::string> result = GitInterface::branch(content);
-	if (!result) { return std::unexpected(result.error()); }
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
 
 	std::string branch = *result;
 
 	result = GitInterface::push_branch(content, branch);
-	if (!result) { return std::unexpected(result.error()); }
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
 
 	return std::format("{}{}{}{}", result ? color_code(config.tick_color) : color_code(config.error_color),
 					   result ? Style::TICK : Style::CROSS, result ? *result : result.error(), Style::RESET);
@@ -223,7 +244,10 @@ std::expected<std::string, std::string> ProjCtl::git_pull(const std::string& nam
 		return output;
 	}
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 
 	return std::format("{}", pull_one((*project)->first, (*project)->second));
 }
@@ -268,7 +292,10 @@ std::expected<std::string, std::string> ProjCtl::git_fetch(const std::string& na
 
 
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 
 	return std::format("{}", fetch_one((*project)->first, (*project)->second));
 }
@@ -277,7 +304,10 @@ std::expected<std::string, std::string> ProjCtl::git_fetch(const std::string& na
 std::expected<std::string, std::string> ProjCtl::git_branch_list(const std::string& name) const
 {
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 	const ProjectContent& content = (*project)->second;
 
 	std::expected<std::string, std::string> result = GitInterface::branch_list(content);
@@ -290,7 +320,10 @@ std::expected<std::string, std::string> ProjCtl::git_branch_list(const std::stri
 std::expected<std::string, std::string> ProjCtl::git_branch(const std::string& name, std::string_view branch) const
 {
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 	const ProjectContent& content = (*project)->second;
 
 	std::expected<std::string, std::string> result = GitInterface::branch_switch(content, branch);
@@ -303,11 +336,17 @@ std::expected<std::string, std::string> ProjCtl::git_branch(const std::string& n
 std::expected<std::string, std::string> ProjCtl::git_merge(const std::string& name) const
 {
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 	const ProjectContent& content = (*project)->second;
 
 	std::expected<std::string, std::string> result = GitInterface::default_merge(content);
-	if (!result) { return std::unexpected(result.error()); }
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
 
 	return std::format("{}{}{}", color_code(config.tick_color), Style::TICK, *result);
 }

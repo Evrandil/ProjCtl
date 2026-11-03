@@ -78,7 +78,10 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 					case RequestField::Labels:
 						for (std::size_t i = 0; i < request.labels.size(); ++i)
 						{
-							if (i != 0) { value += ", "; }
+							if (i != 0)
+							{
+								value += ", ";
+							}
 							value += request.labels[i];
 						}
 						break;
@@ -165,7 +168,10 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 	}
 
 	std::expected project_option = project_find(name);
-	if (!project_option) { return std::unexpected(project_option.error()); }
+	if (!project_option)
+	{
+		return std::unexpected(project_option.error());
+	}
 
 	const ProjectContent& content = (*project_option)->second;
 	return std::format("{}\n", request_one((*project_option)->first, content));
@@ -175,7 +181,10 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 std::expected<int, std::string> ProjCtl::request_create(const std::string& name) const
 {
 	std::expected project_option = project_find(name);
-	if (!project_option) { return std::unexpected(project_option.error()); }
+	if (!project_option)
+	{
+		return std::unexpected(project_option.error());
+	}
 
 	const ProjectContent& content                      = (*project_option)->second;
 	std::expected<HostOption, std::string> host_option = GitInterface::host(content);
@@ -193,7 +202,10 @@ std::expected<int, std::string> ProjCtl::request_create(const std::string& name)
 std::expected<std::string, std::string> ProjCtl::request_merge(const std::string& name) const
 {
 	std::expected project_option = project_find(name);
-	if (!project_option) { return std::unexpected(project_option.error()); }
+	if (!project_option)
+	{
+		return std::unexpected(project_option.error());
+	}
 
 	const ProjectContent& content                      = (*project_option)->second;
 	std::expected<HostOption, std::string> host_option = GitInterface::host(content);

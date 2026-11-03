@@ -14,7 +14,10 @@ int ProjCtl::handle(const Cmd::Base::List& cmd) const
 {
 	std::expected<std::string, std::string> result;
 
-	if (cmd.gits_only) { result = list_gits(); }
+	if (cmd.gits_only)
+	{
+		result = list_gits();
+	}
 	else
 	{
 		result = list();
@@ -50,7 +53,10 @@ int ProjCtl::handle(const Cmd::Base::Add& cmd)
 {
 	std::expected<std::string, std::string> result;
 
-	if (cmd.name == ".") { result = add_current(); }
+	if (cmd.name == ".")
+	{
+		result = add_current();
+	}
 	else
 	{
 		result = add(cmd.name, cmd.path);
@@ -159,7 +165,10 @@ int ProjCtl::handle(const Cmd::Git::Push& cmd) const
 {
 	std::expected<std::string, std::string> result;
 
-	if (cmd.branch_upstream) { result = git_push_branch(cmd.name); }
+	if (cmd.branch_upstream)
+	{
+		result = git_push_branch(cmd.name);
+	}
 	else
 	{
 		result = git_push(cmd.name);
@@ -210,7 +219,10 @@ int ProjCtl::handle(const Cmd::Git::Branch& cmd) const
 {
 	std::expected<std::string, std::string> result;
 
-	if (cmd.branch_name) { result = git_branch(cmd.name, *cmd.branch_name); }
+	if (cmd.branch_name)
+	{
+		result = git_branch(cmd.name, *cmd.branch_name);
+	}
 	else
 	{
 		result = git_branch_list(cmd.name);

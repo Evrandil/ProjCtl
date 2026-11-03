@@ -32,7 +32,10 @@ void ProjCtl::load()
 	while (std::getline(projects_file, line))
 	{
 		line = trim(line);
-		if (line.empty() || line.front() == '#' || line.front() == ';') { continue; }
+		if (line.empty() || line.front() == '#' || line.front() == ';')
+		{
+			continue;
+		}
 
 		switch (line.front())
 		{
@@ -89,8 +92,14 @@ void ProjCtl::save() const
 		projects_file << '[' << project.first << "]\n";
 		projects_file << "path=" << project.second.path.string() << '\n';
 
-		if (project.second.build_command) { projects_file << "build=" << *project.second.build_command << '\n'; }
-		if (project.second.run_command) { projects_file << "run=" << *project.second.run_command << '\n'; }
+		if (project.second.build_command)
+		{
+			projects_file << "build=" << *project.second.build_command << '\n';
+		}
+		if (project.second.run_command)
+		{
+			projects_file << "run=" << *project.second.run_command << '\n';
+		}
 
 		projects_file << '\n';
 	}
@@ -104,7 +113,10 @@ std::optional<std::string> ProjCtl::current_project_name() const
 	{
 		std::filesystem::path project_path = std::filesystem::weakly_canonical(project.second.path);
 
-		if (cwd == project_path) { return project.first; }
+		if (cwd == project_path)
+		{
+			return project.first;
+		}
 	}
 	return std::nullopt;
 }

@@ -84,7 +84,10 @@ std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& n
 					case IssueField::Labels:
 						for (std::size_t i = 0; i < issue.labels.size(); ++i)
 						{
-							if (i != 0) { value += ", "; }
+							if (i != 0)
+							{
+								value += ", ";
+							}
 							value += issue.labels[i];
 						}
 						break;
@@ -168,7 +171,10 @@ std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& n
 	}
 
 	std::expected project_option = project_find(name);
-	if (!project_option) { return std::unexpected(project_option.error()); }
+	if (!project_option)
+	{
+		return std::unexpected(project_option.error());
+	}
 
 	const ProjectContent& content = (*project_option)->second;
 	return std::format("{}\n", issue_one((*project_option)->first, content));
@@ -178,7 +184,10 @@ std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& n
 std::expected<int, std::string> ProjCtl::issue_create(const std::string& name) const
 {
 	std::expected project_option = project_find(name);
-	if (!project_option) { return std::unexpected(project_option.error()); }
+	if (!project_option)
+	{
+		return std::unexpected(project_option.error());
+	}
 
 	const ProjectContent& content                      = (*project_option)->second;
 	std::expected<HostOption, std::string> host_option = GitInterface::host(content);

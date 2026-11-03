@@ -14,7 +14,10 @@ int ProjCtl::handle(const Cmd::List& cmd) const
 {
 	std::expected<std::string, std::string> result;
 
-	if (cmd.gits_only) { result = list_gits(); }
+	if (cmd.gits_only)
+	{
+		result = list_gits();
+	}
 	else
 	{
 		result = list();

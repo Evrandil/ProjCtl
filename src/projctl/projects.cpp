@@ -56,7 +56,10 @@ std::expected<std::string, std::string> ProjCtl::list() const
 std::expected<std::string, std::string> ProjCtl::path_show(const std::string& name) const
 {
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 
 	return (*project)->second.path.string();
 }
@@ -71,7 +74,10 @@ std::expected<std::string, std::string> ProjCtl::add(const std::string& name, st
 										   truncate(name, config.name_width), color_code(config.error_color),
 										   Style::RESET));
 	}
-	if (path.string() == ".") { path = std::filesystem::current_path(); }
+	if (path.string() == ".")
+	{
+		path = std::filesystem::current_path();
+	}
 	std::pair<std::string, ProjectContent> new_project = {name, ProjectContent{path, detect_project_type(path)}};
 	projects.emplace(new_project);
 
@@ -127,7 +133,10 @@ std::expected<std::string, std::string> ProjCtl::remove(const std::string& name)
 std::expected<std::string, std::string> ProjCtl::open(const std::string& name) const
 {
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 
 	if (config.editor == "neovide" || config.editor == "emacs")
 	{
@@ -148,7 +157,10 @@ std::expected<std::string, std::string> ProjCtl::open(const std::string& name) c
 std::expected<int, std::string> ProjCtl::build(const std::string& name) const
 {
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 
 	const ProjectContent& content = (*project)->second;
 
@@ -171,7 +183,10 @@ std::expected<int, std::string> ProjCtl::build(const std::string& name) const
 std::expected<int, std::string> ProjCtl::run(const std::string& name) const
 {
 	std::expected project = project_find(name);
-	if (!project) { return std::unexpected(project.error()); }
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
 	const ProjectContent& content = (*project)->second;
 
 	const std::optional<std::string_view> command_option =

@@ -15,10 +15,14 @@ namespace Cmd
 	{
 
 		struct List
-		{ bool gits_only; };
+		{
+			bool gits_only;
+		};
 
 		struct Path
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct Add
 		{
@@ -27,16 +31,24 @@ namespace Cmd
 		};
 
 		struct Remove
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct Open
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct Build
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct Run
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 	} // namespace Base
 
@@ -44,7 +56,9 @@ namespace Cmd
 	{
 
 		struct Status
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct Commit
 		{
@@ -59,10 +73,14 @@ namespace Cmd
 		};
 
 		struct Pull
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct Fetch
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct Branch
 		{
@@ -71,7 +89,9 @@ namespace Cmd
 		};
 
 		struct Merge
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 	} // namespace Git
 
@@ -87,19 +107,29 @@ namespace Cmd
 		};
 
 		struct IssueList
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct IssueCreate
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct RequestList
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct RequestCreate
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 		struct RequestMerge
-		{ std::string name; };
+		{
+			std::string name;
+		};
 
 	} // namespace GH
 

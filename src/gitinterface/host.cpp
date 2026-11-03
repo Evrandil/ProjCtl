@@ -3,10 +3,16 @@
 
 std::expected<HostOption, std::string> GitInterface::host(const ProjectContent& project)
 {
-	if (!is_repo(project)) [[unlikely]] { return std::unexpected("Not a git repo"); }
+	if (!is_repo(project)) [[unlikely]]
+	{
+		return std::unexpected("Not a git repo");
+	}
 
 	std::expected<std::string, std::string> remote_output = remote(project);
-	if (!remote_output) [[unlikely]] { return std::unexpected(remote_output.error()); }
+	if (!remote_output) [[unlikely]]
+	{
+		return std::unexpected(remote_output.error());
+	}
 
 	std::string remote    = *remote_output;
 	std::size_t separator = remote.find_last_of('/'); // repo name
@@ -37,7 +43,13 @@ std::expected<HostOption, std::string> GitInterface::host(const ProjectContent& 
 	}
 
 	std::string host = remote.substr(separator + 1);
-	if (host == "github") { return HostOption::GitHub; }
-	if (host == "gitlab") { return HostOption::GitLab; }
+	if (host == "github")
+	{
+		return HostOption::GitHub;
+	}
+	if (host == "gitlab")
+	{
+		return HostOption::GitLab;
+	}
 	return HostOption::Unknown;
 }

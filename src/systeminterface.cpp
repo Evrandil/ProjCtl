@@ -8,7 +8,10 @@
 std::optional<std::string> SystemInterface::run(const std::string& command)
 {
 	FILE* pipe = popen(command.c_str(), "r");
-	if (!pipe) [[unlikely]] { return std::nullopt; }
+	if (!pipe) [[unlikely]]
+	{
+		return std::nullopt;
+	}
 
 	std::string output;
 	char buffer[256];
@@ -19,7 +22,10 @@ std::optional<std::string> SystemInterface::run(const std::string& command)
 	}
 
 	int status = pclose(pipe);
-	if (status != 0) [[unlikely]] { return std::nullopt; }
+	if (status != 0) [[unlikely]]
+	{
+		return std::nullopt;
+	}
 	while (!output.empty() && output.back() == '\n')
 	{
 		output.pop_back();
@@ -33,11 +39,17 @@ std::filesystem::path SystemInterface::config_home()
 {
 	const char* xdg = std::getenv("XDG_CONFIG_HOME");
 
-	if (xdg && *xdg != '\0') { return std::filesystem::path{xdg}; }
+	if (xdg && *xdg != '\0')
+	{
+		return std::filesystem::path{xdg};
+	}
 
 	const char* home = std::getenv("HOME");
 
-	if (home && *home != '\0') { return std::filesystem::path{home} / ".config"; }
+	if (home && *home != '\0')
+	{
+		return std::filesystem::path{home} / ".config";
+	}
 
 	return {};
 }
@@ -46,11 +58,17 @@ std::filesystem::path SystemInterface::data_home()
 {
 	const char* xdg = std::getenv("XDG_DATA_HOME");
 
-	if (xdg && *xdg != '\0') { return std::filesystem::path{xdg}; }
+	if (xdg && *xdg != '\0')
+	{
+		return std::filesystem::path{xdg};
+	}
 
 	const char* home = std::getenv("HOME");
 
-	if (home && *home != '\0') { return std::filesystem::path{home} / ".local/share"; }
+	if (home && *home != '\0')
+	{
+		return std::filesystem::path{home} / ".local/share";
+	}
 
 	return {};
 }
@@ -59,11 +77,17 @@ std::filesystem::path SystemInterface::cache_home()
 {
 	const char* xdg = std::getenv("XDG_CACHE_HOME");
 
-	if (xdg && *xdg != '\0') { return std::filesystem::path{xdg}; }
+	if (xdg && *xdg != '\0')
+	{
+		return std::filesystem::path{xdg};
+	}
 
 	const char* home = std::getenv("HOME");
 
-	if (home && *home != '\0') { return std::filesystem::path{home} / ".cashe"; }
+	if (home && *home != '\0')
+	{
+		return std::filesystem::path{home} / ".cashe";
+	}
 
 	return {};
 }
