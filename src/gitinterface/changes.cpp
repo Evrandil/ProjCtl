@@ -10,12 +10,16 @@ std::expected<std::string, std::string> GitInterface::changes(const ProjectConte
 		return std::unexpected("Not a git repo");
 	}
 
-	std::string command               = std::format("git -C \"{}\" status --porcelain", project.path.string());
-	std::optional<std::string> output = SystemInterface::run(command);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "status", "--porcelain"}, project.path.string());
 
-	if (!output) [[unlikely]]
+	if (!result) [[unlikely]]
 	{
-		return std::unexpected("Git status failed");
+		return std::unexpected(std::format("Git not available: {}", result.error()));
 	}
-	return *output;
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
+	}
+
+	return result->text;
 }
