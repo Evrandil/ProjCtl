@@ -10,12 +10,16 @@ std::expected<std::string, std::string> GitInterface::default_merge(const Projec
 		return std::unexpected("Not a git repo");
 	}
 
-	std::string command               = std::format("git -C \"{}\" merge", project.path.string());
-	std::optional<std::string> result = SystemInterface::run(command);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "merge"}, project.path.string());
 
-	if (!result) [[unlikely]]
+	if (!result)
 	{
-		return std::unexpected("Git merge failed");
+		return std::unexpected(std::format("Git merge failed: {}", result.error()));
 	}
-	return *result;
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
+	}
+
+	return result->text;
 }
