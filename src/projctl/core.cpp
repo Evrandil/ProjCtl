@@ -80,15 +80,14 @@ void ProjCtl::load()
 }
 
 
-void ProjCtl::save() const noexcept
+std::expected<void, std::string> ProjCtl::save() const noexcept
 {
 	std::error_code error;
 	std::filesystem::create_directories(data_path.parent_path(), error);
 
 	if (error)
 	{
-		std::println(stderr, "Couldn't create {}: {}", data_path.parent_path().string(), error.message());
-		return;
+		return std::unexpected(std::format("Couldn't create {}: {}", data_path.parent_path().string(), error.message()));
 	}
 
 	std::filesystem::path temp_path = data_path;
@@ -116,18 +115,17 @@ void ProjCtl::save() const noexcept
 		file.close();
 		if (!file)
 		{
-			std::println(stderr, "Couldn't write to: {}", temp_path.string());
 			std::filesystem::remove(temp_path, error);
-			return;
+			return std::unexpected(std::format("Couldn't write to: {}", temp_path.string()));
 		}
 	}
 
 	std::filesystem::rename(temp_path, data_path, error);
 	if (error)
 	{
-		std::println(stderr, "Couldn't save {}: {}", data_path.string(), error.message());
-		return;
+		return std::unexpected(std::format("Couldn't save {}: {}", data_path.string(), error.message()));
 	}
+	return {};
 }
 
 

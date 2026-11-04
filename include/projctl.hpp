@@ -24,7 +24,7 @@ class ProjCtl
 	std::filesystem::path data_path;
 	Config config;
 	void load();
-	void save() const noexcept;
+	[[nodiscard]] std::expected<void, std::string> save() const noexcept;
 	std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string> project_find(const std::string&) const;
 	std::optional<std::string> current_project_name() const;
 

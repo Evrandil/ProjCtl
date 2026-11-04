@@ -22,8 +22,14 @@ int ProjCtl::report_save(const std::expected<std::string, std::string>& result) 
 		return 1;
 	}
 
+	std::expected saved = save();
+	if (!saved)
+	{
+		std::println(stderr, "\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, saved.error(), Style::RESET);
+		return 1;
+	}
+
 	std::println(stdout, "\n\n{}\n\n", *result);
-	save();
 	return 0;
 }
 
