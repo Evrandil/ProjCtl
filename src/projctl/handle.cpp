@@ -14,6 +14,20 @@ int ProjCtl::report(const std::expected<std::string, std::string>& result) const
 	return 0;
 }
 
+int ProjCtl::report_save(const std::expected<std::string, std::string>& result) const
+{
+	if (!result)
+	{
+		std::println(stderr, "\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
+		return 1;
+	}
+
+	std::println(stdout, "\n\n{}\n\n", *result);
+	save();
+	return 0;
+}
+
+
 int ProjCtl::handle(const Cmd::Unknown&) const
 {
 	std::println("\n\n{}Unrecognized command{}\n\n", color_code(config.error_color), Style::RESET);
@@ -50,15 +64,15 @@ int ProjCtl::handle(const Cmd::Base::Add& cmd)
 {
 	if (cmd.name == ".")
 	{
-		return report(add_current());
+		return report_save(add_current());
 	}
-	return report(add(cmd.name, cmd.path));
+	return report_save(add(cmd.name, cmd.path));
 }
 
 
 int ProjCtl::handle(const Cmd::Base::Remove& cmd)
 {
-	return report(remove(cmd.name));
+	return report_save(remove(cmd.name));
 }
 
 

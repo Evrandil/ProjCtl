@@ -2,6 +2,7 @@
 
 #include <format>
 #include <fstream>
+#include <print>
 #include "config.hpp"
 #include "systeminterface.hpp"
 
@@ -12,9 +13,6 @@ ProjCtl::ProjCtl()
 	data_path   = SystemInterface::data_home() / "projctl/projects.ini";
 	load();
 }
-
-
-ProjCtl::~ProjCtl() { save(); }
 
 
 void ProjCtl::load()
@@ -82,25 +80,53 @@ void ProjCtl::load()
 }
 
 
-void ProjCtl::save() const
+void ProjCtl::save() const noexcept
 {
-	std::ofstream projects_file{data_path};
+	std::error_code error;
+	std::filesystem::create_directories(data_path.parent_path(), error);
 
-	for (const decltype(projects)::value_type& project : projects)
+	if (error)
 	{
-		projects_file << '[' << project.first << "]\n";
-		projects_file << "path=" << project.second.path.string() << '\n';
+		std::println(stderr, "Couldn't create {}: {}", data_path.parent_path().string(), error.message());
+		return;
+	}
 
-		if (project.second.build_command)
-		{
-			projects_file << "build=" << *project.second.build_command << '\n';
-		}
-		if (project.second.run_command)
-		{
-			projects_file << "run=" << *project.second.run_command << '\n';
-		}
+	std::filesystem::path temp_path = data_path;
+	temp_path += ".tmp";
 
-		projects_file << '\n';
+	{
+		std::ofstream file{temp_path};
+
+		for (const decltype(projects)::value_type& project : projects)
+		{
+			file << '[' << project.first << "]\n";
+			file << "path=" << project.second.path.string() << '\n';
+
+			if (project.second.build_command)
+			{
+				file << "build=" << *project.second.build_command << '\n';
+			}
+			if (project.second.run_command)
+			{
+				file << "run=" << *project.second.run_command << '\n';
+			}
+
+			file << '\n';
+		}
+		file.close();
+		if (!file)
+		{
+			std::println(stderr, "Couldn't write to: {}", temp_path.string());
+			std::filesystem::remove(temp_path, error);
+			return;
+		}
+	}
+
+	std::filesystem::rename(temp_path, data_path, error);
+	if (error)
+	{
+		std::println(stderr, "Couldn't save {}: {}", data_path.string(), error.message());
+		return;
 	}
 }
 

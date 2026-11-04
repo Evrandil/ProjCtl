@@ -24,11 +24,12 @@ class ProjCtl
 	std::filesystem::path data_path;
 	Config config;
 	void load();
-	void save() const;
+	void save() const noexcept;
 	std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string> project_find(const std::string&) const;
 	std::optional<std::string> current_project_name() const;
 
 	int report(const std::expected<std::string, std::string>&) const;
+	int report_save(const std::expected<std::string, std::string>&) const;
 
 	// Bug functionality
 	int handle(const Cmd::Unknown&) const;
@@ -87,7 +88,6 @@ class ProjCtl
 
 	public:
 	ProjCtl();
-	~ProjCtl();
 	int execute(const Command& command)
 	{
 		return std::visit([this](const auto& cmd) { return handle(cmd); }, command);
