@@ -32,6 +32,8 @@ The parser sets `cmd.all` correctly, but nothing reads it. `handle` passes only 
   - pattern: `return report(cmd.all ? status_all() : status(cmd.name));`
 - [ ] check that nothing is left over: `grep -rn '"--all"\|== "\."' src/` should only find `parser.cpp`
 
+cmd_of(project) / cmd(name) { runs cmd_of(project of arged name) } / cmd_all() { runs cmd_of(all projects) }
+
 ## 3. Handlers (`handle.cpp`)
 
 - [ ] **one reporting helper for `expected<int, …>`**: `build`, `run`, `icreate` and `reqcreate` each repeat the error printing, and print errors to **stdout**
