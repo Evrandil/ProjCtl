@@ -4,7 +4,7 @@
 #include "gitinterface.hpp"
 
 
-std::expected<std::string, std::string> ProjCtl::request_list(const std::string& name) const
+std::expected<std::string, std::string> ProjCtl::request_list(const std::optional<std::string>& name) const
 {
 	auto format_requests = [&](const std::vector<Request>& requests) -> std::string
 	{
@@ -187,7 +187,7 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::string&
 }
 
 
-std::expected<int, std::string> ProjCtl::request_create(const std::string& name) const
+std::expected<int, std::string> ProjCtl::request_create(const std::optional<std::string>& name) const
 {
 	std::expected project_option = project_find(name);
 	if (!project_option)
@@ -207,7 +207,7 @@ std::expected<int, std::string> ProjCtl::request_create(const std::string& name)
 }
 
 
-std::expected<std::string, std::string> ProjCtl::request_merge(const std::string& name) const
+std::expected<std::string, std::string> ProjCtl::request_merge(const std::optional<std::string>& name) const
 {
 	std::expected project_option = project_find(name);
 	if (!project_option)

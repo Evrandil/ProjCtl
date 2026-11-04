@@ -46,7 +46,7 @@ std::expected<std::string, std::string> ProjCtl::list_gits() const
 }
 
 
-std::expected<std::string, std::string> ProjCtl::status(const std::string& name) const
+std::expected<std::string, std::string> ProjCtl::status(const std::optional<std::string>& name) const
 {
 	auto status_one = [&](const std::string& project_name, const ProjectContent& content)
 	{
@@ -107,7 +107,7 @@ std::expected<std::string, std::string> ProjCtl::status(const std::string& name)
 }
 
 
-std::expected<std::string, std::string> ProjCtl::git_commit(const std::string& name, std::optional<std::string_view> message) const
+std::expected<std::string, std::string> ProjCtl::git_commit(const std::optional<std::string>& name, std::optional<std::string_view> message) const
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -130,7 +130,7 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::string& n
 }
 
 
-std::expected<std::string, std::string> ProjCtl::git_push(const std::string& name) const
+std::expected<std::string, std::string> ProjCtl::git_push(const std::optional<std::string>& name) const
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -144,7 +144,7 @@ std::expected<std::string, std::string> ProjCtl::git_push(const std::string& nam
 	return std::format("{}{}{}{}", result ? color_code(config.tick_color) : color_code(config.error_color), result ? Style::TICK : Style::CROSS, result ? *result : result.error(), Style::RESET);
 }
 
-std::expected<std::string, std::string> ProjCtl::git_push_branch(const std::string& name) const
+std::expected<std::string, std::string> ProjCtl::git_push_branch(const std::optional<std::string>& name) const
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -175,7 +175,7 @@ std::expected<std::string, std::string> ProjCtl::git_push_branch(const std::stri
 
 
 // TODO that one also get rid of --all flag and make another func for all I think
-std::expected<std::string, std::string> ProjCtl::git_pull(const std::string& name) const
+std::expected<std::string, std::string> ProjCtl::git_pull(const std::optional<std::string>& name) const
 {
 	auto pull_one = [&](const std::string& project_name, const ProjectContent& content)
 	{
@@ -216,7 +216,7 @@ std::expected<std::string, std::string> ProjCtl::git_pull(const std::string& nam
 
 
 // TODO that one also get rid of --all flag and make another func for all I think
-std::expected<std::string, std::string> ProjCtl::git_fetch(const std::string& name) const
+std::expected<std::string, std::string> ProjCtl::git_fetch(const std::optional<std::string>& name) const
 {
 	auto fetch_one = [&](const std::string& project_name, const ProjectContent& content)
 	{
@@ -259,7 +259,7 @@ std::expected<std::string, std::string> ProjCtl::git_fetch(const std::string& na
 }
 
 // TODO for both branch funcs make some header for output
-std::expected<std::string, std::string> ProjCtl::git_branch_list(const std::string& name) const
+std::expected<std::string, std::string> ProjCtl::git_branch_list(const std::optional<std::string>& name) const
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -274,7 +274,7 @@ std::expected<std::string, std::string> ProjCtl::git_branch_list(const std::stri
 }
 
 
-std::expected<std::string, std::string> ProjCtl::git_branch(const std::string& name, std::string_view branch) const
+std::expected<std::string, std::string> ProjCtl::git_branch(const std::optional<std::string>& name, const std::optional<std::string>& branch) const
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -283,13 +283,13 @@ std::expected<std::string, std::string> ProjCtl::git_branch(const std::string& n
 	}
 	const ProjectContent& content = (*project)->second;
 
-	std::expected<std::string, std::string> result = GitInterface::branch_switch(content, branch);
+	std::expected<std::string, std::string> result = GitInterface::branch_switch(content, *branch);
 
 	return std::format("{}{}{}{}", result ? color_code(config.tick_color) : color_code(config.error_color), result ? Style::TICK : Style::CROSS, result ? *result : result.error(), Style::RESET);
 }
 
 
-std::expected<std::string, std::string> ProjCtl::git_merge(const std::string& name) const
+std::expected<std::string, std::string> ProjCtl::git_merge(const std::optional<std::string>& name) const
 {
 	std::expected project = project_find(name);
 	if (!project)

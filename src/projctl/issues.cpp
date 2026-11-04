@@ -10,7 +10,7 @@
 #include "gitinterface.hpp"
 
 
-std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& name) const
+std::expected<std::string, std::string> ProjCtl::issue_list(const std::optional<std::string>& name) const
 {
 	auto format_issues = [&](const std::vector<Issue>& issues) -> std::string
 	{
@@ -193,7 +193,7 @@ std::expected<std::string, std::string> ProjCtl::issue_list(const std::string& n
 }
 
 
-std::expected<int, std::string> ProjCtl::issue_create(const std::string& name) const
+std::expected<int, std::string> ProjCtl::issue_create(const std::optional<std::string>& name) const
 {
 	std::expected project_option = project_find(name);
 	if (!project_option)
