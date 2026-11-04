@@ -33,10 +33,10 @@ TEST_CASE("list")
 		CHECK(list->gits_only);
 	}
 }
-// projctl add <path> <name>
+// projctl add [<path>] <name>
 TEST_CASE("add")
 {
-	// projctl add [path] [name]
+	// projctl add <path> <name>
 	SUBCASE("add with path and name")
 	{
 		const Command command = parse({"add", "/path/to/project", "proj"});
@@ -45,10 +45,10 @@ TEST_CASE("add")
 		CHECK(add->name == "proj");
 		CHECK(add->path == "/path/to/project");
 	}
-	// projctl add . [name]
+	// projctl add <name>
 	SUBCASE("add current directory with name")
 	{
-		const Command command = parse({"add", ".", "proj"});
+		const Command command = parse({"add", "proj"});
 		const auto* add = std::get_if<Cmd::Base::Add>(&command);
 		REQUIRE(add != nullptr);
 		CHECK(add->name == "proj");
@@ -78,34 +78,82 @@ TEST_CASE("remove")
 // projctl path [<name>]
 TEST_CASE("path")
 {
-	const Command command = parse({"path", "proj"});
-	const auto* path = std::get_if<Cmd::Base::Path>(&command);
-	REQUIRE(path != nullptr);
-	CHECK(path->name == "proj");
+	// projctl path <name>
+	SUBCASE("path with name")
+	{
+		const Command command = parse({"path", "proj"});
+		const auto* path = std::get_if<Cmd::Base::Path>(&command);
+		REQUIRE(path != nullptr);
+		CHECK(path->name == "proj");
+	}
+	// projctl path
+	SUBCASE("path with no name")
+	{
+		const Command command = parse({"path"});
+		const auto* path = std::get_if<Cmd::Base::Path>(&command);
+		REQUIRE(path != nullptr);
+		CHECK(path->name == ".");
+	}
 }
 // projctl open [<name>]
 TEST_CASE("open")
 {
-	const Command command = parse({"open", "proj"});
-	const auto* open = std::get_if<Cmd::Base::Open>(&command);
-	REQUIRE(open != nullptr);
-	CHECK(open->name == "proj");
+	// projctl open <name>
+	SUBCASE("open with name")
+	{
+		const Command command = parse({"open", "proj"});
+		const auto* open = std::get_if<Cmd::Base::Open>(&command);
+		REQUIRE(open != nullptr);
+		CHECK(open->name == "proj");
+	}
+	// projctl open
+	SUBCASE("open with no name")
+	{
+		const Command command = parse({"open"});
+		const auto* open = std::get_if<Cmd::Base::Open>(&command);
+		REQUIRE(open != nullptr);
+		CHECK(open->name == ".");
+	}
 }
 // projctl build [<name>]
 TEST_CASE("build")
 {
-	const Command command = parse({"build", "proj"});
-	const auto* build = std::get_if<Cmd::Base::Build>(&command);
-	REQUIRE(build != nullptr);
-	CHECK(build->name == "proj");
+	// projctl build <name>
+	SUBCASE("build with name")
+	{
+		const Command command = parse({"build", "proj"});
+		const auto* build = std::get_if<Cmd::Base::Build>(&command);
+		REQUIRE(build != nullptr);
+		CHECK(build->name == "proj");
+	}
+	// projctl build
+	SUBCASE("build with no name")
+	{
+		const Command command = parse({"build"});
+		const auto* build = std::get_if<Cmd::Base::Build>(&command);
+		REQUIRE(build != nullptr);
+		CHECK(build->name == ".");
+	}
 }
 // projctl run [<name>]
 TEST_CASE("run")
 {
-	const Command command = parse({"run", "proj"});
-	const auto* run = std::get_if<Cmd::Base::Run>(&command);
-	REQUIRE(run != nullptr);
-	CHECK(run->name == "proj");
+	// projctl run <name>
+	SUBCASE("run with name")
+	{
+		const Command command = parse({"run", "proj"});
+		const auto* run = std::get_if<Cmd::Base::Run>(&command);
+		REQUIRE(run != nullptr);
+		CHECK(run->name == "proj");
+	}
+	// projctl run
+	SUBCASE("run with no name")
+	{
+		const Command command = parse({"run"});
+		const auto* run = std::get_if<Cmd::Base::Run>(&command);
+		REQUIRE(run != nullptr);
+		CHECK(run->name == ".");
+	}
 }
 // projctl branch [<branch>] <name>
 TEST_CASE("branch")
@@ -133,76 +181,142 @@ TEST_CASE("branch")
 // projctl status [<name> | --all | -a]
 TEST_CASE("status")
 {
-	// projctl status <name>
-	SUBCASE("plain status")
+	// projctl status
+	SUBCASE("status with no name")
+	{
+		const Command command = parse({"status"});
+		const auto* status = std::get_if<Cmd::Git::Status>(&command);
+		REQUIRE(status != nullptr);
+		CHECK(status->name == ".");
+	}
+	SUBCASE("status with name")
 	{
 		const Command command = parse({"status", "proj"});
 		const auto* status = std::get_if<Cmd::Git::Status>(&command);
 		REQUIRE(status != nullptr);
 		CHECK(status->name == "proj");
 	}
-	// projctl status --all | -a
-	SUBCASE("status all")
+	// projctl status --all
+	SUBCASE("status --all")
 	{
 		const Command command = parse({"status", "--all"});
 		const auto* status = std::get_if<Cmd::Git::Status>(&command);
 		REQUIRE(status != nullptr);
-		CHECK(status->name == "--all");
+		CHECK(status->all);
+	}
+	// projctl status -a
+	SUBCASE("status -a")
+	{
+		const Command command = parse({"status", "-a"});
+		const auto* status = std::get_if<Cmd::Git::Status>(&command);
+		REQUIRE(status != nullptr);
+		CHECK(status->all);
 	}
 }
 //projctl fetch [<name> | --all | -a]
 TEST_CASE("fetch")
 {
+	// projctl fetch
+	SUBCASE("fetch with no name")
+	{
+		const Command command = parse({"fetch"});
+		const auto* fetch = std::get_if<Cmd::Git::Fetch>(&command);
+		REQUIRE(fetch != nullptr);
+		CHECK(fetch->name == ".");
+	}
 	// projctl fetch <name>
-	SUBCASE("plain fetch")
+	SUBCASE("fetch with name")
 	{
 		const Command command = parse({"fetch", "proj"});
 		const auto* fetch = std::get_if<Cmd::Git::Fetch>(&command);
 		REQUIRE(fetch != nullptr);
 		CHECK(fetch->name == "proj");
 	}
-	// projctl fetch --all | -a
-	SUBCASE("fetch all")
+	// projctl fetch --all
+	SUBCASE("fetch --all")
 	{
 		const Command command = parse({"fetch", "--all"});
 		const auto* fetch = std::get_if<Cmd::Git::Fetch>(&command);
 		REQUIRE(fetch != nullptr);
-		CHECK(fetch->name == "--all");
+		CHECK(fetch->all);
+	}
+	// projctl fetch -a
+	SUBCASE("fetch -a")
+	{
+		const Command command = parse({"fetch", "-a"});
+		const auto* fetch = std::get_if<Cmd::Git::Fetch>(&command);
+		REQUIRE(fetch != nullptr);
+		CHECK(fetch->all);
 	}
 }
 // projctl pull [<name> | --all | -a]
 TEST_CASE("pull")
 {
+	// projctl pull
+	SUBCASE("pull with no name")
+	{
+		const Command command = parse({"pull"});
+		const auto* pull = std::get_if<Cmd::Git::Pull>(&command);
+		REQUIRE(pull != nullptr);
+		CHECK(pull->name == ".");
+	}
 	// projctl pull <name>
-	SUBCASE("plain pull")
+	SUBCASE("pull with name")
 	{
 		const Command command = parse({"pull", "proj"});
 		const auto* pull = std::get_if<Cmd::Git::Pull>(&command);
 		REQUIRE(pull != nullptr);
 		CHECK(pull->name == "proj");
 	}
-	// projctl pull --all | -a
-	SUBCASE("pull all")
+	// projctl pull --all
+	SUBCASE("pull --all")
 	{
 		const Command command = parse({"pull", "--all"});
 		const auto* pull = std::get_if<Cmd::Git::Pull>(&command);
 		REQUIRE(pull != nullptr);
-		CHECK(pull->name == "--all");
+		CHECK(pull->all);
+	}
+	// projctl pull -a
+	SUBCASE("pull -a")
+	{
+		const Command command = parse({"pull", "-a"});
+		const auto* pull = std::get_if<Cmd::Git::Pull>(&command);
+		REQUIRE(pull != nullptr);
+		CHECK(pull->all);
 	}
 }
 // projctl merge [<name>]
 TEST_CASE("merge")
 {
-	const Command command = parse({"merge", "proj"});
-	const auto* automerge = std::get_if<Cmd::Git::Merge>(&command);
-	REQUIRE(automerge != nullptr);
-	CHECK(automerge->name == "proj");
+	SUBCASE("merge with no name")
+	{
+		const Command command = parse({"merge"});
+		const auto* automerge = std::get_if<Cmd::Git::Merge>(&command);
+		REQUIRE(automerge != nullptr);
+		CHECK(automerge->name == ".");
+	}
+	SUBCASE("merge with name")
+	{
+		const Command command = parse({"merge", "proj"});
+		const auto* automerge = std::get_if<Cmd::Git::Merge>(&command);
+		REQUIRE(automerge != nullptr);
+		CHECK(automerge->name == "proj");
+	}
 }
 // projctl commit [[<message>] <name>]
 TEST_CASE("commit")
 {
+	// projctl commit
+	SUBCASE("commit with no name")
+	{
+		const Command command = parse({"commit"});
+		const auto* commit = std::get_if<Cmd::Git::Commit>(&command);
+		REQUIRE(commit != nullptr);
+		CHECK(commit->name == ".");
+		CHECK_FALSE(commit->message);
+	}
 	// projctl commit <name>
-	SUBCASE("plain commit")
+	SUBCASE("commit with name")
 	{
 		const Command command = parse({"commit", "proj"});
 		const auto* commit = std::get_if<Cmd::Git::Commit>(&command);
@@ -224,6 +338,15 @@ TEST_CASE("commit")
 // projctl push [-u] [<name>]
 TEST_CASE("push")
 {
+	// projctl push
+	SUBCASE("push with no name")
+	{
+		const Command command = parse({"push"});
+		const auto* push = std::get_if<Cmd::Git::Push>(&command);
+		REQUIRE(push != nullptr);
+		CHECK(push->name == ".");
+		CHECK_FALSE(push->branch_upstream);
+	}
 	// projctl push <name>
 	SUBCASE("plain push")
 	{
@@ -232,6 +355,15 @@ TEST_CASE("push")
 		REQUIRE(push != nullptr);
 		CHECK(push->name == "proj");
 		CHECK_FALSE(push->branch_upstream);
+	}
+	// projctl push -u
+	SUBCASE("push upstream with no name")
+	{
+		const Command command = parse({"push", "-u"});
+		const auto* push = std::get_if<Cmd::Git::Push>(&command);
+		REQUIRE(push != nullptr);
+		CHECK(push->name == ".");
+		CHECK(push->branch_upstream);
 	}
 	// projctl push -u <name>
 	SUBCASE("push upstream")
@@ -274,16 +406,48 @@ TEST_CASE("gh commands")
 // projctl icreate [<name>]
 TEST_CASE("gh issue commands")
 {
+	// projctl ilist
+	SUBCASE("gh issue list with no name")
+	{
+		const Command command = parse({"ilist"});
+		const auto* gh_issue_list = std::get_if<Cmd::GH::IssueList>(&command);
+		REQUIRE(gh_issue_list != nullptr);
+		CHECK(gh_issue_list->name == ".");
+	}
 	// projctl ilist <name>
-	SUBCASE("gh issue list")
+	SUBCASE("gh issue list with name")
 	{
 		const Command command = parse({"ilist", "proj"});
 		const auto* gh_issue_list = std::get_if<Cmd::GH::IssueList>(&command);
 		REQUIRE(gh_issue_list != nullptr);
 		CHECK(gh_issue_list->name == "proj");
 	}
+	// projctl ilist --all
+	SUBCASE("gh issue list --all")
+	{
+		const Command command = parse({"ilist", "--all"});
+		const auto* gh_issue_list = std::get_if<Cmd::GH::IssueList>(&command);
+		REQUIRE(gh_issue_list != nullptr);
+		CHECK(gh_issue_list->all);
+	}
+	// projctl ilist -a
+	SUBCASE("gh issue list -a")
+	{
+		const Command command = parse({"ilist", "-a"});
+		const auto* gh_issue_list = std::get_if<Cmd::GH::IssueList>(&command);
+		REQUIRE(gh_issue_list != nullptr);
+		CHECK(gh_issue_list->all);
+	}
+	// projctl icreate
+	SUBCASE("gh issue create with no name")
+	{
+		const Command command = parse({"icreate"});
+		const auto* gh_issue_create = std::get_if<Cmd::GH::IssueCreate>(&command);
+		REQUIRE(gh_issue_create != nullptr);
+		CHECK(gh_issue_create->name == ".");
+	}
 	// projctl icreate <name>
-	SUBCASE("gh issue create")
+	SUBCASE("gh issue create with name")
 	{
 		const Command command = parse({"icreate", "proj"});
 		const auto* gh_issue_create = std::get_if<Cmd::GH::IssueCreate>(&command);
@@ -296,24 +460,64 @@ TEST_CASE("gh issue commands")
 // projctl reqmerge [<name>]
 TEST_CASE("gh request commands")
 {
+	// projctl reqlist
+	SUBCASE("gh request list with no name")
+	{
+		const Command command = parse({"reqlist"});
+		const auto* gh_request_list = std::get_if<Cmd::GH::RequestList>(&command);
+		REQUIRE(gh_request_list != nullptr);
+		CHECK(gh_request_list->name == ".");
+	}
 	// projctl reqlist <name>
-	SUBCASE("gh request list")
+	SUBCASE("gh request list with name")
 	{
 		const Command command = parse({"reqlist", "proj"});
 		const auto* gh_request_list = std::get_if<Cmd::GH::RequestList>(&command);
 		REQUIRE(gh_request_list != nullptr);
 		CHECK(gh_request_list->name == "proj");
 	}
+	// projctl reqlist --all
+	SUBCASE("gh request list --all")
+	{
+		const Command command = parse({"reqlist", "--all"});
+		const auto* gh_request_list = std::get_if<Cmd::GH::RequestList>(&command);
+		REQUIRE(gh_request_list != nullptr);
+		CHECK(gh_request_list->all);
+	}
+	// projctl reqlist -a
+	SUBCASE("gh request list -a")
+	{
+		const Command command = parse({"reqlist", "-a"});
+		const auto* gh_request_list = std::get_if<Cmd::GH::RequestList>(&command);
+		REQUIRE(gh_request_list != nullptr);
+		CHECK(gh_request_list->all);
+	}
+	// projctl reqcreate
+	SUBCASE("gh request create with no name")
+	{
+		const Command command = parse({"reqcreate"});
+		const auto* gh_request_create = std::get_if<Cmd::GH::RequestCreate>(&command);
+		REQUIRE(gh_request_create != nullptr);
+		CHECK(gh_request_create->name == ".");
+	}
 	// projctl reqcreate <name>
-	SUBCASE("gh request create")
+	SUBCASE("gh request create with name")
 	{
 		const Command command = parse({"reqcreate", "proj"});
 		const auto* gh_request_create = std::get_if<Cmd::GH::RequestCreate>(&command);
 		REQUIRE(gh_request_create != nullptr);
 		CHECK(gh_request_create->name == "proj");
 	}
-	//projctl reqmerge <name>
-	SUBCASE("gh request merge")
+	//projctl reqmerge
+	SUBCASE("gh request merge with no name")
+	{
+		const Command command = parse({"reqmerge"});
+		const auto* gh_request_merge = std::get_if<Cmd::GH::RequestMerge>(&command);
+		REQUIRE(gh_request_merge != nullptr);
+		CHECK(gh_request_merge->name == ".");
+	}
+	// projctl reqmerge <name>
+	SUBCASE("gh request merge with name")
 	{
 		const Command command = parse({"reqmerge", "proj"});
 		const auto* gh_request_merge = std::get_if<Cmd::GH::RequestMerge>(&command);
@@ -323,9 +527,104 @@ TEST_CASE("gh request commands")
 }
 
 
+namespace
+{
+	bool rejected(std::vector<std::string_view> args) { return std::holds_alternative<Cmd::Unknown>(parser(args)); }
+}
+
+
 TEST_CASE("bad input is rejected")
 {
-	CHECK(std::holds_alternative<Cmd::Unknown>(parse({})));
-	CHECK(std::holds_alternative<Cmd::Unknown>(parse({"remove", "a", "b"})));
-	CHECK(std::holds_alternative<Cmd::Unknown>(parse({"nonsense", "proj"})));
+	SUBCASE("no command / unknown command")
+	{
+		CHECK(rejected({}));
+		CHECK(rejected({"nonsense"}));
+		CHECK(rejected({"nonsense", "proj"}));
+		CHECK(rejected({"Status", "proj"}));    // commands are case-sensitive
+	}
+
+	SUBCASE("commands without arguments")
+	{
+		CHECK(rejected({"git", "proj"}));
+		CHECK(rejected({"repos", "proj"}));
+	}
+
+	SUBCASE("list")
+	{
+		CHECK(rejected({"list", "proj"}));
+		CHECK(rejected({"list", "gits", "proj"}));
+		CHECK(rejected({"list", "gits", "gits"}));
+		CHECK(rejected({"list", "--all"}));
+	}
+
+	SUBCASE("add")
+	{
+		CHECK(rejected({"add"}));
+		CHECK(rejected({"add", "."}));
+		CHECK(rejected({"add", "/some/path"}));
+		CHECK(rejected({"add", "/some/path", "proj", "extra"}));
+	}
+
+	SUBCASE("remove / rm (name required)")
+	{
+		CHECK(rejected({"remove"}));
+		CHECK(rejected({"rm"}));
+		CHECK(rejected({"remove", "a", "b"}));
+		CHECK(rejected({"rm", "a", "b"}));
+		CHECK(rejected({"remove", "--all"}));   // must never mean "remove everything"
+		CHECK(rejected({"rm", "-a"}));
+	}
+
+	SUBCASE("single optional name: too many arguments")
+	{
+		for (std::string_view command : {"path", "open", "build", "run", "merge", "icreate", "reqcreate", "reqmerge"})
+		{
+			CAPTURE(command);
+			CHECK(rejected({command, "a", "b"}));
+		}
+	}
+
+	SUBCASE("single optional name: no --all / -a")
+	{
+		for (std::string_view command : {"path", "open", "build", "run", "merge", "icreate", "reqcreate", "reqmerge"})
+		{
+			CAPTURE(command);
+			CHECK(rejected({command, "--all"}));
+			CHECK(rejected({command, "-a"}));
+		}
+	}
+
+	SUBCASE("name or --all / -a: not both, not more")
+	{
+		for (std::string_view command : {"status", "fetch", "pull", "ilist", "reqlist"})
+		{
+			CAPTURE(command);
+			CHECK(rejected({command, "a", "b"}));
+			CHECK(rejected({command, "--all", "proj"}));
+			CHECK(rejected({command, "proj", "--all"}));
+			CHECK(rejected({command, "-a", "proj"}));
+			CHECK(rejected({command, "--all", "-a"}));
+		}
+	}
+
+	SUBCASE("branch (name required)")
+	{
+		CHECK(rejected({"branch"}));
+		CHECK(rejected({"branch", "feature", "proj", "extra"}));
+	}
+
+	SUBCASE("commit")
+	{
+		CHECK(rejected({"commit", "message", "proj", "extra"}));
+	}
+
+	SUBCASE("push")
+	{
+		CHECK(rejected({"push", "a", "b"}));
+		CHECK(rejected({"push", "proj", "-u"}));        // -u only directly after push
+		CHECK(rejected({"push", "-u", "-u", "proj"}));
+		CHECK(rejected({"push", "-u", "a", "b"}));
+		CHECK(rejected({"push", "-x", "proj"}));        // unknown flag
+		CHECK(rejected({"push", "--all"}));
+	}
 }

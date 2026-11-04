@@ -58,6 +58,7 @@ namespace Cmd
 
 		struct Status
 		{
+			bool all;
 			std::string name;
 		};
 
@@ -69,17 +70,19 @@ namespace Cmd
 
 		struct Push
 		{
-			std::string name;
 			bool branch_upstream;
+			std::string name;
 		};
 
 		struct Pull
 		{
+			bool all;
 			std::string name;
 		};
 
 		struct Fetch
 		{
+			bool all;
 			std::string name;
 		};
 
@@ -109,6 +112,7 @@ namespace Cmd
 
 		struct IssueList
 		{
+			bool all;
 			std::string name;
 		};
 
@@ -119,6 +123,7 @@ namespace Cmd
 
 		struct RequestList
 		{
+			bool all;
 			std::string name;
 		};
 
