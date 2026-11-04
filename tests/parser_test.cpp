@@ -55,8 +55,7 @@ TEST_CASE("add")
 		CHECK(add->path == ".");
 	}
 }
-// projctl remove <name>
-// projctl rm <name>
+// projctl remove | rm <name>
 TEST_CASE("remove")
 {
 	// projctl remove [name]
@@ -245,10 +244,10 @@ TEST_CASE("push")
 }
 /*
 For later to implement (git pipeling):
-projctl pull automerge commit push [name]
-projctl pull automerge commit [commit_msg] push [name]
-projctl pull automerge commit push branch [name]
-projctl pull automerge commit [commit_message] push branch [name]
+projctl pull merge commit push [name]
+projctl pull merge commit [commit_msg] push [name]
+projctl pull merge commit push -u [name]
+projctl pull merge commit [commit_message] push -u [name]
 */
 
 // projctl git | repos

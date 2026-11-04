@@ -1,30 +1,7 @@
 #include "parser.hpp"
 
 
-/*
-projctl list [gits]
-projctl status [<name> | --all | -a]
-projctl add <path> <name>
-projctl remove <name>
-projctl rm <name>
-projctl path [<name>]
-projctl open [<name>]
-projctl build [<name>]
-projctl run [<name>]
-projctl branch [<branch>] <name>
-projctl fetch [<name> | --all | -a]
-projctl pull [<name> | --all | -a]
-projctl merge [<name>]
-projctl commit [[<message>] <name>]
-projctl push [-u] [<name>]
-projctl git
-projctl repos
-projctl ilist [<name> | --all | -a]
-projctl icreate [<name>]
-projctl reqlist [<name> | --all | -a]
-projctl reqcreate [<name>]
-projctl reqmerge [<name>]
-*/
+// grammar: see tests/parser_test.cpp
 
 
 Command parser(std::span<const std::string_view> args)
