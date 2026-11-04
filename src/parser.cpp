@@ -55,7 +55,6 @@ Command parser(std::span<const std::string_view> args)
 		return Cmd::Base::Path{name};
 	}
 
-	// TODO figure out this one XD
 	if (command == "add")
 	{
 		if (name == ".")

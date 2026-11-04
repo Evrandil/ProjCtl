@@ -106,3 +106,13 @@ target_compile_options(projctl PRIVATE
 include(CheckPIESupported)
 check_pie_supported()
 set_property(TARGET projctl PROPERTY POSITION_INDEPENDENT_CODE TRUE)
+
+
+# Tests
+
+option(PROJCTL_BUILD_TESTS "Build the test suite" ON)
+
+if(PROJCTL_BUILD_TESTS)
+	enable_testing()
+	add_subdirectory(tests)
+endif()
