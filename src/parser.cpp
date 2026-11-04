@@ -109,13 +109,13 @@ Command parser(const std::span<const std::string_view> input)
 	if (command == "add")
 	{
 		const std::expected parts = name_with_extra(args);
-		if (!parts)
+		if (!parts || (parts->extra && parts->extra->starts_with('-')))
 		{
 			return Cmd::Unknown{};
 		}
 		return Cmd::Base::Add{
 			.name	= parts->name,
-			.path	= parts->extra ? std::optional<std::filesystem::path>{*parts->extra} : std::nullopt,
+			.path	= parts->extra,
 		};
 	}
 
