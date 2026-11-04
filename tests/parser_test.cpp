@@ -272,7 +272,7 @@ TEST_CASE("gh commands")
 
 
 // projctl ilist [<name> | --all | -a]
-// projctl icreate [<name> | --all | -a]
+// projctl icreate [<name>]
 TEST_CASE("gh issue commands")
 {
 	// projctl ilist <name>
@@ -292,7 +292,7 @@ TEST_CASE("gh issue commands")
 		CHECK(gh_issue_create->name == "proj");
 	}
 }
-// projctl reqlist [<name>]
+// projctl reqlist [<name> | --all | -a]
 // projctl reqcreate [<name>]
 // projctl reqmerge [<name>]
 TEST_CASE("gh request commands")

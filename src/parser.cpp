@@ -20,8 +20,8 @@ projctl push [-u] [<name>]
 projctl git
 projctl repos
 projctl ilist [<name> | --all | -a]
-projctl icreate [<name> | --all | -a]
-projctl reqlist [<name>]
+projctl icreate [<name>]
+projctl reqlist [<name> | --all | -a]
 projctl reqcreate [<name>]
 projctl reqmerge [<name>]
 */
