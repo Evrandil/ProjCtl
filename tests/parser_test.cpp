@@ -294,7 +294,7 @@ TEST_CASE("gh issue commands")
 }
 // projctl reqlist [<name>]
 // projctl reqcreate [<name>]
-// projctl reqcreate [<name>]
+// projctl reqmerge [<name>]
 TEST_CASE("gh request commands")
 {
 	// projctl reqlist <name>

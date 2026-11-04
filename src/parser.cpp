@@ -23,7 +23,7 @@ projctl ilist [<name> | --all | -a]
 projctl icreate [<name> | --all | -a]
 projctl reqlist [<name>]
 projctl reqcreate [<name>]
-projctl reqcreate [<name>]
+projctl reqmerge [<name>]
 */
 
 
