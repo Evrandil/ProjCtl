@@ -25,8 +25,10 @@ Also have $XDG_CONFIG_HOME and $XDG_CACHE_HOME set to some location<br>
 
 Overall concept<br>
 ```bash
-projctl [option/s] [project_name] [argument/s]
+projctl [option/s] [argument/s] [project_name]
 ```
+
+Also for one word commands you can ommit project_name but for everything else do use it<br>
 
 ### List
 Lists projects<br>
@@ -58,12 +60,11 @@ projctl status --all
 Adds project to saved projects<br>
 You can set it to auto-add current directory as project with name of dir<br>
 Also you can set name of dir and add <br>
-USE OBJECTIVE PATHS for now at least<br>
+USE OBJECTIVE PATHS for sake of your sanity \(for now at least\)<br>
 Tho "." I did make to be converted to objective path of current dir<br>
 ```fish
-projctl add [name] [path]
-projctl add [name] .
-projctl add .
+projctl add [path] [name] 
+projctl add . [name]
 ```
 
 ### Remove
@@ -75,8 +76,7 @@ projctl rm [name]
 ```
 
 ### Open
-Opens neovim in project location<br>
-Soon \(I hope\) will open editor set in config but well not on that stage yet<br>
+Opens neovim \(or your editor of config choice\) in project location<br>
 ```fish
 projctl open [name]
 ```
@@ -90,10 +90,8 @@ projctl path [name]
 
 ### Build && run
 Respectively builds and runs projects that either have customely added `build` and `run` commands or have supported default commands \(Rust && node supported for both, CMake + Ninja does have build\)<br>
-Build also supports --all flag<br>
 ```fish
 projctl build [name]
-projctl build --all
 projctl run [name]
 ```
 
@@ -103,7 +101,7 @@ Here we go into the rabbithole<br>
 Switches / creates and switches to branch of given name<br>
 Or lists branches<br>
 ```fish
-projctl branch [name] [branch_name]
+projctl branch [branch_name] [name]
 projctl branch [name]
 ```
 
@@ -127,7 +125,7 @@ Adds all changes and makes commit with provided message \(equivalent to `git add
 Without providing msg it's gonna open $EDITOR for you to write msg to \(equivalent to `git add . && git commit`\)<br>
 ```fish
 projctl commit [name]
-projctl commit [name] [commit_message]
+projctl commit [commit_message] [name]
 ```
 
 ### Push
@@ -142,9 +140,9 @@ projctl push branch [name]
 Performs both actions, you can combo it with branch as well to set upstream to new branch<br>
 ```fish
 projctl commit push [name]
-projctl commit push [name] [commit_message]
+projctl commit push [commit_message] [name]
 projctl commit push branch [name]
-projctl commit push branch [name] [commit_message]
+projctl commit push branch [commit_message] [name]
 ```
 
 ### Merge
@@ -152,8 +150,6 @@ It performs just and only `git merge`, no other options tbh \(so for more specif
 I made this just to have quick pipe merge -> commit -> push in one pc command, not to be actual useful merge<br>
 ```fish
 projctl automerge [name]
-projctl automerge commit [name]
-projctl automerge commit [name] [commit_msg]
 ```
 
 ### Git pipeline
@@ -199,4 +195,3 @@ Also minor thing but for process to be actually saving some time everything with
 And just for record I do expect one to use this with some concept they wanna do so haven't tested any and every combination of commands / args you could do around that git pipeline so yeah beware
 # Beware
 No pipes currently work after refactor, it was good refactor but will take care of pipelines tomorrow or so<br>
-For switching branch and committing with commit msg \(not interactive editor\) use names of projects

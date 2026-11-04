@@ -13,6 +13,61 @@ namespace
 }
 
 
+/*
+projctl list 
+projctl list gits
+
+projctl status [name]
+projctl status --all
+
+projctl add [path] [name] 
+projctl add . [name]
+
+projctl remove [name]
+projctl rm [name]
+
+projctl open [name]
+
+projctl path [name]
+
+projctl build [name]
+
+projctl run [name]
+
+projctl branch [branch_name] [name]
+projctl branch [name]
+
+projctl fetch [name]
+projctl fetch --all
+
+projctl pull [name]
+projctl pull --all
+
+projctl commit [name]
+projctl commit [commit_message] [name]
+
+projctl push [name]
+projctl push branch [name]
+
+projctl automerge [name]
+
+projctl pull automerge commit push [name]
+projctl pull automerge commit [commit_msg] push [name]
+projctl pull automerge commit push branch [name]
+projctl pull automerge commit [commit_message] push branch [name]
+
+projctl git
+
+prjctl repos
+
+projctl ilist [name]
+projctl icreate [name]
+
+projctl reqlist [name]
+projctl reqcreate [name]
+*/
+
+
 TEST_CASE("push")
 {
 	SUBCASE("plain push")
