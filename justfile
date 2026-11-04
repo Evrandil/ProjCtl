@@ -6,9 +6,9 @@ configure:
 build: configure
     cmake --build build
 
-test *args: build
-	./build/tests/projctl_tests {{args}}
-#    ctest --test-dir build --output-on-failure
+test *args: configure
+    cmake --build build --target projctl_tests
+    ./build/tests/projctl_tests {{args}}
 
 run *args: build
     ./build/projctl {{args}}

@@ -190,7 +190,7 @@ Command parser(const std::span<const std::string_view> input)
 	if (command == "branch")
 	{
 		const std::expected parts = name_with_extra(args);
-		if (!parts)
+		if (!parts || (parts->extra && parts->extra->starts_with('-')))
 		{
 			return Cmd::Unknown{};
 		}

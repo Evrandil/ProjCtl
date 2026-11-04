@@ -14,8 +14,8 @@ add_executable(projctl_tests
 
 target_link_libraries(projctl_tests
 	PRIVATE
-	projctl_core
-	doctest::doctest
+		projctl_parser
+		doctest::doctest
 )
 
 add_test(NAME projctl_tests

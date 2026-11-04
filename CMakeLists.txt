@@ -29,10 +29,30 @@ if(NOT nlohmann_json_FOUND)
 endif()
 
 
+# Parser (no dependencies on the rest of projctl)
+
+add_library(projctl_parser
+	src/parser.cpp
+)
+
+target_include_directories(projctl_parser
+	PUBLIC
+		${PROJECT_SOURCE_DIR}/include
+)
+
+target_compile_options(projctl_parser PRIVATE
+	-Wall
+	-Wextra
+	-Wpedantic
+	-Wconversion
+	-Wsign-conversion
+	-Wshadow
+)
+
+
 # Projctl core
 
 add_library(projctl_core
-	src/parser.cpp
 	src/projctl/core.cpp
 	src/projctl/handle.cpp
 	src/projctl/helper.cpp
@@ -78,6 +98,12 @@ target_link_libraries(projctl_core
 		nlohmann_json::nlohmann_json
 )
 
+target_link_libraries(projctl_core
+	PUBLIC
+		projctl_parser
+	PRIVATE
+		nlohmann_json::nlohmann_json
+)
 
 # Executable
 
