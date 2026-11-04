@@ -132,7 +132,6 @@ std::expected<std::string, std::string> ProjCtl::open(const std::string& name) c
 }
 
 
-// TODO remove that lmabda
 std::expected<int, std::string> ProjCtl::build(const std::string& name) const
 {
 	std::expected project = project_find(name);
@@ -153,6 +152,7 @@ std::expected<int, std::string> ProjCtl::build(const std::string& name) const
 
 	return SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", std::string{*command_option}}, content.path);
 }
+
 
 std::expected<int, std::string> ProjCtl::run(const std::string& name) const
 {
