@@ -5,4 +5,4 @@
 #include <string_view>
 
 
-Command parser(std::span<const std::string_view> args);
+Command parser(std::span<const std::string_view>);

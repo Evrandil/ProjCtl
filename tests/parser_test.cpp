@@ -33,7 +33,7 @@ TEST_CASE("list")
 		CHECK(list->gits_only);
 	}
 }
-// projctl add [<path>] <name>
+// projctl add [[<path>] <name>]
 TEST_CASE("add")
 {
 	// projctl add <path> <name>
@@ -52,6 +52,15 @@ TEST_CASE("add")
 		const auto* add = std::get_if<Cmd::Base::Add>(&command);
 		REQUIRE(add != nullptr);
 		CHECK(add->name == "proj");
+		CHECK(add->path == ".");
+	}
+	// projctl add
+	SUBCASE("add current directory with no name")
+	{
+		const Command command = parse({"add"});
+		const auto* add = std::get_if<Cmd::Base::Add>(&command);
+		REQUIRE(add != nullptr);
+		CHECK(add->name == ".");
 		CHECK(add->path == ".");
 	}
 }
@@ -155,7 +164,7 @@ TEST_CASE("run")
 		CHECK(run->name == ".");
 	}
 }
-// projctl branch [<branch>] <name>
+// projctl branch [[<branch>] <name>]
 TEST_CASE("branch")
 {
 	// projctl branch <name>
@@ -551,57 +560,64 @@ TEST_CASE("bad input is rejected")
 		CHECK(rejected({}));
 		CHECK(rejected({"nonsense"}));
 		CHECK(rejected({"nonsense", "proj"}));
-		CHECK(rejected({"Status", "proj"}));    // commands are case-sensitive
+		CHECK(rejected({"Status", "proj"})); // commands are case-sensitive
+		CHECK(rejected({"-a"}));
+		CHECK(rejected({"--all"}));
 	}
 
 	SUBCASE("commands without arguments")
 	{
-		CHECK(rejected({"git", "proj"}));
-		CHECK(rejected({"repos", "proj"}));
+		for (std::string_view command : {"git", "repos"})
+		{
+			CAPTURE(command);
+			CHECK(rejected({command, "proj"}));
+			CHECK(rejected({command, "."}));
+			CHECK(rejected({command, "-a"}));
+		}
 	}
 
 	SUBCASE("list")
 	{
 		CHECK(rejected({"list", "proj"}));
+		CHECK(rejected({"list", "."}));
 		CHECK(rejected({"list", "gits", "proj"}));
 		CHECK(rejected({"list", "gits", "gits"}));
 		CHECK(rejected({"list", "--all"}));
+		CHECK(rejected({"list", "-a"}));
 	}
 
 	SUBCASE("add")
-	{	// Names can't be like "." or contain "/"
-		CHECK(rejected({"add"}));
-		CHECK(rejected({"add", "."}));
-		CHECK(rejected({"add", "/some/path"}));
+	{
+		CHECK(rejected({"add", "-a"}));                   // name can't be an option
+		CHECK(rejected({"add", "--all"}));
+		CHECK(rejected({"add", "-a", "proj"}));           // path can't be an option
+		CHECK(rejected({"add", "/some/path", "-a"}));
 		CHECK(rejected({"add", "/some/path", "proj", "extra"}));
 	}
 
 	SUBCASE("remove / rm (name required)")
 	{
-		CHECK(rejected({"remove"}));
-		CHECK(rejected({"rm"}));
-		CHECK(rejected({"remove", "a", "b"}));
-		CHECK(rejected({"rm", "a", "b"}));
-		CHECK(rejected({"remove", "--all"}));   // must never mean "remove everything"
-		CHECK(rejected({"rm", "-a"}));
+		for (std::string_view command : {"remove", "rm"})
+		{
+			CAPTURE(command);
+			CHECK(rejected({command}));
+			CHECK(rejected({command, "."}));               // never "remove whatever I'm standing in"
+			CHECK(rejected({command, "a", "b"}));
+			CHECK(rejected({command, "--all"}));           // never "remove everything"
+			CHECK(rejected({command, "-a"}));
+		}
 	}
 
-	SUBCASE("single optional name: too many arguments")
+	SUBCASE("optional name: too many arguments / options")
 	{
 		for (std::string_view command : {"path", "open", "build", "run", "merge", "icreate", "reqcreate", "reqmerge"})
 		{
 			CAPTURE(command);
 			CHECK(rejected({command, "a", "b"}));
-		}
-	}
-
-	SUBCASE("single optional name: no --all / -a")
-	{
-		for (std::string_view command : {"path", "open", "build", "run", "merge", "icreate", "reqcreate", "reqmerge"})
-		{
-			CAPTURE(command);
+			CHECK(rejected({command, ".", "proj"}));
 			CHECK(rejected({command, "--all"}));
 			CHECK(rejected({command, "-a"}));
+			CHECK(rejected({command, "-x"}));
 		}
 	}
 
@@ -615,27 +631,39 @@ TEST_CASE("bad input is rejected")
 			CHECK(rejected({command, "proj", "--all"}));
 			CHECK(rejected({command, "-a", "proj"}));
 			CHECK(rejected({command, "--all", "-a"}));
+			CHECK(rejected({command, "-a", "-a"}));
+			CHECK(rejected({command, "-x"}));               // only -a / --all are options here
+			CHECK(rejected({command, "--al"}));
 		}
 	}
 
 	SUBCASE("branch (name required)")
 	{
 		CHECK(rejected({"branch"}));
+		CHECK(rejected({"branch", "-a"}));
+		CHECK(rejected({"branch", "-x", "proj"}));        // branch name can't be an option
+		CHECK(rejected({"branch", "feature", "-a"}));
 		CHECK(rejected({"branch", "feature", "proj", "extra"}));
 	}
 
 	SUBCASE("commit")
 	{
+		CHECK(rejected({"commit", "-a"}));                // name can't be an option
+		CHECK(rejected({"commit", "message", "-a"}));
 		CHECK(rejected({"commit", "message", "proj", "extra"}));
 	}
 
 	SUBCASE("push")
 	{
 		CHECK(rejected({"push", "a", "b"}));
-		CHECK(rejected({"push", "proj", "-u"}));        // -u only directly after push
+		CHECK(rejected({"push", "proj", "-u"}));          // -u only directly after push
+		CHECK(rejected({"push", "-u", "-u"}));
 		CHECK(rejected({"push", "-u", "-u", "proj"}));
 		CHECK(rejected({"push", "-u", "a", "b"}));
-		CHECK(rejected({"push", "-x", "proj"}));        // unknown flag
+		CHECK(rejected({"push", "-u", "-a"}));
+		CHECK(rejected({"push", "-x"}));                  // unknown flag
+		CHECK(rejected({"push", "-x", "proj"}));
 		CHECK(rejected({"push", "--all"}));
+		CHECK(rejected({"push", "-a"}));
 	}
 }

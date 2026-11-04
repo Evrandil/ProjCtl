@@ -1,196 +1,252 @@
 #include "parser.hpp"
+#include <expected>
 
 
 // grammar: see tests/parser_test.cpp
 
-
-Command parser(std::span<const std::string_view> args)
+namespace
 {
-	if (args.empty())
+	// [<name>]: nothing → ".", one word → that word, anything else → nothing
+	std::expected<std::optional<std::string>, std::string> optional_name(std::span<const std::string_view> args)
+	{
+		if (args.empty() || (args.size() == 1 && args.front() == "."))
+		{
+			return std::nullopt;
+		}
+		if (args.size() > 1)
+		{
+			return std::unexpected(std::format("Too many arguments: expected at most one project name, got {}", args.size()));
+		}
+		if (args.front().starts_with('-'))
+		{
+			return std::unexpected(std::format("Unknown option: {}", args.front()));
+		}
+		return std::string{args.front()};
+	}
+
+	template <typename CommandType>
+	Command parser_with_name(std::span<const std::string_view> args)
+	{
+		const std::expected name = optional_name(args);
+		if (!name)
+		{
+			return Cmd::Unknown{};
+		}
+		return CommandType{ .name = *name };
+	}
+
+	template <typename CommandType>
+	Command with_name_or_all(std::span<const std::string_view> args)
+	{
+		if (args.size() == 1 && (args.front() == "--all" || args.front() == "-a"))
+		{
+			return CommandType{ .all = true, .name = std::nullopt };
+		}
+		return parser_with_name<CommandType>(args);
+	}
+
+	struct NameWithExtra
+	{
+		std::optional<std::string> name;
+		std::optional<std::string> extra;
+	};
+
+	std::expected<NameWithExtra, std::string> name_with_extra(std::span<const std::string_view> args)
+	{
+		NameWithExtra result;
+		switch (args.size())
+		{
+			case 2:
+				result.extra = std::string{ args.front() };
+				[[fallthrough]];
+			case 1:
+				[[fallthrough]];
+			case 0:
+				{
+					std::expected name = optional_name(args.size() == 2 ? args.last(1) : args);
+					if (!name)
+					{
+						return std::unexpected(name.error());
+					}
+					result.name = *name;
+					return result;
+				}
+			default:
+				return std::unexpected(std::format("Too many arguments: expected at most two, got {}", args.size()));
+		}
+	}
+}
+
+
+Command parser(const std::span<const std::string_view> input)
+{
+	if (input.empty())
 	{
 		return Cmd::Unknown{};
 	}
 
-	const std::string_view command = args.at(0);
-
-	if (command == "git")
-	{
-		return Cmd::GH::Status{};
-	}
-
-	if (command == "repos")
-	{
-		return Cmd::GH::RepoList{};
-	}
-
+	const std::string_view command = input.front();
+	const std::span args = input.subspan(1);
 
 	if (command == "list")
 	{
-		try
+		if (args.empty())
 		{
-			if (args.at(1) == "gits")
-			{
-				return Cmd::Base::List{true};
-			}
+			return Cmd::Base::List{ .gits_only = false };
 		}
-		catch (const std::out_of_range& err)
+		if (args.size() == 1 && args.front() == "gits")
 		{
-			return Cmd::Base::List{false};
+			return Cmd::Base::List{ .gits_only = true };
 		}
 		return Cmd::Unknown{};
 	}
 
-
-	std::string name;
-
-	if (args.size() < 2)
-	{
-		name = ".";
-	}
-	else
-	{
-		name = std::string{*args.rbegin()};
-	}
-
-
 	if (command == "path")
 	{
-		return Cmd::Base::Path{name};
+		return parser_with_name<Cmd::Base::Path>(args);
 	}
 
 	if (command == "add")
 	{
-		if (name == ".")
-		{
-			return Cmd::Base::Add{
-				name,
-				std::filesystem::path{"."},
-			};
-		}
-		if (args.size() < 3)
+		const std::expected parts = name_with_extra(args);
+		if (!parts)
 		{
 			return Cmd::Unknown{};
 		}
-		return Cmd::Base::Add{std::string{args.at(1)}, std::filesystem::path{args.at(2)}};
+		return Cmd::Base::Add{
+			.name	= parts->name,
+			.path	= parts->extra ? std::optional<std::filesystem::path>{*parts->extra} : std::nullopt,
+		};
 	}
 
 	if (command == "remove" || command == "rm")
 	{
-		return Cmd::Base::Remove{name};
+		const std::expected name = optional_name(args);
+		if (!name || !*name)
+		{
+			return Cmd::Unknown{};
+		}
+		return Cmd::Base::Remove{ .name = **name };
 	}
 
 	if (command == "open")
 	{
-		return Cmd::Base::Open{name};
+		return parser_with_name<Cmd::Base::Open>(args);
 	}
 
 	if (command == "build")
 	{
-		return Cmd::Base::Build{name};
+		return parser_with_name<Cmd::Base::Build>(args);
 	}
 
 	if (command == "run")
 	{
-		return Cmd::Base::Run{name};
+		return parser_with_name<Cmd::Base::Run>(args);
 	}
 
 
 	if (command == "status")
 	{
-		return Cmd::Git::Status{name};
+		return with_name_or_all<Cmd::Git::Status>(args);
 	}
 
 	if (command == "commit")
 	{
-		if (args.size() < 3)
+		const std::expected parts = name_with_extra(args);
+		if (!parts)
 		{
-			return Cmd::Git::Commit{
-				name,
-				std::nullopt,
-			};
+			return Cmd::Unknown{ };
 		}
 		return Cmd::Git::Commit{
-			name,
-			std::string{args.at(1)},
+			.name		= parts->name,
+			.message	= parts->extra,
 		};
 	}
 
 	if (command == "push")
 	{
-		try
+		const bool upstream = !args.empty() && args.front() == "-u";
+		const std::expected name = optional_name(upstream ? args.subspan(1) : args);
+		if (!name)
 		{
-			if (args.at(1) == "branch")
-			{
-				return Cmd::Git::Push{
-					name,
-					true,
-				};
-			}
+			return Cmd::Unknown{};
 		}
-		catch (const std::out_of_range& err)
-		{
-			return Cmd::Git::Push{
-				name,
-				false,
-			};
-		}
+		return Cmd::Git::Push{
+			.branch_upstream	= upstream,
+			.name				= *name,
+		};
 	}
 
 	if (command == "pull")
 	{
-		return Cmd::Git::Pull{name};
+		return with_name_or_all<Cmd::Git::Pull>(args);
 	}
 
 	if (command == "fetch")
 	{
-		return Cmd::Git::Fetch{name};
+		return with_name_or_all<Cmd::Git::Fetch>(args);
 	}
 
 	if (command == "branch")
 	{
-		if (args.size() < 3)
+		const std::expected parts = name_with_extra(args);
+		if (!parts)
 		{
-			return Cmd::Git::Branch{
-				name,
-				std::nullopt,
-			};
+			return Cmd::Unknown{};
 		}
 		return Cmd::Git::Branch{
-			name,
-			std::string{args.at(1)},
+			.name			= parts->name,
+			.branch_name	= parts->extra,
 		};
 	}
 
-
 	if (command == "merge")
 	{
-		return Cmd::Git::Merge{name};
+		return parser_with_name<Cmd::Git::Merge>(args);
+	}
+
+
+	if (command == "git")
+	{
+		if (!args.empty())
+		{
+			return Cmd::Unknown{};
+		}
+		return Cmd::GH::Status{};
+	}
+
+	if (command == "repos")
+	{
+		if (!args.empty())
+		{
+			return Cmd::Unknown{};
+		}
+		return Cmd::GH::RepoList{};
 	}
 
 	if (command == "issues" || command == "ilist")
 	{
-		return Cmd::GH::IssueList{name};
+		return with_name_or_all<Cmd::GH::IssueList>(args);
 	}
 
 	if (command == "icreate")
 	{
-		return Cmd::GH::IssueCreate{name};
+		return parser_with_name<Cmd::GH::IssueCreate>(args);
 	}
-
 
 	if (command == "reqs" || command == "reqlist")
 	{
-		return Cmd::GH::RequestList{name};
+		return with_name_or_all<Cmd::GH::RequestList>(args);
 	}
 
 	if (command == "reqcreate")
 	{
-		return Cmd::GH::RequestCreate{name};
+		return parser_with_name<Cmd::GH::RequestCreate>(args);
 	}
 
 	if (command == "reqmerge")
 	{
-		return Cmd::GH::RequestMerge{name};
+		return parser_with_name<Cmd::GH::RequestMerge>(args);
 	}
 
 	return Cmd::Unknown{};

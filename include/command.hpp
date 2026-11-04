@@ -22,13 +22,13 @@ namespace Cmd
 
 		struct Path
 		{
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct Add
 		{
-			std::string name;
-			std::filesystem::path path;
+			std::optional<std::string> name;
+			std::optional<std::filesystem::path> path;
 		};
 
 		struct Remove
@@ -38,17 +38,17 @@ namespace Cmd
 
 		struct Open
 		{
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct Build
 		{
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct Run
 		{
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 	} // namespace Base
@@ -59,42 +59,42 @@ namespace Cmd
 		struct Status
 		{
 			bool all = false;
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct Commit
 		{
-			std::string name;
+			std::optional<std::string> name;
 			std::optional<std::string> message;
 		};
 
 		struct Push
 		{
 			bool branch_upstream = false;
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct Pull
 		{
 			bool all = false;
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct Fetch
 		{
 			bool all = false;
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct Branch
 		{
-			std::string name;
+			std::optional<std::string> name;
 			std::optional<std::string> branch_name;
 		};
 
 		struct Merge
 		{
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 	} // namespace Git
@@ -113,28 +113,28 @@ namespace Cmd
 		struct IssueList
 		{
 			bool all = false;
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct IssueCreate
 		{
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct RequestList
 		{
 			bool all = false;
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct RequestCreate
 		{
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 		struct RequestMerge
 		{
-			std::string name;
+			std::optional<std::string> name;
 		};
 
 	} // namespace GH
