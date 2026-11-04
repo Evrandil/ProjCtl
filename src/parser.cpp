@@ -37,12 +37,12 @@ projctl commit [commit_message] [name]
 projctl push [name]
 projctl push branch [name]
 
-projctl automerge [name]
+projctl merge [name]
 
-projctl pull automerge commit push [name]
-projctl pull automerge commit [commit_msg] push [name]
-projctl pull automerge commit push branch [name]
-projctl pull automerge commit [commit_message] push branch [name]
+projctl pull merge commit push [name]
+projctl pull merge commit [commit_msg] push [name]
+projctl pull merge commit push branch [name]
+projctl pull merge commit [commit_message] push branch [name]
 
 projctl git
 
