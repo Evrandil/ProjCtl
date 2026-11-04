@@ -17,7 +17,7 @@ namespace Cmd
 
 		struct List
 		{
-			bool gits_only;
+			bool gits_only = false;
 		};
 
 		struct Path
@@ -58,7 +58,7 @@ namespace Cmd
 
 		struct Status
 		{
-			bool all;
+			bool all = false;
 			std::string name;
 		};
 
@@ -70,19 +70,19 @@ namespace Cmd
 
 		struct Push
 		{
-			bool branch_upstream;
+			bool branch_upstream = false;
 			std::string name;
 		};
 
 		struct Pull
 		{
-			bool all;
+			bool all = false;
 			std::string name;
 		};
 
 		struct Fetch
 		{
-			bool all;
+			bool all = false;
 			std::string name;
 		};
 
@@ -112,7 +112,7 @@ namespace Cmd
 
 		struct IssueList
 		{
-			bool all;
+			bool all = false;
 			std::string name;
 		};
 
@@ -123,7 +123,7 @@ namespace Cmd
 
 		struct RequestList
 		{
-			bool all;
+			bool all = false;
 			std::string name;
 		};
 

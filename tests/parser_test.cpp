@@ -58,7 +58,7 @@ TEST_CASE("add")
 // projctl remove | rm <name>
 TEST_CASE("remove")
 {
-	// projctl remove [name]
+	// projctl remove <name>
 	SUBCASE("plain remove")
 	{
 		const Command command = parse({"remove", "proj"});
@@ -66,7 +66,7 @@ TEST_CASE("remove")
 		REQUIRE(remove != nullptr);
 		CHECK(remove->name == "proj");
 	}
-	// projctl rm [name]
+	// projctl rm <name>
 	SUBCASE("rm alias")
 	{
 		const Command command = parse({"rm", "proj"});
@@ -188,6 +188,7 @@ TEST_CASE("status")
 		const auto* status = std::get_if<Cmd::Git::Status>(&command);
 		REQUIRE(status != nullptr);
 		CHECK(status->name == ".");
+		CHECK_FALSE(status->all);
 	}
 	SUBCASE("status with name")
 	{
@@ -195,6 +196,7 @@ TEST_CASE("status")
 		const auto* status = std::get_if<Cmd::Git::Status>(&command);
 		REQUIRE(status != nullptr);
 		CHECK(status->name == "proj");
+		CHECK_FALSE(status->all);
 	}
 	// projctl status --all
 	SUBCASE("status --all")
@@ -223,6 +225,7 @@ TEST_CASE("fetch")
 		const auto* fetch = std::get_if<Cmd::Git::Fetch>(&command);
 		REQUIRE(fetch != nullptr);
 		CHECK(fetch->name == ".");
+		CHECK_FALSE(fetch->all);
 	}
 	// projctl fetch <name>
 	SUBCASE("fetch with name")
@@ -231,6 +234,7 @@ TEST_CASE("fetch")
 		const auto* fetch = std::get_if<Cmd::Git::Fetch>(&command);
 		REQUIRE(fetch != nullptr);
 		CHECK(fetch->name == "proj");
+		CHECK_FALSE(fetch->all);
 	}
 	// projctl fetch --all
 	SUBCASE("fetch --all")
@@ -259,6 +263,7 @@ TEST_CASE("pull")
 		const auto* pull = std::get_if<Cmd::Git::Pull>(&command);
 		REQUIRE(pull != nullptr);
 		CHECK(pull->name == ".");
+		CHECK_FALSE(pull->all);
 	}
 	// projctl pull <name>
 	SUBCASE("pull with name")
@@ -267,6 +272,7 @@ TEST_CASE("pull")
 		const auto* pull = std::get_if<Cmd::Git::Pull>(&command);
 		REQUIRE(pull != nullptr);
 		CHECK(pull->name == "proj");
+		CHECK_FALSE(pull->all);
 	}
 	// projctl pull --all
 	SUBCASE("pull --all")
@@ -291,16 +297,16 @@ TEST_CASE("merge")
 	SUBCASE("merge with no name")
 	{
 		const Command command = parse({"merge"});
-		const auto* automerge = std::get_if<Cmd::Git::Merge>(&command);
-		REQUIRE(automerge != nullptr);
-		CHECK(automerge->name == ".");
+		const auto* merge = std::get_if<Cmd::Git::Merge>(&command);
+		REQUIRE(merge != nullptr);
+		CHECK(merge->name == ".");
 	}
 	SUBCASE("merge with name")
 	{
 		const Command command = parse({"merge", "proj"});
-		const auto* automerge = std::get_if<Cmd::Git::Merge>(&command);
-		REQUIRE(automerge != nullptr);
-		CHECK(automerge->name == "proj");
+		const auto* merge = std::get_if<Cmd::Git::Merge>(&command);
+		REQUIRE(merge != nullptr);
+		CHECK(merge->name == "proj");
 	}
 }
 // projctl commit [[<message>] <name>]
@@ -371,6 +377,7 @@ TEST_CASE("push")
 		const Command command = parse({"push", "-u", "proj"});
 		const auto* push = std::get_if<Cmd::Git::Push>(&command);
 		REQUIRE(push != nullptr);
+		CHECK(push->name == "proj");
 		CHECK(push->branch_upstream);
 	}
 }
@@ -413,6 +420,7 @@ TEST_CASE("gh issue commands")
 		const auto* gh_issue_list = std::get_if<Cmd::GH::IssueList>(&command);
 		REQUIRE(gh_issue_list != nullptr);
 		CHECK(gh_issue_list->name == ".");
+		CHECK_FALSE(gh_issue_list->all);
 	}
 	// projctl ilist <name>
 	SUBCASE("gh issue list with name")
@@ -421,6 +429,7 @@ TEST_CASE("gh issue commands")
 		const auto* gh_issue_list = std::get_if<Cmd::GH::IssueList>(&command);
 		REQUIRE(gh_issue_list != nullptr);
 		CHECK(gh_issue_list->name == "proj");
+		CHECK_FALSE(gh_issue_list->all);
 	}
 	// projctl ilist --all
 	SUBCASE("gh issue list --all")
@@ -467,6 +476,7 @@ TEST_CASE("gh request commands")
 		const auto* gh_request_list = std::get_if<Cmd::GH::RequestList>(&command);
 		REQUIRE(gh_request_list != nullptr);
 		CHECK(gh_request_list->name == ".");
+		CHECK_FALSE(gh_request_list->all);
 	}
 	// projctl reqlist <name>
 	SUBCASE("gh request list with name")
@@ -475,6 +485,7 @@ TEST_CASE("gh request commands")
 		const auto* gh_request_list = std::get_if<Cmd::GH::RequestList>(&command);
 		REQUIRE(gh_request_list != nullptr);
 		CHECK(gh_request_list->name == "proj");
+		CHECK_FALSE(gh_request_list->all);
 	}
 	// projctl reqlist --all
 	SUBCASE("gh request list --all")
@@ -558,7 +569,7 @@ TEST_CASE("bad input is rejected")
 	}
 
 	SUBCASE("add")
-	{
+	{	// Names can't be like "." or contain "/"
 		CHECK(rejected({"add"}));
 		CHECK(rejected({"add", "."}));
 		CHECK(rejected({"add", "/some/path"}));
