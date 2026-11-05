@@ -146,11 +146,7 @@ int ProjCtl::handle(const Cmd::Git::Commit& cmd) const
 
 int ProjCtl::handle(const Cmd::Git::Push& cmd) const
 {
-	if (cmd.branch_upstream)
-	{
-		return report(git_push_branch(cmd.name));
-	}
-	return report(git_push(cmd.name));
+	return report(push(cmd.name, cmd.branch_upstream));
 }
 
 

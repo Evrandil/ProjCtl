@@ -3,26 +3,15 @@
 #include "systeminterface.hpp"
 
 
-std::expected<std::string, std::string> GitInterface::push(const ProjectContent& project)
+std::expected<std::string, std::string> GitInterface::push(const ProjectContent& project, bool upstream)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "push"}, project.path.string());
-
-	if (!result) [[unlikely]]
+	std::vector<std::string> command = {"git", "push"};
+	if (upstream)
 	{
-		return std::unexpected(result.error());
-	}
-	if (result->exit_code != 0)
-	{
-		return std::unexpected(result->text);
+		command.insert(command.end(), {"-u", "origin", "HEAD"});
 	}
 
-	return result->text;
-}
-
-
-std::expected<std::string, std::string> GitInterface::push_branch(const ProjectContent& project, std::string_view branch)
-{
-	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "push", "-u", "origin", std::string(branch)}, project.path.string());
+	std::expected result = SystemInterface::run(command, project.path.string());
 
 	if (!result) [[unlikely]]
 	{

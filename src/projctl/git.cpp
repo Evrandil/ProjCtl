@@ -80,55 +80,6 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::optional<
 }
 
 
-std::expected<std::string, std::string> ProjCtl::git_push(const std::optional<std::string>& name) const
-{
-	std::expected project = project_find(name);
-	if (!project)
-	{
-		return std::unexpected(project.error());
-	}
-	const ProjectContent& content = (*project)->second;
-
-	std::expected<std::string, std::string> result = GitInterface::push(content);
-	if (!result)
-	{
-		return std::unexpected(result.error());
-	}
-
-	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
-}
-
-std::expected<std::string, std::string> ProjCtl::git_push_branch(const std::optional<std::string>& name) const
-{
-	std::expected project = project_find(name);
-	if (!project)
-	{
-		return std::unexpected(project.error());
-	}
-	const ProjectContent& content = (*project)->second;
-
-
-	// TODO just make gitinterface push_branch return the branch name instead of taking it as an argument or do some
-	// optional funky stuff here too
-	std::expected<std::string, std::string> result = GitInterface::branch(content);
-	if (!result)
-	{
-		return std::unexpected(result.error());
-	}
-
-	std::string branch = *result;
-
-	result = GitInterface::push_branch(content, branch);
-	if (!result)
-	{
-		return std::unexpected(result.error());
-	}
-
-	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
-}
-
-
-
 
 
 // TODO for both branch funcs make some header for output
