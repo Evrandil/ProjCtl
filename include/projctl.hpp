@@ -18,6 +18,13 @@ std::string truncate(std::string_view, size_t);
 using ProjectEntry = std::map<std::string, ProjectContent>::value_type;
 using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
 
+struct BatchResult
+{
+	std::string output;
+	std::size_t failed = 0;
+};
+
+
 
 class ProjCtl
 {
@@ -32,6 +39,7 @@ class ProjCtl
 
 	int report(const std::expected<std::string, std::string>&) const;
 	int report(const std::expected<int, std::string>&) const;
+	int report(const BatchResult&) const;
 	int report_save(const std::expected<std::string, std::string>&) const;
 
 	// Bug functionality
@@ -60,19 +68,21 @@ class ProjCtl
 	[[nodiscard]] std::string status(const ProjectEntry&) const;
 	[[nodiscard]] std::expected<std::string, std::string> status(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> status_all() const;
+	[[nodiscard]] std::expected<std::string, std::string> fetch(const ProjectEntry&) const;
+	[[nodiscard]] std::expected<std::string, std::string> fetch(const std::optional<std::string>&) const;
+	[[nodiscard]] BatchResult fetch_all() const;
 	[[nodiscard]] std::expected<std::string, std::string> git_commit(const std::optional<std::string>&, std::optional<std::string_view>) const;
 	[[nodiscard]] std::expected<std::string, std::string> git_push(const std::optional<std::string>&) const;                                      // turn to one function with upstream bool
 	[[nodiscard]] std::expected<std::string, std::string> git_push_branch(const std::optional<std::string>&) const;                               // get rid of this
 	[[nodiscard]] std::expected<std::string, std::string> git_pull(const std::optional<std::string>&) const;                                      // make all bool
-	[[nodiscard]] std::expected<std::string, std::string> git_fetch(const std::optional<std::string>&) const;                                     // make all bool
 	[[nodiscard]] std::expected<std::string, std::string> git_branch_list(const std::optional<std::string>&) const;                               // make version with optional branch_name
 	[[nodiscard]] std::expected<std::string, std::string> git_branch(const std::optional<std::string>&, const std::optional<std::string>&) const; // get rid of this
 	[[nodiscard]] std::expected<std::string, std::string> git_merge(const std::optional<std::string>&) const;
 	int handle(const Cmd::Git::Status&) const;
+	int handle(const Cmd::Git::Fetch&) const;
 	int handle(const Cmd::Git::Commit&) const;
 	int handle(const Cmd::Git::Push&) const;
 	int handle(const Cmd::Git::Pull&) const;
-	int handle(const Cmd::Git::Fetch&) const;
 	int handle(const Cmd::Git::Branch&) const;
 	int handle(const Cmd::Git::Merge&) const;
 

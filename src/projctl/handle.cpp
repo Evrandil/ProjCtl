@@ -25,6 +25,17 @@ int ProjCtl::report(const std::expected<int, std::string>& result) const
 	return *result;
 }
 
+int ProjCtl::report(const BatchResult& results) const
+{
+	std::println(stdout, "\n\n{}\n\n", results.output);
+	if (results.failed > 0)
+	{
+		std::println(stderr, "{}{}{}{} failed\n\n", color_code(config.error_color), Style::CROSS, results.failed, Style::RESET);
+		return 1;
+	}
+	return 0;
+}
+
 int ProjCtl::report_save(const std::expected<std::string, std::string>& result) const
 {
 	if (!result)
@@ -121,10 +132,16 @@ int ProjCtl::handle(const Cmd::Base::Run& cmd) const
 }
 
 
-int ProjCtl::handle(const Cmd::Git::Status& cmd) const { return cmd.all ? report(status_all()) : report(status(cmd.name)); }
+int ProjCtl::handle(const Cmd::Git::Status& cmd) const
+{
+	return cmd.all ? report(status_all()) : report(status(cmd.name));
+}
 
 
-int ProjCtl::handle(const Cmd::Git::Commit& cmd) const { return report(git_commit(cmd.name, cmd.message)); }
+int ProjCtl::handle(const Cmd::Git::Commit& cmd) const
+{
+	return report(git_commit(cmd.name, cmd.message));
+}
 
 
 int ProjCtl::handle(const Cmd::Git::Push& cmd) const
@@ -137,10 +154,16 @@ int ProjCtl::handle(const Cmd::Git::Push& cmd) const
 }
 
 
-int ProjCtl::handle(const Cmd::Git::Pull& cmd) const { return report(git_pull(cmd.name)); }
+int ProjCtl::handle(const Cmd::Git::Pull& cmd) const
+{
+	return report(git_pull(cmd.name));
+}
 
 
-int ProjCtl::handle(const Cmd::Git::Fetch& cmd) const { return report(git_fetch(cmd.name)); }
+int ProjCtl::handle(const Cmd::Git::Fetch& cmd) const
+{
+	return cmd.all ? report(fetch_all()) : report(fetch(cmd.name));
+}
 
 
 int ProjCtl::handle(const Cmd::Git::Branch& cmd) const

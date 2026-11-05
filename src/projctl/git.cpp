@@ -10,6 +10,10 @@
 #include "gitinterface.hpp"
 
 
+namespace
+{
+}
+
 std::expected<std::string, std::string> ProjCtl::list_gits() const
 {
 	auto list_one_git = [&](const std::string& name, const ProjectContent& content)
@@ -127,25 +131,57 @@ std::expected<std::string, std::string> ProjCtl::status_all() const
 	return output;
 }
 
-
-
-/*
-	if (name == "--all")
+std::expected<std::string, std::string> ProjCtl::fetch(const ProjectEntry& project) const
+{
+	std::string output = std::format("{}Fetching: {}{}{}\n", color_code(config.header_color), color_code(config.project_name_color), project.first, Style::RESET);
+	std::expected<std::string, std::string> result = GitInterface::fetch(project.second);
+	if (!result)
 	{
-		std::string output;
-		std::vector<std::future<std::string>> tasks;
-		tasks.reserve(projects.size());
-		for (const decltype(projects)::value_type& project : projects)
-		{
-			tasks.push_back(std::async(std::launch::async, status_one, std::cref(project.first), std::cref(project.second)));
-		}
-		for (std::future<std::string>& task : tasks)
-		{
-			std::format_to(std::back_inserter(output), "{}\n", task.get());
-		}
-		return output;
+		std::format_to(std::back_inserter(output), "{}{}Couldn't fetch {}{}{}: {}{}", color_code(config.error_color), Style::CROSS, color_code(config.project_name_color), project.first, color_code(config.error_color), result.error(), Style::RESET);
+		return std::unexpected(output);
 	}
-*/
+	std::format_to(std::back_inserter(output), "{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
+	return output;
+}
+
+std::expected<std::string, std::string> ProjCtl::fetch(const std::optional<std::string>& name) const
+{
+	std::expected project = project_find(name);
+	if (!project)
+	{
+		return std::unexpected(project.error());
+	}
+
+	return fetch(**project);
+}
+
+BatchResult ProjCtl::fetch_all() const
+{
+	std::vector<std::future<std::expected<std::string, std::string>>> tasks;
+	tasks.reserve(projects.size());
+
+	for (const ProjectEntry& project : projects)
+	{
+		if (GitInterface::is_repo(project.second))
+		{
+			tasks.push_back(std::async(std::launch::async, [this, &project] {return fetch(project); }));
+		}
+	}
+
+	BatchResult results;
+	for (std::future<std::expected<std::string, std::string>>& task : tasks)
+	{
+		std::expected fetched = task.get();
+		if (!fetched)
+		{
+			++results.failed;
+		}
+		std::format_to(std::back_inserter(results.output), "{}\n\n", fetched ? *fetched : fetched.error());
+	}
+
+	return results;
+}
+
 
 
 std::expected<std::string, std::string> ProjCtl::git_commit(const std::optional<std::string>& name, std::optional<std::string_view> message) const
@@ -266,50 +302,6 @@ std::expected<std::string, std::string> ProjCtl::git_pull(const std::optional<st
 }
 
 
-// TODO that one also get rid of --all flag and make another func for all I think
-// And make result expected so if commit's not successful it returns the error instead of just printing it
-std::expected<std::string, std::string> ProjCtl::git_fetch(const std::optional<std::string>& name) const
-{
-	auto fetch_one = [&](const std::string& project_name, const ProjectContent& content)
-	{
-		std::string output;
-		std::format_to(std::back_inserter(output), "{}Fetching: {}{}{}\n", color_code(config.header_color), color_code(config.project_name_color), project_name, Style::RESET);
-		std::expected<std::string, std::string> result = GitInterface::fetch(content);
-
-		std::format_to(std::back_inserter(output), "{}{}{}{}", result ? color_code(config.tick_color) : color_code(config.error_color), result ? Style::TICK : Style::CROSS,
-					   result ? *result : result.error(), Style::RESET);
-		return output;
-	};
-
-
-	if (name == "--all")
-	{
-		std::string output;
-		std::vector<std::future<std::string>> tasks;
-		tasks.reserve(projects.size());
-		for (const decltype(projects)::value_type& project : projects)
-		{
-			if (GitInterface::is_repo(project.second))
-			{
-				tasks.push_back(std::async(std::launch::async, fetch_one, std::cref(project.first), std::cref(project.second)));
-			}
-		}
-		for (std::future<std::string>& task : tasks)
-		{
-			std::format_to(std::back_inserter(output), "{}\n", task.get());
-		}
-		return output;
-	}
-
-
-	std::expected project = project_find(name);
-	if (!project)
-	{
-		return std::unexpected(project.error());
-	}
-
-	return std::format("{}", fetch_one((*project)->first, (*project)->second));
-}
 
 // TODO for both branch funcs make some header for output
 std::expected<std::string, std::string> ProjCtl::git_branch_list(const std::optional<std::string>& name) const
