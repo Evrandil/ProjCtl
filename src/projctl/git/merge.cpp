@@ -20,3 +20,9 @@ std::expected<std::string, std::string> ProjCtl::git_merge(const std::optional<s
 
 	return std::format("{}{}{}", color_code(config.tick_color), Style::TICK, *result);
 }
+
+
+int ProjCtl::handle(const Cmd::Git::Merge& cmd) const
+{
+	return report(git_merge(cmd.name));
+}

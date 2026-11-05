@@ -85,3 +85,9 @@ std::expected<std::string, std::string> ProjCtl::status_all() const
 
 	return output;
 }
+
+
+int ProjCtl::handle(const Cmd::Git::Status& cmd) const
+{
+	return cmd.all ? report(status_all()) : report(status(cmd.name));
+}

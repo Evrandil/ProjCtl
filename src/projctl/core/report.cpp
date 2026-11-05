@@ -138,48 +138,6 @@ int ProjCtl::handle(const Cmd::Base::Run& cmd) const
 }
 
 
-int ProjCtl::handle(const Cmd::Git::Status& cmd) const
-{
-	return cmd.all ? report(status_all()) : report(status(cmd.name));
-}
-
-
-int ProjCtl::handle(const Cmd::Git::Commit& cmd) const
-{
-	return report(git_commit(cmd.name, cmd.message));
-}
-
-
-int ProjCtl::handle(const Cmd::Git::Push& cmd) const
-{
-	return report(push(cmd.name, cmd.branch_upstream));
-}
-
-
-int ProjCtl::handle(const Cmd::Git::Pull& cmd) const
-{
-	return cmd.all ? report(pull_all()) : report(pull(cmd.name));
-}
-
-
-int ProjCtl::handle(const Cmd::Git::Fetch& cmd) const
-{
-	return cmd.all ? report(fetch_all()) : report(fetch(cmd.name));
-}
-
-
-int ProjCtl::handle(const Cmd::Git::Branch& cmd) const
-{
-	return report(branch(cmd.name, cmd.branch_name));
-}
-
-
-int ProjCtl::handle(const Cmd::Git::Merge& cmd) const
-{
-	return report(git_merge(cmd.name));
-}
-
-
 int ProjCtl::handle(const Cmd::GH::Status&) const
 {
 	return report(g_status());

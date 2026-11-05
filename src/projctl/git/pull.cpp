@@ -61,3 +61,9 @@ BatchResult ProjCtl::pull_all() const
 
 	return results;
 }
+
+
+int ProjCtl::handle(const Cmd::Git::Pull& cmd) const
+{
+	return cmd.all ? report(pull_all()) : report(pull(cmd.name));
+}

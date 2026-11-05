@@ -30,3 +30,9 @@ std::expected<std::string, std::string> ProjCtl::branch(const std::optional<std:
 	}
 	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
 }
+
+
+int ProjCtl::handle(const Cmd::Git::Branch& cmd) const
+{
+	return report(branch(cmd.name, cmd.branch_name));
+}

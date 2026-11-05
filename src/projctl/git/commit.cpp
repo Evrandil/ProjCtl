@@ -21,3 +21,9 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::optional<
 	}
 	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
 }
+
+
+int ProjCtl::handle(const Cmd::Git::Commit& cmd) const
+{
+	return report(git_commit(cmd.name, cmd.message));
+}

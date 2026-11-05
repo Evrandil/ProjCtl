@@ -53,10 +53,12 @@ target_compile_options(projctl_parser PRIVATE
 # Projctl core
 
 add_library(projctl_core
-	src/projctl/core.cpp
-	src/projctl/handle.cpp
-	src/projctl/helper.cpp
-	src/projctl/projects.cpp
+	src/projctl/core/current_project_name.cpp
+	src/projctl/core/load.cpp
+	src/projctl/core/projctl.cpp
+	src/projctl/core/project_find.cpp
+	src/projctl/core/save.cpp
+	src/projctl/core/report.cpp
 	src/projctl/git/list.cpp
 	src/projctl/git/status.cpp
 	src/projctl/git/fetch.cpp
@@ -65,6 +67,8 @@ add_library(projctl_core
 	src/projctl/git/commit.cpp
 	src/projctl/git/merge.cpp
 	src/projctl/git/branch.cpp
+	src/projctl/helper.cpp
+	src/projctl/projects.cpp
 	src/projctl/hosting.cpp
 	src/projctl/issues.cpp
 	src/projctl/requests.cpp

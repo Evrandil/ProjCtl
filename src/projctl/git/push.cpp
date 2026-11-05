@@ -19,3 +19,9 @@ std::expected<std::string, std::string> ProjCtl::push(const std::optional<std::s
 	}
 	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
 }
+
+
+int ProjCtl::handle(const Cmd::Git::Push& cmd) const
+{
+	return report(push(cmd.name, cmd.branch_upstream));
+}
