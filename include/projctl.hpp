@@ -76,8 +76,7 @@ class ProjCtl
 	[[nodiscard]] BatchResult pull_all() const;
 	[[nodiscard]] std::expected<std::string, std::string> git_commit(const std::optional<std::string>&, std::optional<std::string_view>) const;
 	[[nodiscard]] std::expected<std::string, std::string> push(const std::optional<std::string>&, bool) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_branch_list(const std::optional<std::string>&) const;                               // make version with optional branch_name
-	[[nodiscard]] std::expected<std::string, std::string> git_branch(const std::optional<std::string>&, const std::optional<std::string>&) const; // get rid of this
+	[[nodiscard]] std::expected<std::string, std::string> branch(const std::optional<std::string>&, const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> git_merge(const std::optional<std::string>&) const;
 	int handle(const Cmd::Git::Status&) const;
 	int handle(const Cmd::Git::Fetch&) const;

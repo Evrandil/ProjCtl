@@ -98,10 +98,16 @@ int ProjCtl::handle(const Cmd::Base::Add& cmd)
 }
 
 
-int ProjCtl::handle(const Cmd::Base::Remove& cmd) { return report_save(remove(cmd.name)); }
+int ProjCtl::handle(const Cmd::Base::Remove& cmd)
+{
+	return report_save(remove(cmd.name));
+}
 
 
-int ProjCtl::handle(const Cmd::Base::Open& cmd) const { return report(open(cmd.name)); }
+int ProjCtl::handle(const Cmd::Base::Open& cmd) const
+{
+	return report(open(cmd.name));
+}
 
 
 int ProjCtl::handle(const Cmd::Base::Build& cmd) const
@@ -164,24 +170,32 @@ int ProjCtl::handle(const Cmd::Git::Fetch& cmd) const
 
 int ProjCtl::handle(const Cmd::Git::Branch& cmd) const
 {
-	if (cmd.branch_name)
-	{
-		return report(git_branch(cmd.name, *cmd.branch_name));
-	}
-	return report(git_branch_list(cmd.name));
+	return report(branch(cmd.name, cmd.branch_name));
 }
 
 
-int ProjCtl::handle(const Cmd::Git::Merge& cmd) const { return report(git_merge(cmd.name)); }
+int ProjCtl::handle(const Cmd::Git::Merge& cmd) const
+{
+	return report(git_merge(cmd.name));
+}
 
 
-int ProjCtl::handle(const Cmd::GH::Status&) const { return report(g_status()); }
+int ProjCtl::handle(const Cmd::GH::Status&) const
+{
+	return report(g_status());
+}
 
 
-int ProjCtl::handle(const Cmd::GH::RepoList&) const { return report(repo_list()); }
+int ProjCtl::handle(const Cmd::GH::RepoList&) const
+{
+	return report(repo_list());
+}
 
 
-int ProjCtl::handle(const Cmd::GH::IssueList& cmd) const { return report(issue_list(cmd.name)); }
+int ProjCtl::handle(const Cmd::GH::IssueList& cmd) const
+{
+	return report(issue_list(cmd.name));
+}
 
 
 int ProjCtl::handle(const Cmd::GH::IssueCreate& cmd) const
@@ -198,7 +212,10 @@ int ProjCtl::handle(const Cmd::GH::IssueCreate& cmd) const
 }
 
 
-int ProjCtl::handle(const Cmd::GH::RequestList& cmd) const { return report(request_list(cmd.name)); }
+int ProjCtl::handle(const Cmd::GH::RequestList& cmd) const
+{
+	return report(request_list(cmd.name));
+}
 
 
 int ProjCtl::handle(const Cmd::GH::RequestCreate& cmd) const
@@ -215,4 +232,7 @@ int ProjCtl::handle(const Cmd::GH::RequestCreate& cmd) const
 }
 
 
-int ProjCtl::handle(const Cmd::GH::RequestMerge& cmd) const { return report(request_merge(cmd.name)); }
+int ProjCtl::handle(const Cmd::GH::RequestMerge& cmd) const
+{
+	return report(request_merge(cmd.name));
+}

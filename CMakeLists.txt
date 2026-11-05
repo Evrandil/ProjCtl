@@ -57,12 +57,14 @@ add_library(projctl_core
 	src/projctl/handle.cpp
 	src/projctl/helper.cpp
 	src/projctl/projects.cpp
-	src/projctl/git.cpp
+	src/projctl/git/list.cpp
 	src/projctl/git/status.cpp
 	src/projctl/git/fetch.cpp
 	src/projctl/git/pull.cpp
 	src/projctl/git/push.cpp
 	src/projctl/git/commit.cpp
+	src/projctl/git/merge.cpp
+	src/projctl/git/branch.cpp
 	src/projctl/hosting.cpp
 	src/projctl/issues.cpp
 	src/projctl/requests.cpp
