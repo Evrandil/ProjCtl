@@ -62,6 +62,8 @@ add_library(projctl_core
 	src/projctl/projects/list.cpp
 	src/projctl/projects/open.cpp
 	src/projctl/projects/path.cpp
+	src/projctl/projects/build.cpp
+	src/projctl/projects/run.cpp
 	src/projctl/git/list.cpp
 	src/projctl/git/status.cpp
 	src/projctl/git/fetch.cpp

@@ -1,13 +1,6 @@
 #include "projctl.hpp"
 
-#include <format>
-#include <string_view>
-#include <future>
-#include <vector>
-#include <functional>
-#include <iterator>
 #include "config.hpp"
-#include "systeminterface.hpp"
 
 
 std::expected<std::string, std::string> ProjCtl::add(const std::optional<std::string>& name, std::optional<std::filesystem::path> path)
@@ -59,47 +52,4 @@ std::expected<std::string, std::string> ProjCtl::remove(const std::string& name)
 	}
 
 	return std::format("{}{:<{}}{}{}{}", color_code(config.header_color), "Removed project:", config.name_width, color_code(config.project_name_color), name, Style::RESET);
-}
-
-
-std::expected<int, std::string> ProjCtl::build(const std::optional<std::string>& name) const
-{
-	std::expected project = project_find(name);
-	if (!project)
-	{
-		return std::unexpected(project.error());
-	}
-
-	const ProjectContent& content = (*project)->second;
-
-	const std::optional<std::string_view> command_option = content.build_command ? content.build_command : build_command_for(content.type);
-
-	if (!command_option)
-	{
-		return std::unexpected(std::format("{}There's no default build command for {}{}{} as type of project {}{}{}", color_code(config.error_color), color_code(config.project_type_color),
-										   project_type_to_string(content.type), color_code(config.error_color), color_code(config.project_name_color), *name, Style::RESET));
-	}
-
-	return SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", std::string{*command_option}}, content.path);
-}
-
-
-std::expected<int, std::string> ProjCtl::run(const std::optional<std::string>& name) const
-{
-	std::expected project = project_find(name);
-	if (!project)
-	{
-		return std::unexpected(project.error());
-	}
-	const ProjectContent& content = (*project)->second;
-
-	const std::optional<std::string_view> command_option = content.run_command ? content.run_command : run_command_for(content.type);
-
-	if (!command_option)
-	{
-		return std::unexpected(std::format("{}There's no default run command for {}{}{} as type of project {}{}{}", color_code(config.error_color), color_code(config.project_type_color),
-										   project_type_to_string(content.type), color_code(config.error_color), color_code(config.project_name_color), *name, Style::RESET));
-	}
-
-	return SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", std::string{*command_option}}, content.path);
 }
