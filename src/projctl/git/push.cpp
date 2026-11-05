@@ -17,5 +17,5 @@ std::expected<std::string, std::string> ProjCtl::push(const std::optional<std::s
 	{
 		return std::unexpected(std::format("{}Couldn't push {}{}{}: {}{}", color_code(config.error_color), color_code(config.project_name_color), (*project)->first, color_code(config.error_color), result.error(), Style::RESET));
 	}
-	return result;
+	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
 }
