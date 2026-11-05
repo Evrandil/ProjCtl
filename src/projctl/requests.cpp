@@ -137,7 +137,7 @@ std::expected<std::string, std::string> ProjCtl::request_list(const std::optiona
 		{
 			return std::format("{}Failed to get host {}{}", color_code(config.error_color), host_option.error(), Style::RESET);
 		}
-		HostOption host = *host_option;
+		HostOption host    = *host_option;
 		std::string output = std::format("{}Requests for {}{}{}:\n", color_code(config.header_color), color_code(config.project_name_color), project_name, Style::RESET);
 		std::expected<std::vector<Request>, std::string> command_output = GitHostInterface::request_list(host, content.path.string());
 		if (!command_output)

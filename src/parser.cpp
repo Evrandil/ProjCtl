@@ -24,23 +24,21 @@ namespace
 		return std::string{args.front()};
 	}
 
-	template <typename CommandType>
-	Command parser_with_name(std::span<const std::string_view> args)
+	template <typename CommandType> Command parser_with_name(std::span<const std::string_view> args)
 	{
 		const std::expected name = optional_name(args);
 		if (!name)
 		{
 			return Cmd::Unknown{};
 		}
-		return CommandType{ .name = *name };
+		return CommandType{.name = *name};
 	}
 
-	template <typename CommandType>
-	Command with_name_or_all(std::span<const std::string_view> args)
+	template <typename CommandType> Command with_name_or_all(std::span<const std::string_view> args)
 	{
 		if (args.size() == 1 && (args.front() == "--all" || args.front() == "-a"))
 		{
-			return CommandType{ .all = true, .name = std::nullopt };
+			return CommandType{.all = true, .name = std::nullopt};
 		}
 		return parser_with_name<CommandType>(args);
 	}
@@ -57,25 +55,25 @@ namespace
 		switch (args.size())
 		{
 			case 2:
-				result.extra = std::string{ args.front() };
+				result.extra = std::string{args.front()};
 				[[fallthrough]];
 			case 1:
 				[[fallthrough]];
 			case 0:
+			{
+				std::expected name = optional_name(args.size() == 2 ? args.last(1) : args);
+				if (!name)
 				{
-					std::expected name = optional_name(args.size() == 2 ? args.last(1) : args);
-					if (!name)
-					{
-						return std::unexpected(name.error());
-					}
-					result.name = *name;
-					return result;
+					return std::unexpected(name.error());
 				}
+				result.name = *name;
+				return result;
+			}
 			default:
 				return std::unexpected(std::format("Too many arguments: expected at most two, got {}", args.size()));
 		}
 	}
-}
+} // namespace
 
 
 Command parser(const std::span<const std::string_view> input)
@@ -86,17 +84,17 @@ Command parser(const std::span<const std::string_view> input)
 	}
 
 	const std::string_view command = input.front();
-	const std::span args = input.subspan(1);
+	const std::span args           = input.subspan(1);
 
 	if (command == "list")
 	{
 		if (args.empty())
 		{
-			return Cmd::Base::List{ .gits_only = false };
+			return Cmd::Base::List{.gits_only = false};
 		}
 		if (args.size() == 1 && args.front() == "gits")
 		{
-			return Cmd::Base::List{ .gits_only = true };
+			return Cmd::Base::List{.gits_only = true};
 		}
 		return Cmd::Unknown{};
 	}
@@ -114,8 +112,8 @@ Command parser(const std::span<const std::string_view> input)
 			return Cmd::Unknown{};
 		}
 		return Cmd::Base::Add{
-			.name	= parts->name,
-			.path	= parts->extra,
+			.name = parts->name,
+			.path = parts->extra,
 		};
 	}
 
@@ -126,7 +124,7 @@ Command parser(const std::span<const std::string_view> input)
 		{
 			return Cmd::Unknown{};
 		}
-		return Cmd::Base::Remove{ .name = **name };
+		return Cmd::Base::Remove{.name = **name};
 	}
 
 	if (command == "open")
@@ -155,25 +153,25 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected parts = name_with_extra(args);
 		if (!parts)
 		{
-			return Cmd::Unknown{ };
+			return Cmd::Unknown{};
 		}
 		return Cmd::Git::Commit{
-			.name		= parts->name,
-			.message	= parts->extra,
+			.name    = parts->name,
+			.message = parts->extra,
 		};
 	}
 
 	if (command == "push")
 	{
-		const bool upstream = !args.empty() && args.front() == "-u";
+		const bool upstream      = !args.empty() && args.front() == "-u";
 		const std::expected name = optional_name(upstream ? args.subspan(1) : args);
 		if (!name)
 		{
 			return Cmd::Unknown{};
 		}
 		return Cmd::Git::Push{
-			.branch_upstream	= upstream,
-			.name				= *name,
+			.branch_upstream = upstream,
+			.name            = *name,
 		};
 	}
 
@@ -195,8 +193,8 @@ Command parser(const std::span<const std::string_view> input)
 			return Cmd::Unknown{};
 		}
 		return Cmd::Git::Branch{
-			.name			= parts->name,
-			.branch_name	= parts->extra,
+			.name        = parts->name,
+			.branch_name = parts->extra,
 		};
 	}
 

@@ -58,7 +58,9 @@ std::expected<std::string, std::string> GitHubInterface::repo_list()
 
 std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1", "gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt,parent"}, path);
+	std::expected result = SystemInterface::run(
+		std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1", "gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt,parent"},
+		path);
 
 	if (!result)
 	{
@@ -108,15 +110,13 @@ std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::
 }
 
 
-std::expected<int, std::string> GitHubInterface::issue_create(std::string_view path)
-{
-	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "create"}, path);
-}
+std::expected<int, std::string> GitHubInterface::issue_create(std::string_view path) { return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "create"}, path); }
 
 
 std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1", "gh", "pr", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}, path);
+	std::expected result = SystemInterface::run(
+		std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1", "gh", "pr", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}, path);
 
 	if (!result)
 	{
@@ -162,10 +162,7 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(s
 }
 
 
-std::expected<int, std::string> GitHubInterface::request_create(std::string_view path)
-{
-	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "create"}, path);
-}
+std::expected<int, std::string> GitHubInterface::request_create(std::string_view path) { return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "create"}, path); }
 
 
 std::expected<std::string, std::string> GitHubInterface::request_merge(std::string_view path)

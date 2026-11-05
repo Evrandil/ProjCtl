@@ -87,16 +87,10 @@ int ProjCtl::handle(const Cmd::Base::Add& cmd)
 }
 
 
-int ProjCtl::handle(const Cmd::Base::Remove& cmd)
-{
-	return report_save(remove(cmd.name));
-}
+int ProjCtl::handle(const Cmd::Base::Remove& cmd) { return report_save(remove(cmd.name)); }
 
 
-int ProjCtl::handle(const Cmd::Base::Open& cmd) const
-{
-	return report(open(cmd.name));
-}
+int ProjCtl::handle(const Cmd::Base::Open& cmd) const { return report(open(cmd.name)); }
 
 
 int ProjCtl::handle(const Cmd::Base::Build& cmd) const
@@ -127,16 +121,10 @@ int ProjCtl::handle(const Cmd::Base::Run& cmd) const
 }
 
 
-int ProjCtl::handle(const Cmd::Git::Status& cmd) const
-{
-	return report(status(cmd.name));
-}
+int ProjCtl::handle(const Cmd::Git::Status& cmd) const { return cmd.all ? report(status_all()) : report(status(cmd.name)); }
 
 
-int ProjCtl::handle(const Cmd::Git::Commit& cmd) const
-{
-	return report(git_commit(cmd.name, cmd.message));
-}
+int ProjCtl::handle(const Cmd::Git::Commit& cmd) const { return report(git_commit(cmd.name, cmd.message)); }
 
 
 int ProjCtl::handle(const Cmd::Git::Push& cmd) const
@@ -149,16 +137,10 @@ int ProjCtl::handle(const Cmd::Git::Push& cmd) const
 }
 
 
-int ProjCtl::handle(const Cmd::Git::Pull& cmd) const
-{
-	return report(git_pull(cmd.name));
-}
+int ProjCtl::handle(const Cmd::Git::Pull& cmd) const { return report(git_pull(cmd.name)); }
 
 
-int ProjCtl::handle(const Cmd::Git::Fetch& cmd) const
-{
-	return report(git_fetch(cmd.name));
-}
+int ProjCtl::handle(const Cmd::Git::Fetch& cmd) const { return report(git_fetch(cmd.name)); }
 
 
 int ProjCtl::handle(const Cmd::Git::Branch& cmd) const
@@ -171,28 +153,16 @@ int ProjCtl::handle(const Cmd::Git::Branch& cmd) const
 }
 
 
-int ProjCtl::handle(const Cmd::Git::Merge& cmd) const
-{
-	return report(git_merge(cmd.name));
-}
+int ProjCtl::handle(const Cmd::Git::Merge& cmd) const { return report(git_merge(cmd.name)); }
 
 
-int ProjCtl::handle(const Cmd::GH::Status&) const
-{
-	return report(g_status());
-}
+int ProjCtl::handle(const Cmd::GH::Status&) const { return report(g_status()); }
 
 
-int ProjCtl::handle(const Cmd::GH::RepoList&) const
-{
-	return report(repo_list());
-}
+int ProjCtl::handle(const Cmd::GH::RepoList&) const { return report(repo_list()); }
 
 
-int ProjCtl::handle(const Cmd::GH::IssueList& cmd) const
-{
-	return report(issue_list(cmd.name));
-}
+int ProjCtl::handle(const Cmd::GH::IssueList& cmd) const { return report(issue_list(cmd.name)); }
 
 
 int ProjCtl::handle(const Cmd::GH::IssueCreate& cmd) const
@@ -209,10 +179,7 @@ int ProjCtl::handle(const Cmd::GH::IssueCreate& cmd) const
 }
 
 
-int ProjCtl::handle(const Cmd::GH::RequestList& cmd) const
-{
-	return report(request_list(cmd.name));
-}
+int ProjCtl::handle(const Cmd::GH::RequestList& cmd) const { return report(request_list(cmd.name)); }
 
 
 int ProjCtl::handle(const Cmd::GH::RequestCreate& cmd) const
@@ -229,7 +196,4 @@ int ProjCtl::handle(const Cmd::GH::RequestCreate& cmd) const
 }
 
 
-int ProjCtl::handle(const Cmd::GH::RequestMerge& cmd) const
-{
-	return report(request_merge(cmd.name));
-}
+int ProjCtl::handle(const Cmd::GH::RequestMerge& cmd) const { return report(request_merge(cmd.name)); }

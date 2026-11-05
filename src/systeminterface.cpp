@@ -14,14 +14,14 @@
 namespace
 {
 	constexpr std::size_t READ_CHUNK_SIZE = 4096;
-	constexpr int SIGNAL_EXIT_BASE        = 128;		// shell convention: killed by signal N -> exit code 128 + N
+	constexpr int SIGNAL_EXIT_BASE        = 128; // shell convention: killed by signal N -> exit code 128 + N
 	std::vector<char*> make_argv(std::span<const std::string> args)
 	{
 		std::vector<char*> argv;
 		argv.reserve(args.size() + 1);
 		for (const std::string& arg : args)
 		{
-			argv.push_back(const_cast<char*>(arg.c_str()));			// NOLINT(cppcoreguidelines-pro-type-const-cast)
+			argv.push_back(const_cast<char*>(arg.c_str())); // NOLINT(cppcoreguidelines-pro-type-const-cast)
 		}
 		argv.push_back(nullptr);
 		return argv;
@@ -62,12 +62,12 @@ std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::sp
 		return std::unexpected(std::format("Directory doesn't exist: {}", cwd.string()));
 	}
 
-	std::array<int, 2> fds = { };
+	std::array<int, 2> fds = {};
 	if (pipe(fds.data()) != 0)
 	{
 		return std::unexpected(std::format("Couldn't create pipe: {}", std::strerror(errno)));
 	}
-	const int read_end = fds.front();
+	const int read_end  = fds.front();
 	const int write_end = fds.back();
 
 	posix_spawn_file_actions_t actions;
@@ -85,7 +85,7 @@ std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::sp
 	}
 
 	std::vector<char*> argv = make_argv(args);
-	pid_t pid = 0;
+	pid_t pid               = 0;
 
 	const int error = posix_spawnp(&pid, argv.front(), &actions, nullptr, argv.data(), environ);
 
@@ -99,7 +99,7 @@ std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::sp
 	}
 
 	std::string text;
-	std::array<char, READ_CHUNK_SIZE> buffer = { };
+	std::array<char, READ_CHUNK_SIZE> buffer = {};
 	while (true)
 	{
 		const ssize_t count = read(read_end, buffer.data(), buffer.size());

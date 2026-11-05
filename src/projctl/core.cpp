@@ -144,7 +144,7 @@ std::optional<std::string> ProjCtl::current_project_name() const
 }
 
 
-std::expected<std::map<std::string, ProjectContent>::const_iterator, std::string> ProjCtl::project_find(const std::optional<std::string>& name) const
+std::expected<ProjectIterator, std::string> ProjCtl::project_find(const std::optional<std::string>& name) const
 {
 	std::string actual_name;
 	if (name)

@@ -142,5 +142,6 @@ namespace Cmd
 } // namespace Cmd
 
 
-using Command = std::variant<Cmd::Unknown, Cmd::Base::List, Cmd::Base::Path, Cmd::Base::Add, Cmd::Base::Remove, Cmd::Base::Open, Cmd::Base::Build, Cmd::Base::Run, Cmd::Git::Status, Cmd::Git::Commit, Cmd::Git::Push, Cmd::Git::Pull, Cmd::Git::Fetch, Cmd::Git::Branch, Cmd::Git::Merge, Cmd::GH::Status,
-							 Cmd::GH::RepoList, Cmd::GH::IssueList, Cmd::GH::IssueCreate, Cmd::GH::RequestList, Cmd::GH::RequestCreate, Cmd::GH::RequestMerge>;
+using Command = std::variant<Cmd::Unknown, Cmd::Base::List, Cmd::Base::Path, Cmd::Base::Add, Cmd::Base::Remove, Cmd::Base::Open, Cmd::Base::Build, Cmd::Base::Run, Cmd::Git::Status, Cmd::Git::Commit,
+							 Cmd::Git::Push, Cmd::Git::Pull, Cmd::Git::Fetch, Cmd::Git::Branch, Cmd::Git::Merge, Cmd::GH::Status, Cmd::GH::RepoList, Cmd::GH::IssueList, Cmd::GH::IssueCreate,
+							 Cmd::GH::RequestList, Cmd::GH::RequestCreate, Cmd::GH::RequestMerge>;
