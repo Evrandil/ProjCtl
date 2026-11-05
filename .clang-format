@@ -7,7 +7,7 @@ ContinuationIndentWidth: 4
 
 BreakBeforeBraces: Allman
 InsertBraces: true
-ColumnLimit: 200
+ColumnLimit: 120
 
 PointerAlignment: Left
 ReferenceAlignment: Left
@@ -16,6 +16,7 @@ DerivePointerAlignment: false
 #AllowShortBlocksOnASingleLine: Always
 #AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 #AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Inline
 AlignConsecutiveAssignments: Consecutive
 
 IndentCaseLabels: true

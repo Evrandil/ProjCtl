@@ -8,8 +8,9 @@
 #include <expected>
 
 
-constexpr std::string_view MARGIN = "    ";
-constexpr int MARGIN_WIDTH        = 20;
+constexpr std::string_view MARGIN	= "    ";
+constexpr int MARGIN_WIDTH			= 20;
+constexpr int MARGIN_SIZE			= 20;
 
 
 ProjectType detect_project_type(const std::filesystem::path&);

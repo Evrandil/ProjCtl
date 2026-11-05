@@ -59,6 +59,9 @@ add_library(projctl_core
 	src/projctl/core/project_find.cpp
 	src/projctl/core/save.cpp
 	src/projctl/core/report.cpp
+	src/projctl/projects/list.cpp
+	src/projctl/projects/open.cpp
+	src/projctl/projects/path.cpp
 	src/projctl/git/list.cpp
 	src/projctl/git/status.cpp
 	src/projctl/git/fetch.cpp

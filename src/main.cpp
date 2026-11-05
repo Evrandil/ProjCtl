@@ -9,9 +9,7 @@ int main(const int argc, const char** argv)
 {
 	std::vector<std::string_view> args{argv + 1, argv + argc};
 
-	Command command = parser(args);
-
 	ProjCtl proj_ctl;
 
-	return proj_ctl.execute(command);
+	return proj_ctl.execute(parser(args));
 }

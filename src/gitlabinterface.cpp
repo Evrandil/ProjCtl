@@ -89,7 +89,10 @@ std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(std::
 }
 
 
-std::expected<int, std::string> GitLabInterface::issue_create(std::string_view path) { return SystemInterface::run_interactive(std::vector<std::string>{"glab", "issue", "create"}, path); }
+std::expected<int, std::string> GitLabInterface::issue_create(std::string_view path)
+{
+	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "issue", "create"}, path);
+}
 
 
 std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(std::string_view path)
@@ -136,7 +139,10 @@ std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(s
 }
 
 
-std::expected<int, std::string> GitLabInterface::request_create(std::string_view path) { return SystemInterface::run_interactive(std::vector<std::string>{"glab", "mr", "create"}, path); }
+std::expected<int, std::string> GitLabInterface::request_create(std::string_view path)
+{
+	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "mr", "create"}, path);
+}
 
 
 std::expected<std::string, std::string> GitLabInterface::request_merge(std::string_view path)
