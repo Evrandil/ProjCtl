@@ -62,6 +62,7 @@ add_library(projctl_core
 	src/projctl/git/fetch.cpp
 	src/projctl/git/pull.cpp
 	src/projctl/git/push.cpp
+	src/projctl/git/commit.cpp
 	src/projctl/hosting.cpp
 	src/projctl/issues.cpp
 	src/projctl/requests.cpp

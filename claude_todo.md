@@ -43,7 +43,7 @@ cmd_of(project) / cmd(name) { runs cmd_of(project of arged name) } / cmd_all() {
   - [ ] `struct Unknown { std::string message; };`
   - [ ] parser: pass `optional_name`'s errors along (`Cmd::Unknown{ .message = name.error() }`), plus short usage lines for the other cases (`"usage: projctl push [-u] [<name>]"`)
   - [x] `handle(const Cmd::Unknown&)`: print the message to **stderr** (currently stdout, no reason given)
-- [ ] `push`: one `git_push(name, bool upstream)` instead of `git_push` + `git_push_branch` (your TODO)
+- [x] `push`: one `git_push(name, bool upstream)` instead of `git_push` + `git_push_branch` (your TODO)
 - [ ] `branch`: one function taking the optional branch name instead of `git_branch` + `git_branch_list` (your TODO)
 
 ## 4. Failures that look like success

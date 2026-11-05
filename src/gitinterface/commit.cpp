@@ -20,7 +20,7 @@ std::expected<std::string, std::string> GitInterface::add(const ProjectContent& 
 }
 
 
-std::expected<std::string, std::string> GitInterface::commit(const ProjectContent& project, std::string_view message)
+std::expected<std::string, std::string> GitInterface::commit(const ProjectContent& project, std::optional<std::string_view> message)
 {
 	std::expected add_result = add(project);
 	if (!add_result) [[unlikely]]
@@ -28,40 +28,29 @@ std::expected<std::string, std::string> GitInterface::commit(const ProjectConten
 		return std::unexpected(add_result.error());
 	}
 
-	std::expected commit_result = SystemInterface::run(std::vector<std::string>{"git", "-C", "commit", "-m", std::string(message)}, project.path.string());
-	if (!commit_result) [[unlikely]]
+	if (!message)
 	{
-		return std::unexpected(commit_result.error());
-	}
-	if (commit_result->exit_code != 0)
-	{
-		return std::unexpected(commit_result->text);
-	}
+		std::expected<int, std::string> exit_code = SystemInterface::run_interactive(std::vector<std::string>{"git", "commit"}, project.path);
+		if (!exit_code)
+		{
+			return std::unexpected(exit_code.error());
+		}
+		if (*exit_code != 0)
+		{
+			return std::unexpected("Commit aborted");
+		}
 
-	add_result->append("\n");
-	add_result->append(commit_result->text);
-
-	return *add_result;
-}
-
-
-std::expected<std::string, std::string> GitInterface::commit(const ProjectContent& project)
-{
-	std::expected add_result = add(project);
-	if (!add_result) [[unlikely]]
-	{
-		return std::unexpected(add_result.error());
+		return "Committed";
 	}
 
-	std::expected commit_result = SystemInterface::run_interactive(std::vector<std::string>{"git", "commit"}, project.path.string());
-	if (!commit_result) [[unlikely]]
+	std::expected<SystemInterface::Output, std::string> result = SystemInterface::run(std::vector<std::string>{"git", "commit", "-m", std::string{ *message }}, project.path);
+	if (!result)
 	{
-		return std::unexpected(commit_result.error());
+		return std::unexpected(result.error());
 	}
-	if (*commit_result != 0)
+	if (result->exit_code != 0)
 	{
-		return std::unexpected("Git commit failed");
+		return std::unexpected(result->text);
 	}
-
-	return *add_result;
+	return result->text;
 }
