@@ -126,7 +126,11 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::optional<
 		result = GitInterface::commit(content);
 	}
 
-	return std::format("{}{}{}{}", result ? color_code(config.tick_color) : color_code(config.error_color), result ? Style::TICK : Style::CROSS, result ? *result : result.error(), Style::RESET);
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
+	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
 }
 
 
@@ -140,8 +144,12 @@ std::expected<std::string, std::string> ProjCtl::git_push(const std::optional<st
 	const ProjectContent& content = (*project)->second;
 
 	std::expected<std::string, std::string> result = GitInterface::push(content);
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
 
-	return std::format("{}{}{}{}", result ? color_code(config.tick_color) : color_code(config.error_color), result ? Style::TICK : Style::CROSS, result ? *result : result.error(), Style::RESET);
+	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
 }
 
 std::expected<std::string, std::string> ProjCtl::git_push_branch(const std::optional<std::string>& name) const
@@ -170,11 +178,12 @@ std::expected<std::string, std::string> ProjCtl::git_push_branch(const std::opti
 		return std::unexpected(result.error());
 	}
 
-	return std::format("{}{}{}{}", result ? color_code(config.tick_color) : color_code(config.error_color), result ? Style::TICK : Style::CROSS, result ? *result : result.error(), Style::RESET);
+	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
 }
 
 
 // TODO that one also get rid of --all flag and make another func for all I think
+// And make result expected so if commit's not successful it returns the error instead of just printing it
 std::expected<std::string, std::string> ProjCtl::git_pull(const std::optional<std::string>& name) const
 {
 	auto pull_one = [&](const std::string& project_name, const ProjectContent& content)
@@ -216,6 +225,7 @@ std::expected<std::string, std::string> ProjCtl::git_pull(const std::optional<st
 
 
 // TODO that one also get rid of --all flag and make another func for all I think
+// And make result expected so if commit's not successful it returns the error instead of just printing it
 std::expected<std::string, std::string> ProjCtl::git_fetch(const std::optional<std::string>& name) const
 {
 	auto fetch_one = [&](const std::string& project_name, const ProjectContent& content)
@@ -269,8 +279,12 @@ std::expected<std::string, std::string> ProjCtl::git_branch_list(const std::opti
 	const ProjectContent& content = (*project)->second;
 
 	std::expected<std::string, std::string> result = GitInterface::branch_list(content);
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
 
-	return std::format("{}{}{}", result ? color_code(config.project_branch_color) : color_code(config.error_color), result ? *result : result.error(), Style::RESET);
+	return std::format("{}{}{}",color_code(config.project_branch_color), *result, Style::RESET);
 }
 
 
@@ -284,8 +298,12 @@ std::expected<std::string, std::string> ProjCtl::git_branch(const std::optional<
 	const ProjectContent& content = (*project)->second;
 
 	std::expected<std::string, std::string> result = GitInterface::branch_switch(content, *branch);
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
 
-	return std::format("{}{}{}{}", result ? color_code(config.tick_color) : color_code(config.error_color), result ? Style::TICK : Style::CROSS, result ? *result : result.error(), Style::RESET);
+	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
 }
 
 

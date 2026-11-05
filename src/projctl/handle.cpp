@@ -14,6 +14,17 @@ int ProjCtl::report(const std::expected<std::string, std::string>& result) const
 	return 0;
 }
 
+int ProjCtl::report(const std::expected<int, std::string>& result) const
+{
+	if (!result)
+	{
+		std::println(stderr, "\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
+		return 1;
+	}
+
+	return *result;
+}
+
 int ProjCtl::report_save(const std::expected<std::string, std::string>& result) const
 {
 	if (!result)
@@ -36,7 +47,7 @@ int ProjCtl::report_save(const std::expected<std::string, std::string>& result) 
 
 int ProjCtl::handle(const Cmd::Unknown&) const
 {
-	std::println("\n\n{}Unrecognized command{}\n\n", color_code(config.error_color), Style::RESET);
+	std::println(stderr, "\n\n{}Unrecognized command{}\n\n", color_code(config.error_color), Style::RESET);
 	return 1;
 }
 
@@ -57,7 +68,7 @@ int ProjCtl::handle(const Cmd::Base::Path& cmd) const
 
 	if (!result)
 	{
-		std::println("{}{}{}{}", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
+		std::println(stderr, "{}{}{}{}", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
 		return 1;
 	}
 

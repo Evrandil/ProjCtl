@@ -211,7 +211,7 @@ std::filesystem::path SystemInterface::cache_home()
 
 	if (home && *home != '\0')
 	{
-		return std::filesystem::path{home} / ".cashe";
+		return std::filesystem::path{home} / ".cache";
 	}
 
 	return {};

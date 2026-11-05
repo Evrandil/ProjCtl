@@ -67,7 +67,7 @@ constexpr std::optional<std::string_view> run_command_for(ProjectType type)
 		case ProjectType::Node:
 			return "npm start 2>&1";
 		case ProjectType::Zig:
-			return "zig run 2>&1";
+			return "zig build run 2>&1";
 		default:
 			return std::nullopt;
 	}

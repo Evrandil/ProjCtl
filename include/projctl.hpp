@@ -29,6 +29,7 @@ class ProjCtl
 	std::optional<std::string> current_project_name() const;
 
 	int report(const std::expected<std::string, std::string>&) const;
+	int report(const std::expected<int, std::string>&) const;
 	int report_save(const std::expected<std::string, std::string>&) const;
 
 	// Bug functionality

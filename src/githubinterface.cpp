@@ -93,7 +93,7 @@ std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::
 
 		if (!json_issue.at("author").is_null())
 		{
-			issue.author = json_issue.at("author").at("name").get<std::string>();
+			issue.author = json_issue.at("author").at("login").get<std::string>();
 		}
 
 		for (const nlohmann::json& label : json_issue.at("labels"))
@@ -147,7 +147,7 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(s
 
 		if (!json_request.at("author").is_null())
 		{
-			request.author = json_request.at("author").at("name").get<std::string>();
+			request.author = json_request.at("author").at("login").get<std::string>();
 		}
 
 		for (const nlohmann::json& label : json_request.at("labels"))
