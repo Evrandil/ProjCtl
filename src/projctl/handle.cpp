@@ -156,7 +156,7 @@ int ProjCtl::handle(const Cmd::Git::Push& cmd) const
 
 int ProjCtl::handle(const Cmd::Git::Pull& cmd) const
 {
-	return report(git_pull(cmd.name));
+	return cmd.all ? report(pull_all()) : report(pull(cmd.name));
 }
 
 

@@ -26,7 +26,7 @@ The parser sets `cmd.all` correctly, but nothing reads it. `handle` passes only 
 - [ ] split into "one" and "all" versions, with `handle` choosing:
   - [x] `status` / `status_all`: `git.cpp:83`
   - [x] `git_fetch` / `git_fetch_all`: `git.cpp:232`
-  - [ ] `git_pull` / `git_pull_all`: `git.cpp:190`
+  - [x] `git_pull` / `git_pull_all`: `git.cpp:190`
   - [ ] `issue_list` / `issue_list_all`: `issues.cpp:166`
   - [ ] `request_list` / `request_list_all`: `requests.cpp:160`
   - pattern: `return report(cmd.all ? status_all() : status(cmd.name));`

@@ -71,10 +71,12 @@ class ProjCtl
 	[[nodiscard]] std::expected<std::string, std::string> fetch(const ProjectEntry&) const;
 	[[nodiscard]] std::expected<std::string, std::string> fetch(const std::optional<std::string>&) const;
 	[[nodiscard]] BatchResult fetch_all() const;
+	[[nodiscard]] std::expected<std::string, std::string> pull(const ProjectEntry&) const;
+	[[nodiscard]] std::expected<std::string, std::string> pull(const std::optional<std::string>&) const;
+	[[nodiscard]] BatchResult pull_all() const;
 	[[nodiscard]] std::expected<std::string, std::string> git_commit(const std::optional<std::string>&, std::optional<std::string_view>) const;
 	[[nodiscard]] std::expected<std::string, std::string> git_push(const std::optional<std::string>&) const;                                      // turn to one function with upstream bool
 	[[nodiscard]] std::expected<std::string, std::string> git_push_branch(const std::optional<std::string>&) const;                               // get rid of this
-	[[nodiscard]] std::expected<std::string, std::string> git_pull(const std::optional<std::string>&) const;                                      // make all bool
 	[[nodiscard]] std::expected<std::string, std::string> git_branch_list(const std::optional<std::string>&) const;                               // make version with optional branch_name
 	[[nodiscard]] std::expected<std::string, std::string> git_branch(const std::optional<std::string>&, const std::optional<std::string>&) const; // get rid of this
 	[[nodiscard]] std::expected<std::string, std::string> git_merge(const std::optional<std::string>&) const;
