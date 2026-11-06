@@ -1,7 +1,6 @@
 #include "projctl.hpp"
 
 #include "gitinterface.hpp"
-#include <print>
 
 
 std::expected<int, std::string> ProjCtl::request_create(const std::optional<std::string>& name) const
@@ -26,13 +25,5 @@ std::expected<int, std::string> ProjCtl::request_create(const std::optional<std:
 
 int ProjCtl::handle(const Cmd::GH::RequestCreate& cmd) const
 {
-	std::expected<int, std::string> result = request_create(cmd.name);
-
-	if (!result)
-	{
-		std::println("\n\n{}{}{}{}\n\n", paint(config.error_color), Style::CROSS, result.error(), reset());
-		return 1;
-	}
-
-	return *result;
+	return report(request_create(cmd.name));
 }

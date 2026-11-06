@@ -39,9 +39,5 @@ std::expected<std::string, std::string> ProjCtl::list() const
 
 int ProjCtl::handle(const Cmd::Base::List& cmd) const
 {
-	if (cmd.gits_only)
-	{
-		return report(list_gits());
-	}
-	return report(list());
+	return cmd.gits_only ? report(list_gits()) : report(list());
 }

@@ -18,7 +18,7 @@ int ProjCtl::report(const std::expected<int, std::string>& result) const
 {
 	if (!result)
 	{
-		std::println(stderr, "\n\n{}\n\n", result.error());
+		std::println(stderr, "\n\n{}{}{}{}\n\n", paint(config.error_color), Style::CROSS, result.error(), reset());
 		return 1;
 	}
 
@@ -60,10 +60,4 @@ int ProjCtl::handle(const Cmd::Unknown& cmd) const
 {
 	std::println(stderr, "\n\n{}{}{}{}\n\n", paint(config.error_color), Style::CROSS, cmd.message, reset());
 	return 1;
-}
-
-
-int ProjCtl::handle(const Cmd::Base::Remove& cmd)
-{
-	return report_save(remove(cmd.name));
 }

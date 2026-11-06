@@ -1,7 +1,6 @@
 #include "projctl.hpp"
 
 #include "systeminterface.hpp"
-#include <print>
 
 
 std::expected<int, std::string> ProjCtl::run(const std::optional<std::string>& name) const
@@ -27,13 +26,5 @@ std::expected<int, std::string> ProjCtl::run(const std::optional<std::string>& n
 
 int ProjCtl::handle(const Cmd::Base::Run& cmd) const
 {
-	std::expected<int, std::string> result = run(cmd.name);
-
-	if (!result)
-	{
-		std::println("\n\n{}\n\n", result.error());
-		return 1;
-	}
-
-	return *result;
+	return report(run(cmd.name));
 }

@@ -51,7 +51,6 @@ class ProjCtl
 	// Bug functionality
 	[[nodiscard]] int handle(const Cmd::Unknown&) const;
 
-	// TODO s
 	// Base functionality
 	[[nodiscard]] std::expected<std::string, std::string> list() const;
 	[[nodiscard]] std::expected<std::string, std::string> list_gits() const;

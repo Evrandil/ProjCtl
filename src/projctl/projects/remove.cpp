@@ -1,9 +1,5 @@
 #include "projctl.hpp"
 
-#include "config.hpp"
-
-
-
 
 std::expected<std::string, std::string> ProjCtl::remove(const std::string& name)
 {
@@ -14,4 +10,10 @@ std::expected<std::string, std::string> ProjCtl::remove(const std::string& name)
 	}
 
 	return std::format("{}{:<{}}{}{}{}", paint(config.header_color), "Removed project:", config.name_width, paint(config.project_name_color), name, reset());
+}
+
+
+int ProjCtl::handle(const Cmd::Base::Remove& cmd)
+{
+	return report_save(remove(cmd.name));
 }
