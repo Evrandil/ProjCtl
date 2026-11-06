@@ -9,7 +9,7 @@ std::expected<int, std::string> ProjCtl::build(const std::optional<std::string>&
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(project.error());
+		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
 	}
 
 	const ProjectContent& content = (*project)->second;
@@ -32,7 +32,7 @@ int ProjCtl::handle(const Cmd::Base::Build& cmd) const
 
 	if (!result)
 	{
-		std::println("\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
+		std::println("\n\n{}\n\n", result.error());
 		return 1;
 	}
 

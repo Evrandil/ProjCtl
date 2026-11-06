@@ -8,7 +8,7 @@ std::expected<std::string, std::string> ProjCtl::request_merge(const std::option
 	std::expected project_option = project_find(name);
 	if (!project_option)
 	{
-		return std::unexpected(project_option.error());
+		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project_option.error(), Style::RESET));
 	}
 
 	const ProjectContent& content                      = (*project_option)->second;

@@ -8,7 +8,7 @@ std::expected<std::string, std::string> ProjCtl::open(const std::optional<std::s
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(project.error());
+		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
 	}
 
 	const bool background = config.editor == "neovide" || config.editor == "emacs";
