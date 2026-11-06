@@ -3,6 +3,7 @@
 #include "gitinterface.hpp"
 #include "githostinterface.hpp"
 #include <ranges>
+#include <future>
 
 
 std::string ProjCtl::issue_table(const std::vector<Issue>& issues) const
@@ -132,7 +133,7 @@ std::expected<std::string, std::string> ProjCtl::issues(const ProjectEntry& proj
 	std::expected host_option = GitInterface::host(content);
 	if (!host_option)
 	{
-		return std::unexpected(std::format("{}Couldn't list issues for {}{}{}: {}", color_code(config.error_color), color_code(config.project_name_color), color_code(config.error_color), host_option.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}Couldn't list issues for {}{}{}: {}", color_code(config.error_color), Style::CROSS, color_code(config.project_name_color), color_code(config.error_color), host_option.error(), Style::RESET));
 	}
 	HostOption host = *host_option;
 
@@ -140,7 +141,7 @@ std::expected<std::string, std::string> ProjCtl::issues(const ProjectEntry& proj
 	std::expected list = GitHostInterface::issue_list(host, content.path.string());
 	if (!list)
 	{
-		return std::unexpected(std::format("{}Couldn't list issues for {}{}{}: {}", color_code(config.error_color), color_code(config.project_name_color), color_code(config.error_color), list.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}Couldn't list issues for {}{}{}: {}", color_code(config.error_color), Style::CROSS, color_code(config.project_name_color), color_code(config.error_color), list.error(), Style::RESET));
 		return output;
 	}
 	if (list->empty())
@@ -167,8 +168,36 @@ std::expected<std::string, std::string> ProjCtl::issues(const std::optional<std:
 }
 
 
+BatchResult ProjCtl::issues_all() const
+{
+	std::vector<std::future<std::expected<std::string, std::string>>> tasks;
+	tasks.reserve(projects.size());
+
+	auto is_git = [](const ProjectEntry& project) { return GitInterface::is_repo(project.second); };
+
+	for (const auto& project : projects | std::views::filter(is_git))
+	{
+		tasks.push_back(std::async(std::launch::async, [this, &project]() { return issues(project); }));
+	}
+
+	BatchResult results;
+	for (decltype(tasks)::value_type& task : tasks)
+	{
+		std::expected result = task.get();
+		if (!result)
+		{
+			std::format_to(std::back_inserter(results.output), "{}\n", result.error());
+			++results.failed;
+			continue;
+		}
+		std::format_to(std::back_inserter(results.output), "{}\n", *result);
+	}
+
+	return results;
+}
+
 
 int ProjCtl::handle(const Cmd::GH::IssueList& cmd) const
 {
-	return report(issues(cmd.name));
+	return cmd.all ? report(issues_all()) : report(issues(cmd.name));
 }
