@@ -207,6 +207,20 @@ Command parser(const std::span<const std::string_view> input)
 		return parser_with_name<Cmd::Git::Merge>(args);
 	}
 
+	if (command == "log")
+	{
+		const bool oneline = !args.empty() && args.front() == "-o";
+		const std::expected name = optional_name(oneline ? args.subspan(1) : args);
+		if (!name)
+		{
+			return Cmd::Unknown{ .message = name.error() };
+		}
+		return Cmd::Git::Log{
+			.oneline = oneline,
+			.name = *name,
+		};
+	}
+
 
 	if (command == "git" || command == "gits"|| command == "gh")
 	{

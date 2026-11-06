@@ -78,6 +78,7 @@ class ProjCtl
 	[[nodiscard]] std::expected<std::string, std::string> push(const std::optional<std::string>&, bool) const;
 	[[nodiscard]] std::expected<std::string, std::string> branch(const std::optional<std::string>&, const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> git_merge(const std::optional<std::string>&) const;
+	[[nodiscard]] std::expected<std::string, std::string> log(const std::optional<std::string>&, bool) const;
 	[[nodiscard]] int handle(const Cmd::Git::Status&) const;
 	[[nodiscard]] int handle(const Cmd::Git::Fetch&) const;
 	[[nodiscard]] int handle(const Cmd::Git::Commit&) const;
@@ -85,6 +86,7 @@ class ProjCtl
 	[[nodiscard]] int handle(const Cmd::Git::Pull&) const;
 	[[nodiscard]] int handle(const Cmd::Git::Branch&) const;
 	[[nodiscard]] int handle(const Cmd::Git::Merge&) const;
+	[[nodiscard]] int handle(const Cmd::Git::Log&) const;
 
 	// GH functionality
 	[[nodiscard]] BatchResult g_status() const;
