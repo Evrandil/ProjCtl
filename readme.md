@@ -7,8 +7,6 @@ And it was annoying<br>
 So here it is wrapper for git management \(haven't rly done anything on CodeBerg so I don't have that one wrapped\)<br>
 Tho honestly it's useful not only for git projects<br><br>
 
-It's nice to alias `pc=projctl` and `p` as `cd (projctl path $argv[1])` \(I use fish Idrk about bash or zsh\)
-
 Dependencies:
 ```fish
 cmake 3.20
@@ -17,7 +15,6 @@ just
 ```
 C++ standard is set to 26 so I guess that's requirement for compiler<br>
 Tho Idk with 23 I think it still runs, with precious versions... haven't checked but I guess not really<br>
-Also have `$XDG_CONFIG_HOME and` `$XDG_CACHE_HOME` set to some location<br>
 # Installatoin
 ## If you have just
 ```fish
@@ -71,8 +68,6 @@ projctl status [<name> | --all | -a]
 Adds project to saved projects<br>
 You can set it to auto-add current directory as project with name of dir<br>
 Also you can set name of dir and add <br>
-USE OBJECTIVE PATHS for sake of your sanity \(for now at least\)<br>
-Tho "." I did make to be converted to objective path of current dir<br>
 ```fish
 projctl add [[<path>] <name>]
 ```
@@ -80,6 +75,7 @@ projctl add [[<path>] <name>]
 ### Remove
 Removes project<br>
 \(Doesn't actually remove files, just from projctl list\)<br>
+Also it rejects calls without name or with "." \(on purpose\)
 ```fish
 projctl remove | rm <name>
 ```
@@ -152,10 +148,10 @@ No pipes currently work after refactor, it was good refactor but will take care 
 Also git options will work in pieline \(as one option so you don't have to write project name every time\) with this order:<br>
 automerge -> commit -> push \(with branch option\)
 ```fish
-projctl pull automerge commit push <name>
-projctl pull automerge commit <commit_msg> push <name>
-projctl pull automerge commit push branch <name>
-projctl pull automerge commit <commit_message> push branch <name>
+projctl pull merge commit push <name>
+projctl pull merge commit <commit_msg> push <name>
+projctl pull merge commit push branch <name>
+projctl pull merge commit <commit_message> push branch <name>
 ```
 
 ## GitHub / GitLab
