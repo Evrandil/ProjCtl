@@ -11,6 +11,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 
+include(CheckIPOSupported)
+check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error)
+
+if(ipo_supported)
+	set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
+else()
+	message(WARNING "LTO not supported: ${ipo_error}")
+endif()
+
 
 # Json
 
@@ -47,6 +56,7 @@ target_compile_options(projctl_parser PRIVATE
 	-Wconversion
 	-Wsign-conversion
 	-Wshadow
+#	-fsanitize=address,undefined
 )
 
 
@@ -110,7 +120,7 @@ target_compile_options(projctl_core PRIVATE
 	-Wconversion
 	-Wsign-conversion
 	-Wshadow
-#	-O3
+#	-fsanitize=address,undefined
 )
 
 target_link_libraries(projctl_core
@@ -143,7 +153,7 @@ target_compile_options(projctl PRIVATE
 	-Wshadow
 	-Wconversion
 	-Wsign-conversion
-#	-O3
+#	-fsanitize=address,undefined
 )
 
 
