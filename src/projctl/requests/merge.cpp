@@ -19,7 +19,12 @@ std::expected<std::string, std::string> ProjCtl::request_merge(const std::option
 	}
 	HostOption host = *host_option;
 
-	return GitHostInterface::request_merge(host, content.path.string());
+	std::expected result = GitHostInterface::request_merge(host, content.path.string());
+	if (!result)
+	{
+		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET));
+	}
+	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
 }
 
 
