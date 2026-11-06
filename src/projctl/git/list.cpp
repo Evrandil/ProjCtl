@@ -2,6 +2,7 @@
 
 #include "gitinterface.hpp"
 #include <future>
+#include <ranges>
 
 
 std::expected<std::string, std::string> ProjCtl::list_gits() const
@@ -17,12 +18,11 @@ std::expected<std::string, std::string> ProjCtl::list_gits() const
 	std::vector<std::future<std::string>> tasks;
 	tasks.reserve(projects.size());
 
-	for (const decltype(projects)::value_type& project : projects)
+	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second); };
+
+	for (const decltype(projects)::value_type& project : projects | std::views::filter(is_git))
 	{
-		if (GitInterface::is_repo(project.second))
-		{
-			tasks.push_back(std::async(std::launch::async, list_one_git, std::cref(project.first), std::cref(project.second)));
-		}
+		tasks.push_back(std::async(std::launch::async, list_one_git, std::cref(project.first), std::cref(project.second)));
 	}
 
 	if (tasks.empty()) [[unlikely]]

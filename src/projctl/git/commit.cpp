@@ -8,7 +8,7 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::optional<
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(project.error());
+		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
 	}
 	const ProjectContent& content = (*project)->second;
 
@@ -17,7 +17,7 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::optional<
 
 	if (!result)
 	{
-		return std::unexpected(result.error());
+		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET));
 	}
 	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
 }

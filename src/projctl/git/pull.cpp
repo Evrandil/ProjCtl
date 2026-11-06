@@ -1,6 +1,7 @@
 #include "projctl.hpp"
 
 #include <future>
+#include <ranges>
 #include "gitinterface.hpp"
 
 
@@ -26,7 +27,7 @@ std::expected<std::string, std::string> ProjCtl::pull(const std::optional<std::s
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(project.error());
+		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
 	}
 
 	return pull(**project);
@@ -38,12 +39,11 @@ BatchResult ProjCtl::pull_all() const
 	std::vector<std::future<std::expected<std::string, std::string>>> tasks;
 	tasks.reserve(projects.size());
 
-	for (const ProjectEntry& project : projects)
+	auto is_git = [](const ProjectEntry& project) { return GitInterface::is_repo(project.second); };
+
+	for (const ProjectEntry& project : projects | std::views::filter(is_git))
 	{
-		if (GitInterface::is_repo(project.second))
-		{
-			tasks.push_back(std::async(std::launch::async, [this, &project] {return pull(project); }));
-		}
+		tasks.push_back(std::async(std::launch::async, [this, &project] {return pull(project); }));
 	}
 
 	BatchResult results;

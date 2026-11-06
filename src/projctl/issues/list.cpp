@@ -160,7 +160,7 @@ std::expected<std::string, std::string> ProjCtl::issues(const std::optional<std:
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(project.error());
+		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
 	}
 
 	return issues(**project);
