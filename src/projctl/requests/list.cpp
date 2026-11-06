@@ -75,12 +75,12 @@ std::string ProjCtl::request_table(const std::vector<Request>& requests) const
 				return Style::Color::Default;
 		}
 	};
-	table += color_code(config.header_color);
+	table += paint(config.header_color);
 	for (RequestField field : config.request_columns)
 	{
 		std::format_to(std::back_inserter(table), "{:<{}}", field_name(field), field_width(field));
 	}
-	table += Style::RESET;
+	table += reset();
 	table += '\n';
 	for (const Request& request : requests)
 	{
@@ -115,7 +115,7 @@ std::string ProjCtl::request_table(const std::vector<Request>& requests) const
 					value = request.parent ? std::format("#{}", *request.parent) : "-";
 					break;
 			}
-			std::format_to(std::back_inserter(table), "{}{:<{}}{}", color_code(field_color(field, request)), truncate(value, field_width(field)), field_width(field), Style::RESET);
+			std::format_to(std::back_inserter(table), "{}{:<{}}{}", paint(field_color(field, request)), truncate(value, field_width(field)), field_width(field), reset());
 		}
 		table += '\n';
 	}
@@ -131,20 +131,20 @@ std::expected<std::string, std::string> ProjCtl::requests(const ProjectEntry& pr
 	std::expected host_option = GitInterface::host(content);
 	if (!host_option)
 	{
-		return std::unexpected(std::format("{}{}Couldn't list requests for {}{}{}: {}", color_code(config.error_color), Style::CROSS, color_code(config.project_name_color), color_code(config.error_color), host_option.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}Couldn't list requests for {}{}{}: {}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), paint(config.error_color), host_option.error(), reset()));
 	}
 	HostOption host = *host_option;
 
-	std::string output = std::format("{}Requests for {}{}{}:\n", color_code(config.header_color), color_code(config.project_name_color), project_name, Style::RESET);
+	std::string output = std::format("{}Requests for {}{}{}:\n", paint(config.header_color), paint(config.project_name_color), project_name, reset());
 	std::expected list = GitHostInterface::request_list(host, content.path.string());
 	if (!list)
 	{
-		return std::unexpected(std::format("{}{}Couldn't list requests for {}{}{}: {}", color_code(config.error_color), Style::CROSS, color_code(config.project_name_color), color_code(config.error_color), list.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}Couldn't list requests for {}{}{}: {}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), paint(config.error_color), list.error(), reset()));
 		return output;
 	}
 	if (list->empty())
 	{
-		std::format_to(std::back_inserter(output), "{}No requests{}\n", color_code(config.header_color), Style::RESET);
+		std::format_to(std::back_inserter(output), "{}No requests{}\n", paint(config.header_color), reset());
 		return output;
 	}
 
@@ -159,7 +159,7 @@ std::expected<std::string, std::string> ProjCtl::requests(const std::optional<st
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
 	}
 
 	return requests(**project);

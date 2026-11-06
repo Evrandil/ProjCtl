@@ -10,12 +10,12 @@ BatchResult ProjCtl::g_status() const
 	{
 		std::string output;
 		CliState state = GitHostInterface::state(host);
-		std::format_to(std::back_inserter(output), "{}{:<{}}{}{}{}{}\n", color_code(config.header_color), std::format("{} Cli", host == HostOption::GitHub ? "GitHub" : "GitLab"), config.name_width,
-					   state != CliState::NotInstalled ? color_code(config.tick_color) : color_code(config.error_color), state != CliState::NotInstalled ? Style::TICK : Style::CROSS,
-					   state != CliState::NotInstalled ? "Installed" : "Not installed", Style::RESET);
-		std::format_to(std::back_inserter(output), "{}{:<{}}{}{}{}{}\n", color_code(config.header_color), "Auth", config.name_width,
-					   state == CliState::Ready ? color_code(config.tick_color) : color_code(config.error_color), state == CliState::Ready ? Style::TICK : Style::CROSS,
-					   state == CliState::Ready ? "Authenticated" : "Not authenticated", Style::RESET);
+		std::format_to(std::back_inserter(output), "{}{:<{}}{}{}{}{}\n", paint(config.header_color), std::format("{} Cli", host == HostOption::GitHub ? "GitHub" : "GitLab"), config.name_width,
+					   state != CliState::NotInstalled ? paint(config.tick_color) : paint(config.error_color), state != CliState::NotInstalled ? Style::TICK : Style::CROSS,
+					   state != CliState::NotInstalled ? "Installed" : "Not installed", reset());
+		std::format_to(std::back_inserter(output), "{}{:<{}}{}{}{}{}\n", paint(config.header_color), "Auth", config.name_width,
+					   state == CliState::Ready ? paint(config.tick_color) : paint(config.error_color), state == CliState::Ready ? Style::TICK : Style::CROSS,
+					   state == CliState::Ready ? "Authenticated" : "Not authenticated", reset());
 		return output;
 	};
 	std::array<std::future<std::string>, 2> tasks = std::array<std::future<std::string>, 2>{

@@ -9,14 +9,14 @@ std::expected<int, std::string> ProjCtl::issue_create(const std::optional<std::s
 	std::expected project_option = project_find(name);
 	if (!project_option)
 	{
-		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project_option.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project_option.error(), reset()));
 	}
 
 	const ProjectContent& content                      = (*project_option)->second;
 	std::expected<HostOption, std::string> host_option = GitInterface::host(content);
 	if (!host_option)
 	{
-		return std::unexpected(std::format("{}Failed to get host {}{}\n", color_code(config.error_color), host_option.error(), Style::RESET));
+		return std::unexpected(std::format("{}Failed to get host {}{}\n", paint(config.error_color), host_option.error(), reset()));
 	}
 	HostOption host = *host_option;
 
@@ -30,7 +30,7 @@ int ProjCtl::handle(const Cmd::GH::IssueCreate& cmd) const
 
 	if (!result)
 	{
-		std::println("\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
+		std::println("\n\n{}{}{}{}\n\n", paint(config.error_color), Style::CROSS, result.error(), reset());
 		return 1;
 	}
 

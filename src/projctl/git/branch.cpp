@@ -8,7 +8,7 @@ std::expected<std::string, std::string> ProjCtl::branch(const std::optional<std:
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
 	}
 	const ProjectContent& content = (*project)->second;
 
@@ -17,18 +17,18 @@ std::expected<std::string, std::string> ProjCtl::branch(const std::optional<std:
 		std::expected result = GitInterface::branch(content);
 		if (!result)
 		{
-			return std::unexpected(std::format("{}{}{}", color_code(config.error_color), result.error(), Style::RESET));
+			return std::unexpected(std::format("{}{}{}", paint(config.error_color), result.error(), reset()));
 		}
 
-		return std::format("{}{}{}", color_code(config.project_branch_color), *result, Style::RESET);
+		return std::format("{}{}{}", paint(config.project_branch_color), *result, reset());
 	}
 
 	std::expected result = GitInterface::branch_switch(content, *branch_name);
 	if (!result)
 	{
-		return std::unexpected(std::format("{}Couldn't switch branches for {}{}{}: {}{}", color_code(config.error_color), color_code(config.project_name_color), (*project)->first, color_code(config.error_color), result.error(), Style::RESET));
+		return std::unexpected(std::format("{}Couldn't switch branches for {}{}{}: {}{}", paint(config.error_color), paint(config.project_name_color), (*project)->first, paint(config.error_color), result.error(), reset()));
 	}
-	return std::format("{}{}{}{}", color_code(config.tick_color), Style::TICK, *result, Style::RESET);
+	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
 }
 
 

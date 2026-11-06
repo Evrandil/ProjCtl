@@ -9,7 +9,7 @@ std::expected<int, std::string> ProjCtl::run(const std::optional<std::string>& n
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
 	}
 	const ProjectContent& content = (*project)->second;
 
@@ -17,8 +17,8 @@ std::expected<int, std::string> ProjCtl::run(const std::optional<std::string>& n
 
 	if (!command_option)
 	{
-		return std::unexpected(std::format("{}There's no default run command for {}{}{} as type of project {}{}{}", color_code(config.error_color), color_code(config.project_type_color),
-										   project_type_to_string(content.type), color_code(config.error_color), color_code(config.project_name_color), (*project)->first, Style::RESET));
+		return std::unexpected(std::format("{}There's no default run command for {}{}{} as type of project {}{}{}", paint(config.error_color), paint(config.project_type_color),
+										   project_type_to_string(content.type), paint(config.error_color), paint(config.project_name_color), (*project)->first, reset()));
 	}
 
 	return SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", std::string{*command_option}}, content.path);

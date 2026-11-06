@@ -15,9 +15,9 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 
 	auto parse_line = [&](const std::string_view header, const std::optional<bool> tick, const std::string_view text, const Style::Color text_color)
 	{
-		std::format_to(std::back_inserter(output), "{}{}{:<{}}{}{}{}{}\n", MARGIN, color_code(config.header_color), header, config.name_width,
-					   tick ? *tick ? color_code(config.tick_color) : color_code(config.cross_color) : color_code(text_color), tick ? *tick ? Style::TICK : Style::CROSS : "",
-					   truncate(text, config.max_width - CONTENT_WIDTH), Style::RESET);
+		std::format_to(std::back_inserter(output), "{}{}{:<{}}{}{}{}{}\n", MARGIN, paint(config.header_color), header, config.name_width,
+					   tick ? *tick ? paint(config.tick_color) : paint(config.cross_color) : paint(text_color), tick ? *tick ? Style::TICK : Style::CROSS : "",
+					   truncate(text, config.max_width - CONTENT_WIDTH), reset());
 	};
 
 	const std::string& name			= project.first;
@@ -50,7 +50,7 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 			changes ? changes->empty() ? config.tick_color : config.warning_color : config.error_color);
 	if (changes && !changes->empty())
 	{
-		std::format_to(std::back_inserter(output), "\n{}{}{}\n", color_code(config.warning_color), *changes, Style::RESET);
+		std::format_to(std::back_inserter(output), "\n{}{}{}\n", paint(config.warning_color), *changes, reset());
 	}
 
 	return output;
@@ -62,7 +62,7 @@ std::expected<std::string, std::string> ProjCtl::status(const std::optional<std:
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
 	}
 	return status(**project);
 }

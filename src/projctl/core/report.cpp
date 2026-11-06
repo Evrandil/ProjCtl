@@ -30,7 +30,7 @@ int ProjCtl::report(const BatchResult& results) const
 	std::println(stdout, "\n\n{}\n\n", results.output);
 	if (results.failed > 0)
 	{
-		std::println(stderr, "{}{}{}{} failed\n\n", color_code(config.error_color), Style::CROSS, results.failed, Style::RESET);
+		std::println(stderr, "{}{}{}{} failed\n\n", paint(config.error_color), Style::CROSS, results.failed, reset());
 		return 1;
 	}
 	return 0;
@@ -58,7 +58,7 @@ int ProjCtl::report_save(const std::expected<std::string, std::string>& result) 
 
 int ProjCtl::handle(const Cmd::Unknown& cmd) const
 {
-	std::println(stderr, "\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, cmd.message, Style::RESET);
+	std::println(stderr, "\n\n{}{}{}{}\n\n", paint(config.error_color), Style::CROSS, cmd.message, reset());
 	return 1;
 }
 

@@ -75,12 +75,12 @@ std::string ProjCtl::issue_table(const std::vector<Issue>& issues) const
 				return Style::Color::Default;
 		}
 	};
-	table += color_code(config.header_color);
+	table += paint(config.header_color);
 	for (IssueField field : config.issue_columns)
 	{
 		std::format_to(std::back_inserter(table), "{:<{}}", field_name(field), field_width(field));
 	}
-	table += Style::RESET;
+	table += reset();
 	table += '\n';
 	for (const Issue& issue : issues)
 	{
@@ -116,7 +116,7 @@ std::string ProjCtl::issue_table(const std::vector<Issue>& issues) const
 					break;
 			}
 
-			std::format_to(std::back_inserter(table), "{}{:<{}}{}", color_code(field_color(field, issue)), truncate(value, field_width(field)), field_width(field), Style::RESET);
+			std::format_to(std::back_inserter(table), "{}{:<{}}{}", paint(field_color(field, issue)), truncate(value, field_width(field)), field_width(field), reset());
 		}
 		table += '\n';
 	}
@@ -132,20 +132,20 @@ std::expected<std::string, std::string> ProjCtl::issues(const ProjectEntry& proj
 	std::expected host_option = GitInterface::host(content);
 	if (!host_option)
 	{
-		return std::unexpected(std::format("{}{}Couldn't list issues for {}{}{}: {}", color_code(config.error_color), Style::CROSS, color_code(config.project_name_color), color_code(config.error_color), host_option.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}Couldn't list issues for {}{}{}: {}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), paint(config.error_color), host_option.error(), reset()));
 	}
 	HostOption host = *host_option;
 
-	std::string output = std::format("{}Issues for {}{}{}:\n", color_code(config.header_color), color_code(config.project_name_color), project_name, Style::RESET);
+	std::string output = std::format("{}Issues for {}{}{}:\n", paint(config.header_color), paint(config.project_name_color), project_name, reset());
 	std::expected list = GitHostInterface::issue_list(host, content.path.string());
 	if (!list)
 	{
-		return std::unexpected(std::format("{}{}Couldn't list issues for {}{}{}: {}", color_code(config.error_color), Style::CROSS, color_code(config.project_name_color), color_code(config.error_color), list.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}Couldn't list issues for {}{}{}: {}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), paint(config.error_color), list.error(), reset()));
 		return output;
 	}
 	if (list->empty())
 	{
-		std::format_to(std::back_inserter(output), "{}No issues{}\n", color_code(config.header_color), Style::RESET);
+		std::format_to(std::back_inserter(output), "{}No issues{}\n", paint(config.header_color), reset());
 		return output;
 	}
 
@@ -160,7 +160,7 @@ std::expected<std::string, std::string> ProjCtl::issues(const std::optional<std:
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
 	}
 
 	return issues(**project);

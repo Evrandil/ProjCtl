@@ -8,7 +8,7 @@ std::expected<std::string, std::string> ProjCtl::open(const std::optional<std::s
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", color_code(config.error_color), Style::CROSS, project.error(), Style::RESET));
+		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
 	}
 
 	const bool background = config.editor == "neovide" || config.editor == "emacs";
@@ -26,7 +26,7 @@ std::expected<std::string, std::string> ProjCtl::open(const std::optional<std::s
 		return std::unexpected(std::format("{} exited with code {}", config.editor, *result));
 	}
 
-	return std::format("{}{}{}{}{}", color_code(config.header_color), "Opened project: ", color_code(config.project_name_color), (*project)->first, Style::RESET);
+	return std::format("{}{}{}{}{}", paint(config.header_color), "Opened project: ", paint(config.project_name_color), (*project)->first, reset());
 }
 
 
