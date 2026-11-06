@@ -1,7 +1,7 @@
 #include "projctl.hpp"
 
 
-std::expected<std::string, std::string> ProjCtl::add(const std::optional<std::string>& name, std::optional<std::filesystem::path> path)
+std::expected<std::string, std::string> ProjCtl::add(const std::optional<std::string>& name, std::optional<std::filesystem::path>& path)
 {
 	std::error_code error;
 	const std::filesystem::path full_path = std::filesystem::weakly_canonical(std::filesystem::absolute(path.value_or(std::filesystem::current_path())), error);

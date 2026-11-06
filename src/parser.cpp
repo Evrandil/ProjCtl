@@ -21,6 +21,10 @@ namespace
 		{
 			return std::unexpected(std::format("Unknown option: {}", args.front()));
 		}
+		if (args.front().contains('/'))
+		{
+			return std::unexpected(std::format("Invalid project name: {}", args.front()));
+		}
 		return std::string{args.front()};
 	}
 
