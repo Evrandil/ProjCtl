@@ -35,3 +35,13 @@ std::expected<std::string, std::string> ProjCtl::list() const
 
 	return output;
 }
+
+
+int ProjCtl::handle(const Cmd::Base::List& cmd) const
+{
+	if (cmd.gits_only)
+	{
+		return report(list_gits());
+	}
+	return report(list());
+}

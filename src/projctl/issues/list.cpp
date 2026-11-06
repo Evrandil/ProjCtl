@@ -1,7 +1,6 @@
 #include "projctl.hpp"
 
 #include "gitinterface.hpp"
-#include "githostinterface.hpp"
 #include <ranges>
 #include <future>
 
@@ -126,7 +125,6 @@ std::string ProjCtl::issue_table(const std::vector<Issue>& issues) const
 
 std::expected<std::string, std::string> ProjCtl::issues(const ProjectEntry& project) const
 {
-
 	const ProjectContent& content = project.second;
 	const std::string& project_name = project.first;
 

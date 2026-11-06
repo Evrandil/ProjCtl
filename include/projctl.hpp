@@ -35,16 +35,16 @@ class ProjCtl
 	Config config;
 	void load();
 	[[nodiscard]] std::expected<void, std::string> save() const noexcept;
-	std::expected<ProjectIterator, std::string> project_find(const std::optional<std::string>&) const;
-	std::optional<std::string> current_project_name() const;
+	[[nodiscard]] std::expected<ProjectIterator, std::string> project_find(const std::optional<std::string>&) const;
+	[[nodiscard]] std::optional<std::string> current_project_name() const;
 
-	int report(const std::expected<std::string, std::string>&) const;
-	int report(const std::expected<int, std::string>&) const;
-	int report(const BatchResult&) const;
-	int report_save(const std::expected<std::string, std::string>&) const;
+	[[nodiscard]] int report(const std::expected<std::string, std::string>&) const;
+	[[nodiscard]] int report(const std::expected<int, std::string>&) const;
+	[[nodiscard]] int report(const BatchResult&) const;
+	[[nodiscard]] int report_save(const std::expected<std::string, std::string>&) const;
 
 	// Bug functionality
-	int handle(const Cmd::Unknown&) const;
+	[[nodiscard]] int handle(const Cmd::Unknown&) const;
 
 	// TODO s
 	// Base functionality
@@ -57,13 +57,13 @@ class ProjCtl
 	[[nodiscard]] std::expected<std::string, std::string> open(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<int, std::string> build(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<int, std::string> run(const std::optional<std::string>&) const;
-	int handle(const Cmd::Base::List&) const;
-	int handle(const Cmd::Base::Path&) const;
-	int handle(const Cmd::Base::Add&);
-	int handle(const Cmd::Base::Remove&);
-	int handle(const Cmd::Base::Open&) const;
-	int handle(const Cmd::Base::Build&) const;
-	int handle(const Cmd::Base::Run&) const;
+	[[nodiscard]] int handle(const Cmd::Base::List&) const;
+	[[nodiscard]] int handle(const Cmd::Base::Path&) const;
+	[[nodiscard]] int handle(const Cmd::Base::Add&);
+	[[nodiscard]] int handle(const Cmd::Base::Remove&);
+	[[nodiscard]] int handle(const Cmd::Base::Open&) const;
+	[[nodiscard]] int handle(const Cmd::Base::Build&) const;
+	[[nodiscard]] int handle(const Cmd::Base::Run&) const;
 
 	// Git functionality
 	[[nodiscard]] std::string status(const ProjectEntry&) const;
@@ -79,13 +79,13 @@ class ProjCtl
 	[[nodiscard]] std::expected<std::string, std::string> push(const std::optional<std::string>&, bool) const;
 	[[nodiscard]] std::expected<std::string, std::string> branch(const std::optional<std::string>&, const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> git_merge(const std::optional<std::string>&) const;
-	int handle(const Cmd::Git::Status&) const;
-	int handle(const Cmd::Git::Fetch&) const;
-	int handle(const Cmd::Git::Commit&) const;
-	int handle(const Cmd::Git::Push&) const;
-	int handle(const Cmd::Git::Pull&) const;
-	int handle(const Cmd::Git::Branch&) const;
-	int handle(const Cmd::Git::Merge&) const;
+	[[nodiscard]] int handle(const Cmd::Git::Status&) const;
+	[[nodiscard]] int handle(const Cmd::Git::Fetch&) const;
+	[[nodiscard]] int handle(const Cmd::Git::Commit&) const;
+	[[nodiscard]] int handle(const Cmd::Git::Push&) const;
+	[[nodiscard]] int handle(const Cmd::Git::Pull&) const;
+	[[nodiscard]] int handle(const Cmd::Git::Branch&) const;
+	[[nodiscard]] int handle(const Cmd::Git::Merge&) const;
 
 	// GH functionality
 	[[nodiscard]] std::expected<std::string, std::string> g_status() const;
@@ -96,16 +96,18 @@ class ProjCtl
 	[[nodiscard]] BatchResult issues_all() const;
 	[[nodiscard]] std::expected<int, std::string> issue_create(const std::optional<std::string>&) const;
 	[[nodiscard]] std::string request_table(const std::vector<Request>&) const;
-	[[nodiscard]] std::expected<std::string, std::string> request_list(const std::optional<std::string>&) const;
+	[[nodiscard]] std::expected<std::string, std::string> requests(const ProjectEntry&) const;
+	[[nodiscard]] std::expected<std::string, std::string> requests(const std::optional<std::string>&) const;
+	[[nodiscard]] BatchResult requests_all() const;
 	[[nodiscard]] std::expected<int, std::string> request_create(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> request_merge(const std::optional<std::string>&) const;
-	int handle(const Cmd::GH::Status&) const;
-	int handle(const Cmd::GH::RepoList&) const;
-	int handle(const Cmd::GH::IssueList&) const;
-	int handle(const Cmd::GH::IssueCreate&) const;
-	int handle(const Cmd::GH::RequestList&) const;
-	int handle(const Cmd::GH::RequestCreate&) const;
-	int handle(const Cmd::GH::RequestMerge&) const;
+	[[nodiscard]] int handle(const Cmd::GH::Status&) const;
+	[[nodiscard]] int handle(const Cmd::GH::RepoList&) const;
+	[[nodiscard]] int handle(const Cmd::GH::IssueList&) const;
+	[[nodiscard]] int handle(const Cmd::GH::IssueCreate&) const;
+	[[nodiscard]] int handle(const Cmd::GH::RequestList&) const;
+	[[nodiscard]] int handle(const Cmd::GH::RequestCreate&) const;
+	[[nodiscard]] int handle(const Cmd::GH::RequestMerge&) const;
 
 	public:
 	ProjCtl();
