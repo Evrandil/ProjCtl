@@ -15,12 +15,21 @@ cmake 3.20
 ninja
 just
 ```
-C++ standard is set to 2023 so I guess that's requirement for compiler<br>
-Also have $XDG_CONFIG_HOME and $XDG_CACHE_HOME set to some location<br>
+C++ standard is set to 26 so I guess that's requirement for compiler<br>
+Tho Idk with 23 I think it still runs, with precious versions... haven't checked but I guess not really<br>
+Also have `$XDG_CONFIG_HOME and` `$XDG_CACHE_HOME` set to some location<br>
+# Installatoin
+## If you have just
 ```fish
-./install.fish
+just install
 ```
-
+## No just
+Tbh just doesn't give you any advantage, it just lists those comand for shell so you don't have to think what commands to run<br>
+```fish
+cmake -S . -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release -DPROJCTL_BUILD_TESTS=OFF
+cmake --build build-release
+sudo install -m 755 -s build-release/projctl /usr/local/bin/projctl
+```
 # Usage \[fast docs\]
 
 Overall concept<br>
@@ -28,14 +37,17 @@ Overall concept<br>
 projctl [option/s] [argument/s] [project_name]
 ```
 
-Also for one word commands you can ommit project_name but for everything else do use it<br>
+And for many commands you can ommit like every option / argument, for grammar just read further<br>
+For grammar:<br>
+- `<smth>` - some variable
+- `[]` - optional value
+- `|` - or
 
 ### List
 Lists projects<br>
-With gits or git will list only git repos<br>
+With gits will list only git repos<br>
 ```fish
-projctl list 
-projctl list gits
+projctl list [gits]
 ```
 
 ### Status
@@ -52,8 +64,7 @@ Status contains<br>
     Status:             [(If git repo)If there were unpushed / uncommitted changes, if yes lists files with changes below]<br>
 ```
 ```fish
-projctl status [name]
-projctl status --all
+projctl status [<name> | --all | -a]
 ```
 
 ### Add
@@ -63,36 +74,34 @@ Also you can set name of dir and add <br>
 USE OBJECTIVE PATHS for sake of your sanity \(for now at least\)<br>
 Tho "." I did make to be converted to objective path of current dir<br>
 ```fish
-projctl add [path] [name] 
-projctl add . [name]
+projctl add [[<path>] <name>]
 ```
 
 ### Remove
 Removes project<br>
 \(Doesn't actually remove files, just from projctl list\)<br>
 ```fish
-projctl remove [name]
-projctl rm [name]
+projctl remove | rm <name>
 ```
 
 ### Open
 Opens neovim \(or your editor of config choice\) in project location<br>
 ```fish
-projctl open [name]
+projctl open [<name>]
 ```
 
 ### Path
 Gives path of project<br>
 Nice for `cd (projctl path $argv[1])` terminal macro<br>
 ```fish
-projctl path [name]
+projctl path [<name>]
 ```
 
 ### Build && run
 Respectively builds and runs projects that either have customely added `build` and `run` commands or have supported default commands \(Rust && node supported for both, CMake + Ninja does have build\)<br>
 ```fish
-projctl build [name]
-projctl run [name]
+projctl build [<name>]
+projctl run [<name>]
 ```
 
 ## Git
@@ -101,65 +110,52 @@ Here we go into the rabbithole<br>
 Switches / creates and switches to branch of given name<br>
 Or lists branches<br>
 ```fish
-projctl branch [branch_name] [name]
-projctl branch [name]
+projctl branch [[<branch>] <name>]
 ```
 
 ### Fetch
 Fetches project<br>
 Supports --all flag \(performs fetch to all git projects\)<br>
 ```fish
-projctl fetch [name]
-projctl fetch --all
+projctl fetch [<name> | --all | -a]
 ```
 
 ### Pull
 Updates project<br>
 Supports --all flag \(performs pull for all git projects\)<br>
 ```fish
-projctl pull [name]
-projctl pull --all
+projctl pull [<name> | --all | -a]
 ```
 ### Commit
 Adds all changes and makes commit with provided message \(equivalent to `git add . && git commit -m \[commit_message\]`\)<br>
 Without providing msg it's gonna open $EDITOR for you to write msg to \(equivalent to `git add . && git commit`\)<br>
 ```fish
-projctl commit [name]
-projctl commit [commit_message] [name]
+projctl commit [[<message>] <name>]
 ```
 
 ### Push
 Pushes committed changes<br>
-If used with branch pushes changes to uninitialized branch \(equivalent to `git push -u origin \[current_branch\]`\)<br>
+If used with branch pushes changes upstream to HEAD \(equivalent to `git push -u origin HEAD`\)<br>
 ```fish
-projctl push [name]
-projctl push branch [name]
-```
-
-### Commit push
-Performs both actions, you can combo it with branch as well to set upstream to new branch<br>
-```fish
-projctl commit push [name]
-projctl commit push [commit_message] [name]
-projctl commit push branch [name]
-projctl commit push branch [commit_message] [name]
+projctl push [-u] [<name>]
 ```
 
 ### Merge
 It performs just and only `git merge`, no other options tbh \(so for more specific merge options do use git command itself\), 
 I made this just to have quick pipe merge -> commit -> push in one pc command, not to be actual useful merge<br>
 ```fish
-projctl automerge [name]
+projctl merge [<name>]
 ```
 
 ### Git pipeline
+No pipes currently work after refactor, it was good refactor but will take care of pipelines tomorrow or so \[*or so...*\]<br>
 Also git options will work in pieline \(as one option so you don't have to write project name every time\) with this order:<br>
 automerge -> commit -> push \(with branch option\)
 ```fish
-projctl pull automerge commit push [name]
-projctl pull automerge commit [commit_msg] push [name]
-projctl pull automerge commit push branch [name]
-projctl pull automerge commit [commit_message] push branch [name]
+projctl pull automerge commit push <name>
+projctl pull automerge commit <commit_msg> push <name>
+projctl pull automerge commit push branch <name>
+projctl pull automerge commit <commit_message> push branch <name>
 ```
 
 ## GitHub / GitLab
@@ -173,26 +169,23 @@ projctl git
 ### Repos
 To see all repos on both platforms
 ```fish
-prjctl repos
+projctl repos
 ```
 
 ### Issues
 List or create issues for repo<br>
 ```fish
-projctl ilist [name]
-projctl icreate [name]
+projctl ilist [<name> | --all | -a]
+projctl icreate [<name>]
 ```
 
 ### Requests (PR \(GH\) / MR \(GLab\))
-List or create requests for repo<br>
+List, create requests or merge open requests for repo<br>
 ```fish
-projctl reqlist [name]
-projctl reqcreate [name]
+projctl reqlist [<name> | --all | -a]
+projctl reqcreate [<name>]
+projctl reqmerge [<name>]
 ```
 
 <br><br><br>
-Also minor thing but for process to be actually saving some time everything with --all flag is done in parrallel but for that to happen program stores output and when everything is done prints it in order so there's no classic `some console print -> some waiting -> some more printing` for example in pull command, everything gets printed all at once when waiting is done, but thanks to that all thing are async so it' kinda faster one could argue<br>
-And just for record I do expect one to use this with some concept they wanna do so haven't tested any and every combination of commands / args you could do around that git pipeline so yeah beware
-# Beware
-No pipes currently work after refactor, it was good refactor but will take care of pipelines tomorrow or so<br>
-Also currently nothing works \(as refactor lasts\), for working code you'd need to go back few commits as am doing all work in maib lmao or just wait la day of 3<br>
+Also minor thing but for process to be actually saving some time everything with --all flag is done in parrallel but for that to happen program stores output and when everything is done prints it in order so there's no classic `some console print -> some waiting -> some more printing` for example in pull command, everything gets printed all at once when waiting is done, but thanks to that all thing are async so it's kinda faster one could argue<br>
