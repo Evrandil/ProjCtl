@@ -4,34 +4,36 @@
 #include <future>
 
 
-std::expected<std::string, std::string> ProjCtl::repo_list() const
+BatchResult ProjCtl::repo_list() const
 {
-	auto list_one = [&](HostOption host)
+	auto list_one = [&](HostOption host) -> std::expected<std::string, std::string>
 	{
-		std::string output;
 		std::expected repo_list = GitHostInterface::repo_list(host);
 		if (!repo_list)
 		{
-			std::format_to(std::back_inserter(output), "{}{} {}repos\n{}{}{}", color_code(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", color_code(config.header_color),
-						   color_code(config.error_color), repo_list.error(), Style::RESET);
-			return output;
+			return std::unexpected(std::format("{}{} {}repos\n{}{}{}", color_code(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", color_code(config.header_color),
+						   color_code(config.error_color), repo_list.error(), Style::RESET));
 		}
-		std::format_to(std::back_inserter(output), "{}{} {}repos\n{}{}{}", color_code(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", color_code(config.header_color),
+		return std::format("{}{} {}repos\n{}{}{}", color_code(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", color_code(config.header_color),
 					   color_code(config.project_short_remote_color), *repo_list, Style::RESET);
-		return output;
 	};
 
-	std::array<std::future<std::string>, 2> tasks = std::array<std::future<std::string>, 2>{
+	std::array<std::future<std::expected<std::string, std::string>>, 2> tasks = std::array<std::future<std::expected<std::string, std::string>>, 2>{
 		std::async(std::launch::async, list_one, HostOption::GitHub),
 		std::async(std::launch::async, list_one, HostOption::GitLab),
 	};
 
-	std::string output;
+	BatchResult results;
 	for (auto& task : tasks)
 	{
-		std::format_to(std::back_inserter(output), "{}\n\n", task.get());
+		std::expected result = task.get();
+		if (!result)
+		{
+			++results.failed;
+		}
+		std::format_to(std::back_inserter(results.output), "{}\n\n", result ? *result : result.error());
 	}
-	return output;
+	return results;
 }
 
 

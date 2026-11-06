@@ -33,7 +33,7 @@ namespace
 		const std::expected name = optional_name(args);
 		if (!name)
 		{
-			return Cmd::Unknown{};
+			return Cmd::Unknown{ .message = name.error() };
 		}
 		return CommandType{.name = *name};
 	}
@@ -100,7 +100,7 @@ Command parser(const std::span<const std::string_view> input)
 		{
 			return Cmd::Base::List{.gits_only = true};
 		}
-		return Cmd::Unknown{};
+		return Cmd::Unknown{ .message = std::format("Too many arguments: expected at most one, got {}", args.size()) };
 	}
 
 	if (command == "path")
@@ -113,7 +113,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-')))
 		{
-			return Cmd::Unknown{};
+			return Cmd::Unknown{ .message = parts ? "Invalid path: must not start with '-'" : parts.error() };
 		}
 		return Cmd::Base::Add{
 			.name = parts->name,
@@ -126,7 +126,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected name = optional_name(args);
 		if (!name || !*name)
 		{
-			return Cmd::Unknown{};
+			return Cmd::Unknown{ .message = name ? "Missing project name" : name.error() };
 		}
 		return Cmd::Base::Remove{.name = **name};
 	}
@@ -157,7 +157,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected parts = name_with_extra(args);
 		if (!parts)
 		{
-			return Cmd::Unknown{};
+			return Cmd::Unknown{ .message = parts.error() };
 		}
 		return Cmd::Git::Commit{
 			.name    = parts->name,
@@ -171,7 +171,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected name = optional_name(upstream ? args.subspan(1) : args);
 		if (!name)
 		{
-			return Cmd::Unknown{};
+			return Cmd::Unknown{ .message = name.error() };
 		}
 		return Cmd::Git::Push{
 			.branch_upstream = upstream,
@@ -194,7 +194,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-')))
 		{
-			return Cmd::Unknown{};
+			return Cmd::Unknown{ .message = parts ? "Invalid ref: can't start with '-'" : parts.error() };
 		}
 		return Cmd::Git::Branch{
 			.name        = parts->name,
@@ -212,7 +212,7 @@ Command parser(const std::span<const std::string_view> input)
 	{
 		if (!args.empty())
 		{
-			return Cmd::Unknown{};
+			return Cmd::Unknown{ .message = "Doesn't take any arguments" };
 		}
 		return Cmd::GH::Status{};
 	}
@@ -221,7 +221,7 @@ Command parser(const std::span<const std::string_view> input)
 	{
 		if (!args.empty())
 		{
-			return Cmd::Unknown{};
+			return Cmd::Unknown{ .message = "Doesn't take any arguments" };
 		}
 		return Cmd::GH::RepoList{};
 	}
@@ -251,5 +251,5 @@ Command parser(const std::span<const std::string_view> input)
 		return parser_with_name<Cmd::GH::RequestMerge>(args);
 	}
 
-	return Cmd::Unknown{};
+	return Cmd::Unknown{ .message = "No command specified" };
 }

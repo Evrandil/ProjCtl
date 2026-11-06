@@ -4,9 +4,9 @@
 #include <future>
 
 
-std::expected<std::string, std::string> ProjCtl::g_status() const
+BatchResult ProjCtl::g_status() const
 {
-	auto status_one = [&](HostOption host)
+	auto status_one = [&](HostOption host) -> std::string
 	{
 		std::string output;
 		CliState state = GitHostInterface::state(host);
@@ -23,12 +23,13 @@ std::expected<std::string, std::string> ProjCtl::g_status() const
 		std::async(std::launch::async, status_one, HostOption::GitLab),
 	};
 
-	std::string output;
+	BatchResult results;
 	for (auto& task : tasks)
 	{
-		std::format_to(std::back_inserter(output), "{}\n", task.get());
+		std::string result = task.get();
+		std::format_to(std::back_inserter(results.output), "{}\n", result);
 	}
-	return output;
+	return results;
 }
 
 

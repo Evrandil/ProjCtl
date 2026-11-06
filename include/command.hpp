@@ -10,6 +10,7 @@ namespace Cmd
 
 	struct Unknown
 	{
+		std::string message;
 	};
 
 	namespace Base

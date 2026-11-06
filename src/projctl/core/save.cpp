@@ -10,7 +10,7 @@ std::expected<void, std::string> ProjCtl::save() const noexcept
 
 	if (error)
 	{
-		return std::unexpected(std::format("Couldn't create {}: {}", data_path.parent_path().string(), error.message()));
+			return std::unexpected(std::format("{}{}Couldn't create {}{}{}: {}{}", color_code(config.error_color), Style::CROSS, color_code(config.project_path_color), data_path.parent_path().string(), color_code(config.error_color), error.message(), Style::RESET));
 	}
 
 	std::filesystem::path temp_path = data_path;
@@ -39,14 +39,14 @@ std::expected<void, std::string> ProjCtl::save() const noexcept
 		if (!file)
 		{
 			std::filesystem::remove(temp_path, error);
-			return std::unexpected(std::format("Couldn't write to: {}", temp_path.string()));
+			return std::unexpected(std::format("{}{}Couldn't write to: {}{}{}", color_code(config.error_color), Style::CROSS, color_code(config.project_path_color), temp_path.string(), Style::RESET));
 		}
 	}
 
 	std::filesystem::rename(temp_path, data_path, error);
 	if (error)
 	{
-		return std::unexpected(std::format("Couldn't save {}: {}", data_path.string(), error.message()));
+		return std::unexpected(std::format("{}{}Couldn't save {}{}{}: {}{}", color_code(config.error_color), Style::CROSS, color_code(config.project_path_color), data_path.string(), color_code(config.error_color), error.message(), Style::RESET));
 	}
 	return {};
 }
