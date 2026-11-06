@@ -85,6 +85,7 @@ add_library(projctl_core
 	src/projctl/git/merge.cpp
 	src/projctl/git/branch.cpp
 	src/projctl/git/log.cpp
+	src/projctl/git/diff.cpp
 	src/projctl/issues/create.cpp
 	src/projctl/issues/list.cpp
 	src/projctl/requests/create.cpp
@@ -106,6 +107,7 @@ add_library(projctl_core
 	src/gitinterface/push.cpp
 	src/gitinterface/remote.cpp
 	src/gitinterface/log.cpp
+	src/gitinterface/diff.cpp
 	src/githostinterface.cpp
 	src/githubinterface.cpp
 	src/gitlabinterface.cpp

@@ -6,7 +6,6 @@
 
 namespace
 {
-	// [<name>]: nothing → ".", one word → that word, anything else → nothing
 	std::expected<std::optional<std::string>, std::string> optional_name(std::span<const std::string_view> args)
 	{
 		if (args.empty() || (args.size() == 1 && args.front() == "."))
@@ -218,6 +217,19 @@ Command parser(const std::span<const std::string_view> input)
 		return Cmd::Git::Log{
 			.oneline = oneline,
 			.name = *name,
+		};
+	}
+
+	if (command == "diff")
+	{
+		const std::expected parts = name_with_extra(args);
+		if (!parts || (parts->extra && parts->extra->starts_with('-')))
+		{
+			return Cmd::Unknown{ .message = parts ? "Invalid path: must not start with '-'" : parts.error() };
+		}
+		return Cmd::Git::Diff{
+			.name = parts->name,
+			.path = parts->extra,
 		};
 	}
 
