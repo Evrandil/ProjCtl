@@ -104,38 +104,6 @@ int ProjCtl::handle(const Cmd::Base::Remove& cmd)
 }
 
 
-int ProjCtl::handle(const Cmd::Base::Open& cmd) const
-{
-	return report(open(cmd.name));
-}
-
-
-int ProjCtl::handle(const Cmd::Base::Build& cmd) const
-{
-	std::expected<int, std::string> result = build(cmd.name);
-
-	if (!result)
-	{
-		std::println("\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
-		return 1;
-	}
-
-	return *result;
-}
-
-
-int ProjCtl::handle(const Cmd::Base::Run& cmd) const
-{
-	std::expected<int, std::string> result = run(cmd.name);
-
-	if (!result)
-	{
-		std::println("\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
-		return 1;
-	}
-
-	return *result;
-}
 
 
 int ProjCtl::handle(const Cmd::GH::Status&) const

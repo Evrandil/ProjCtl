@@ -26,5 +26,13 @@ std::expected<std::string, std::string> ProjCtl::open(const std::optional<std::s
 		return std::unexpected(std::format("{} exited with code {}", config.editor, *result));
 	}
 
-	return std::format("{}{}{}{}{}", color_code(config.header_color), "Opened project: ", color_code(config.project_name_color), *name, Style::RESET);
+	return std::format("{}{}{}{}{}", color_code(config.header_color), "Opened project: ", color_code(config.project_name_color), (*project)->first, Style::RESET);
 }
+
+
+int ProjCtl::handle(const Cmd::Base::Open& cmd) const
+{
+	return report(open(cmd.name));
+}
+
+
