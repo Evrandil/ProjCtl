@@ -11,11 +11,11 @@ BatchResult ProjCtl::repo_list() const
 		std::expected repo_list = GitHostInterface::repo_list(host);
 		if (!repo_list)
 		{
-			return std::unexpected(std::format("{}{} {}repos\n{}{}{}", color_code(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", color_code(config.header_color),
-						   color_code(config.error_color), repo_list.error(), Style::RESET));
+			return std::unexpected(std::format("{}{} {}repos\n{}{}{}", paint(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", paint(config.header_color),
+						   paint(config.error_color), repo_list.error(), reset()));
 		}
-		return std::format("{}{} {}repos\n{}{}{}", color_code(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", color_code(config.header_color),
-					   color_code(config.project_short_remote_color), *repo_list, Style::RESET);
+		return std::format("{}{} {}repos\n{}{}{}", paint(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", paint(config.header_color),
+					   paint(config.project_short_remote_color), *repo_list, reset());
 	};
 
 	std::array<std::future<std::expected<std::string, std::string>>, 2> tasks = std::array<std::future<std::expected<std::string, std::string>>, 2>{

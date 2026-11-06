@@ -33,6 +33,11 @@ class ProjCtl
 	std::filesystem::path config_path;
 	std::filesystem::path data_path;
 	Config config;
+
+	bool use_colors = true;
+	std::string_view paint(Style::Color color) const;
+	std::string_view reset() const;
+
 	void load();
 	[[nodiscard]] std::expected<void, std::string> save() const noexcept;
 	[[nodiscard]] std::expected<ProjectIterator, std::string> project_find(const std::optional<std::string>&) const;

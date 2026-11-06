@@ -69,6 +69,7 @@ add_library(projctl_core
 	src/projctl/core/project_find.cpp
 	src/projctl/core/save.cpp
 	src/projctl/core/report.cpp
+	src/projctl/core/color.cpp
 	src/projctl/projects/list.cpp
 	src/projctl/projects/add.cpp
 	src/projctl/projects/open.cpp

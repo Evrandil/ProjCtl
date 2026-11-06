@@ -14,14 +14,14 @@ std::expected<ProjectIterator, std::string> ProjCtl::project_find(const std::opt
 		std::optional<std::string> current = current_project_name();
 		if (!current)
 		{
-			return std::unexpected(std::format("{}{}Current directory isn't a saved project{}", color_code(config.error_color), Style::CROSS, Style::RESET));
+			return std::unexpected(std::format("{}{}Current directory isn't a saved project{}", paint(config.error_color), Style::CROSS, reset()));
 		}
 		actual_name = *current;
 	}
 	std::map<std::string, ProjectContent>::const_iterator project = projects.find(actual_name);
 	if (project == projects.end())
 	{
-		return std::unexpected(std::format("{}{}Project with name {}{}{} doesn't exist{}", color_code(config.error_color), Style::CROSS, color_code(config.project_name_color), actual_name, color_code(config.error_color), Style::RESET));
+		return std::unexpected(std::format("{}{}Project with name {}{}{} doesn't exist{}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), actual_name, paint(config.error_color), reset()));
 	}
 	return project;
 }

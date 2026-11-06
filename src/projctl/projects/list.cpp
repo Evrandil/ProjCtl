@@ -7,12 +7,12 @@ std::expected<std::string, std::string> ProjCtl::list() const
 {
 	auto list_one = [&](const std::string& name, const ProjectContent& content)
 	{
-		return std::format("{}{:<{}}{}{:<{}}{}\n", color_code(config.project_name_color), truncate(name, config.name_width), config.name_width, color_code(config.project_path_color),
-						   truncate(content.path.string(), config.path_width), config.path_width, Style::RESET);
+		return std::format("{}{:<{}}{}{:<{}}{}\n", paint(config.project_name_color), truncate(name, config.name_width), config.name_width, paint(config.project_path_color),
+						   truncate(content.path.string(), config.path_width), config.path_width, reset());
 	};
 	if (projects.empty()) [[unlikely]]
 	{
-		return std::unexpected(std::format("{}There are no projects saved{}\n", color_code(config.error_color), Style::RESET));
+		return std::unexpected(std::format("{}There are no projects saved{}\n", paint(config.error_color), reset()));
 	}
 
 	std::vector<std::future<std::string>> tasks;
@@ -26,7 +26,7 @@ std::expected<std::string, std::string> ProjCtl::list() const
 
 	std::string output;
 
-	std::format_to(std::back_inserter(output), "{}{:<{}}{}{}\n", color_code(config.header_color), "Name", config.name_width, "Path", Style::RESET);
+	std::format_to(std::back_inserter(output), "{}{:<{}}{}{}\n", paint(config.header_color), "Name", config.name_width, "Path", reset());
 
 	for (std::future<std::string>& task : tasks)
 	{
