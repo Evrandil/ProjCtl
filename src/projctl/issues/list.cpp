@@ -3,6 +3,7 @@
 #include "gitinterface.hpp"
 #include <ranges>
 #include <future>
+#include <utility>
 
 
 std::string ProjCtl::issue_table(const std::vector<Issue>& issues) const

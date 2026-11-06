@@ -15,21 +15,11 @@ Items in order: fix the crashes first, then make features work again, then the c
   - [ ] check the **resolved** name against `projects.contains(...)`, not only when one was typed
   - [ ] delete `add_current()` (`projects.cpp:79`, `projctl.hpp:43`) and the `if` in `handle(const Cmd::Base::Add&)`
   - [ ] optional: reject names containing `/` in `optional_name` (`pc add proj /path`, old argument order, currently creates a project *named* `/path`) and add a test
-- [x] **`open` / `build` / `run` without a name crash in their messages**: same pattern, `*name` used for printing
-  - `projects.cpp:131` (`open` success message), `:150` (`build` "no default command"), `:171` (`run` "no default command")
-  - [x] use the real project name instead: `(*project)->first`
 
 ## 2. `--all` / `-a` (currently ignored)
 
 The parser sets `cmd.all` correctly, but nothing reads it. `handle` passes only `cmd.name`, and the methods still check `name == "--all"`, which can never be true now. `pc status -a` inside a project only shows that project, and outside one it says "Current directory isn't a saved project".
 
-- [ ] split into "one" and "all" versions, with `handle` choosing:
-  - [x] `status` / `status_all`: `git.cpp:83`
-  - [x] `git_fetch` / `git_fetch_all`: `git.cpp:232`
-  - [x] `git_pull` / `git_pull_all`: `git.cpp:190`
-  - [x] `issue_list` / `issue_list_all`: `issues.cpp:166`
-  - [ ] `request_list` / `request_list_all`: `requests.cpp:160`
-  - pattern: `return report(cmd.all ? status_all() : status(cmd.name));`
 - [ ] check that nothing is left over: `grep -rn '"--all"\|== "\."' src/` should only find `parser.cpp`
 
 cmd_of(project) / cmd(name) { runs cmd_of(project of arged name) } / cmd_all() { runs cmd_of(all projects) }
@@ -42,6 +32,8 @@ cmd_of(project) / cmd(name) { runs cmd_of(project of arged name) } / cmd_all() {
   - [x] `handle(const Cmd::Unknown&)`: print the message to **stderr** (currently stdout, no reason given)
 
 ## 5. Output formatting
+
+**Move formatting from report to command methods**
 
 Rule: **interface layers return plain text or data → `ProjCtl` methods build the colourful output → `report()` prints it and styles errors.**
 
@@ -59,7 +51,6 @@ Rule: **interface layers return plain text or data → `ProjCtl` methods build t
 ## 6. Leftovers from the first review
 
 - [ ] `host()`: HTTPS remotes (`https://github.com/...`) fail to parse (`gitinterface/host.cpp`). Find the host part after `://` or `@`, then check whether it contains `github` / `gitlab`
-- [ ] JSON parsing that can't throw: `json::parse(text, nullptr, false)` + `is_discarded()`, or a `try`/`catch (const nlohmann::json::exception&)` around the parsing loops
 - [ ] README: new argument order, `-u`, `-a`, `add` forms, removed pipeline
 
 ## 7. Later
