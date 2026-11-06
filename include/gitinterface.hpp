@@ -23,4 +23,5 @@ namespace GitInterface
 	[[nodiscard]] std::expected<std::string, std::string> pull(const ProjectContent&);
 	[[nodiscard]] std::expected<std::string, std::string> fetch(const ProjectContent&);
 	[[nodiscard]] std::expected<std::string, std::string> default_merge(const ProjectContent&);
+	[[nodiscard]] std::expected<std::string, std::string> log(const ProjectContent&, bool oneline = false);
 }; // namespace GitInterface
