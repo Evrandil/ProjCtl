@@ -9,7 +9,7 @@ namespace
 	std::vector<std::string> gh_command(std::vector<std::string> args)
 	{
 		std::vector<std::string> command = std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1"};
-		command.append_range(args);
+		command.append_range(args | std::views::as_rvalue);
 		return command;
 	}
 }
