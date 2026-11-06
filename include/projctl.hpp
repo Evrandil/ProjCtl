@@ -90,8 +90,12 @@ class ProjCtl
 	// GH functionality
 	[[nodiscard]] std::expected<std::string, std::string> g_status() const;
 	[[nodiscard]] std::expected<std::string, std::string> repo_list() const;
-	[[nodiscard]] std::expected<std::string, std::string> issue_list(const std::optional<std::string>&) const;
+	[[nodiscard]] std::string issue_table(const std::vector<Issue>&) const;
+	[[nodiscard]] std::expected<std::string, std::string> issues(const ProjectEntry&) const;
+	[[nodiscard]] std::expected<std::string, std::string> issues(const std::optional<std::string>&) const;
+//	[[nodiscard]] std::expected<std::string, std::string> issues_all() const;
 	[[nodiscard]] std::expected<int, std::string> issue_create(const std::optional<std::string>&) const;
+	[[nodiscard]] std::string request_table(const std::vector<Request>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> request_list(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<int, std::string> request_create(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> request_merge(const std::optional<std::string>&) const;

@@ -118,24 +118,8 @@ int ProjCtl::handle(const Cmd::GH::RepoList&) const
 }
 
 
-int ProjCtl::handle(const Cmd::GH::IssueList& cmd) const
-{
-	return report(issue_list(cmd.name));
-}
 
 
-int ProjCtl::handle(const Cmd::GH::IssueCreate& cmd) const
-{
-	std::expected<int, std::string> result = issue_create(cmd.name);
-
-	if (!result)
-	{
-		std::println("\n\n{}{}{}{}\n\n", color_code(config.error_color), Style::CROSS, result.error(), Style::RESET);
-		return 1;
-	}
-
-	return *result;
-}
 
 
 int ProjCtl::handle(const Cmd::GH::RequestList& cmd) const
