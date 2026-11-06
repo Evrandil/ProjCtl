@@ -36,24 +36,10 @@ cmd_of(project) / cmd(name) { runs cmd_of(project of arged name) } / cmd_all() {
 
 ## 3. Handlers (`handle.cpp`)
 
-- [x] **one reporting helper for `expected<int, …>`**: `build`, `run`, `icreate` and `reqcreate` each repeat the error printing, and print errors to **stdout**
-  - e.g. `int report_code(const std::expected<int, std::string>&) const;` (error → stderr, return 1; value → return it as the exit code)
-- [x] **`path` errors go to stdout** (`handle.cpp:60`), so `cd (pc path typo)` still tries to `cd` into the message → stderr
 - [ ] **`Cmd::Unknown` with a message**
   - [ ] `struct Unknown { std::string message; };`
   - [ ] parser: pass `optional_name`'s errors along (`Cmd::Unknown{ .message = name.error() }`), plus short usage lines for the other cases (`"usage: projctl push [-u] [<name>]"`)
   - [x] `handle(const Cmd::Unknown&)`: print the message to **stderr** (currently stdout, no reason given)
-- [x] `push`: one `git_push(name, bool upstream)` instead of `git_push` + `git_push_branch` (your TODO)
-- [x] `branch`: one function taking the optional branch name instead of `git_branch` + `git_branch_list` (your TODO)
-
-## 4. Failures that look like success
-
-These return a **successful** `expected` holding the `✗` text, so `report()` prints it as success and the exit code is 0:
-
-- [x] `git.cpp:129` `git_commit`, `:144` `git_push`, `:173` `git_push_branch`, `:186` pull (one), `:227` fetch (one), `:273` `git_branch_list`, `:288` `git_branch`
- - [x] Done for single funcs
-- [x] pattern: `if (!result) { return std::unexpected(result.error()); }` first, then format only the success case (`git_merge` already does it right)
-- [x] for the `_all` versions: decide whether one failed project means exit code 1 (probably yes)
 
 ## 5. Output formatting
 
@@ -73,12 +59,7 @@ Rule: **interface layers return plain text or data → `ProjCtl` methods build t
 ## 6. Leftovers from the first review
 
 - [ ] `host()`: HTTPS remotes (`https://github.com/...`) fail to parse (`gitinterface/host.cpp`). Find the host part after `://` or `@`, then check whether it contains `github` / `gitlab`
-- [ ] `list_gits`: `*GitInterface::branch(...)` / `*GitInterface::remote_short(...)` without checking (`git.cpp:18`). A repo without `origin` is UB
-- [x] GitHub `author.name` → `author.login` (`githubinterface.cpp:96`, `:150`). `name` is often empty
 - [ ] JSON parsing that can't throw: `json::parse(text, nullptr, false)` + `is_discarded()`, or a `try`/`catch (const nlohmann::json::exception&)` around the parsing loops
-- [x] `.cashe` → `.cache` (`systeminterface.cpp:214`)
-- [x] `zig run` → `zig build run` (`projectcontent.hpp:70`), and detect `build.zig` in `detect_project_type`
-- [x] `truncate`: cuts 5, adds 3 (`...`), so results come out 2 short (`helper.cpp`)
 - [ ] README: new argument order, `-u`, `-a`, `add` forms, removed pipeline
 
 ## 7. Later

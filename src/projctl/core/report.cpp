@@ -64,8 +64,6 @@ int ProjCtl::handle(const Cmd::Unknown&) const
 
 
 
-
-
 int ProjCtl::handle(const Cmd::Base::Add& cmd)
 {
 	if (cmd.name == ".")
@@ -79,18 +77,4 @@ int ProjCtl::handle(const Cmd::Base::Add& cmd)
 int ProjCtl::handle(const Cmd::Base::Remove& cmd)
 {
 	return report_save(remove(cmd.name));
-}
-
-
-
-
-int ProjCtl::handle(const Cmd::GH::Status&) const
-{
-	return report(g_status());
-}
-
-
-int ProjCtl::handle(const Cmd::GH::RepoList&) const
-{
-	return report(repo_list());
 }

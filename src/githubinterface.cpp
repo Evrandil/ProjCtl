@@ -4,20 +4,20 @@
 #include <nlohmann/json.hpp>
 
 
-/*
 namespace
 {
-	std::vector<std::string> colors_helper(std::vector<std::string> args)
+	std::vector<std::string> gh_command(std::vector<std::string> args)
 	{
-		return std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1"};
+		std::vector<std::string> command = std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1"};
+		command.append_range(args);
+		return command;
 	}
 }
-*/
 
 
 CliState GitHubInterface::state()
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"gh", "auth", "status"});
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "auth", "status"}));
 
 	if (!result)
 	{
@@ -30,7 +30,7 @@ CliState GitHubInterface::state()
 
 std::expected<std::string, std::string> GitHubInterface::repo_list()
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"gh", "repo", "list", "--json", "nameWithOwner", "--jq", ".[].nameWithOwner", "--limit", "100"});
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "repo", "list", "--json", "nameWithOwner", "--limit", "100"}));
 
 	if (!result)
 	{
@@ -42,14 +42,17 @@ std::expected<std::string, std::string> GitHubInterface::repo_list()
 	}
 
 	std::string output;
-	for (const nlohmann::json& repo : nlohmann::json::parse(result->text))
+
+	const nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
+	if (json.is_discarded())
 	{
-		output += repo.get<std::string>();
-		output += '\n';
+		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
 	}
-	if (!output.empty())
+
+	for (const nlohmann::json& repo : json)
 	{
-		output.pop_back();
+		output += repo.at("nameWithOwner").get<std::string>();
+		output += '\n';
 	}
 
 	return output;
@@ -59,7 +62,7 @@ std::expected<std::string, std::string> GitHubInterface::repo_list()
 std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view path)
 {
 	std::expected result = SystemInterface::run(
-		std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1", "gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt,parent"},
+		gh_command(std::vector<std::string>{"gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt,parent"}),
 		path);
 
 	if (!result)
@@ -119,7 +122,7 @@ std::expected<int, std::string> GitHubInterface::issue_create(std::string_view p
 std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view path)
 {
 	std::expected result = SystemInterface::run(
-		std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1", "gh", "pr", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}, path);
+		gh_command(std::vector<std::string>{"gh", "pr", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}), path);
 
 	if (!result)
 	{

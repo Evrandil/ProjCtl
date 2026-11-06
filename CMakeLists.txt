@@ -77,9 +77,10 @@ add_library(projctl_core
 	src/projctl/requests/create.cpp
 	src/projctl/requests/merge.cpp
 	src/projctl/requests/list.cpp
+	src/projctl/gh/status.cpp
+	src/projctl/gh/list.cpp
 	src/projctl/helper.cpp
 	src/projctl/projects.cpp
-	src/projctl/hosting.cpp
 	src/systeminterface.cpp
 	src/gitinterface/branch.cpp
 	src/gitinterface/changes.cpp

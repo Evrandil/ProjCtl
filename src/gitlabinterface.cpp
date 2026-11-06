@@ -31,14 +31,17 @@ std::expected<std::string, std::string> GitLabInterface::repo_list()
 	}
 
 	std::string output;
-	for (const nlohmann::json& repo : nlohmann::json::parse(result->text))
+
+	const nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
+	if (json.is_discarded())
+	{
+		return std::unexpected(std::format("Unexpected output from glab:\n{}", result->text));
+	}
+
+	for (const nlohmann::json& repo : json)
 	{
 		output += repo.at("path_with_namespace").get<std::string>();
 		output += '\n';
-	}
-	if (!output.empty())
-	{
-		output.pop_back();
 	}
 
 	return output;

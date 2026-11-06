@@ -204,7 +204,7 @@ Command parser(const std::span<const std::string_view> input)
 	}
 
 
-	if (command == "git")
+	if (command == "git" || command == "gits"|| command == "gh")
 	{
 		if (!args.empty())
 		{
