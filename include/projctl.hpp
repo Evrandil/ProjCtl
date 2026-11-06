@@ -52,7 +52,6 @@ class ProjCtl
 	[[nodiscard]] std::expected<std::string, std::string> list_gits() const;
 	[[nodiscard]] std::expected<std::string, std::string> path_show(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> add(const std::optional<std::string>&, std::optional<std::filesystem::path>);
-	[[nodiscard]] std::expected<std::string, std::string> add_current(); // get rid of this
 	[[nodiscard]] std::expected<std::string, std::string> remove(const std::string&);
 	[[nodiscard]] std::expected<std::string, std::string> open(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<int, std::string> build(const std::optional<std::string>&) const;

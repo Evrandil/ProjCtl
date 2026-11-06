@@ -63,17 +63,6 @@ int ProjCtl::handle(const Cmd::Unknown&) const
 }
 
 
-
-int ProjCtl::handle(const Cmd::Base::Add& cmd)
-{
-	if (cmd.name == ".")
-	{
-		return report_save(add_current());
-	}
-	return report_save(add(cmd.name, cmd.path));
-}
-
-
 int ProjCtl::handle(const Cmd::Base::Remove& cmd)
 {
 	return report_save(remove(cmd.name));
