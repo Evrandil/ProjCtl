@@ -1,6 +1,7 @@
 #include "gitinterface.hpp"
 
 #include "systeminterface.hpp"
+#include <vector>
 
 
 namespace

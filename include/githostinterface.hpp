@@ -2,18 +2,13 @@
 
 #include "issue.hpp"
 #include "request.hpp"
+#include "githostoption.hpp"
 
 #include <vector>
 #include <expected>
 #include <string>
 
 
-enum class HostOption : uint8_t
-{
-	GitHub,
-	GitLab,
-	Unknown,
-};
 
 
 enum class CliState : uint8_t

@@ -1,6 +1,7 @@
 #include "gitinterface.hpp"
 
 #include "systeminterface.hpp"
+#include <vector>
 
 
 std::expected<int, std::string> GitInterface::diff(const ProjectContent& project, const std::optional<std::filesystem::path>& path)

@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <map>
 #include <expected>
+#include <vector>
 
 
 constexpr std::string_view MARGIN	= "    ";

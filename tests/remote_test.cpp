@@ -67,6 +67,14 @@ TEST_CASE("short_from_remote")
 		CHECK(short_from_remote("ssh://git@gitlab.com:2222/group/subgroup/repo.git") == "group/subgroup/repo");
 	}
 
+	SUBCASE("deep subgroups, ports, dotless hosts, .git/")
+	{
+		CHECK(short_from_remote("https://gitlab.com/a/b/c/repo") == "a/b/c/repo");
+		CHECK(short_from_remote("https://gitlab.company.com:8443/team/repo") == "team/repo");
+		CHECK(short_from_remote("http://localhost/team/repo") == "team/repo");
+		CHECK(short_from_remote("https://github.com/Evrandil/projctl.git/") == "Evrandil/projctl");
+	}
+
 	SUBCASE("garbage is an error")
 	{
 		CHECK_FALSE(short_from_remote(""));

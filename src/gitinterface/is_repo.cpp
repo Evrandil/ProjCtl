@@ -1,6 +1,7 @@
 #include "gitinterface.hpp"
 
 #include "systeminterface.hpp"
+#include <vector>
 
 
 bool GitInterface::is_repo(const ProjectContent& project)

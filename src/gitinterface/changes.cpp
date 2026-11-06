@@ -1,6 +1,7 @@
 #include "gitinterface.hpp"
 
 #include "systeminterface.hpp"
+#include <vector>
 
 
 std::expected<std::string, std::string> GitInterface::changes(const ProjectContent& project)

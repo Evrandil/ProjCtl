@@ -1,6 +1,7 @@
 #include "gitinterface.hpp"
 
 #include "systeminterface.hpp"
+#include <vector>
 
 
 [[nodiscard]] std::expected<std::string, std::string> GitInterface::log(const ProjectContent& project, bool oneline)

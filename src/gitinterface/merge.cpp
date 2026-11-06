@@ -1,6 +1,7 @@
 #include "gitinterface.hpp"
 
 #include "systeminterface.hpp"
+#include <vector>
 
 
 std::expected<std::string, std::string> GitInterface::default_merge(const ProjectContent& project)

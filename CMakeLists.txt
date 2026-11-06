@@ -42,6 +42,7 @@ endif()
 
 add_library(projctl_parser
 	src/parser.cpp
+	src/remote_url.cpp
 )
 
 target_include_directories(projctl_parser
@@ -72,6 +73,7 @@ add_library(projctl_core
 	src/projctl/core/color.cpp
 	src/projctl/projects/list.cpp
 	src/projctl/projects/add.cpp
+	src/projctl/projects/remove.cpp
 	src/projctl/projects/open.cpp
 	src/projctl/projects/path.cpp
 	src/projctl/projects/build.cpp
@@ -94,7 +96,6 @@ add_library(projctl_core
 	src/projctl/gh/status.cpp
 	src/projctl/gh/list.cpp
 	src/projctl/helper.cpp
-	src/projctl/projects.cpp
 	src/systeminterface.cpp
 	src/gitinterface/branch.cpp
 	src/gitinterface/changes.cpp

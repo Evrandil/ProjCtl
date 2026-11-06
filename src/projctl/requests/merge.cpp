@@ -1,6 +1,7 @@
 #include "projctl.hpp"
 
 #include "gitinterface.hpp"
+#include "githostinterface.hpp"
 
 
 std::expected<std::string, std::string> ProjCtl::request_merge(const std::optional<std::string>& name) const

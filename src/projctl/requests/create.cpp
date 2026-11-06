@@ -1,6 +1,7 @@
 #include "projctl.hpp"
 
 #include "gitinterface.hpp"
+#include "githostinterface.hpp"
 
 
 std::expected<int, std::string> ProjCtl::request_create(const std::optional<std::string>& name) const
