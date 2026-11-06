@@ -33,9 +33,7 @@ cmd_of(project) / cmd(name) { runs cmd_of(project of arged name) } / cmd_all() {
 
 ## 5. Output formatting
 
-**Move formatting from report to command methods**
-
-Rule: **interface layers return plain text or data → `ProjCtl` methods build the colourful output → `report()` prints it and styles errors.**
+Rule: **interface layers return plain text or data → `ProjCtl` methods build the colourful output → `report()` prints it.**
 
 - [ ] **errors as plain text**: remove `color_code(...)` / `Style::RESET` from every `std::unexpected(...)` message. `report()` already adds the red colour and `✗`, so these get double-styled:
   - `projects.cpp:65` (already exists), `:150` / `:171` (no default build/run command), the error branches in `issues.cpp` / `requests.cpp`

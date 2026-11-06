@@ -1,7 +1,7 @@
 default: build
 
 configure:
-    cmake -S . -B build -G Ninja
+    cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
 
 build: configure
     cmake --build build
@@ -13,5 +13,12 @@ test *args: configure
 run *args: build
     ./build/projctl {{args}}
 
+release:
+    cmake -S . -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release -DPROJCTL_BUILD_TESTS=OFF
+    cmake --build build-release
+
+install: release
+    sudo install -m 755 -s build-release/projctl /usr/local/bin/projctl
+
 clean:
-    rm -rf build
+    rm -rf build build-release
