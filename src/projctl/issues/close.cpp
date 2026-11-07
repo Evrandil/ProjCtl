@@ -16,7 +16,7 @@ std::expected<std::string, std::string> ProjCtl::issue_close(const std::optional
 	std::expected host_option = GitInterface::host(content.path);
 	if (!host_option)
 	{
-		return std::unexpected(std::format("{}Failed to get host {}{}\n", paint(config.error_color), host_option.error(), reset()));
+		return std::unexpected(std::format("{}{}Failed to get host {}{}\n", paint(config.error_color), symbol(Style::Mark::Cross), host_option.error(), reset()));
 	}
 	HostOption host = *host_option;
 

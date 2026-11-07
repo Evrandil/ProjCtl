@@ -12,7 +12,7 @@ std::expected<std::string, std::string> ProjCtl::list() const
 	};
 	if (projects.empty()) [[unlikely]]
 	{
-		return std::unexpected(std::format("{}There are no projects saved{}\n", paint(config.error_color), reset()));
+		return std::unexpected(std::format("{}{}There are no projects saved{}\n", paint(config.error_color), symbol(Style::Mark::Cross), reset()));
 	}
 
 	std::vector<std::future<std::string>> tasks;

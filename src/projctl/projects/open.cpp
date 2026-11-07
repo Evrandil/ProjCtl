@@ -19,14 +19,14 @@ std::expected<std::string, std::string> ProjCtl::open(const std::optional<std::s
 
 	if (!result)
 	{
-		return std::unexpected(result.error());
+		return std::unexpected(std::format("{}{} {}{}", paint(config.error_color), symbol(Style::Mark::Cross), result.error(), reset()));
 	}
 	if (*result != 0)
 	{
-		return std::unexpected(std::format("{} exited with code {}", config.editor, *result));
+		return std::unexpected(std::format("{}{} {} exited with code {}{}", paint(config.error_color), symbol(Style::Mark::Cross), config.editor, *result, reset()));
 	}
 
-	return std::format("{}{}{}{}{}", paint(config.header_color), "Opened project: ", paint(config.project_name_color), (*project)->first, reset());
+	return std::format("{}{}{}{}{}{}{}", paint(config.tick_color), symbol(Style::Mark::Tick), paint(config.header_color), "Opened project: ", paint(config.project_name_color), (*project)->first, reset());
 }
 
 
