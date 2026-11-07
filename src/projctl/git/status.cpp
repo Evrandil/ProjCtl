@@ -46,12 +46,14 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 
 	parse_line("Name:", Style::Mark::None, name, config.project_name_color);
 	parse_line("Path:", Style::Mark::None, content.path.string(), config.project_path_color);
-	parse_line("Exists:", exists ? Style::Mark::Tick : Style::Mark::Cross, exists ? "Yes" : "No", Style::Color::Default);
 
 	if (!exists)
 	{
+		parse_line("Exists:", Style::Mark::Cross, "No", Style::Color::Default);
 		return output;
 	}
+
+	parse_line("Exists:", Style::Mark::Tick, "Yes", Style::Color::Default);
 	parse_line("Type:", Style::Mark::None, project_type_to_string(content.type), config.project_type_color);
 
 	if (!GitInterface::is_repo(content.path))
@@ -61,19 +63,19 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 	}
 	const std::expected<std::string, std::string> remote  = GitInterface::remote(content.path);
 	const std::expected<std::string_view, std::string> repo = remote ? short_from_remote(*remote) : std::unexpected(remote.error());
-	const auto [repo_text, repo_color] = [&]() -> std::pair<std::string_view, Style::Color>
+	const auto repo_text = [&]() -> std::string_view
 	{
 		if (repo)
 		{
-			return {*repo, config.tick_color};
+			return *repo;
 		}
 		if (remote)
 		{
-			return {*remote, config.warning_color};
+			return *remote;
 		}
-		return {"No remote", config.warning_color};
+		return "No remote";
 	}();
-	parse_line("Git:", Style::Mark::Tick, repo_text, repo_color);
+	parse_line("Git:", Style::Mark::Tick, repo_text, Style::Color::Default);
 	result_line("Full remote:", remote, config.project_remote_color);
 
 	const std::expected<std::string, std::string> branch  = GitInterface::branch(content.path);
