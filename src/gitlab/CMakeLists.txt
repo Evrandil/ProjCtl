@@ -9,9 +9,8 @@ target_include_directories(projctl_gitlab
 )
 
 target_link_libraries(projctl_gitlab
-	PUBLIC
-		projctl_system
 	PRIVATE
+		projctl_system
 		projctl_warnings
 		nlohmann_json::nlohmann_json
 )

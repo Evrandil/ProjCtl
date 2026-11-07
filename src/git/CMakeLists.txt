@@ -21,9 +21,8 @@ target_include_directories(projctl_git
 )
 
 target_link_libraries(projctl_git
-	PUBLIC
-		projctl_system
 	PRIVATE
+		projctl_system
 		projctl_parser
 		projctl_warnings
 )

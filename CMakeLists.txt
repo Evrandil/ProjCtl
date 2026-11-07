@@ -37,6 +37,8 @@ if(NOT nlohmann_json_FOUND)
 	FetchContent_MakeAvailable(nlohmann_json)
 endif()
 
+# Compile flags
+
 add_library(projctl_warnings INTERFACE)
 
 target_compile_options(projctl_warnings INTERFACE
@@ -70,7 +72,6 @@ target_link_libraries(projctl
 		projctl_core
 		projctl_warnings
 )
-
 
 # Security
 
