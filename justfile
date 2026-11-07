@@ -18,7 +18,8 @@ release:
     cmake --build build-release
 
 install: release
-    sudo install -m 755 -s build-release/projctl /usr/local/bin/projctl
+	sudo install -m 755 -s build-release/projctl /usr/local/bin/projctl
+	sudo install -Dm644 completions/projctl.fish /usr/local/share/fish/vendor_completions.d/projctl.fish
 
 clean:
     rm -rf build build-release
