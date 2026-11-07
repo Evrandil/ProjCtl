@@ -8,6 +8,8 @@
 #include <expected>
 #include <string>
 
+std::vector<std::string> gh_command(std::vector<std::string> args);
+
 
 namespace GitHubInterface
 {

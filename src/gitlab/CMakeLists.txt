@@ -1,6 +1,8 @@
 
 add_library(projctl_gitlab
 	gitlabinterface.cpp
+	issues.cpp
+	requests.cpp
 )
 
 target_include_directories(projctl_gitlab
