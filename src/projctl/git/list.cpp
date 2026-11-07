@@ -5,7 +5,7 @@
 #include <ranges>
 
 
-std::expected<std::string, std::string> ProjCtl::list_gits() const
+std::expected<std::string, std::string> ProjCtl::list_gits(bool names_only) const
 {
 	auto list_one_git = [&](const std::string& name, const ProjectContent& content)
 	{
@@ -22,6 +22,17 @@ std::expected<std::string, std::string> ProjCtl::list_gits() const
 
 	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
 
+	std::string output;
+
+	if (names_only)
+	{
+		for (const ProjectEntry& project : projects | std::views::filter(is_git))
+		{
+			std::format_to(std::back_inserter(output), "{}\n", project.first);
+		}
+		return output;
+	}
+
 	for (const ProjectEntry& project : projects | std::views::filter(is_git))
 	{
 		tasks.push_back(std::async(std::launch::async, list_one_git, std::cref(project.first), std::cref(project.second)));
@@ -31,8 +42,6 @@ std::expected<std::string, std::string> ProjCtl::list_gits() const
 	{
 		return std::unexpected(std::format("{}There are no git projects saved{}\n", paint(config.error_color), reset()));
 	}
-
-	std::string output;
 
 	std::format_to(std::back_inserter(output), "{}{:<{}}{:<{}}{:<{}}{:<{}}{}\n", paint(config.header_color), "Name", config.name_width, "Path", config.path_width, "Branch", config.branch_width,
 				   "Repo", config.remote_width, reset());

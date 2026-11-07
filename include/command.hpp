@@ -19,6 +19,7 @@ namespace Cmd
 		struct List
 		{
 			bool gits_only = false;
+			bool names_only = false;
 		};
 
 		struct Path

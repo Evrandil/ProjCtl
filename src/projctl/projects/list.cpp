@@ -1,36 +1,35 @@
 #include "projctl.hpp"
 
-#include <future>
 
-
-std::expected<std::string, std::string> ProjCtl::list() const
+std::expected<std::string, std::string> ProjCtl::list(bool names_only) const
 {
-	auto list_one = [&](const std::string& name, const ProjectContent& content)
+	auto list_one = [&](const std::string& name, const std::filesystem::path& path)
 	{
 		return std::format("{}{:<{}}{}{:<{}}{}\n", paint(config.project_name_color), truncate(name, config.name_width), config.name_width, paint(config.project_path_color),
-						   truncate(content.path.string(), config.path_width), config.path_width, reset());
+						   truncate(path.string(), config.path_width), config.path_width, reset());
 	};
+
+	std::string output;
+
+	if (names_only)
+	{
+		for (const ProjectEntry& project: projects)
+		{
+			std::format_to(std::back_inserter(output), "{}\n", project.first);
+		}
+		return output;
+	}
+
 	if (projects.empty()) [[unlikely]]
 	{
 		return std::unexpected(std::format("{}{}There are no projects saved{}\n", paint(config.error_color), symbol(Style::Mark::Cross), reset()));
 	}
 
-	std::vector<std::future<std::string>> tasks;
-	tasks.reserve(projects.size());
+	std::format_to(std::back_inserter(output), "{}{:<{}}{}{}\n", paint(config.header_color), "Name", config.name_width, "Path", reset());
 
 	for (const ProjectEntry& project : projects)
 	{
-		tasks.push_back(std::async(std::launch::async, list_one, std::cref(project.first), std::cref(project.second)));
-	}
-
-
-	std::string output;
-
-	std::format_to(std::back_inserter(output), "{}{:<{}}{}{}\n", paint(config.header_color), "Name", config.name_width, "Path", reset());
-
-	for (std::future<std::string>& task : tasks)
-	{
-		std::format_to(std::back_inserter(output), "{}", task.get());
+		std::format_to(std::back_inserter(output), "{}", list_one(project.first, project.second.path));
 	}
 
 	return output;
@@ -39,5 +38,5 @@ std::expected<std::string, std::string> ProjCtl::list() const
 
 int ProjCtl::handle(const Cmd::Base::List& cmd) const
 {
-	return cmd.gits_only ? report(list_gits()) : report(list());
+	return cmd.gits_only ? report(list_gits(cmd.names_only)) : report(list(cmd.names_only));
 }
