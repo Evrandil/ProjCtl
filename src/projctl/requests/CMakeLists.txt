@@ -7,4 +7,5 @@ target_sources(projctl_core
 		close.cpp
 		list.cpp
 		merge.cpp
+		view.cpp
 )

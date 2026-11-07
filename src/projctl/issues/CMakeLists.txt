@@ -6,4 +6,5 @@ target_sources(projctl_core
 		create.cpp
 		edit.cpp
 		list.cpp
+		view.cpp
 )

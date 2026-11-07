@@ -58,6 +58,21 @@ std::expected<int, std::string> GitLabInterface::request_edit(const std::filesys
 	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "mr", "edit", std::to_string(request_number)}, path);
 }
 
+std::expected<std::string, std::string> GitLabInterface::request_view(const std::filesystem::path& path, int request_number)
+{
+	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
+	}
+
+	return result->text;
+}
+
 std::expected<std::string, std::string> GitLabInterface::request_close(const std::filesystem::path& path, int request_number)
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);

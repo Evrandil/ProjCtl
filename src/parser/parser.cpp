@@ -309,6 +309,11 @@ Command parser(const std::span<const std::string_view> input)
 		return number_with_optional_name<Cmd::GH::IssueEdit>(args);
 	}
 
+	if (command == "iview")
+	{
+		return number_with_optional_name<Cmd::GH::IssueView>(args);
+	}
+
 	if (command == "iclose")
 	{
 		return number_with_optional_name<Cmd::GH::IssueClose>(args);
@@ -327,6 +332,11 @@ Command parser(const std::span<const std::string_view> input)
 	if (command == "reqedit")
 	{
 		return number_with_optional_name<Cmd::GH::RequestEdit>(args);
+	}
+
+	if (command == "reqview")
+	{
+		return number_with_optional_name<Cmd::GH::RequestView>(args);
 	}
 
 	if (command == "reqclose")

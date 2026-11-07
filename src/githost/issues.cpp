@@ -62,6 +62,25 @@ std::expected<int, std::string> GitHostInterface::issue_edit(const std::filesyst
 }
 
 
+std::expected<std::string, std::string> GitHostInterface::issue_view(const std::filesystem::path& path, int issue_number)
+{
+	std::expected host = GitInterface::host(path);
+	if (!host)
+	{
+		return std::unexpected(host.error());
+	}
+	switch (*host)
+	{
+		case HostOption::GitHub:
+			return GitHubInterface::issue_view(path, issue_number);
+		case HostOption::GitLab:
+			return GitLabInterface::issue_view(path, issue_number);
+		default:
+			return std::unexpected("Unknown host");
+	}
+}
+
+
 std::expected<std::string, std::string> GitHostInterface::issue_close(const std::filesystem::path& path, int issue_number)
 {
 	std::expected host = GitInterface::host(path);
