@@ -49,8 +49,9 @@ class ProjCtl
 	[[nodiscard]] int report(const BatchResult&) const;
 	[[nodiscard]] int report_save(const std::expected<std::string, std::string>&) const;
 
-	// Bug functionality
+	// Program's functionality
 	[[nodiscard]] int handle(const Cmd::Unknown&) const;
+	[[nodiscard]] int handle(const Cmd::Version&) const;
 
 	// Base functionality
 	[[nodiscard]] std::expected<std::string, std::string> list(bool) const;

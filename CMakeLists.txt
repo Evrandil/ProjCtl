@@ -5,11 +5,27 @@ project(projctl
 	LANGUAGES CXX
 )
 
+# Version header
+
+configure_file(
+	${PROJECT_SOURCE_DIR}/cmake/version.hpp.in
+	${PROJECT_BINARY_DIR}/generated/version.hpp
+	@ONLY
+)
+
+add_library(projctl_version INTERFACE)
+
+target_include_directories(projctl_version
+	INTERFACE
+		${PROJECT_BINARY_DIR}/generated
+)
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_COLOR_DIAGNOSTICS ON)
+
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error)

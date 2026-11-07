@@ -131,6 +131,15 @@ Command parser(const std::span<const std::string_view> input)
 	const std::string_view command = input.front();
 	const std::span args           = input.subspan(1);
 
+	if (command == "version" || command == "-v" || command == "--version")
+	{
+		if (!args.empty())
+		{
+			return Cmd::Unknown{ .message = "Doesn't take any arguments" };
+		}
+		return Cmd::Version{};
+	}
+
 	if (command == "list")
 	{
 		if (args.empty())

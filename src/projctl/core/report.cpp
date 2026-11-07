@@ -1,6 +1,7 @@
 #include "projctl.hpp"
 
 #include <print>
+#include "version.hpp"
 
 int ProjCtl::report(const std::expected<std::string, std::string>& result) const
 {
@@ -60,4 +61,10 @@ int ProjCtl::handle(const Cmd::Unknown& cmd) const
 {
 	std::println(stderr, "\n\n{}{}{}{}\n\n", paint(config.error_color), Style::CROSS, cmd.message, reset());
 	return 1;
+}
+
+int ProjCtl::handle(const Cmd::Version&) const
+{
+	std::println(stdout, "\n\n{}ProjCtl version: {}{}\n\n", paint(config.header_color), Version::STRING, reset());
+	return 0;
 }

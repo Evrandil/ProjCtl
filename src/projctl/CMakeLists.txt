@@ -22,5 +22,6 @@ target_link_libraries(projctl_core
 	PRIVATE
 		projctl_git
 		projctl_githost
+		projctl_version
 		projctl_warnings
 )
