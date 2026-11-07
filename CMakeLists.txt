@@ -37,114 +37,29 @@ if(NOT nlohmann_json_FOUND)
 	FetchContent_MakeAvailable(nlohmann_json)
 endif()
 
+# Compile flags
 
-# Parser (no dependencies on the rest of projctl)
+add_library(projctl_warnings INTERFACE)
 
-add_library(projctl_parser
-	src/parser.cpp
-	src/remote_url.cpp
-)
-
-target_include_directories(projctl_parser
-	PUBLIC
-		${PROJECT_SOURCE_DIR}/include
-)
-
-target_compile_options(projctl_parser PRIVATE
+target_compile_options(projctl_warnings INTERFACE
 	-Wall
 	-Wextra
 	-Wpedantic
 	-Wconversion
 	-Wsign-conversion
 	-Wshadow
-#	-fsanitize=address,undefined
 )
 
+# Libs
 
-# Projctl core
-
-add_library(projctl_core
-	src/projctl/core/current_project_name.cpp
-	src/projctl/core/load.cpp
-	src/projctl/core/projctl.cpp
-	src/projctl/core/project_find.cpp
-	src/projctl/core/save.cpp
-	src/projctl/core/report.cpp
-	src/projctl/core/color.cpp
-	src/projctl/projects/list.cpp
-	src/projctl/projects/add.cpp
-	src/projctl/projects/remove.cpp
-	src/projctl/projects/open.cpp
-	src/projctl/projects/path.cpp
-	src/projctl/projects/build.cpp
-	src/projctl/projects/run.cpp
-	src/projctl/git/list.cpp
-	src/projctl/git/status.cpp
-	src/projctl/git/fetch.cpp
-	src/projctl/git/pull.cpp
-	src/projctl/git/push.cpp
-	src/projctl/git/commit.cpp
-	src/projctl/git/merge.cpp
-	src/projctl/git/branch.cpp
-	src/projctl/git/log.cpp
-	src/projctl/git/diff.cpp
-	src/projctl/issues/create.cpp
-	src/projctl/issues/close.cpp
-	src/projctl/issues/edit.cpp
-	src/projctl/issues/list.cpp
-	src/projctl/requests/create.cpp
-	src/projctl/requests/close.cpp
-	src/projctl/requests/edit.cpp
-	src/projctl/requests/merge.cpp
-	src/projctl/requests/list.cpp
-	src/projctl/gh/status.cpp
-	src/projctl/gh/list.cpp
-	src/projctl/helper.cpp
-	src/systeminterface.cpp
-	src/gitinterface/branch.cpp
-	src/gitinterface/changes.cpp
-	src/gitinterface/commit.cpp
-	src/gitinterface/fetch.cpp
-	src/gitinterface/host.cpp
-	src/gitinterface/is_repo.cpp
-	src/gitinterface/merge.cpp
-	src/gitinterface/pull.cpp
-	src/gitinterface/push.cpp
-	src/gitinterface/remote.cpp
-	src/gitinterface/log.cpp
-	src/gitinterface/diff.cpp
-	src/githostinterface.cpp
-	src/githubinterface.cpp
-	src/gitlabinterface.cpp
-	src/config.cpp
-)
-
-target_include_directories(projctl_core
-	PUBLIC
-		${PROJECT_SOURCE_DIR}/include
-)
-
-target_compile_options(projctl_core PRIVATE
-	-Wall
-	-Wextra
-	-Wpedantic
-	-Wconversion
-	-Wsign-conversion
-	-Wshadow
-#	-fsanitize=address,undefined
-)
-
-target_link_libraries(projctl_core
-	PRIVATE
-		nlohmann_json::nlohmann_json
-)
-
-target_link_libraries(projctl_core
-	PUBLIC
-		projctl_parser
-	PRIVATE
-		nlohmann_json::nlohmann_json
-)
+add_subdirectory(src/parser)
+add_subdirectory(src/system)
+add_subdirectory(src/config)
+add_subdirectory(src/git)
+add_subdirectory(src/github)
+add_subdirectory(src/gitlab)
+add_subdirectory(src/githost)
+add_subdirectory(src/projctl)
 
 # Executable
 
@@ -155,18 +70,8 @@ add_executable(projctl
 target_link_libraries(projctl
 	PRIVATE
 		projctl_core
+		projctl_warnings
 )
-
-target_compile_options(projctl PRIVATE
-	-Wall
-	-Wextra
-	-Wpedantic
-	-Wshadow
-	-Wconversion
-	-Wsign-conversion
-#	-fsanitize=address,undefined
-)
-
 
 # Security
 

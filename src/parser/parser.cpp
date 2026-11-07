@@ -1,5 +1,6 @@
 #include "parser.hpp"
 #include <expected>
+#include <charconv>
 
 
 // grammar: see tests/parser_test.cpp
@@ -46,9 +47,19 @@ namespace
 		return parser_with_name<CommandType>(args);
 	}
 
+	std::optional<int> parse_number(std::string_view text)
+	{
+		int value = 0;
+		const auto [end, error] = std::from_chars(text.data(), text.data() + text.size(), value);
+		if (error != std::errc{} || end != text.data() + text.size() || value <= 0)
+		{
+			return std::nullopt;
+		}
+		return value;
+	}
+
 	template <typename CommandType> Command number_with_optional_name(std::span<const std::string_view> args)
 	{
-		int number = 0;
 		std::expected<std::optional<std::string>, std::string> name = std::nullopt;
 		switch (args.size())
 		{
@@ -60,18 +71,18 @@ namespace
 				}
 				[[fallthrough]];
 			case 1:
-				try
 				{
-					number = std::stoi(std::string{args.front()});
+					std::optional<int> number = parse_number(args.front());
+					if (!number)
+					{
+						return Cmd::Unknown{ .message = std::format("Invalid number: {}", args.front()) };
+					}
+
+					return CommandType{
+						.number = *number,
+						.name = *name,
+					};
 				}
-				catch (const std::exception&)
-				{
-					return Cmd::Unknown{ .message = std::format("Invalid number: {}", args.front()) };
-				}
-				return CommandType{
-					.number = number,
-					.name = *name,
-				};
 			default:
 				return Cmd::Unknown{ .message = std::format("Invalid number of arguments: expected one or two, got {}", args.size()) };
 		}

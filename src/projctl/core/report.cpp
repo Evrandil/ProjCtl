@@ -18,7 +18,7 @@ int ProjCtl::report(const std::expected<int, std::string>& result) const
 {
 	if (!result)
 	{
-		std::println(stderr, "\n\n{}{}{}{}\n\n", paint(config.error_color), Style::CROSS, result.error(), reset());
+		std::println(stderr, "\n\n{}\n\n", result.error());
 		return 1;
 	}
 

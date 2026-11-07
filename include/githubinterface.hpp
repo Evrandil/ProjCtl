@@ -2,11 +2,13 @@
 
 #include "issue.hpp"
 #include "request.hpp"
-#include "githostinterface.hpp"
+#include "clistate.hpp"
 
 #include <vector>
 #include <expected>
 #include <string>
+
+std::vector<std::string> gh_command(std::vector<std::string> args);
 
 
 namespace GitHubInterface

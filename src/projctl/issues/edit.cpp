@@ -9,7 +9,7 @@ std::expected<int, std::string> ProjCtl::issue_edit(const std::optional<std::str
 	std::expected project_option = project_find(name);
 	if (!project_option)
 	{
-		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project_option.error(), reset()));
+		return std::unexpected(project_option.error());
 	}
 
 	const ProjectContent& content                      = (*project_option)->second;

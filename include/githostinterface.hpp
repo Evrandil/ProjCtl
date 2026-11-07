@@ -3,6 +3,7 @@
 #include "issue.hpp"
 #include "request.hpp"
 #include "githostoption.hpp"
+#include "clistate.hpp"
 
 #include <vector>
 #include <expected>
@@ -11,12 +12,6 @@
 
 
 
-enum class CliState : uint8_t
-{
-	NotInstalled,
-	NotAuthenticated,
-	Ready,
-};
 
 
 namespace GitHostInterface
