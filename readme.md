@@ -53,14 +53,14 @@ projctl list [gits]
 Gives status of project \(/ all projects if used with --all flag\)<br>
 Status contains<br>
 ```
-    Name:               [Name]<br>
-    Path:               [Path]<br>
-    Exists:             [If project exists on disk, "No" if it has been removed / moved]<br>
-    Type:               [Lang / environment, currently supported are: { "C++/CMake", "Rust", "Node", "Python" } ]<br>
-    Git:                [(If git repo) current workspace/repo_name]<br>
-    Branch:             [(If git repo) current working branch]<br>
-    Full remote:        [(If git repo) full remote path]<br>
-    Status:             [(If git repo)If there were unpushed / uncommitted changes, if yes lists files with changes below]<br>
+    Name:               [Name]
+    Path:               [Path]
+    Exists:             [If project exists on disk, "No" if it has been removed / moved]
+    Type:               [Lang / environment, currently supported are: { "C++/CMake", "Rust", "Node", "Python" } ]
+    Git:                [(If git repo) current workspace/repo_name]
+    Branch:             [(If git repo) current working branch]
+    Full remote:        [(If git repo) full remote path]
+    Status:             [(If git repo)If there were unpushed / uncommitted changes, if yes lists files with changes below]
 ```
 ```fish
 projctl status [<name> | --all | -a]
