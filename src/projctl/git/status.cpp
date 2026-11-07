@@ -109,7 +109,7 @@ std::expected<std::string, std::string> ProjCtl::status(const std::optional<std:
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
+		return std::unexpected(project.error());
 	}
 	return status(**project);
 }
