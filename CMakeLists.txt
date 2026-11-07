@@ -37,6 +37,16 @@ if(NOT nlohmann_json_FOUND)
 	FetchContent_MakeAvailable(nlohmann_json)
 endif()
 
+add_library(projctl_warnings INTERFACE)
+
+target_compile_options(projctl_warnings INTERFACE
+	-Wall
+	-Wextra
+	-Wpedantic
+	-Wconversion
+	-Wsign-conversion
+	-Wshadow
+)
 
 # Parser (no dependencies on the rest of projctl)
 
@@ -61,7 +71,7 @@ target_compile_options(projctl_parser PRIVATE
 )
 
 
-add_subdirectory(src/gitinterface)
+add_subdirectory(src/git)
 
 
 
