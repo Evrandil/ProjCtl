@@ -13,8 +13,8 @@ cmake 3.20
 ninja
 just
 ```
-C++ standard is set to 26 so I guess that's requirement for compiler<br>
-Tho Idk with 23 I think it still runs, with precious versions... haven't checked but I guess not really<br>
+C++ standard is set to 23 so I guess that's requirement for compiler<br>
+\(RIP folks on Windows\)<br>
 # Installatoin
 ## If you have just
 ```fish
@@ -27,7 +27,7 @@ cmake -S . -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release -DPROJCTL_BUILD_
 cmake --build build-release
 sudo install -m 755 -s build-release/projctl /usr/local/bin/projctl
 ```
-Do use release build type there with `-s` flag for install, trust me
+Do use release build type there \(or at least -O3 bc binary does be able to get big XD\) with `-s` flag for install, trust me
 
 # Usage \[fast docs\]
 
