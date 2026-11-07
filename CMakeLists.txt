@@ -48,8 +48,7 @@ target_compile_options(projctl_warnings INTERFACE
 	-Wshadow
 )
 
-# Parser (no dependencies on the rest of projctl)
-
+# Libs
 
 add_subdirectory(src/parser)
 add_subdirectory(src/system)

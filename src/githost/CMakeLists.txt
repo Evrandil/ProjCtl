@@ -9,10 +9,10 @@ target_include_directories(projctl_githost
 )
 
 target_link_libraries(projctl_githost
-	PUBLIC
+	PRIVATE
 		projctl_git
 		projctl_github
 		projctl_gitlab
-	PRIVATE
+		projctl_parser
 		projctl_warnings
 )

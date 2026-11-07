@@ -2,7 +2,7 @@
 
 #include "issue.hpp"
 #include "request.hpp"
-#include "githostinterface.hpp"
+#include "clistate.hpp"
 
 #include <expected>
 #include <string>
