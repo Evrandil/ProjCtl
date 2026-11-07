@@ -16,9 +16,10 @@ target_include_directories(projctl_core
 )
 
 target_link_libraries(projctl_core
-	PRIVATE
+	PUBLIC
 		projctl_parser
 		projctl_config
+	PRIVATE
 		projctl_git
 		projctl_githost
 		projctl_warnings
