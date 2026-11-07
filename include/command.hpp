@@ -112,6 +112,7 @@ namespace Cmd
 
 	} // namespace Git
 
+	// TODO Split that to Issue and Request subnamespaces?
 	namespace GH
 	{
 
@@ -140,6 +141,12 @@ namespace Cmd
 			std::optional<std::string> name;
 		};
 
+		struct IssueView
+		{
+			int number = 0;
+			std::optional<std::string> name;
+		};
+
 		struct IssueClose
 		{
 			int number = 0;
@@ -163,6 +170,12 @@ namespace Cmd
 			std::optional<std::string> name;
 		};
 
+		struct RequestView
+		{
+			int number = 0;
+			std::optional<std::string> name;
+		};
+
 		struct RequestClose
 		{
 			int number = 0;
@@ -180,5 +193,5 @@ namespace Cmd
 
 
 using Command = std::variant<Cmd::Unknown, Cmd::Base::List, Cmd::Base::Path, Cmd::Base::Add, Cmd::Base::Remove, Cmd::Base::Open, Cmd::Base::Build, Cmd::Base::Run, Cmd::Git::Status, Cmd::Git::Commit,
-							 Cmd::Git::Push, Cmd::Git::Pull, Cmd::Git::Fetch, Cmd::Git::Branch, Cmd::Git::Merge, Cmd::Git::Log, Cmd::Git::Diff, Cmd::GH::Status, Cmd::GH::RepoList, Cmd::GH::IssueList, Cmd::GH::IssueCreate, Cmd::GH::IssueEdit, Cmd::GH::IssueClose,
-							 Cmd::GH::RequestList, Cmd::GH::RequestCreate, Cmd::GH::RequestEdit, Cmd::GH::RequestClose, Cmd::GH::RequestMerge>;
+							 Cmd::Git::Push, Cmd::Git::Pull, Cmd::Git::Fetch, Cmd::Git::Branch, Cmd::Git::Merge, Cmd::Git::Log, Cmd::Git::Diff, Cmd::GH::Status, Cmd::GH::RepoList, Cmd::GH::IssueList, Cmd::GH::IssueCreate, Cmd::GH::IssueEdit, Cmd::GH::IssueView, Cmd::GH::IssueClose,
+							 Cmd::GH::RequestList, Cmd::GH::RequestCreate, Cmd::GH::RequestEdit, Cmd::GH::RequestView, Cmd::GH::RequestClose, Cmd::GH::RequestMerge>;

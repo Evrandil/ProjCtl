@@ -58,6 +58,21 @@ std::expected<int, std::string> GitLabInterface::issue_edit(const std::filesyste
 	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "issue", "edit", std::to_string(issue_number)}, path);
 }
 
+std::expected<std::string, std::string> GitLabInterface::issue_view(const std::filesystem::path& path, int issue_number)
+{
+	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "issue", "view", std::to_string(issue_number)}, path);
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
+	}
+
+	return result->text;
+}
+
 std::expected<std::string, std::string> GitLabInterface::issue_close(const std::filesystem::path& path, int issue_number)
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "issue", "close", std::to_string(issue_number)}, path);

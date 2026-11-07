@@ -68,6 +68,22 @@ std::expected<int, std::string> GitHubInterface::issue_edit(const std::filesyste
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)}, path);
 }
 
+std::expected<std::string, std::string> GitHubInterface::issue_view(const std::filesystem::path& path, int issue_number)
+{
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "view", std::to_string(issue_number)}), path);
+
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
+	}
+
+	return result->text;
+}
+
 std::expected<std::string, std::string> GitHubInterface::issue_close(const std::filesystem::path& path, int issue_number)
 {
 	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "close", std::to_string(issue_number)}), path);
