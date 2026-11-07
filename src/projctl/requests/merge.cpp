@@ -1,6 +1,5 @@
 #include "projctl.hpp"
 
-#include "gitinterface.hpp"
 #include "githostinterface.hpp"
 
 
@@ -12,15 +11,7 @@ std::expected<std::string, std::string> ProjCtl::request_merge(const std::option
 		return std::unexpected(project.error());
 	}
 
-	const ProjectContent& content = (*project)->second;
-	std::expected host_option = GitInterface::host(content.path);
-	if (!host_option)
-	{
-		return std::unexpected(std::format("{}{}Failed to get host {}{}", paint(config.error_color), symbol(Style::Mark::Cross), host_option.error(), reset()));
-	}
-	HostOption host = *host_option;
-
-	std::expected result = GitHostInterface::request_merge(host, content.path.string());
+	std::expected result = GitHostInterface::request_merge((*project)->second.path.string());
 	if (!result)
 	{
 		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), symbol(Style::Mark::Cross), result.error(), reset()));

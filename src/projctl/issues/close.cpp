@@ -1,6 +1,5 @@
 #include "projctl.hpp"
 
-#include "gitinterface.hpp"
 #include "githostinterface.hpp"
 
 
@@ -12,15 +11,13 @@ std::expected<std::string, std::string> ProjCtl::issue_close(const std::optional
 		return std::unexpected(project_option.error());
 	}
 
-	const ProjectContent& content                      = (*project_option)->second;
-	std::expected host_option = GitInterface::host(content.path);
-	if (!host_option)
+	std::expected result = GitHostInterface::issue_close((*project_option)->second.path.string(), issue_number);
+	if (!result)
 	{
-		return std::unexpected(std::format("{}{}Failed to get host {}{}\n", paint(config.error_color), symbol(Style::Mark::Cross), host_option.error(), reset()));
+		return std::unexpected(std::format("{}{}Failed to Close issue {}: {}{}\n", paint(config.error_color), symbol(Style::Mark::Cross), issue_number, result.error(), reset()));
 	}
-	HostOption host = *host_option;
 
-	return GitHostInterface::issue_close(host, content.path.string(), issue_number);
+	return *result;
 }
 
 
