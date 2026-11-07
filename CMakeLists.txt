@@ -66,6 +66,16 @@ target_compile_options(projctl_warnings INTERFACE
 	-Wshadow
 )
 
+# Sanitizers (Debug only)
+
+target_compile_options(projctl_warnings INTERFACE
+	$<$<CONFIG:Debug>:-fsanitize=address,undefined -fno-omit-frame-pointer>
+)
+
+target_link_options(projctl_warnings INTERFACE
+	$<$<CONFIG:Debug>:-fsanitize=address,undefined>
+)
+
 # Libs
 
 add_subdirectory(src/parser)
