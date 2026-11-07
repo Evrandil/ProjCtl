@@ -46,6 +46,37 @@ namespace
 		return parser_with_name<CommandType>(args);
 	}
 
+	template <typename CommandType> Command number_with_optional_name(std::span<const std::string_view> args)
+	{
+		int number = 0;
+		std::expected<std::optional<std::string>, std::string> name = std::nullopt;
+		switch (args.size())
+		{
+			case 2:
+				name = optional_name(args.last(1));
+				if (!name)
+				{
+					return Cmd::Unknown{ .message = name.error() };
+				}
+				[[fallthrough]];
+			case 1:
+				try
+				{
+					number = std::stoi(std::string{args.front()});
+				}
+				catch (const std::exception&)
+				{
+					return Cmd::Unknown{ .message = std::format("Invalid number: {}", args.front()) };
+				}
+				return CommandType{
+					.number = number,
+					.name = *name,
+				};
+			default:
+				return Cmd::Unknown{ .message = std::format("Invalid number of arguments: expected one or two, got {}", args.size()) };
+		}
+	}
+
 	struct NameWithExtra
 	{
 		std::optional<std::string> name;
@@ -262,6 +293,11 @@ Command parser(const std::span<const std::string_view> input)
 		return parser_with_name<Cmd::GH::IssueCreate>(args);
 	}
 
+	if (command == "iedit")
+	{
+		return number_with_optional_name<Cmd::GH::IssueEdit>(args);
+	}
+
 	if (command == "reqs" || command == "reqlist")
 	{
 		return with_name_or_all<Cmd::GH::RequestList>(args);
@@ -272,10 +308,15 @@ Command parser(const std::span<const std::string_view> input)
 		return parser_with_name<Cmd::GH::RequestCreate>(args);
 	}
 
+	if (command == "reqedit")
+	{
+		return number_with_optional_name<Cmd::GH::RequestEdit>(args);
+	}
+
 	if (command == "reqmerge")
 	{
 		return parser_with_name<Cmd::GH::RequestMerge>(args);
 	}
 
-	return Cmd::Unknown{ .message = "No command specified" };
+	return Cmd::Unknown{ .message = "No command specified (check grammar :-)" };
 }

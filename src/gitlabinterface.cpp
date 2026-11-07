@@ -97,6 +97,11 @@ std::expected<int, std::string> GitLabInterface::issue_create(std::string_view p
 	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "issue", "create"}, path);
 }
 
+std::expected<int, std::string> GitLabInterface::issue_edit(std::string_view path, int issue_number)
+{
+	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "issue", "edit", std::to_string(issue_number)}, path);
+}
+
 
 std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(std::string_view path)
 {
@@ -145,6 +150,11 @@ std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(s
 std::expected<int, std::string> GitLabInterface::request_create(std::string_view path)
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "mr", "create"}, path);
+}
+
+std::expected<int, std::string> GitLabInterface::request_edit(std::string_view path, int request_number)
+{
+	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "mr", "edit", std::to_string(request_number)}, path);
 }
 
 
