@@ -1,6 +1,5 @@
 #include "projctl.hpp"
 
-#include "gitinterface.hpp"
 #include "githostinterface.hpp"
 
 
@@ -12,15 +11,13 @@ std::expected<int, std::string> ProjCtl::request_create(const std::optional<std:
 		return std::unexpected(project.error());
 	}
 
-	const ProjectContent& content = (*project)->second;
-	std::expected host_option = GitInterface::host(content.path);
-	if (!host_option)
+	std::expected result = GitHostInterface::request_create((*project)->second.path.string());
+	if (!result)
 	{
-		return std::unexpected(std::format("{}{}Failed to get host {}{}", paint(config.error_color), symbol(Style::Mark::Cross), host_option.error(), reset()));
+		return std::unexpected(std::format("{}{}Failed to create request: {}{}", paint(config.error_color), symbol(Style::Mark::Cross), result.error(), reset()));
 	}
-	HostOption host = *host_option;
 
-	return GitHostInterface::request_create(host, content.path.string());
+	return *result;
 }
 
 

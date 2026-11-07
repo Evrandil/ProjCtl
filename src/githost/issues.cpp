@@ -1,12 +1,18 @@
 #include "githostinterface.hpp"
 
+#include "gitinterface.hpp"
 #include "githubinterface.hpp"
 #include "gitlabinterface.hpp"
 
 
-std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(HostOption host, const std::filesystem::path& path)
+std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(const std::filesystem::path& path)
 {
-	switch (host)
+	std::expected host = GitInterface::host(path);
+	if (!host)
+	{
+		return std::unexpected(host.error());
+	}
+	switch (*host)
 	{
 		case HostOption::GitHub:
 			return GitHubInterface::issue_list(path);
@@ -18,9 +24,14 @@ std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(Host
 }
 
 
-std::expected<int, std::string> GitHostInterface::issue_create(HostOption host, const std::filesystem::path& path)
+std::expected<int, std::string> GitHostInterface::issue_create(const std::filesystem::path& path)
 {
-	switch (host)
+	std::expected host = GitInterface::host(path);
+	if (!host)
+	{
+		return std::unexpected(host.error());
+	}
+	switch (*host)
 	{
 		case HostOption::GitHub:
 			return GitHubInterface::issue_create(path);
@@ -32,9 +43,14 @@ std::expected<int, std::string> GitHostInterface::issue_create(HostOption host, 
 }
 
 
-std::expected<int, std::string> GitHostInterface::issue_edit(HostOption host, const std::filesystem::path& path, int issue_number)
+std::expected<int, std::string> GitHostInterface::issue_edit(const std::filesystem::path& path, int issue_number)
 {
-	switch (host)
+	std::expected host = GitInterface::host(path);
+	if (!host)
+	{
+		return std::unexpected(host.error());
+	}
+	switch (*host)
 	{
 		case HostOption::GitHub:
 			return GitHubInterface::issue_edit(path, issue_number);
@@ -46,9 +62,14 @@ std::expected<int, std::string> GitHostInterface::issue_edit(HostOption host, co
 }
 
 
-std::expected<std::string, std::string> GitHostInterface::issue_close(HostOption host, const std::filesystem::path& path, int issue_number)
+std::expected<std::string, std::string> GitHostInterface::issue_close(const std::filesystem::path& path, int issue_number)
 {
-	switch (host)
+	std::expected host = GitInterface::host(path);
+	if (!host)
+	{
+		return std::unexpected(host.error());
+	}
+	switch (*host)
 	{
 		case HostOption::GitHub:
 			return GitHubInterface::issue_close(path, issue_number);
