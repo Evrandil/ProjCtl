@@ -15,9 +15,9 @@ namespace
 } // namespace
 
 
-std::expected<std::string, std::string> GitInterface::branch(const ProjectContent& project)
+std::expected<std::string, std::string> GitInterface::branch(const std::filesystem::path& path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "branch", "--show-current"}, project.path.string());
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "branch", "--show-current"}, path);
 
 	if (!result) [[unlikely]]
 	{
@@ -32,9 +32,9 @@ std::expected<std::string, std::string> GitInterface::branch(const ProjectConten
 }
 
 
-std::expected<std::string, std::string> GitInterface::branch_list(const ProjectContent& project)
+std::expected<std::string, std::string> GitInterface::branch_list(const std::filesystem::path& path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "branch", "--list"}, project.path.string());
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "branch", "--list"}, path);
 
 	if (!result) [[unlikely]]
 	{
@@ -49,11 +49,11 @@ std::expected<std::string, std::string> GitInterface::branch_list(const ProjectC
 }
 
 
-std::expected<std::string, std::string> GitInterface::branch_switch(const ProjectContent& project, std::string_view branch)
+std::expected<std::string, std::string> GitInterface::branch_switch(const std::filesystem::path& path, std::string_view branch)
 {
 	const std::string name{branch};
 
-	const bool exists = ref_exists(project.path, "refs/heads/" + name) || ref_exists(project.path, "refs/remotes/origin/" + name);
+	const bool exists = ref_exists(path, "refs/heads/" + name) || ref_exists(path, "refs/remotes/origin/" + name);
 
 	std::vector<std::string> args{"git", "switch"};
 	if (!exists)
@@ -62,7 +62,7 @@ std::expected<std::string, std::string> GitInterface::branch_switch(const Projec
 	}
 	args.push_back(name);
 
-	auto result = SystemInterface::run(args, project.path);
+	auto result = SystemInterface::run(args, path);
 	if (!result) [[unlikely]]
 	{
 		return std::unexpected(result.error());

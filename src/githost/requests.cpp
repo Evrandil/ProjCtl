@@ -4,7 +4,7 @@
 #include "gitlabinterface.hpp"
 
 
-std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(HostOption host, std::string_view path)
+std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(HostOption host, const std::filesystem::path& path)
 {
 	switch (host)
 	{
@@ -18,7 +18,7 @@ std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(
 }
 
 
-std::expected<int, std::string> GitHostInterface::request_create(HostOption host, std::string_view path)
+std::expected<int, std::string> GitHostInterface::request_create(HostOption host, const std::filesystem::path& path)
 {
 	switch (host)
 	{
@@ -32,7 +32,7 @@ std::expected<int, std::string> GitHostInterface::request_create(HostOption host
 }
 
 
-std::expected<int, std::string> GitHostInterface::request_edit(HostOption host, std::string_view path, int request_number)
+std::expected<int, std::string> GitHostInterface::request_edit(HostOption host, const std::filesystem::path& path, int request_number)
 {
 	switch (host)
 	{
@@ -45,7 +45,7 @@ std::expected<int, std::string> GitHostInterface::request_edit(HostOption host, 
 	}
 }
 
-std::expected<std::string, std::string> GitHostInterface::request_close(HostOption host, std::string_view path, int request_number)
+std::expected<std::string, std::string> GitHostInterface::request_close(HostOption host, const std::filesystem::path& path, int request_number)
 {
 	switch (host)
 	{
@@ -59,7 +59,7 @@ std::expected<std::string, std::string> GitHostInterface::request_close(HostOpti
 }
 
 
-std::expected<std::string, std::string> GitHostInterface::request_merge(HostOption host, std::string_view path)
+std::expected<std::string, std::string> GitHostInterface::request_merge(HostOption host, const std::filesystem::path& path)
 {
 	switch (host)
 	{

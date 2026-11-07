@@ -4,9 +4,9 @@
 #include <vector>
 
 
-std::expected<std::string, std::string> GitInterface::default_merge(const ProjectContent& project)
+std::expected<std::string, std::string> GitInterface::default_merge(const std::filesystem::path& path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "merge"}, project.path.string());
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "merge"}, path);
 
 	if (!result) [[unlikely]]
 	{

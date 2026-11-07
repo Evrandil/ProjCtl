@@ -4,7 +4,7 @@
 #include <nlohmann/json.hpp>
 
 
-std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(std::string_view path)
+std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(const std::filesystem::path& path)
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "list", "--output", "json"}, path);
 
@@ -48,17 +48,17 @@ std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(s
 }
 
 
-std::expected<int, std::string> GitLabInterface::request_create(std::string_view path)
+std::expected<int, std::string> GitLabInterface::request_create(const std::filesystem::path& path)
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "mr", "create"}, path);
 }
 
-std::expected<int, std::string> GitLabInterface::request_edit(std::string_view path, int request_number)
+std::expected<int, std::string> GitLabInterface::request_edit(const std::filesystem::path& path, int request_number)
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "mr", "edit", std::to_string(request_number)}, path);
 }
 
-std::expected<std::string, std::string> GitLabInterface::request_close(std::string_view path, int request_number)
+std::expected<std::string, std::string> GitLabInterface::request_close(const std::filesystem::path& path, int request_number)
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
 	if (!result)
@@ -74,7 +74,7 @@ std::expected<std::string, std::string> GitLabInterface::request_close(std::stri
 }
 
 
-std::expected<std::string, std::string> GitLabInterface::request_merge(std::string_view path)
+std::expected<std::string, std::string> GitLabInterface::request_merge(const std::filesystem::path& path)
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "merge", "--squash", "--remove-source-branch"}, path);
 	if (!result)

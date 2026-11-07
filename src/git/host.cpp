@@ -3,9 +3,9 @@
 #include "remote_url.hpp"
 
 
-std::expected<HostOption, std::string> GitInterface::host(const ProjectContent& project)
+std::expected<HostOption, std::string> GitInterface::host(const std::filesystem::path& path)
 {
-	std::expected<std::string, std::string> remote_output = remote(project);
+	std::expected<std::string, std::string> remote_output = remote(path);
 	if (!remote_output) [[unlikely]]
 	{
 		return std::unexpected(remote_output.error());

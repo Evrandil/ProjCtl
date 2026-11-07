@@ -4,14 +4,14 @@
 #include <vector>
 
 
-std::expected<int, std::string> GitInterface::diff(const ProjectContent& project, const std::optional<std::filesystem::path>& path)
+std::expected<int, std::string> GitInterface::diff(const std::filesystem::path& path, const std::optional<std::filesystem::path>& file_path)
 {
 	std::vector<std::string> args{"git", "diff"};
 
-	if (path)
+	if (file_path)
 	{
-		args.push_back(path->string());
+		args.push_back(file_path->string());
 	}
 
-	return SystemInterface::run_interactive(args, project.path.string());
+	return SystemInterface::run_interactive(args, path);
 }

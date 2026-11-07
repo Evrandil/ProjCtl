@@ -9,16 +9,18 @@ std::expected<std::string, std::string> ProjCtl::list_gits() const
 {
 	auto list_one_git = [&](const std::string& name, const ProjectContent& content)
 	{
+		std::expected branch		= GitInterface::branch(content.path);
+		std::expected remote_short	= GitInterface::remote_short(content.path);
 		return std::format("{}{:<{}}{}{:<{}}{}{:<{}}{}{:<{}}\n", paint(config.project_name_color), truncate(name, config.name_width), config.name_width, paint(config.project_path_color),
 						   truncate(content.path.string(), config.path_width), config.path_width, paint(config.project_branch_color),
-						   truncate(*GitInterface::branch(content), config.branch_width), config.branch_width, paint(config.project_short_remote_color),
-						   truncate(*GitInterface::remote_short(content), config.remote_width), config.remote_width);
+						   truncate(branch.value_or("-"), config.branch_width), config.branch_width, paint(config.project_short_remote_color),
+						   truncate(remote_short.value_or("-"), config.remote_width), config.remote_width);
 	};
 
 	std::vector<std::future<std::string>> tasks;
 	tasks.reserve(projects.size());
 
-	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second); };
+	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
 
 	for (const decltype(projects)::value_type& project : projects | std::views::filter(is_git))
 	{

@@ -13,7 +13,7 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::optional<
 	const ProjectContent& content = (*project)->second;
 
 	std::expected<std::string, std::string> result;
-	result = GitInterface::commit(content, message);
+	result = GitInterface::commit(content.path, message);
 
 	if (!result)
 	{

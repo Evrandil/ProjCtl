@@ -4,7 +4,7 @@
 #include "gitlabinterface.hpp"
 
 
-std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(HostOption host, std::string_view path)
+std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(HostOption host, const std::filesystem::path& path)
 {
 	switch (host)
 	{
@@ -18,7 +18,7 @@ std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(Host
 }
 
 
-std::expected<int, std::string> GitHostInterface::issue_create(HostOption host, std::string_view path)
+std::expected<int, std::string> GitHostInterface::issue_create(HostOption host, const std::filesystem::path& path)
 {
 	switch (host)
 	{
@@ -32,7 +32,7 @@ std::expected<int, std::string> GitHostInterface::issue_create(HostOption host, 
 }
 
 
-std::expected<int, std::string> GitHostInterface::issue_edit(HostOption host, std::string_view path, int issue_number)
+std::expected<int, std::string> GitHostInterface::issue_edit(HostOption host, const std::filesystem::path& path, int issue_number)
 {
 	switch (host)
 	{
@@ -46,7 +46,7 @@ std::expected<int, std::string> GitHostInterface::issue_edit(HostOption host, st
 }
 
 
-std::expected<std::string, std::string> GitHostInterface::issue_close(HostOption host, std::string_view path, int issue_number)
+std::expected<std::string, std::string> GitHostInterface::issue_close(HostOption host, const std::filesystem::path& path, int issue_number)
 {
 	switch (host)
 	{

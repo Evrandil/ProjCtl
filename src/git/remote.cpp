@@ -4,9 +4,9 @@
 #include <vector>
 
 
-std::expected<std::string, std::string> GitInterface::remote(const ProjectContent& project)
+std::expected<std::string, std::string> GitInterface::remote(const std::filesystem::path& path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "remote", "get-url", "origin"}, project.path.string());
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "remote", "get-url", "origin"}, path);
 
 	if (!result) [[unlikely]]
 	{
@@ -21,9 +21,9 @@ std::expected<std::string, std::string> GitInterface::remote(const ProjectConten
 }
 
 
-std::expected<std::string, std::string> GitInterface::remote_short(const ProjectContent& project)
+std::expected<std::string, std::string> GitInterface::remote_short(const std::filesystem::path& path)
 {
-	std::expected<std::string, std::string> remote_output = remote(project);
+	std::expected<std::string, std::string> remote_output = remote(path);
 	if (!remote_output) [[unlikely]]
 	{
 		return std::unexpected(remote_output.error());

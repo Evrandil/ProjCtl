@@ -4,7 +4,7 @@
 #include <nlohmann/json.hpp>
 
 
-std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::string_view path)
+std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(const std::filesystem::path& path)
 {
 	std::expected result = SystemInterface::run(
 		gh_command(std::vector<std::string>{"gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt,parent"}),
@@ -58,17 +58,17 @@ std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(std::
 }
 
 
-std::expected<int, std::string> GitHubInterface::issue_create(std::string_view path)
+std::expected<int, std::string> GitHubInterface::issue_create(const std::filesystem::path& path)
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "create"}, path);
 }
 
-std::expected<int, std::string> GitHubInterface::issue_edit(std::string_view path, int issue_number)
+std::expected<int, std::string> GitHubInterface::issue_edit(const std::filesystem::path& path, int issue_number)
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)}, path);
 }
 
-std::expected<std::string, std::string> GitHubInterface::issue_close(std::string_view path, int issue_number)
+std::expected<std::string, std::string> GitHubInterface::issue_close(const std::filesystem::path& path, int issue_number)
 {
 	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "close", std::to_string(issue_number)}), path);
 

@@ -12,7 +12,7 @@ std::expected<std::string, std::string> ProjCtl::push(const std::optional<std::s
 		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
 	}
 
-	std::expected result = GitInterface::push((*project)->second, upstream);
+	std::expected result = GitInterface::push((*project)->second.path, upstream);
 	if (!result)
 	{
 		return std::unexpected(std::format("{}Couldn't push {}{}{}: {}{}", paint(config.error_color), paint(config.project_name_color), (*project)->first, paint(config.error_color), result.error(), reset()));

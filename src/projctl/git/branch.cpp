@@ -14,7 +14,7 @@ std::expected<std::string, std::string> ProjCtl::branch(const std::optional<std:
 
 	if (!branch_name)
 	{
-		std::expected result = GitInterface::branch(content);
+		std::expected result = GitInterface::branch(content.path);
 		if (!result)
 		{
 			return std::unexpected(std::format("{}{}{}", paint(config.error_color), result.error(), reset()));
@@ -23,7 +23,7 @@ std::expected<std::string, std::string> ProjCtl::branch(const std::optional<std:
 		return std::format("{}{}{}", paint(config.project_branch_color), *result, reset());
 	}
 
-	std::expected result = GitInterface::branch_switch(content, *branch_name);
+	std::expected result = GitInterface::branch_switch(content.path, *branch_name);
 	if (!result)
 	{
 		return std::unexpected(std::format("{}Couldn't switch branches for {}{}{}: {}{}", paint(config.error_color), paint(config.project_name_color), (*project)->first, paint(config.error_color), result.error(), reset()));

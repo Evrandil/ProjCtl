@@ -129,7 +129,7 @@ std::expected<std::string, std::string> ProjCtl::requests(const ProjectEntry& pr
 	const ProjectContent& content = project.second;
 	const std::string& project_name = project.first;
 
-	std::expected host_option = GitInterface::host(content);
+	std::expected host_option = GitInterface::host(content.path);
 	if (!host_option)
 	{
 		return std::unexpected(std::format("{}{}Couldn't list requests for {}{}{}: {}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), paint(config.error_color), host_option.error(), reset()));
@@ -172,7 +172,7 @@ BatchResult ProjCtl::requests_all() const
 	std::vector<std::future<std::expected<std::string, std::string>>> tasks;
 	tasks.reserve(projects.size());
 
-	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second); };
+	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
 
 	for (const auto& project : projects | std::views::filter(is_git))
 	{
