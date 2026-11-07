@@ -72,7 +72,8 @@ target_compile_options(projctl_parser PRIVATE
 
 
 add_subdirectory(src/git)
-
+add_subdirectory(src/system)
+add_subdirectory(src/config)
 
 
 # Projctl core
@@ -114,11 +115,9 @@ add_library(projctl_core
 	src/projctl/gh/status.cpp
 	src/projctl/gh/list.cpp
 	src/projctl/helper.cpp
-	src/systeminterface.cpp
 	src/githostinterface.cpp
 	src/githubinterface.cpp
 	src/gitlabinterface.cpp
-	src/config.cpp
 )
 
 target_include_directories(projctl_core
@@ -126,26 +125,12 @@ target_include_directories(projctl_core
 		${PROJECT_SOURCE_DIR}/include
 )
 
-target_compile_options(projctl_core PRIVATE
-	-Wall
-	-Wextra
-	-Wpedantic
-	-Wconversion
-	-Wsign-conversion
-	-Wshadow
-#	-fsanitize=address,undefined
-)
-
-target_link_libraries(projctl_core
-	PRIVATE
-		nlohmann_json::nlohmann_json
-)
-
 target_link_libraries(projctl_core
 	PUBLIC
 		projctl_parser
 	PRIVATE
 		nlohmann_json::nlohmann_json
+		projctl_warnings
 )
 
 # Executable

@@ -15,7 +15,11 @@ add_library(projctl_git
 )
 
 
-target_include_directories(projctl_git PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(projctl_git
+	PUBLIC
+		${PROJECT_SOURCE_DIR}/include
+)
+
 target_link_libraries(projctl_git
 	PUBLIC
 		projctl_system
