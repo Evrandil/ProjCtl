@@ -14,32 +14,29 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 	constexpr uint8_t CONTENT_WIDTH = 24;
 	std::string output;
 
-	auto parse_line = [&](const std::string_view header, const std::optional<bool> tick, const std::string_view text, const Style::Color text_color)
+	auto parse_line = [&](const std::string_view header, const Style::Mark& mark, const std::string_view text, const Style::Color text_color)
 	{
-		std::string_view mark;
 		Style::Color color = text_color;
-		if (tick == true)
+		if (mark == Style::Mark::Tick)
 		{
-			mark = Style::TICK;
 			color = config.tick_color;
 		}
-		else if (tick == false)
+		else if (mark == Style::Mark::Cross)
 		{
-			mark = Style::CROSS;
 			color = config.cross_color;
 		}
 		std::format_to(std::back_inserter(output), "{}{}{:<{}}{}{}{}{}\n", MARGIN, paint(config.header_color), header, config.name_width,
-				paint(color), mark, truncate(text, config.max_width - CONTENT_WIDTH), reset());
+				paint(color), symbol(mark), truncate(text, config.max_width - CONTENT_WIDTH), reset());
 	};
 	auto result_line = [&](std::string_view header, const std::expected<std::string, std::string>& result, Style::Color ok_color)
 	{
 		if (result)
 		{
-			parse_line(header, std::nullopt, *result, ok_color);
+			parse_line(header, Style::Mark::None, *result, ok_color);
 		}
 		else
 		{
-			parse_line(header, std::nullopt, result.error(), config.error_color);
+			parse_line(header, Style::Mark::None, result.error(), config.error_color);
 		}
 	};
 
@@ -47,19 +44,19 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 	const ProjectContent& content	= project.second;
 	const bool exists            	= std::filesystem::exists(content.path);
 
-	parse_line("Name:", std::nullopt, name, config.project_name_color);
-	parse_line("Path:", std::nullopt, content.path.string(), config.project_path_color);
-	parse_line("Exists:", exists, exists ? "Yes" : "No", exists ? config.tick_color : config.cross_color);
+	parse_line("Name:", Style::Mark::None, name, config.project_name_color);
+	parse_line("Path:", Style::Mark::None, content.path.string(), config.project_path_color);
+	parse_line("Exists:", exists ? Style::Mark::Tick : Style::Mark::Cross, exists ? "Yes" : "No", Style::Color::Default);
 
 	if (!exists)
 	{
 		return output;
 	}
-	parse_line("Type:", std::nullopt, project_type_to_string(content.type), config.project_type_color);
+	parse_line("Type:", Style::Mark::None, project_type_to_string(content.type), config.project_type_color);
 
 	if (!GitInterface::is_repo(content.path))
 	{
-		parse_line("Git:", false, "Not a git repo", config.cross_color);
+		parse_line("Git:", Style::Mark::Cross, "Not a git repo", config.cross_color);
 		return output;
 	}
 	const std::expected<std::string, std::string> remote  = GitInterface::remote(content.path);
@@ -76,7 +73,7 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 		}
 		return {"No remote", config.warning_color};
 	}();
-	parse_line("Git:", true, repo_text, repo_color);
+	parse_line("Git:", Style::Mark::Tick, repo_text, repo_color);
 	result_line("Full remote:", remote, config.project_remote_color);
 
 	const std::expected<std::string, std::string> branch  = GitInterface::branch(content.path);
@@ -95,7 +92,7 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 		}
 		return {"Changes", config.warning_color};
 	}();
-	parse_line("Status:", std::nullopt, changes_text, changes_color);
+	parse_line("Status:", Style::Mark::None, changes_text, changes_color);
 	if (changes && !changes->empty())
 	{
 		std::format_to(std::back_inserter(output), "\n{}{}{}\n", paint(config.warning_color), *changes, reset());
