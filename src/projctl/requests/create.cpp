@@ -13,7 +13,7 @@ std::expected<int, std::string> ProjCtl::request_create(const std::optional<std:
 	}
 
 	const ProjectContent& content                      = (*project_option)->second;
-	std::expected<HostOption, std::string> host_option = GitInterface::host(content);
+	std::expected host_option = GitInterface::host(content.path);
 	if (!host_option)
 	{
 		return std::unexpected(std::format("{}Failed to get host {}{}", paint(config.error_color), host_option.error(), reset()));

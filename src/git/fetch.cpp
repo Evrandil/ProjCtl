@@ -4,9 +4,9 @@
 #include <vector>
 
 
-std::expected<std::string, std::string> GitInterface::fetch(const ProjectContent& project)
+std::expected<std::string, std::string> GitInterface::fetch(const std::filesystem::path& path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "fetch", "--verbose"}, project.path.string());
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "fetch", "--verbose"}, path);
 
 	if (!result) [[unlikely]]
 	{

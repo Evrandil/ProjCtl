@@ -8,7 +8,7 @@
 std::expected<std::string, std::string> ProjCtl::fetch(const ProjectEntry& project) const
 {
 	std::string output = std::format("{}Fetching: {}{}{}\n", paint(config.header_color), paint(config.project_name_color), project.first, reset());
-	std::expected<std::string, std::string> result = GitInterface::fetch(project.second);
+	std::expected<std::string, std::string> result = GitInterface::fetch(project.second.path);
 	if (!result)
 	{
 		std::format_to(std::back_inserter(output), "{}{}Couldn't fetch {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), project.first, paint(config.error_color), result.error(), reset());
@@ -34,7 +34,7 @@ BatchResult ProjCtl::fetch_all() const
 	std::vector<std::future<std::expected<std::string, std::string>>> tasks;
 	tasks.reserve(projects.size());
 
-	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second); };
+	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
 
 	for (const ProjectEntry& project : projects | std::views::filter(is_git))
 	{

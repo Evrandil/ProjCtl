@@ -4,9 +4,9 @@
 #include <vector>
 
 
-std::expected<std::string, std::string> GitInterface::changes(const ProjectContent& project)
+std::expected<std::string, std::string> GitInterface::changes(const std::filesystem::path& path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "status", "--porcelain"}, project.path.string());
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "status", "--porcelain"}, path);
 
 	if (!result) [[unlikely]]
 	{

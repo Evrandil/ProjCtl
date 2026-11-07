@@ -35,7 +35,7 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 	}
 
 	parse_line("Type:", std::nullopt, project_type_to_string(content.type), config.project_type_color);
-	const std::expected<std::string, std::string> remote  = GitInterface::remote(content);
+	const std::expected<std::string, std::string> remote  = GitInterface::remote(content.path);
 	const std::expected<std::string_view, std::string> git = remote ? short_from_remote(*remote) : std::unexpected("Not a git repo");
 	parse_line("Git:", git.has_value(), git ? *git : git.error(), git ? config.tick_color : config.cross_color);
 
@@ -43,8 +43,8 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 	{
 		return output;
 	}
-	const std::expected<std::string, std::string> branch  = GitInterface::branch(content);
-	const std::expected<std::string, std::string> changes = GitInterface::changes(content);
+	const std::expected<std::string, std::string> branch  = GitInterface::branch(content.path);
+	const std::expected<std::string, std::string> changes = GitInterface::changes(content.path);
 	parse_line("Branch:", std::nullopt, branch ? *branch : branch.error(), branch ? config.project_branch_color : config.cross_color);
 	parse_line("Full remote:", std::nullopt, remote ? *remote : remote.error(), remote ? config.project_remote_color : config.cross_color);
 	parse_line("Status:", std::nullopt, changes ? changes->empty() ? "No changes" : "Changes:" : changes.error(),

@@ -9,7 +9,7 @@ std::expected<std::string, std::string> ProjCtl::pull(const ProjectEntry& projec
 {
 	std::string output;
 	std::format_to(std::back_inserter(output), "{}Pulling: {}{}{}\n", paint(config.header_color), paint(config.project_name_color), project.first, reset());
-	std::expected<std::string, std::string> result = GitInterface::pull(project.second);
+	std::expected<std::string, std::string> result = GitInterface::pull(project.second.path);
 
 	if (!result)
 	{
@@ -39,7 +39,7 @@ BatchResult ProjCtl::pull_all() const
 	std::vector<std::future<std::expected<std::string, std::string>>> tasks;
 	tasks.reserve(projects.size());
 
-	auto is_git = [](const ProjectEntry& project) { return GitInterface::is_repo(project.second); };
+	auto is_git = [](const ProjectEntry& project) { return GitInterface::is_repo(project.second.path); };
 
 	for (const ProjectEntry& project : projects | std::views::filter(is_git))
 	{

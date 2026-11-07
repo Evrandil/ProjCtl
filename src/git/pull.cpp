@@ -4,9 +4,9 @@
 #include <vector>
 
 
-std::expected<std::string, std::string> GitInterface::pull(const ProjectContent& project)
+std::expected<std::string, std::string> GitInterface::pull(const std::filesystem::path& path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "pull"}, project.path.string());
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "pull"}, path);
 
 	if (!result) [[unlikely]]
 	{

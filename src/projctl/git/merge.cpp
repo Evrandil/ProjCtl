@@ -12,7 +12,7 @@ std::expected<std::string, std::string> ProjCtl::git_merge(const std::optional<s
 	}
 	const ProjectContent& content = (*project)->second;
 
-	std::expected<std::string, std::string> result = GitInterface::default_merge(content);
+	std::expected<std::string, std::string> result = GitInterface::default_merge(content.path);
 	if (!result)
 	{
 		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, result.error(), reset()));

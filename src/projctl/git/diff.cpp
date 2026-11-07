@@ -11,7 +11,7 @@ std::expected<int, std::string> ProjCtl::diff(const std::optional<std::string>& 
 		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
 	}
 
-	return GitInterface::diff((*project)->second, path);
+	return GitInterface::diff((*project)->second.path, path);
 }
 
 

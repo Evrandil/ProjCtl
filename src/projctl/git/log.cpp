@@ -11,7 +11,7 @@ std::expected<std::string, std::string> ProjCtl::log(const std::optional<std::st
 		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
 	}
 
-	std::expected result = GitInterface::log((*project)->second, oneline);
+	std::expected result = GitInterface::log((*project)->second.path, oneline);
 	if (!result)
 	{
 		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, result.error(), reset()));
