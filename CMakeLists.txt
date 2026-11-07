@@ -61,6 +61,10 @@ target_compile_options(projctl_parser PRIVATE
 )
 
 
+add_subdirectory(src/gitinterface)
+
+
+
 # Projctl core
 
 add_library(projctl_core
@@ -101,18 +105,6 @@ add_library(projctl_core
 	src/projctl/gh/list.cpp
 	src/projctl/helper.cpp
 	src/systeminterface.cpp
-	src/gitinterface/branch.cpp
-	src/gitinterface/changes.cpp
-	src/gitinterface/commit.cpp
-	src/gitinterface/fetch.cpp
-	src/gitinterface/host.cpp
-	src/gitinterface/is_repo.cpp
-	src/gitinterface/merge.cpp
-	src/gitinterface/pull.cpp
-	src/gitinterface/push.cpp
-	src/gitinterface/remote.cpp
-	src/gitinterface/log.cpp
-	src/gitinterface/diff.cpp
 	src/githostinterface.cpp
 	src/githubinterface.cpp
 	src/gitlabinterface.cpp
@@ -155,6 +147,7 @@ add_executable(projctl
 target_link_libraries(projctl
 	PRIVATE
 		projctl_core
+		projctl_git
 )
 
 target_compile_options(projctl PRIVATE
