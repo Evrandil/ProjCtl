@@ -140,6 +140,7 @@ projctl pull [<name> | --all | -a]
 ### Commit
 Adds all changes and makes commit with provided message \(equivalent to `git add . && git commit -m \[commit_message\]`\)<br>
 Without providing msg it's gonna open $EDITOR for you to write msg to \(equivalent to `git add . && git commit`\)<br>
+Not yet implemented but in soon future will be `-u` option \(to add changes only of already tracked files, like `git add -u`\)<br>
 ```fish
 projctl commit [[<message>] <name>]
 ```
