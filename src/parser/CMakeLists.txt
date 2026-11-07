@@ -1,6 +1,7 @@
 
 add_library(projctl_parser
 	parser.cpp
+	remote_url.cpp
 )
 
 target_include_directories(projctl_parser
