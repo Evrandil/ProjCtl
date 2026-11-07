@@ -118,6 +118,11 @@ std::expected<int, std::string> GitHubInterface::issue_create(std::string_view p
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "create"}, path);
 }
 
+std::expected<int, std::string> GitHubInterface::issue_edit(std::string_view path, int issue_number)
+{
+	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)}, path);
+}
+
 
 std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view path)
 {
@@ -171,6 +176,11 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(s
 std::expected<int, std::string> GitHubInterface::request_create(std::string_view path)
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "create"}, path);
+}
+
+std::expected<int, std::string> GitHubInterface::request_edit(std::string_view path, int request_number)
+{
+	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "edit", std::to_string(request_number)}, path);
 }
 
 
