@@ -4,7 +4,7 @@
 #include <nlohmann/json.hpp>
 
 
-std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view path)
+std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(const std::filesystem::path& path)
 {
 	std::expected result = SystemInterface::run(
 		gh_command(std::vector<std::string>{"gh", "pr", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}), path);
@@ -53,17 +53,17 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(s
 }
 
 
-std::expected<int, std::string> GitHubInterface::request_create(std::string_view path)
+std::expected<int, std::string> GitHubInterface::request_create(const std::filesystem::path& path)
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "create"}, path);
 }
 
-std::expected<int, std::string> GitHubInterface::request_edit(std::string_view path, int request_number)
+std::expected<int, std::string> GitHubInterface::request_edit(const std::filesystem::path& path, int request_number)
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "edit", std::to_string(request_number)}, path);
 }
 
-std::expected<std::string, std::string> GitHubInterface::request_close(std::string_view path, int request_number)
+std::expected<std::string, std::string> GitHubInterface::request_close(const std::filesystem::path& path, int request_number)
 {
 	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "pr", "close", std::to_string(request_number)}), path);
 
@@ -80,7 +80,7 @@ std::expected<std::string, std::string> GitHubInterface::request_close(std::stri
 }
 
 
-std::expected<std::string, std::string> GitHubInterface::request_merge(std::string_view path)
+std::expected<std::string, std::string> GitHubInterface::request_merge(const std::filesystem::path& path)
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"gh", "pr", "merge", "--squash", "--delete-branch"}, path);
 	if (!result)

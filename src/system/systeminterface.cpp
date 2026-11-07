@@ -79,6 +79,7 @@ std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::sp
 	posix_spawn_file_actions_addclose(&actions, read_end);
 	posix_spawn_file_actions_addclose(&actions, write_end);
 
+	// TODO !cwd.empty() checked two times ?
 	if (!cwd.empty())
 	{
 		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());

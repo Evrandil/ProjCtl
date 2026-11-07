@@ -4,7 +4,7 @@ configure:
     cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
 
 build: configure
-    cmake --build build
+    cmake --build build -- -k 0
 
 test *args: configure
     cmake --build build --target projctl_tests
