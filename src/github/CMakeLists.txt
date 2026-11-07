@@ -13,4 +13,5 @@ target_link_libraries(projctl_github
 		projctl_system
 	PRIVATE
 		projctl_warnings
+		nlohmann_json::nlohmann_json
 )
