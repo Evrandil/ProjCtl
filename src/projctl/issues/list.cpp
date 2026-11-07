@@ -133,7 +133,7 @@ std::expected<std::string, std::string> ProjCtl::issues(const ProjectEntry& proj
 	std::expected host_option = GitInterface::host(content.path);
 	if (!host_option)
 	{
-		return std::unexpected(std::format("{}{}Couldn't list issues for {}{}{}: {}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), paint(config.error_color), host_option.error(), reset()));
+		return std::unexpected(std::format("{}{}Couldn't list issues for {}{}{}: {}", paint(config.error_color), symbol(Style::Mark::Cross), paint(config.project_name_color), paint(config.error_color), host_option.error(), reset()));
 	}
 	HostOption host = *host_option;
 
@@ -141,7 +141,7 @@ std::expected<std::string, std::string> ProjCtl::issues(const ProjectEntry& proj
 	std::expected list = GitHostInterface::issue_list(host, content.path.string());
 	if (!list)
 	{
-		return std::unexpected(std::format("{}{}Couldn't list issues for {}{}{}: {}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), paint(config.error_color), list.error(), reset()));
+		return std::unexpected(std::format("{}{}Couldn't list issues for {}{}{}: {}", paint(config.error_color), symbol(Style::Mark::Cross), paint(config.project_name_color), paint(config.error_color), list.error(), reset()));
 		return output;
 	}
 	if (list->empty())
@@ -161,7 +161,7 @@ std::expected<std::string, std::string> ProjCtl::issues(const std::optional<std:
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
+		return std::unexpected(project.error());
 	}
 
 	return issues(**project);

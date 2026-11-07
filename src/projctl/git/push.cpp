@@ -9,7 +9,7 @@ std::expected<std::string, std::string> ProjCtl::push(const std::optional<std::s
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
+		return std::unexpected(project.error());
 	}
 
 	std::expected result = GitInterface::push((*project)->second.path, upstream);

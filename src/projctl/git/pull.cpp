@@ -27,7 +27,7 @@ std::expected<std::string, std::string> ProjCtl::pull(const std::optional<std::s
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
+		return std::unexpected(project.error());
 	}
 
 	return pull(**project);

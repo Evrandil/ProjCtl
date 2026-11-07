@@ -8,7 +8,7 @@ std::expected<int, std::string> ProjCtl::diff(const std::optional<std::string>& 
 	auto project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
+		return std::unexpected(project.error());
 	}
 
 	return GitInterface::diff((*project)->second.path, path);

@@ -12,13 +12,13 @@ std::expected<std::string, std::string> ProjCtl::list() const
 	};
 	if (projects.empty()) [[unlikely]]
 	{
-		return std::unexpected(std::format("{}There are no projects saved{}\n", paint(config.error_color), reset()));
+		return std::unexpected(std::format("{}{}There are no projects saved{}\n", paint(config.error_color), symbol(Style::Mark::Cross), reset()));
 	}
 
 	std::vector<std::future<std::string>> tasks;
 	tasks.reserve(projects.size());
 
-	for (const decltype(projects)::value_type& project : projects)
+	for (const ProjectEntry& project : projects)
 	{
 		tasks.push_back(std::async(std::launch::async, list_one, std::cref(project.first), std::cref(project.second)));
 	}

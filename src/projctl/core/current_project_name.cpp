@@ -3,15 +3,39 @@
 
 std::optional<std::string> ProjCtl::current_project_name() const
 {
-	std::filesystem::path cwd = std::filesystem::weakly_canonical(std::filesystem::current_path());
-	for (const decltype(projects)::value_type& project : projects)
+	std::error_code error;
+	std::filesystem::path cwd = std::filesystem::weakly_canonical(std::filesystem::current_path(error), error);
+	if (error)
 	{
-		std::filesystem::path project_path = std::filesystem::weakly_canonical(project.second.path);
-
-		if (cwd == project_path)
+		return std::nullopt;
+	}
+	const ProjectEntry* best	= nullptr;
+	std::ptrdiff_t best_depth	= 0;
+	for (const ProjectEntry& project : projects)
+	{
+		std::filesystem::path project_path = std::filesystem::weakly_canonical(project.second.path, error);
+		if (error)
 		{
-			return project.first;
+			continue;
+		}
+
+		const auto [project_end, cwd_rest] = std::ranges::mismatch(project_path, cwd);
+		if (project_end != project_path.end())
+		{
+			continue;
+		}
+
+		const std::ptrdiff_t depth = std::ranges::distance(project_path);
+		if (depth > best_depth)
+		{
+			best = &project;
+			best_depth = depth;
 		}
 	}
-	return std::nullopt;
+
+	if (best == nullptr)
+	{
+		return std::nullopt;
+	}
+	return best->first;
 }

@@ -8,7 +8,7 @@ std::expected<int, std::string> ProjCtl::build(const std::optional<std::string>&
 	std::expected project = project_find(name);
 	if (!project)
 	{
-		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, project.error(), reset()));
+		return std::unexpected(project.error());
 	}
 
 	const ProjectContent& content = (*project)->second;
@@ -17,7 +17,7 @@ std::expected<int, std::string> ProjCtl::build(const std::optional<std::string>&
 
 	if (!command_option)
 	{
-		return std::unexpected(std::format("{}There's no default build command for {}{}{} as type of project {}{}{}", paint(config.error_color), paint(config.project_type_color),
+		return std::unexpected(std::format("{}{}There's no default build command for {}{}{} as type of project {}{}{}", paint(config.error_color), symbol(Style::Mark::Cross), paint(config.project_type_color),
 										   project_type_to_string(content.type), paint(config.error_color), paint(config.project_name_color), (*project)->first, reset()));
 	}
 

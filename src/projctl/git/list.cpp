@@ -22,7 +22,7 @@ std::expected<std::string, std::string> ProjCtl::list_gits() const
 
 	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
 
-	for (const decltype(projects)::value_type& project : projects | std::views::filter(is_git))
+	for (const ProjectEntry& project : projects | std::views::filter(is_git))
 	{
 		tasks.push_back(std::async(std::launch::async, list_one_git, std::cref(project.first), std::cref(project.second)));
 	}

@@ -19,7 +19,7 @@ std::expected<void, std::string> ProjCtl::save() const noexcept
 	{
 		std::ofstream file{temp_path};
 
-		for (const decltype(projects)::value_type& project : projects)
+		for (const ProjectEntry& project : projects)
 		{
 			file << '[' << project.first << "]\n";
 			file << "path=" << project.second.path.string() << '\n';
