@@ -38,9 +38,9 @@ projctl [option/s] [argument/s] [project_name]
 
 And for many commands you can ommit like every option / argument, for grammar just read further<br>
 For grammar:<br>
-- `<smth>` - some variable
-- `[]` - optional value
-- `|` - or
+- `<var>` - some variable
+- `[opt]` - optional value
+- `this | other` - or
 
 ### List
 Lists projects<br>
