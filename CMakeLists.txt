@@ -89,9 +89,11 @@ add_library(projctl_core
 	src/projctl/git/log.cpp
 	src/projctl/git/diff.cpp
 	src/projctl/issues/create.cpp
+	src/projctl/issues/close.cpp
 	src/projctl/issues/edit.cpp
 	src/projctl/issues/list.cpp
 	src/projctl/requests/create.cpp
+	src/projctl/requests/close.cpp
 	src/projctl/requests/edit.cpp
 	src/projctl/requests/merge.cpp
 	src/projctl/requests/list.cpp

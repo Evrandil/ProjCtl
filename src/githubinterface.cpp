@@ -123,6 +123,22 @@ std::expected<int, std::string> GitHubInterface::issue_edit(std::string_view pat
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)}, path);
 }
 
+std::expected<std::string, std::string> GitHubInterface::issue_close(std::string_view path, int issue_number)
+{
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "close", std::to_string(issue_number)}), path);
+
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
+	}
+
+	return result->text;
+}
+
 
 std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(std::string_view path)
 {
@@ -181,6 +197,22 @@ std::expected<int, std::string> GitHubInterface::request_create(std::string_view
 std::expected<int, std::string> GitHubInterface::request_edit(std::string_view path, int request_number)
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "edit", std::to_string(request_number)}, path);
+}
+
+std::expected<std::string, std::string> GitHubInterface::request_close(std::string_view path, int request_number)
+{
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "pr", "close", std::to_string(request_number)}), path);
+
+	if (!result)
+	{
+		return std::unexpected(result.error());
+	}
+	if (result->exit_code != 0)
+	{
+		return std::unexpected(result->text);
+	}
+
+	return result->text;
 }
 
 

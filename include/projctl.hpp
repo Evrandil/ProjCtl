@@ -104,21 +104,25 @@ class ProjCtl
 	[[nodiscard]] BatchResult issues_all() const;
 	[[nodiscard]] std::expected<int, std::string> issue_create(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<int, std::string> issue_edit(const std::optional<std::string>&, int) const;
+	[[nodiscard]] std::expected<std::string, std::string> issue_close(const std::optional<std::string>&, int) const;
 	[[nodiscard]] std::string request_table(const std::vector<Request>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> requests(const ProjectEntry&) const;
 	[[nodiscard]] std::expected<std::string, std::string> requests(const std::optional<std::string>&) const;
 	[[nodiscard]] BatchResult requests_all() const;
 	[[nodiscard]] std::expected<int, std::string> request_create(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<int, std::string> request_edit(const std::optional<std::string>&, int) const;
+	[[nodiscard]] std::expected<std::string, std::string> request_close(const std::optional<std::string>&, int) const;
 	[[nodiscard]] std::expected<std::string, std::string> request_merge(const std::optional<std::string>&) const;
 	[[nodiscard]] int handle(const Cmd::GH::Status&) const;
 	[[nodiscard]] int handle(const Cmd::GH::RepoList&) const;
 	[[nodiscard]] int handle(const Cmd::GH::IssueList&) const;
 	[[nodiscard]] int handle(const Cmd::GH::IssueCreate&) const;
 	[[nodiscard]] int handle(const Cmd::GH::IssueEdit&) const;
+	[[nodiscard]] int handle(const Cmd::GH::IssueClose&) const;
 	[[nodiscard]] int handle(const Cmd::GH::RequestList&) const;
 	[[nodiscard]] int handle(const Cmd::GH::RequestCreate&) const;
 	[[nodiscard]] int handle(const Cmd::GH::RequestEdit&) const;
+	[[nodiscard]] int handle(const Cmd::GH::RequestClose&) const;
 	[[nodiscard]] int handle(const Cmd::GH::RequestMerge&) const;
 
 	public:

@@ -298,6 +298,11 @@ Command parser(const std::span<const std::string_view> input)
 		return number_with_optional_name<Cmd::GH::IssueEdit>(args);
 	}
 
+	if (command == "iclose")
+	{
+		return number_with_optional_name<Cmd::GH::IssueClose>(args);
+	}
+
 	if (command == "reqs" || command == "reqlist")
 	{
 		return with_name_or_all<Cmd::GH::RequestList>(args);
@@ -311,6 +316,11 @@ Command parser(const std::span<const std::string_view> input)
 	if (command == "reqedit")
 	{
 		return number_with_optional_name<Cmd::GH::RequestEdit>(args);
+	}
+
+	if (command == "reqclose")
+	{
+		return number_with_optional_name<Cmd::GH::RequestClose>(args);
 	}
 
 	if (command == "reqmerge")
