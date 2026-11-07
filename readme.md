@@ -45,8 +45,9 @@ For grammar:<br>
 ### List
 Lists projects<br>
 With gits will list only git repos<br>
+`-n` / `--names` flag for names-only \(wihtout headers, without colors\), nice for completions<br>
 ```fish
-projctl list [gits]
+projctl list [-n | gits [-n]]
 ```
 
 ### Status

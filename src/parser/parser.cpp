@@ -141,6 +141,14 @@ Command parser(const std::span<const std::string_view> input)
 		{
 			return Cmd::Base::List{.gits_only = true};
 		}
+		if (args.size() == 1 && (args.front() == "--names" || args.front() == "-n"))
+		{
+			return Cmd::Base::List{.gits_only = false, .names_only = true};
+		}
+		if (args.size() == 2 && args.front() == "gits" && (args.back() == "--names" || args.back() == "-n"))
+		{
+			return Cmd::Base::List{.gits_only = true, .names_only = true};
+		}
 		return Cmd::Unknown{ .message = std::format("Too many arguments: expected at most one, got {}", args.size()) };
 	}
 
