@@ -177,6 +177,7 @@ projctl icreate [<name>]
 
 ### Requests (PR \(GH\) / MR \(GLab\))
 List, create requests or merge open requests for repo<br>
+Reqmerge is just squash merge with delete source repo option
 ```fish
 projctl reqlist [<name> | --all | -a]
 projctl reqcreate [<name>]
