@@ -27,6 +27,8 @@ cmake -S . -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release -DPROJCTL_BUILD_
 cmake --build build-release
 sudo install -m 755 -s build-release/projctl /usr/local/bin/projctl
 ```
+Do use release build type there with `-s` flag for install, trust me
+
 # Usage \[fast docs\]
 
 Overall concept<br>
@@ -116,6 +118,19 @@ Supports --all flag \(performs fetch to all git projects\)<br>
 projctl fetch [<name> | --all | -a]
 ```
 
+### Log
+Gives you log of repo, strongly recommended to pipe with `less` \(otherwise you **will** get log of every commit on your screen\)<br>
+Supports `-o` flag for `--oneline` equivalent
+```fish
+projctl log [-o] [<name>]
+```
+
+### Diff
+Gives you `git diff` preview of repo / file<br>
+```fish
+projctl diff [[<filename>] <name>]
+```
+
 ### Pull
 Updates project<br>
 Supports --all flag \(performs pull for all git projects\)<br>
@@ -173,6 +188,9 @@ List or create issues for repo<br>
 ```fish
 projctl ilist [<name> | --all | -a]
 projctl icreate [<name>]
+projctl iedit [<name>]
+projctl iview [<name>]
+projctl iclose [<name>]
 ```
 
 ### Requests (PR \(GH\) / MR \(GLab\))
@@ -181,6 +199,9 @@ Reqmerge is just squash merge with delete source repo option
 ```fish
 projctl reqlist [<name> | --all | -a]
 projctl reqcreate [<name>]
+projctl reqedit [<name>]
+projctl reqview [<name>]
+projctl reqclose [<name>]
 projctl reqmerge [<name>]
 ```
 
