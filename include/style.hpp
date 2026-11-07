@@ -2,6 +2,7 @@
 
 #include <string_view>
 #include <cstdint>
+#include <utility>
 
 namespace Style
 {
@@ -72,5 +73,25 @@ namespace Style
 	constexpr std::string_view RESET = "\033[0m";
 	constexpr std::string_view TICK  = "✓ ";
 	constexpr std::string_view CROSS = "✗ ";
+
+	enum class Mark : uint8_t {
+		None,
+		Tick,
+		Cross,
+	};
+
+	constexpr std::string_view symbol(Mark mark)
+	{
+		switch (mark)
+		{
+			case Mark::None:
+				return "";
+			case Mark::Tick:
+				return TICK;
+			case Mark::Cross:
+				return CROSS;
+		}
+		std::unreachable();
+	}
 
 } // namespace Style

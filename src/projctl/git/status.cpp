@@ -16,9 +16,31 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 
 	auto parse_line = [&](const std::string_view header, const std::optional<bool> tick, const std::string_view text, const Style::Color text_color)
 	{
+		std::string_view mark;
+		Style::Color color = text_color;
+		if (tick == true)
+		{
+			mark = Style::TICK;
+			color = config.tick_color;
+		}
+		else if (tick == false)
+		{
+			mark = Style::CROSS;
+			color = config.cross_color;
+		}
 		std::format_to(std::back_inserter(output), "{}{}{:<{}}{}{}{}{}\n", MARGIN, paint(config.header_color), header, config.name_width,
-					   tick ? *tick ? paint(config.tick_color) : paint(config.cross_color) : paint(text_color), tick ? *tick ? Style::TICK : Style::CROSS : "",
-					   truncate(text, config.max_width - CONTENT_WIDTH), reset());
+				paint(color), mark, truncate(text, config.max_width - CONTENT_WIDTH), reset());
+	};
+	auto result_line = [&](std::string_view header, const std::expected<std::string, std::string>& result, Style::Color ok_color)
+	{
+		if (result)
+		{
+			parse_line(header, std::nullopt, *result, ok_color);
+		}
+		else
+		{
+			parse_line(header, std::nullopt, result.error(), config.error_color);
+		}
 	};
 
 	const std::string& name			= project.first;
@@ -42,13 +64,38 @@ std::string ProjCtl::status(const ProjectEntry& project) const
 	}
 	const std::expected<std::string, std::string> remote  = GitInterface::remote(content.path);
 	const std::expected<std::string_view, std::string> repo = remote ? short_from_remote(*remote) : std::unexpected(remote.error());
-	parse_line("Git:", true, repo ? *repo : remote ? std::string_view{*remote} : "No remote", config.tick_color);
+	const auto [repo_text, repo_color] = [&]() -> std::pair<std::string_view, Style::Color>
+	{
+		if (repo)
+		{
+			return {*repo, config.tick_color};
+		}
+		if (remote)
+		{
+			return {*remote, config.warning_color};
+		}
+		return {"No remote", config.warning_color};
+	}();
+	parse_line("Git:", true, repo_text, repo_color);
+	result_line("Full remote:", remote, config.project_remote_color);
+
 	const std::expected<std::string, std::string> branch  = GitInterface::branch(content.path);
+	result_line("Branch", branch, config.project_branch_color);
+
 	const std::expected<std::string, std::string> changes = GitInterface::changes(content.path);
-	parse_line("Branch:", std::nullopt, branch ? *branch : branch.error(), branch ? config.project_branch_color : config.cross_color);
-	parse_line("Full remote:", std::nullopt, remote ? *remote : remote.error(), remote ? config.project_remote_color : config.cross_color);
-	parse_line("Status:", std::nullopt, changes ? changes->empty() ? "No changes" : "Changes:" : changes.error(),
-			changes ? changes->empty() ? config.tick_color : config.warning_color : config.error_color);
+	const auto [changes_text, changes_color] = [&]() -> std::pair<std::string_view, Style::Color>
+	{
+		if (!changes)
+		{
+			return {changes.error(), config.error_color};
+		}
+		if (changes->empty())
+		{
+			return {"No changes", config.tick_color};
+		}
+		return {"Changes", config.warning_color};
+	}();
+	parse_line("Status:", std::nullopt, changes_text, changes_color);
 	if (changes && !changes->empty())
 	{
 		std::format_to(std::back_inserter(output), "\n{}{}{}\n", paint(config.warning_color), *changes, reset());
