@@ -1,8 +1,8 @@
 #pragma once
 
+#include <expected>
 #include <filesystem>
 #include <vector>
-#include <expected>
 
 #include "issue.hpp"
 #include "request.hpp"
@@ -73,7 +73,6 @@ struct Config {
 	Style::Color warning_color              = Style::Color::Yellow;
 
 	std::string editor = "nvim";
-
 };
 
 [[nodiscard]] auto load_config(const std::filesystem::path& path) -> std::expected<Config, std::string>;

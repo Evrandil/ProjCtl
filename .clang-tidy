@@ -12,6 +12,7 @@ Checks: >
   -modernize-use-trailing-return-type,
   -readability-identifier-length,
   -readability-magic-numbers,
+  -cppcoreguidelines-avoid-magic-numbers,
   -readability-braces-around-statements,
   -bugprone-easily-swappable-parameters
 

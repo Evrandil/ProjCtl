@@ -3,12 +3,12 @@
 #include "style.hpp"
 
 #include <cstddef>
+#include <expected>
 #include <filesystem>
 #include <fstream>
 #include <optional>
 #include <string>
 #include <string_view>
-#include <expected>
 #include <vector>
 
 namespace {
@@ -101,8 +101,8 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 		return std::unexpected("Failed to open config file: " + path.string());
 	}
 
-	Config config;
-	std::string section; // TODO change to enum so we can use switch statement instead of if else chain
+	Config      config;
+	std::string section; // TODO change to enum so we can use switch statement instead of if else chain ?
 	std::string line;
 	while (std::getline(config_file, line)) {
 		line = trim(line);
