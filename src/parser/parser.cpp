@@ -10,6 +10,9 @@
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <utility>
+#include <array>
+#include <algorithm>
 
 // grammar: see tests/parser_test.cpp
 
@@ -113,24 +116,15 @@ namespace {
 				return std::unexpected(std::format("Too many arguments: expected at most two, got {}", args.size()));
 		}
 	}
-} // namespace
 
-auto parser(const std::span<const std::string_view> input) -> Command {
-	if (input.empty()) {
-		return Cmd::Unknown{};
-	}
-
-	const std::string_view command = input.front();
-	const std::span        args    = input.subspan(1);
-
-	if (command == "version" || command == "-v" || command == "--version") {
+	using SubParser = auto (*)(std::span<const std::string_view>) -> Command;
+	auto parse_version(std::span<const std::string_view> args) -> Command {
 		if (!args.empty()) {
 			return Cmd::Unknown{.message = "Doesn't take any arguments"};
 		}
 		return Cmd::Version{};
 	}
-
-	if (command == "list") {
+	auto parse_list(std::span<const std::string_view> args) -> Command {
 		if (args.empty()) {
 			return Cmd::Base::List{.gits_only = false};
 		}
@@ -145,12 +139,7 @@ auto parser(const std::span<const std::string_view> input) -> Command {
 		}
 		return Cmd::Unknown{.message = std::format("Too many arguments: expected at most one, got {}", args.size())};
 	}
-
-	if (command == "path") {
-		return parser_with_name<Cmd::Base::Path>(args);
-	}
-
-	if (command == "add") {
+	auto parse_add(std::span<const std::string_view> args) -> Command {
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-'))) {
 			return Cmd::Unknown{.message = parts ? "Invalid path: must not start with '-'" : parts.error()};
@@ -160,32 +149,14 @@ auto parser(const std::span<const std::string_view> input) -> Command {
 			.path = parts->extra,
 		};
 	}
-
-	if (command == "remove" || command == "rm") {
+	auto parse_remove(std::span<const std::string_view> args) -> Command {
 		const std::expected name = optional_name(args);
 		if (!name || !*name) {
 			return Cmd::Unknown{.message = name ? "Missing project name" : name.error()};
 		}
 		return Cmd::Base::Remove{.name = **name};
 	}
-
-	if (command == "open") {
-		return parser_with_name<Cmd::Base::Open>(args);
-	}
-
-	if (command == "build") {
-		return parser_with_name<Cmd::Base::Build>(args);
-	}
-
-	if (command == "run") {
-		return parser_with_name<Cmd::Base::Run>(args);
-	}
-
-	if (command == "status") {
-		return with_name_or_all<Cmd::Git::Status>(args);
-	}
-
-	if (command == "commit") {
+	auto parse_commit(std::span<const std::string_view> args) -> Command {
 		const std::expected parts = name_with_extra(args);
 		if (!parts) {
 			return Cmd::Unknown{.message = parts.error()};
@@ -195,8 +166,7 @@ auto parser(const std::span<const std::string_view> input) -> Command {
 			.message = parts->extra,
 		};
 	}
-
-	if (command == "push") {
+	auto parse_push(std::span<const std::string_view> args) -> Command {
 		const bool          upstream = !args.empty() && args.front() == "-u";
 		const std::expected name     = optional_name(upstream ? args.subspan(1) : args);
 		if (!name) {
@@ -207,16 +177,7 @@ auto parser(const std::span<const std::string_view> input) -> Command {
 			.name            = *name,
 		};
 	}
-
-	if (command == "pull") {
-		return with_name_or_all<Cmd::Git::Pull>(args);
-	}
-
-	if (command == "fetch") {
-		return with_name_or_all<Cmd::Git::Fetch>(args);
-	}
-
-	if (command == "branch") {
+	auto parse_branch(std::span<const std::string_view> args) -> Command {
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-'))) {
 			return Cmd::Unknown{.message = parts ? "Invalid ref: can't start with '-'" : parts.error()};
@@ -226,12 +187,7 @@ auto parser(const std::span<const std::string_view> input) -> Command {
 			.branch_name = parts->extra,
 		};
 	}
-
-	if (command == "merge") {
-		return parser_with_name<Cmd::Git::Merge>(args);
-	}
-
-	if (command == "log") {
+	auto parse_log(std::span<const std::string_view> args) -> Command {
 		const bool          oneline = !args.empty() && args.front() == "-o";
 		const std::expected name    = optional_name(oneline ? args.subspan(1) : args);
 		if (!name) {
@@ -242,8 +198,7 @@ auto parser(const std::span<const std::string_view> input) -> Command {
 			.name    = *name,
 		};
 	}
-
-	if (command == "diff") {
+	auto parse_diff(std::span<const std::string_view> args) -> Command {
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-'))) {
 			return Cmd::Unknown{.message = parts ? "Invalid path: must not start with '-'" : parts.error()};
@@ -253,63 +208,68 @@ auto parser(const std::span<const std::string_view> input) -> Command {
 			.path = parts->extra,
 		};
 	}
-
-	if (command == "git" || command == "gits" || command == "gh") {
+	auto parse_gh(std::span<const std::string_view> args) -> Command {
 		if (!args.empty()) {
 			return Cmd::Unknown{.message = "Doesn't take any arguments"};
 		}
 		return Cmd::GH::Status{};
 	}
-
-	if (command == "repos") {
+	auto parse_repos(std::span<const std::string_view> args) -> Command {
 		if (!args.empty()) {
 			return Cmd::Unknown{.message = "Doesn't take any arguments"};
 		}
 		return Cmd::GH::RepoList{};
 	}
 
-	if (command == "issues" || command == "ilist") {
-		return with_name_or_all<Cmd::GH::IssueList>(args);
+	constexpr std::array<std::pair<std::string_view, SubParser>, 37> COMMANDS{
+		std::pair{"version", parse_version},
+		std::pair{"--version", parse_version},
+		std::pair{"-v", parse_version},
+		std::pair{"list", parse_list},
+		std::pair{"path", parser_with_name<Cmd::Base::Path>},
+		std::pair{"add", parse_add},
+		std::pair{"remove", parse_remove},
+		std::pair{"rm", parse_remove},
+		std::pair{"open", parser_with_name<Cmd::Base::Open>},
+		std::pair{"build", parser_with_name<Cmd::Base::Build>},
+		std::pair{"run", parser_with_name<Cmd::Base::Run>},
+		std::pair{"status", with_name_or_all<Cmd::Git::Status>},
+		std::pair{"commit", parse_commit},
+		std::pair{"push", parse_push},
+		std::pair{"pull", with_name_or_all<Cmd::Git::Pull>},
+		std::pair{"fetch", with_name_or_all<Cmd::Git::Fetch>},
+		std::pair{"branch", parse_branch},
+		std::pair{"merge", parser_with_name<Cmd::Git::Merge>},
+		std::pair{"log", parse_log},
+		std::pair{"diff", parse_diff},
+		std::pair{"gh", parse_gh},
+		std::pair{"git", parse_gh},
+		std::pair{"gits", parse_gh},
+		std::pair{"repos", parse_repos},
+		std::pair{"ilist", with_name_or_all<Cmd::GH::IssueList>},
+		std::pair{"issues", with_name_or_all<Cmd::GH::IssueList>},
+		std::pair{"icreate", parser_with_name<Cmd::GH::IssueCreate>},
+		std::pair{"iedit", number_with_optional_name<Cmd::GH::IssueEdit>},
+		std::pair{"iview", number_with_optional_name<Cmd::GH::IssueView>},
+		std::pair{"iclose", number_with_optional_name<Cmd::GH::IssueClose>},
+		std::pair{"reqlist", with_name_or_all<Cmd::GH::RequestList>},
+		std::pair{"reqs", with_name_or_all<Cmd::GH::RequestList>},
+		std::pair{"reqcreate", parser_with_name<Cmd::GH::RequestCreate>},
+		std::pair{"reqedit", number_with_optional_name<Cmd::GH::RequestEdit>},
+		std::pair{"reqview", number_with_optional_name<Cmd::GH::RequestView>},
+		std::pair{"reqclose", number_with_optional_name<Cmd::GH::RequestClose>},
+		std::pair{"reqmerge", parser_with_name<Cmd::GH::RequestMerge>},
+	};
+} // namespace
+
+auto parser(const std::span<const std::string_view> input) -> Command {
+	if (input.empty()) {
+		return Cmd::Unknown{};
 	}
 
-	if (command == "icreate") {
-		return parser_with_name<Cmd::GH::IssueCreate>(args);
-	}
-
-	if (command == "iedit") {
-		return number_with_optional_name<Cmd::GH::IssueEdit>(args);
-	}
-
-	if (command == "iview") {
-		return number_with_optional_name<Cmd::GH::IssueView>(args);
-	}
-
-	if (command == "iclose") {
-		return number_with_optional_name<Cmd::GH::IssueClose>(args);
-	}
-
-	if (command == "reqs" || command == "reqlist") {
-		return with_name_or_all<Cmd::GH::RequestList>(args);
-	}
-
-	if (command == "reqcreate") {
-		return parser_with_name<Cmd::GH::RequestCreate>(args);
-	}
-
-	if (command == "reqedit") {
-		return number_with_optional_name<Cmd::GH::RequestEdit>(args);
-	}
-
-	if (command == "reqview") {
-		return number_with_optional_name<Cmd::GH::RequestView>(args);
-	}
-
-	if (command == "reqclose") {
-		return number_with_optional_name<Cmd::GH::RequestClose>(args);
-	}
-
-	if (command == "reqmerge") {
-		return parser_with_name<Cmd::GH::RequestMerge>(args);
+	const auto *const found = std::ranges::find(COMMANDS, input.front(), &std::pair<std::string_view, SubParser>::first);
+	if (found != COMMANDS.end()) {
+		return found->second(input.subspan(1));
 	}
 
 	return Cmd::Unknown{.message = "No command specified (check grammar :-)"};
