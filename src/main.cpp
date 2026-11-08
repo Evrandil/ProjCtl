@@ -1,7 +1,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <exception>
-#include <print>
+#include <cstdio> // Bc println has ability to throw up...
 #include <ranges>
 #include <span>
 #include <string_view>
@@ -19,10 +19,12 @@ auto main(int argc, char** argv) -> int {
 
 		return proj_ctl.execute(parser(args));
 	} catch (const std::exception& error) {
-		std::println(stderr, "projctl: fatal error: {}", error.what());
+		std::fputs("projctl: fatal error: ", stderr);
+		std::fputs(error.what(), stderr);
+		std::fputc('\n', stderr);
 		return EXIT_FAILURE;
 	} catch (...) {
-		std::println(stderr, "projctl: fatal error: unknown exception");
+		std::fputs("projctl: fatal error: unknown exception\n", stderr);
 		return EXIT_FAILURE;
 	}
 }

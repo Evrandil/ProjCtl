@@ -19,6 +19,7 @@ Checks: >
 CheckOptions:
   readability-implicit-bool-conversion.AllowPointerConditions: true
   concurrency-mt-unsafe.FunctionSet: glibc
+  misc-include-cleaner.IgnoreHeaders: 'stdlib\.h'
 
 HeaderFilterRegex: '/(include|src)/.*'
 ExcludeHeaderFilterRegex: '_deps/'
