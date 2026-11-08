@@ -163,6 +163,46 @@ namespace {
 
 		return fields;
 	}
+
+	auto set_color(Config& config, std::string_view key, std::string_view value) -> void {
+		if (key == "enabled") {
+			config.colors_enabled = value == "true";
+			return;
+		}
+		const std::optional field = lookup(COLORS, key);
+		const std::optional color = lookup(COLOR_NAMES, value);
+		if (field && color) {
+			config.** field = *color;
+		}
+	}
+
+	auto set_table(Config& config, std::string_view key, std::string_view value) -> void {
+		if (key != "columns") {
+			set_width(config, TABLE_WIDTHS, key, value);
+			return;
+		}
+		std::vector<IssueField> parsed = parse_table_fields(value);
+		if (!parsed.empty()) {
+			config.issue_columns = std::move(parsed);
+		}
+	}
+
+	auto apply_setting(Config& config, const Section section, std::string_view key, std::string_view value) -> void {
+		switch (section) {
+			case Section::General:
+				if (key == "editor") {
+					config.editor = value;
+				}
+				return;
+
+			case Section::Display: set_width(config, DISPLAY_WIDTHS, key, value); return;
+
+			case Section::Tables: set_table(config, key, value); return;
+
+			case Section::Colors:  set_color(config, key, value); return;
+			case Section::Unknown: return;
+		}
+	}
 } // namespace
 
 auto load_config(const std::filesystem::path& path) -> std::expected<Config, std::string> {
@@ -193,45 +233,7 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 		const std::string_view key   = trim(trimmed.substr(0, separator));
 		const std::string_view value = trim(trimmed.substr(separator + 1));
 
-		switch (section) {
-			case Section::General:
-				if (key == "editor") {
-					config.editor = value;
-				}
-				continue;
-
-			case Section::Display: {
-				set_width(config, DISPLAY_WIDTHS, key, value);
-				continue;
-			}
-
-			case Section::Tables: {
-				if (key == "columns") {
-					std::vector<IssueField> parsed = parse_table_fields(value);
-					if (!parsed.empty()) {
-						config.issue_columns = std::move(parsed);
-					}
-					continue;
-				}
-				set_width(config, TABLE_WIDTHS, key, value);
-				continue;
-			}
-
-			case Section::Colors: {
-				if (key == "enabled") {
-					config.colors_enabled = value == "true";
-					continue;
-				}
-				const std::optional color = lookup(COLOR_NAMES, value);
-				const std::optional field = lookup(COLORS, key);
-				if (color && field) {
-					config.** field = *color;
-				}
-				continue;
-			}
-
-			case Section::Unknown: continue;
-		}
+		apply_setting(config, section, key, value);
 	}
 	return config;
 }
