@@ -3,6 +3,7 @@
 #include "style.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <expected>
 #include <filesystem>
 #include <fstream>
@@ -11,6 +12,8 @@
 #include <string_view>
 #include <utility>
 #include <vector>
+#include <array>
+#include <algorithm>
 
 namespace {
 
@@ -92,9 +95,82 @@ namespace {
 		return std::nullopt;
 	}
 
+	template <typename T>
+	using Field = std::pair<std::string_view, T Config::*>;
+
+	constexpr std::array DISPLAY_WIDTHS{
+		Field<size_t>{"max_width", &Config::max_width},
+		Field<size_t>{"name_width", &Config::name_width},
+		Field<size_t>{"path_width", &Config::path_width},
+		Field<size_t>{"remote_width", &Config::remote_width},
+		Field<size_t>{"branch_width", &Config::branch_width},
+	};
+	constexpr std::array TABLE_WIDTHS{
+		Field<size_t>{"number_width", &Config::table_number_width},
+		Field<size_t>{"title_width", &Config::table_title_width},
+		Field<size_t>{"author_width", &Config::table_author_width},
+		Field<size_t>{"state_width", &Config::table_state_width},
+		Field<size_t>{"labels_width", &Config::table_labels_width},
+		Field<size_t>{"created_width", &Config::table_created_width},
+		Field<size_t>{"updated_width", &Config::table_updated_width},
+		Field<size_t>{"parent_width", &Config::table_parent_width},
+	};
+
+	constexpr std::array COLORS{
+		Field<Style::Color>{"header", &Config::header_color},
+		Field<Style::Color>{"project_name", &Config::project_name_color},
+		Field<Style::Color>{"project_path", &Config::project_path_color},
+		Field<Style::Color>{"project_branch", &Config::project_branch_color},
+		Field<Style::Color>{"project_remote", &Config::project_remote_color},
+		Field<Style::Color>{"project_type", &Config::project_type_color},
+		Field<Style::Color>{"project_short_remote", &Config::project_short_remote_color},
+		Field<Style::Color>{"tick", &Config::tick_color},
+		Field<Style::Color>{"cross", &Config::cross_color},
+		Field<Style::Color>{"table_number", &Config::table_number_color},
+		Field<Style::Color>{"table_title", &Config::table_title_color},
+		Field<Style::Color>{"table_open", &Config::table_open_color},
+		Field<Style::Color>{"table_closed", &Config::table_closed_color},
+		Field<Style::Color>{"table_author", &Config::table_author_color},
+		Field<Style::Color>{"table_labels", &Config::table_labels_color},
+		Field<Style::Color>{"table_parent", &Config::table_parent_color},
+		Field<Style::Color>{"error", &Config::error_color},
+		Field<Style::Color>{"warning", &Config::warning_color},
+	};
+
+	template <typename T, size_t N>
+	auto find_field(const std::array<Field<T>, N>& fields, std::string_view key) -> T Config::* {
+		const auto found = std::ranges::find(fields, key, &Field<T>::first);
+		if (found != fields.end()) {
+			return found->second;
+		}
+		return nullptr;
+	}
+
+	enum class Section : uint8_t {
+		General,
+		Display,
+		Tables,
+		Colors,
+		Unknown,
+	};
+
+	Section section_from_string(std::string_view section) {
+		if (section == "General") {
+			return Section::General;
+		}
+		if (section == "Display") {
+			return Section::Display;
+		}
+		if (section == "Issues") {
+			return Section::Tables;
+		}
+		if (section == "Colors") {
+			return Section::Colors;
+		}
+		return Section::Unknown;
+	}
 } // namespace
 
-// TODO Make this load func more readable ?
 auto load_config(const std::filesystem::path& path) -> std::expected<Config, std::string> {
 	std::ifstream config_file(path);
 
@@ -103,7 +179,7 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 	}
 
 	Config      config;
-	std::string section; // TODO change to enum so we can use switch statement instead of if else chain ?
+	Section section = Section::Unknown;
 	std::string line;
 	while (std::getline(config_file, line)) {
 		line = trim(line);
@@ -115,7 +191,7 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 		}
 
 		if (line.front() == '[' && line.back() == ']') {
-			section = trim(std::string_view(line).substr(1, line.size() - 2));
+			section = section_from_string(trim(std::string_view(line).substr(1, line.size() - 2)));
 			continue;
 		}
 
@@ -127,93 +203,53 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 		const std::string key   = trim(std::string_view(line.substr(0, separator)));
 		const std::string value = trim(std::string_view(line.substr(separator + 1)));
 
-		if (section == "General") {
-			if (key == "editor") {
-				config.editor = value;
-			}
-			continue;
-		}
-
-		if (section == "Display") {
-			if (key == "name_width") {
-				config.name_width = std::stoul(value);
-			} else if (key == "max_width") {
-				config.max_width = std::stoul(value);
-			} else if (key == "path_width") {
-				config.path_width = std::stoul(value);
-			} else if (key == "remote_width") {
-				config.remote_width = std::stoul(value);
-			} else if (key == "branch_width") {
-				config.branch_width = std::stoul(value);
-			}
-			continue;
-		}
-
-		if (section == "Issues") {
-			if (key == "number_width") {
-				config.issue_number_width = std::stoul(value);
-			} else if (key == "title_width") {
-				config.issue_title_width = std::stoul(value);
-			} else if (key == "author_width") {
-				config.issue_author_width = std::stoul(value);
-			} else if (key == "state_width") {
-				config.issue_state_width = std::stoul(value);
-			} else if (key == "labels_width") {
-				config.issue_labels_width = std::stoul(value);
-			} else if (key == "columns") {
-				std::vector<IssueField> parsed = parse_issue_fields(value);
-				if (!parsed.empty()) {
-					config.issue_columns = std::move(parsed);
+		switch (section) {
+			case Section::General:
+				if (key == "editor") {
+					config.editor = value;
 				}
-			}
-			continue;
-		}
-
-		if (section == "Colors") {
-			if (key == "enabled") {
-				config.colors_enabled = value == "true";
 				continue;
-			}
-			const std::optional<Style::Color> color = color_from_string(value);
-			if (color) {
-				if (key == "issue_number") {
-					config.issue_number_color = *color;
-				} else if (key == "header_color") {
-					config.header_color = *color;
-				} else if (key == "issue_title_color") {
-					config.issue_title_color = *color;
-				} else if (key == "issue_open_color") {
-					config.issue_open_color = *color;
-				} else if (key == "issue_closed_color") {
-					config.issue_closed_color = *color;
-				} else if (key == "issue_author_color") {
-					config.issue_author_color = *color;
-				} else if (key == "issue_labels_color") {
-					config.issue_labels_color = *color;
-				} else if (key == "issue_parent_color") {
-					config.issue_parent_color = *color;
-				} else if (key == "error_color") {
-					config.error_color = *color;
-				} else if (key == "warning_color") {
-					config.warning_color = *color;
-				} else if (key == "project_name_color") {
-					config.project_name_color = *color;
-				} else if (key == "project_path_color") {
-					config.project_path_color = *color;
-				} else if (key == "project_branch_color") {
-					config.project_branch_color = *color;
-				} else if (key == "project_remote_color") {
-					config.project_remote_color = *color;
-				} else if (key == "project_type_color") {
-					config.project_type_color = *color;
-				} else if (key == "project_short_remote_color") {
-					config.project_short_remote_color = *color;
-				} else if (key == "tick_color") {
-					config.tick_color = *color;
-				} else if (key == "cross_color") {
-					config.cross_color = *color;
+
+			case Section::Display:
+				{
+					const size_t width = std::stoul(value);
+					size_t Config::* field = find_field(DISPLAY_WIDTHS, key);
+					if (field != nullptr) {
+						config.*field = width;
+					}
+					continue;
 				}
-			}
+
+			case Section::Tables:
+				{
+					if (key == "columns") {
+						std::vector<IssueField> parsed = parse_issue_fields(value);
+						if (!parsed.empty()) {
+							config.issue_columns = std::move(parsed);
+						}
+					}
+					const size_t width = std::stoul(value);
+					size_t Config::* field = find_field(TABLE_WIDTHS, key);
+					if (field != nullptr) {
+						config.*field = width;
+					}
+					continue;
+				}
+
+			case Section::Colors:
+				{
+					if (key == "enabled") {
+						config.colors_enabled = value == "true";
+						continue;
+					}
+					const std::optional<Style::Color> color = color_from_string(value);
+					Style::Color Config::* field = find_field(COLORS, key);
+					if (color && field != nullptr) {
+						config.*field = *color;
+					}
+				}
+
+			default: continue;
 		}
 	}
 	return config;

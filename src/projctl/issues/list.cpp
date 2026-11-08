@@ -36,29 +36,29 @@ auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string
 	};
 	const auto field_width = [&](IssueField field) -> std::size_t {
 		switch (field) {
-			case IssueField::Number:  return config.issue_number_width - 1;
-			case IssueField::Title:   return config.issue_title_width - 1;
-			case IssueField::State:   return config.issue_state_width - 1;
-			case IssueField::Author:  return config.issue_author_width - 1;
-			case IssueField::Labels:  return config.issue_labels_width - 1;
-			case IssueField::Created: return config.issue_created_width - 1;
-			case IssueField::Updated: return config.issue_updated_width - 1;
-			case IssueField::Parent:  return config.issue_parent_width - 1;
+			case IssueField::Number:  return config.table_number_width - 1;
+			case IssueField::Title:   return config.table_title_width - 1;
+			case IssueField::State:   return config.table_state_width - 1;
+			case IssueField::Author:  return config.table_author_width - 1;
+			case IssueField::Labels:  return config.table_labels_width - 1;
+			case IssueField::Created: return config.table_created_width - 1;
+			case IssueField::Updated: return config.table_updated_width - 1;
+			case IssueField::Parent:  return config.table_parent_width - 1;
 		}
 		std::unreachable();
 	};
 	const auto field_color = [&](IssueField field, const Issue& issue) -> Style::Color {
 		switch (field) {
-			case IssueField::Number: return config.issue_number_color;
-			case IssueField::Title:  return config.issue_title_color;
+			case IssueField::Number: return config.table_number_color;
+			case IssueField::Title:  return config.table_title_color;
 			case IssueField::State:
 				if (issue.state == "OPEN" || issue.state == "opened") {
-					return config.issue_open_color;
+					return config.table_open_color;
 				}
-				return config.issue_closed_color;
-			case IssueField::Author: return config.issue_author_color;
-			case IssueField::Labels: return config.issue_labels_color;
-			case IssueField::Parent: return config.issue_parent_color;
+				return config.table_closed_color;
+			case IssueField::Author: return config.table_author_color;
+			case IssueField::Labels: return config.table_labels_color;
+			case IssueField::Parent: return config.table_parent_color;
 			default:                 return Style::Color::Default;
 		}
 	};

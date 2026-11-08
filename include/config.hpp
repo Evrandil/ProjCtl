@@ -3,33 +3,27 @@
 #include <expected>
 #include <filesystem>
 #include <vector>
+#include <cstdlib>
+#include <string>
 
 #include "issue.hpp"
 #include "request.hpp"
 #include "style.hpp"
 
 struct Config {
-	std::size_t max_width             = 300;
-	std::size_t name_width            = 20;
-	std::size_t path_width            = 50;
-	std::size_t remote_width          = 50;
-	std::size_t branch_width          = 15;
-	std::size_t issue_number_width    = 8;
-	std::size_t issue_title_width     = 40;
-	std::size_t issue_author_width    = 20;
-	std::size_t issue_state_width     = 12;
-	std::size_t issue_labels_width    = 30;
-	std::size_t issue_created_width   = 22;
-	std::size_t issue_updated_width   = 22;
-	std::size_t issue_parent_width    = 10;
-	std::size_t request_number_width  = 8;
-	std::size_t request_title_width   = 40;
-	std::size_t request_author_width  = 20;
-	std::size_t request_state_width   = 12;
-	std::size_t request_labels_width  = 30;
-	std::size_t request_created_width = 22;
-	std::size_t request_updated_width = 22;
-	std::size_t request_parent_width  = 10;
+	size_t max_width             = 300;
+	size_t name_width            = 20;
+	size_t path_width            = 50;
+	size_t remote_width          = 50;
+	size_t branch_width          = 15;
+	size_t table_number_width    = 8;
+	size_t table_title_width     = 40;
+	size_t table_author_width    = 20;
+	size_t table_state_width     = 12;
+	size_t table_labels_width    = 30;
+	size_t table_created_width   = 22;
+	size_t table_updated_width   = 22;
+	size_t table_parent_width    = 10;
 
 	std::vector<IssueField> issue_columns{
 		IssueField::Number,
@@ -55,20 +49,13 @@ struct Config {
 	Style::Color project_short_remote_color = Style::Color::BoldBlue;
 	Style::Color tick_color                 = Style::Color::BoldGreen;
 	Style::Color cross_color                = Style::Color::BoldRed;
-	Style::Color issue_number_color         = Style::Color::BoldMagenta;
-	Style::Color issue_title_color          = Style::Color::White;
-	Style::Color issue_open_color           = Style::Color::BoldGreen;
-	Style::Color issue_closed_color         = Style::Color::BoldRed;
-	Style::Color issue_author_color         = Style::Color::Blue;
-	Style::Color issue_labels_color         = Style::Color::Magenta;
-	Style::Color issue_parent_color         = Style::Color::Cyan;
-	Style::Color request_number_color       = Style::Color::BoldMagenta;
-	Style::Color request_title_color        = Style::Color::White;
-	Style::Color request_open_color         = Style::Color::BoldGreen;
-	Style::Color request_closed_color       = Style::Color::BoldRed;
-	Style::Color request_author_color       = Style::Color::Blue;
-	Style::Color request_labels_color       = Style::Color::Magenta;
-	Style::Color request_parent_color       = Style::Color::Cyan;
+	Style::Color table_number_color       = Style::Color::BoldMagenta;
+	Style::Color table_title_color        = Style::Color::White;
+	Style::Color table_open_color         = Style::Color::BoldGreen;
+	Style::Color table_closed_color       = Style::Color::BoldRed;
+	Style::Color table_author_color       = Style::Color::Blue;
+	Style::Color table_labels_color       = Style::Color::Magenta;
+	Style::Color table_parent_color       = Style::Color::Cyan;
 	Style::Color error_color                = Style::Color::BoldRed;
 	Style::Color warning_color              = Style::Color::Yellow;
 

@@ -36,29 +36,29 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 	};
 	const auto field_width = [&](RequestField field) -> std::size_t {
 		switch (field) {
-			case RequestField::Number:  return config.request_number_width - 1;
-			case RequestField::Title:   return config.request_title_width - 1;
-			case RequestField::State:   return config.request_state_width - 1;
-			case RequestField::Author:  return config.request_author_width - 1;
-			case RequestField::Labels:  return config.request_labels_width - 1;
-			case RequestField::Created: return config.request_created_width - 1;
-			case RequestField::Updated: return config.request_updated_width - 1;
-			case RequestField::Parent:  return config.request_parent_width - 1;
+			case RequestField::Number:  return config.table_number_width - 1;
+			case RequestField::Title:   return config.table_title_width - 1;
+			case RequestField::State:   return config.table_state_width - 1;
+			case RequestField::Author:  return config.table_author_width - 1;
+			case RequestField::Labels:  return config.table_labels_width - 1;
+			case RequestField::Created: return config.table_created_width - 1;
+			case RequestField::Updated: return config.table_updated_width - 1;
+			case RequestField::Parent:  return config.table_parent_width - 1;
 		}
 		std::unreachable();
 	};
 	const auto field_color = [&](RequestField field, const Request& request) -> Style::Color {
 		switch (field) {
-			case RequestField::Number: return config.request_number_color;
-			case RequestField::Title:  return config.request_title_color;
+			case RequestField::Number: return config.table_number_color;
+			case RequestField::Title:  return config.table_title_color;
 			case RequestField::State:
 				if (request.state == "OPEN" || request.state == "opened") {
-					return config.request_open_color;
+					return config.table_open_color;
 				}
-				return config.request_closed_color;
-			case RequestField::Author: return config.request_author_color;
-			case RequestField::Labels: return config.request_labels_color;
-			case RequestField::Parent: return config.request_parent_color;
+				return config.table_closed_color;
+			case RequestField::Author: return config.table_author_color;
+			case RequestField::Labels: return config.table_labels_color;
+			case RequestField::Parent: return config.table_parent_color;
 			default:                   return Style::Color::Default;
 		}
 	};
@@ -74,7 +74,7 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 
 			switch (field) {
 				case RequestField::Number: value = std::format("#{}", request.number); break;
-				case RequestField::Title:  value = truncate(request.title, config.request_title_width - 1); break;
+				case RequestField::Title:  value = truncate(request.title, config.table_title_width - 1); break;
 				case RequestField::State:  value = request.state; break;
 				case RequestField::Author: value = request.author; break;
 				case RequestField::Labels:
