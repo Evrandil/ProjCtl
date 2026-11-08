@@ -1,11 +1,10 @@
 #include <doctest/doctest.h>
 
 #include "config.hpp"
-#include <filesystem>
-#include <expected>
-#include <fstream>
 #include "style.hpp"
-
+#include <expected>
+#include <filesystem>
+#include <fstream>
 
 TEST_CASE("load_config") {
 	const std::filesystem::path path = std::filesystem::temp_directory_path() / "projctl_test_config.ini";

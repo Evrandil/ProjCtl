@@ -44,7 +44,7 @@ namespace {
 		{"remote_width", &Config::remote_width},
 		{"branch_width", &Config::branch_width},
 	});
-	constexpr auto TABLE_WIDTHS = std::to_array<Field<size_t>>({
+	constexpr auto TABLE_WIDTHS   = std::to_array<Field<size_t>>({
 		{"number_width", &Config::table_number_width},
 		{"title_width", &Config::table_title_width},
 		{"author_width", &Config::table_author_width},
@@ -77,20 +77,20 @@ namespace {
 	});
 
 	constexpr auto COLOR_NAMES = std::to_array<Named<Style::Color>>({
-			{"default", Style::Color::Default},
-			{"black", Style::Color::Black},
-			{"red", Style::Color::Red},
-			{"green", Style::Color::Green},
-			{"yellow", Style::Color::Yellow},
-			{"blue", Style::Color::Blue},
-			{"magenta", Style::Color::Magenta},
-			{"cyan", Style::Color::Cyan},
-			{"white", Style::Color::White},
-			});
+		{"default", Style::Color::Default},
+		{"black", Style::Color::Black},
+		{"red", Style::Color::Red},
+		{"green", Style::Color::Green},
+		{"yellow", Style::Color::Yellow},
+		{"blue", Style::Color::Blue},
+		{"magenta", Style::Color::Magenta},
+		{"cyan", Style::Color::Cyan},
+		{"white", Style::Color::White},
+	});
 
 	template <typename T, size_t N>
 	constexpr auto lookup(const std::array<Named<T>, N>& table, std::string_view name) -> std::optional<T> {
-		const auto *const found = std::ranges::find(table, name, &Named<T>::first);
+		const auto* const found = std::ranges::find(table, name, &Named<T>::first);
 		if (found == table.end()) {
 			return std::nullopt;
 		}
@@ -123,10 +123,10 @@ namespace {
 	auto
 	set_width(Config& config, const std::array<Field<size_t>, N>& fields, std::string_view key, std::string_view value)
 		-> void {
-			const std::optional<size_t Config::*> field = lookup(fields, key);
-			const std::optional<size_t> width = parse_size(value);
+		const std::optional<size_t Config::*> field = lookup(fields, key);
+		const std::optional<size_t>           width = parse_size(value);
 		if (field && width) {
-			config.**field = *width;
+			config.** field = *width;
 		}
 	}
 
@@ -223,9 +223,9 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 					continue;
 				}
 				const std::optional color = lookup(COLOR_NAMES, value);
-				const std::optional field            = lookup(COLORS, key);
+				const std::optional field = lookup(COLORS, key);
 				if (color && field) {
-					config.**field = *color;
+					config.** field = *color;
 				}
 				continue;
 			}

@@ -24,6 +24,7 @@ namespace {
 		}
 		return CommandType{};
 	}
+
 	auto optional_name(std::span<const std::string_view> args)
 		-> std::expected<std::optional<std::string>, std::string> {
 		if (args.empty() || (args.size() == 1 && args.front() == ".")) {
@@ -216,7 +217,7 @@ namespace {
 		};
 	}
 
-	using SubParser = auto (*)(std::span<const std::string_view>) -> Command;
+	using SubParser         = auto (*)(std::span<const std::string_view>) -> Command;
 	constexpr auto COMMANDS = std::to_array<std::pair<std::string_view, SubParser>>({
 		{"version", without_args<Cmd::Version>},
 		{"--version", without_args<Cmd::Version>},
