@@ -6,6 +6,16 @@ configure:
 build: configure
     cmake --build build -- -k 0
 
+format:
+    git ls-files '*.cpp' '*.hpp' | xargs clang-format -i
+
+format-check:
+    git ls-files '*.cpp' '*.hpp' | xargs clang-format --dry-run --Werror
+
+tidy:
+    cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    run-clang-tidy -p build -quiet 'src/.*'
+
 test *args: configure
     cmake --build build --target projctl_tests
     ./build/tests/projctl_tests {{args}}

@@ -32,3 +32,36 @@ jobs:
 
       - name: Test
         run: ctest --test-dir build --output-on-failure
+
+  format:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu --noconfirm clang git
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Check formatting
+        run: git ls-files '*.cpp' '*.hpp' | xargs clang-format --dry-run --Werror
+
+  tidy:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu --noconfirm gcc clang cmake ninja nlohmann-json git
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Configure
+        run: >
+          cmake -S . -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          -DPROJCTL_BUILD_TESTS=OFF
+
+      - name: Run clang-tidy
+        run: run-clang-tidy -p build -quiet -warnings-as-errors='*' 'src/.*'

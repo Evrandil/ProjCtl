@@ -1,14 +1,20 @@
 Checks: >
   -*,
+  clang-analyzer-*,
   cppcoreguidelines-*,
   readability-*,
   performance-*,
   bugprone-*,
+  modernize-*,
   -cppcoreguidelines-pro-type-reinterpret-cast
+  -modernize-use-trailing-return-type,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -readability-braces-around-statements,
+  -bugprone-easily-swappable-parameters
 
-CheckOptions:
-  - key: readability-implicit-bool-conversion.AllowPointerConditions
-    value: true
+#CheckOptions:
+#  - key: readability-implicit-bool-conversion.AllowPointerConditions
+#    value: true
 
-WarningsAsErrors: ''
-HeaderFilterRegex: '.*'
+HeaderFilterRegex: '(include|src)/.*'
