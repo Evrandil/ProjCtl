@@ -148,7 +148,7 @@ auto ProjCtl::requests_all() const -> BatchResult {
 	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
 
 	for (const auto& project : projects | std::views::filter(is_git)) {
-		tasks.push_back(std::async(std::launch::async, [this, &project]() -> std::expected<std::string, std::string> {
+		tasks.push_back(std::async(std::launch::async, [this, &project] -> std::expected<std::string, std::string> {
 			return requests(project);
 		}));
 	}

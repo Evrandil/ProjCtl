@@ -78,7 +78,7 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	const std::expected<std::string, std::string>      remote = GitInterface::remote(content.path);
 	const std::expected<std::string_view, std::string> repo =
 		remote ? short_from_remote(*remote) : std::unexpected(remote.error());
-	const auto repo_text = [&]() -> std::string_view {
+	const auto repo_text = [&] -> std::string_view {
 		if (repo) {
 			return *repo;
 		}

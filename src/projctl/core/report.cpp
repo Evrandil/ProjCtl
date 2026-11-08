@@ -7,7 +7,7 @@
 #include "style.hpp"
 #include "version.hpp"
 
-auto ProjCtl::report(const ResultString& result) const -> int {
+auto ProjCtl::report(const ResultString& result) -> int {
 	if (!result) {
 		std::println(stderr, "\n\n{}\n\n", result.error());
 		return 1;
@@ -17,7 +17,7 @@ auto ProjCtl::report(const ResultString& result) const -> int {
 	return 0;
 }
 
-auto ProjCtl::report(const ResultInt& result) const -> int {
+auto ProjCtl::report(const ResultInt& result) -> int {
 	if (!result) {
 		std::println(stderr, "\n\n{}\n\n", result.error());
 		return 1;
