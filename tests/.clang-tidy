@@ -2,4 +2,5 @@ InheritParentConfig: true
 Checks: >
   -cppcoreguidelines-avoid-do-while,
   -misc-use-anonymous-namespace,
-  -readability-function-cognitive-complexity
+  -readability-function-cognitive-complexity,
+  -misc-const-correctness

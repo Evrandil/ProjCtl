@@ -14,7 +14,7 @@ format-check:
 
 tidy:
     cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-    run-clang-tidy -p build -quiet '{{justfile_directory()}}/(stc|tests)/'
+    run-clang-tidy -p build -quiet '{{justfile_directory()}}/src/'
 
 test *args: configure
     cmake --build build --target projctl_tests

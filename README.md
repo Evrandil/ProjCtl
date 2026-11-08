@@ -211,3 +211,11 @@ projctl reqmerge [<name>]
 <br><br><br>
 Also minor thing but for process to be actually saving some time everything with --all flag is done in parrallel but for that to happen program stores output and when everything is done prints it in order so there's no classic `some console print -> some waiting -> some more printing` for example in pull command, everything gets printed all at once when waiting is done, but thanks to that all thing are async so it's kinda faster one could argue<br>
 And it automatically detects non-interactive sessions so you can use it in nvim as `!pc [whatever functionality you want]`
+
+# Development
+Any help is welcome<br>Just remember after to run<br>
+```fish
+just format | format-check
+just tidy
+```
+And make it good and stylish<br>
