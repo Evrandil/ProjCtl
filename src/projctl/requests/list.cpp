@@ -13,22 +13,14 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 	{
 		switch (field)
 		{
-			case RequestField::Number:
-				return "Number";
-			case RequestField::Title:
-				return "Title";
-			case RequestField::State:
-				return "State";
-			case RequestField::Author:
-				return "Author";
-			case RequestField::Labels:
-				return "Labels";
-			case RequestField::Created:
-				return "Created";
-			case RequestField::Updated:
-				return "Updated";
-			case RequestField::Parent:
-				return "Parent";
+			case RequestField::Number:  return "Number";
+			case RequestField::Title:   return "Title";
+			case RequestField::State:   return "State";
+			case RequestField::Author:  return "Author";
+			case RequestField::Labels:  return "Labels";
+			case RequestField::Created: return "Created";
+			case RequestField::Updated: return "Updated";
+			case RequestField::Parent:  return "Parent";
 		}
 		std::unreachable();
 	};
@@ -36,22 +28,14 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 	{
 		switch (field)
 		{
-			case RequestField::Number:
-				return config.request_number_width;
-			case RequestField::Title:
-				return config.request_title_width;
-			case RequestField::State:
-				return config.request_state_width;
-			case RequestField::Author:
-				return config.request_author_width;
-			case RequestField::Labels:
-				return config.request_labels_width;
-			case RequestField::Created:
-				[[fallthrough]];
-			case RequestField::Updated:
-				return 22;
-			case RequestField::Parent:
-				return 10;
+			case RequestField::Number:  return config.request_number_width;
+			case RequestField::Title:   return config.request_title_width;
+			case RequestField::State:   return config.request_state_width;
+			case RequestField::Author:  return config.request_author_width;
+			case RequestField::Labels:  return config.request_labels_width;
+			case RequestField::Created: [[fallthrough]];
+			case RequestField::Updated: return 22;
+			case RequestField::Parent:  return 10;
 		}
 		std::unreachable();
 	};
@@ -59,20 +43,13 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 	{
 		switch (field)
 		{
-			case RequestField::Number:
-				return config.request_number_color;
-			case RequestField::Title:
-				return config.request_title_color;
-			case RequestField::State:
-				return request.state == "OPEN" || request.state == "opened" ? config.request_open_color : config.request_closed_color;
-			case RequestField::Author:
-				return config.request_author_color;
-			case RequestField::Labels:
-				return config.request_labels_color;
-			case RequestField::Parent:
-				return config.request_parent_color;
-			default:
-				return Style::Color::Default;
+			case RequestField::Number: return config.request_number_color;
+			case RequestField::Title:  return config.request_title_color;
+			case RequestField::State:  return request.state == "OPEN" || request.state == "opened" ? config.request_open_color : config.request_closed_color;
+			case RequestField::Author: return config.request_author_color;
+			case RequestField::Labels: return config.request_labels_color;
+			case RequestField::Parent: return config.request_parent_color;
+			default:                   return Style::Color::Default;
 		}
 	};
 	table += paint(config.header_color);
@@ -90,30 +67,14 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 
 			switch (field)
 			{
-				case RequestField::Number:
-					value = std::format("#{}", request.number);
-					break;
-				case RequestField::Title:
-					value = truncate(request.title, config.request_title_width - 1);
-					break;
-				case RequestField::State:
-					value = request.state;
-					break;
-				case RequestField::Author:
-					value = request.author;
-					break;
-				case RequestField::Labels:
-					table += request.labels | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>();
-					break;
-				case RequestField::Created:
-					value = request.created;
-					break;
-				case RequestField::Updated:
-					value = request.updated;
-					break;
-				case RequestField::Parent:
-					value = request.parent ? std::format("#{}", *request.parent) : "-";
-					break;
+				case RequestField::Number:  value = std::format("#{}", request.number); break;
+				case RequestField::Title:   value = truncate(request.title, config.request_title_width - 1); break;
+				case RequestField::State:   value = request.state; break;
+				case RequestField::Author:  value = request.author; break;
+				case RequestField::Labels:  table += request.labels | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>(); break;
+				case RequestField::Created: value = request.created; break;
+				case RequestField::Updated: value = request.updated; break;
+				case RequestField::Parent:  value = request.parent ? std::format("#{}", *request.parent) : "-"; break;
 			}
 			std::format_to(std::back_inserter(table), "{}{:<{}}{}", paint(field_color(field, request)), truncate(value, field_width(field)), field_width(field), reset());
 		}
@@ -132,7 +93,8 @@ auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::
 	if (!list)
 	{
 		return std::unexpected(
-			std::format("{}{}Couldn't list requests for {}{}{}: {}", paint(config.error_color), symbol(Style::Mark::Cross), paint(config.project_name_color), paint(config.error_color), list.error(), reset()));
+			std::format("{}{}Couldn't list requests for {}{}{}: {}", paint(config.error_color), symbol(Style::Mark::Cross), paint(config.project_name_color), paint(config.error_color), list.error(), reset())
+		);
 	}
 	if (list->empty())
 	{

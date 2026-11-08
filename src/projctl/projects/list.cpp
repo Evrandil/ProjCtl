@@ -4,8 +4,16 @@ auto ProjCtl::list(bool names_only) const -> std::expected<std::string, std::str
 {
 	auto list_one = [&](const std::string& name, const std::filesystem::path& path) -> std::string
 	{
-		return std::format("{}{:<{}}{}{:<{}}{}\n", paint(config.project_name_color), truncate(name, config.name_width), config.name_width, paint(config.project_path_color), truncate(path.string(), config.path_width),
-		                   config.path_width, reset());
+		return std::format(
+			"{}{:<{}}{}{:<{}}{}\n",
+			paint(config.project_name_color),
+			truncate(name, config.name_width),
+			config.name_width,
+			paint(config.project_path_color),
+			truncate(path.string(), config.path_width),
+			config.path_width,
+			reset()
+		);
 	};
 
 	std::string output;

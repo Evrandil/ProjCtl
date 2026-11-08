@@ -13,22 +13,14 @@ auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string
 	{
 		switch (field)
 		{
-			case IssueField::Number:
-				return "Number";
-			case IssueField::Title:
-				return "Title";
-			case IssueField::State:
-				return "State";
-			case IssueField::Author:
-				return "Author";
-			case IssueField::Labels:
-				return "Labels";
-			case IssueField::Created:
-				return "Created";
-			case IssueField::Updated:
-				return "Updated";
-			case IssueField::Parent:
-				return "Parent";
+			case IssueField::Number:  return "Number";
+			case IssueField::Title:   return "Title";
+			case IssueField::State:   return "State";
+			case IssueField::Author:  return "Author";
+			case IssueField::Labels:  return "Labels";
+			case IssueField::Created: return "Created";
+			case IssueField::Updated: return "Updated";
+			case IssueField::Parent:  return "Parent";
 		}
 		std::unreachable();
 	};
@@ -36,22 +28,14 @@ auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string
 	{
 		switch (field)
 		{
-			case IssueField::Number:
-				return config.issue_number_width - 1;
-			case IssueField::Title:
-				return config.issue_title_width - 1;
-			case IssueField::State:
-				return config.issue_state_width - 1;
-			case IssueField::Author:
-				return config.issue_author_width - 1;
-			case IssueField::Labels:
-				return config.issue_labels_width - 1;
-			case IssueField::Created:
-				[[fallthrough]];
-			case IssueField::Updated:
-				return 22;
-			case IssueField::Parent:
-				return 10;
+			case IssueField::Number:  return config.issue_number_width - 1;
+			case IssueField::Title:   return config.issue_title_width - 1;
+			case IssueField::State:   return config.issue_state_width - 1;
+			case IssueField::Author:  return config.issue_author_width - 1;
+			case IssueField::Labels:  return config.issue_labels_width - 1;
+			case IssueField::Created: [[fallthrough]];
+			case IssueField::Updated: return 22;
+			case IssueField::Parent:  return 10;
 		}
 		std::unreachable();
 	};
@@ -59,20 +43,13 @@ auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string
 	{
 		switch (field)
 		{
-			case IssueField::Number:
-				return config.issue_number_color;
-			case IssueField::Title:
-				return config.issue_title_color;
-			case IssueField::State:
-				return issue.state == "OPEN" || issue.state == "opened" ? config.issue_open_color : config.issue_closed_color;
-			case IssueField::Author:
-				return config.issue_author_color;
-			case IssueField::Labels:
-				return config.issue_labels_color;
-			case IssueField::Parent:
-				return config.issue_parent_color;
-			default:
-				return Style::Color::Default;
+			case IssueField::Number: return config.issue_number_color;
+			case IssueField::Title:  return config.issue_title_color;
+			case IssueField::State:  return issue.state == "OPEN" || issue.state == "opened" ? config.issue_open_color : config.issue_closed_color;
+			case IssueField::Author: return config.issue_author_color;
+			case IssueField::Labels: return config.issue_labels_color;
+			case IssueField::Parent: return config.issue_parent_color;
+			default:                 return Style::Color::Default;
 		}
 	};
 	table += paint(config.header_color);
@@ -90,30 +67,14 @@ auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string
 
 			switch (field)
 			{
-				case IssueField::Number:
-					value = std::format("#{}", issue.number);
-					break;
-				case IssueField::Title:
-					value = issue.title;
-					break;
-				case IssueField::State:
-					value = issue.state;
-					break;
-				case IssueField::Author:
-					value = issue.author;
-					break;
-				case IssueField::Labels:
-					value = issue.labels | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>();
-					break;
-				case IssueField::Created:
-					value = issue.created;
-					break;
-				case IssueField::Updated:
-					value = issue.updated;
-					break;
-				case IssueField::Parent:
-					value = issue.parent ? *issue.parent : "-";
-					break;
+				case IssueField::Number:  value = std::format("#{}", issue.number); break;
+				case IssueField::Title:   value = issue.title; break;
+				case IssueField::State:   value = issue.state; break;
+				case IssueField::Author:  value = issue.author; break;
+				case IssueField::Labels:  value = issue.labels | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>(); break;
+				case IssueField::Created: value = issue.created; break;
+				case IssueField::Updated: value = issue.updated; break;
+				case IssueField::Parent:  value = issue.parent ? *issue.parent : "-"; break;
 			}
 
 			std::format_to(std::back_inserter(table), "{}{:<{}}{}", paint(field_color(field, issue)), truncate(value, field_width(field)), field_width(field), reset());
@@ -133,7 +94,8 @@ auto ProjCtl::issues(const ProjectEntry& project) const -> std::expected<std::st
 	if (!list)
 	{
 		return std::unexpected(
-			std::format("{}{}Couldn't list issues for {}{}{}: {}", paint(config.error_color), symbol(Style::Mark::Cross), paint(config.project_name_color), paint(config.error_color), list.error(), reset()));
+			std::format("{}{}Couldn't list issues for {}{}{}: {}", paint(config.error_color), symbol(Style::Mark::Cross), paint(config.project_name_color), paint(config.error_color), list.error(), reset())
+		);
 	}
 	if (list->empty())
 	{

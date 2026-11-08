@@ -23,4 +23,4 @@ namespace GitInterface
 	[[nodiscard]] auto default_merge(const std::filesystem::path&) -> std::expected<std::string, std::string>;
 	[[nodiscard]] auto log(const std::filesystem::path&, bool oneline = false) -> std::expected<std::string, std::string>;
 	[[nodiscard]] auto diff(const std::filesystem::path&, const std::optional<std::filesystem::path>&) -> std::expected<int, std::string>;
-}; // namespace GitInterface
+} // namespace GitInterface

@@ -12,8 +12,9 @@ auto ProjCtl::pull(const ProjectEntry& project) const -> std::expected<std::stri
 
 	if (!result)
 	{
-		std::format_to(std::back_inserter(output), "{}{}Couldn't pull {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), project.first, paint(config.error_color), result.error(),
-		               reset());
+		std::format_to(
+			std::back_inserter(output), "{}{}Couldn't pull {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), project.first, paint(config.error_color), result.error(), reset()
+		);
 		return std::unexpected(output);
 	}
 

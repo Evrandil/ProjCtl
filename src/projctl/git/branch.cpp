@@ -26,7 +26,8 @@ auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional
 	if (!result)
 	{
 		return std::unexpected(
-			std::format("{}Couldn't switch branches for {}{}{}: {}{}", paint(config.error_color), paint(config.project_name_color), (*project)->first, paint(config.error_color), result.error(), reset()));
+			std::format("{}Couldn't switch branches for {}{}{}: {}{}", paint(config.error_color), paint(config.project_name_color), (*project)->first, paint(config.error_color), result.error(), reset())
+		);
 	}
 	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
 }

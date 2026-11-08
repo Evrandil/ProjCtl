@@ -9,8 +9,11 @@ auto ProjCtl::save() const noexcept -> std::expected<void, std::string>
 
 	if (error)
 	{
-		return std::unexpected(std::format("{}{}Couldn't create {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_path_color), data_path.parent_path().string(), paint(config.error_color),
-		                                   error.message(), reset()));
+		return std::unexpected(
+			std::format(
+				"{}{}Couldn't create {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_path_color), data_path.parent_path().string(), paint(config.error_color), error.message(), reset()
+			)
+		);
 	}
 
 	std::filesystem::path temp_path = data_path;
@@ -47,7 +50,8 @@ auto ProjCtl::save() const noexcept -> std::expected<void, std::string>
 	if (error)
 	{
 		return std::unexpected(
-			std::format("{}{}Couldn't save {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_path_color), data_path.string(), paint(config.error_color), error.message(), reset()));
+			std::format("{}{}Couldn't save {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_path_color), data_path.string(), paint(config.error_color), error.message(), reset())
+		);
 	}
 	return {};
 }

@@ -11,61 +11,44 @@ namespace Style
 	{
 		Default,
 		Black,
-		BaldBlack,
+		BoldBlack,
 		Red,
-		BaldRed,
+		BoldRed,
 		Green,
-		BaldGreen,
+		BoldGreen,
 		Yellow,
-		BaldYellow,
+		BoldYellow,
 		Blue,
-		BaldBlue,
+		BoldBlue,
 		Magenta,
-		BaldMagenta,
+		BoldMagenta,
 		Cyan,
-		BaldCyan,
+		BoldCyan,
 		White,
-		BaldWhite,
+		BoldWhite,
 	};
 
 	constexpr auto color_code(const Color color) -> std::string_view
 	{
 		switch (color)
 		{
-			case Color::Default:
-				return "\033[39m";
-			case Color::Black:
-				return "\033[30m";
-			case Color::BaldBlack:
-				return "\033[1;30m";
-			case Color::Red:
-				return "\033[31m";
-			case Color::BaldRed:
-				return "\033[1;31m";
-			case Color::Green:
-				return "\033[32m";
-			case Color::BaldGreen:
-				return "\033[1;32m";
-			case Color::Yellow:
-				return "\033[33m";
-			case Color::BaldYellow:
-				return "\033[1;33m";
-			case Color::Blue:
-				return "\033[34m";
-			case Color::BaldBlue:
-				return "\033[1;34m";
-			case Color::Magenta:
-				return "\033[35m";
-			case Color::BaldMagenta:
-				return "\033[1;35m";
-			case Color::Cyan:
-				return "\033[36m";
-			case Color::BaldCyan:
-				return "\033[1;36m";
-			case Color::White:
-				return "\033[37m";
-			case Color::BaldWhite:
-				return "\033[1;37m";
+			case Color::Default:     return "\033[39m";
+			case Color::Black:       return "\033[30m";
+			case Color::BoldBlack:   return "\033[1;30m";
+			case Color::Red:         return "\033[31m";
+			case Color::BoldRed:     return "\033[1;31m";
+			case Color::Green:       return "\033[32m";
+			case Color::BoldGreen:   return "\033[1;32m";
+			case Color::Yellow:      return "\033[33m";
+			case Color::BoldYellow:  return "\033[1;33m";
+			case Color::Blue:        return "\033[34m";
+			case Color::BoldBlue:    return "\033[1;34m";
+			case Color::Magenta:     return "\033[35m";
+			case Color::BoldMagenta: return "\033[1;35m";
+			case Color::Cyan:        return "\033[36m";
+			case Color::BoldCyan:    return "\033[1;36m";
+			case Color::White:       return "\033[37m";
+			case Color::BoldWhite:   return "\033[1;37m";
 		}
 		return "\033[39m";
 	}
@@ -85,12 +68,9 @@ namespace Style
 	{
 		switch (mark)
 		{
-			case Mark::None:
-				return "";
-			case Mark::Tick:
-				return TICK;
-			case Mark::Cross:
-				return CROSS;
+			case Mark::None:  return "";
+			case Mark::Tick:  return TICK;
+			case Mark::Cross: return CROSS;
 		}
 		std::unreachable();
 	}

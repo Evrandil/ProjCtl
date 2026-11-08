@@ -25,7 +25,11 @@ struct Config
 	std::size_t request_labels_width = 30;
 
 	std::vector<IssueField> issue_columns{
-		IssueField::Number, IssueField::Title, IssueField::State, IssueField::Author, IssueField::Labels,
+		IssueField::Number,
+		IssueField::Title,
+		IssueField::State,
+		IssueField::Author,
+		IssueField::Labels,
 	};
 	std::vector<RequestField> request_columns{
 		RequestField::Number,
@@ -36,29 +40,29 @@ struct Config
 	bool colors_enabled = true;
 
 	Style::Color header_color               = Style::Color::Cyan;
-	Style::Color project_name_color         = Style::Color::BaldYellow;
+	Style::Color project_name_color         = Style::Color::BoldYellow;
 	Style::Color project_path_color         = Style::Color::Magenta;
 	Style::Color project_branch_color       = Style::Color::Cyan;
 	Style::Color project_remote_color       = Style::Color::Blue;
-	Style::Color project_type_color         = Style::Color::BaldMagenta;
-	Style::Color project_short_remote_color = Style::Color::BaldBlue;
-	Style::Color tick_color                 = Style::Color::BaldGreen;
-	Style::Color cross_color                = Style::Color::BaldRed;
-	Style::Color issue_number_color         = Style::Color::BaldMagenta;
+	Style::Color project_type_color         = Style::Color::BoldMagenta;
+	Style::Color project_short_remote_color = Style::Color::BoldBlue;
+	Style::Color tick_color                 = Style::Color::BoldGreen;
+	Style::Color cross_color                = Style::Color::BoldRed;
+	Style::Color issue_number_color         = Style::Color::BoldMagenta;
 	Style::Color issue_title_color          = Style::Color::White;
-	Style::Color issue_open_color           = Style::Color::BaldGreen;
-	Style::Color issue_closed_color         = Style::Color::BaldRed;
+	Style::Color issue_open_color           = Style::Color::BoldGreen;
+	Style::Color issue_closed_color         = Style::Color::BoldRed;
 	Style::Color issue_author_color         = Style::Color::Blue;
 	Style::Color issue_labels_color         = Style::Color::Magenta;
 	Style::Color issue_parent_color         = Style::Color::Cyan;
-	Style::Color request_number_color       = Style::Color::BaldMagenta;
+	Style::Color request_number_color       = Style::Color::BoldMagenta;
 	Style::Color request_title_color        = Style::Color::White;
-	Style::Color request_open_color         = Style::Color::BaldGreen;
-	Style::Color request_closed_color       = Style::Color::BaldRed;
+	Style::Color request_open_color         = Style::Color::BoldGreen;
+	Style::Color request_closed_color       = Style::Color::BoldRed;
 	Style::Color request_author_color       = Style::Color::Blue;
 	Style::Color request_labels_color       = Style::Color::Magenta;
 	Style::Color request_parent_color       = Style::Color::Cyan;
-	Style::Color error_color                = Style::Color::BaldRed;
+	Style::Color error_color                = Style::Color::BoldRed;
 	Style::Color warning_color              = Style::Color::Yellow;
 
 	std::string editor = "nvim";

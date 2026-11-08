@@ -10,9 +10,21 @@ auto ProjCtl::list_gits(bool names_only) const -> std::expected<std::string, std
 	{
 		std::expected branch       = GitInterface::branch(content.path);
 		std::expected remote_short = GitInterface::remote_short(content.path);
-		return std::format("{}{:<{}}{}{:<{}}{}{:<{}}{}{:<{}}\n", paint(config.project_name_color), truncate(name, config.name_width), config.name_width, paint(config.project_path_color),
-		                   truncate(content.path.string(), config.path_width), config.path_width, paint(config.project_branch_color), truncate(branch.value_or("-"), config.branch_width), config.branch_width,
-		                   paint(config.project_short_remote_color), truncate(remote_short.value_or("-"), config.remote_width), config.remote_width);
+		return std::format(
+			"{}{:<{}}{}{:<{}}{}{:<{}}{}{:<{}}\n",
+			paint(config.project_name_color),
+			truncate(name, config.name_width),
+			config.name_width,
+			paint(config.project_path_color),
+			truncate(content.path.string(), config.path_width),
+			config.path_width,
+			paint(config.project_branch_color),
+			truncate(branch.value_or("-"), config.branch_width),
+			config.branch_width,
+			paint(config.project_short_remote_color),
+			truncate(remote_short.value_or("-"), config.remote_width),
+			config.remote_width
+		);
 	};
 
 	std::vector<std::future<std::string>> tasks;
@@ -41,8 +53,9 @@ auto ProjCtl::list_gits(bool names_only) const -> std::expected<std::string, std
 		return std::unexpected(std::format("{}There are no git projects saved{}\n", paint(config.error_color), reset()));
 	}
 
-	std::format_to(std::back_inserter(output), "{}{:<{}}{:<{}}{:<{}}{:<{}}{}\n", paint(config.header_color), "Name", config.name_width, "Path", config.path_width, "Branch", config.branch_width, "Repo",
-	               config.remote_width, reset());
+	std::format_to(
+		std::back_inserter(output), "{}{:<{}}{:<{}}{:<{}}{:<{}}{}\n", paint(config.header_color), "Name", config.name_width, "Path", config.path_width, "Branch", config.branch_width, "Repo", config.remote_width, reset()
+	);
 
 	for (std::future<std::string>& task : tasks)
 	{

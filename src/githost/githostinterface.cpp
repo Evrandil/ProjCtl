@@ -7,12 +7,9 @@ auto GitHostInterface::state(HostOption host) -> CliState
 {
 	switch (host)
 	{
-		case HostOption::GitHub:
-			return GitHubInterface::state();
-		case HostOption::GitLab:
-			return GitLabInterface::state();
-		default:
-			return CliState::NotInstalled;
+		case HostOption::GitHub: return GitHubInterface::state();
+		case HostOption::GitLab: return GitLabInterface::state();
+		default:                 return CliState::NotInstalled;
 	}
 }
 
@@ -20,11 +17,8 @@ auto GitHostInterface::repo_list(HostOption host) -> std::expected<std::string, 
 {
 	switch (host)
 	{
-		case HostOption::GitHub:
-			return GitHubInterface::repo_list();
-		case HostOption::GitLab:
-			return GitLabInterface::repo_list();
-		default:
-			return std::unexpected("Unknown host");
+		case HostOption::GitHub: return GitHubInterface::repo_list();
+		case HostOption::GitLab: return GitLabInterface::repo_list();
+		default:                 return std::unexpected("Unknown host");
 	}
 }

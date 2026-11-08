@@ -10,8 +10,9 @@ auto ProjCtl::fetch(const ProjectEntry& project) const -> std::expected<std::str
 	std::expected<std::string, std::string> result = GitInterface::fetch(project.second.path);
 	if (!result)
 	{
-		std::format_to(std::back_inserter(output), "{}{}Couldn't fetch {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), project.first, paint(config.error_color), result.error(),
-		               reset());
+		std::format_to(
+			std::back_inserter(output), "{}{}Couldn't fetch {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), project.first, paint(config.error_color), result.error(), reset()
+		);
 		return std::unexpected(output);
 	}
 	std::format_to(std::back_inserter(output), "{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());

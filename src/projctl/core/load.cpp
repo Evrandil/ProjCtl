@@ -27,12 +27,15 @@ void ProjCtl::load()
 			case '[':
 				if (!name.empty()) [[likely]]
 				{
-					this->projects.emplace(name, ProjectContent{
-													 std::filesystem::path{path_str},
-													 detect_project_type(path_str),
-													 build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
-													 run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
-												 });
+					this->projects.emplace(
+						name,
+						ProjectContent{
+							std::filesystem::path{path_str},
+							detect_project_type(path_str),
+							build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
+							run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
+						}
+					);
 					path_str.clear();
 					build_command.clear();
 					run_command.clear();
@@ -51,17 +54,19 @@ void ProjCtl::load()
 				separator     = line.find('=');
 				build_command = trim(line.substr(separator + 1));
 				continue;
-			default:
-				continue;
+			default: continue;
 		}
 	}
 	if (!name.empty()) [[likely]]
 	{
-		this->projects.emplace(name, ProjectContent{
-										 std::filesystem::path{path_str},
-										 detect_project_type(path_str),
-										 build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
-										 run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
-									 });
+		this->projects.emplace(
+			name,
+			ProjectContent{
+				std::filesystem::path{path_str},
+				detect_project_type(path_str),
+				build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
+				run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
+			}
+		);
 	}
 }

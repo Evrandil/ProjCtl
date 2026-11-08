@@ -19,7 +19,12 @@ InsertBraces: true
 ColumnLimit: 220
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortEnumsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: true
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
 BreakTemplateDeclarations: Yes
+BinPackArguments: false
+AlignAfterOpenBracket: BlockIndent
 
 # Alignment
 PointerAlignment: Left

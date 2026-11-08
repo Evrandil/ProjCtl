@@ -24,8 +24,9 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string
 		{
 			color = config.cross_color;
 		}
-		std::format_to(std::back_inserter(output), "{}{}{:<{}}{}{}{}{}\n", MARGIN, paint(config.header_color), header, config.name_width, paint(color), symbol(mark), truncate(text, config.max_width - CONTENT_WIDTH),
-		               reset());
+		std::format_to(
+			std::back_inserter(output), "{}{}{:<{}}{}{}{}{}\n", MARGIN, paint(config.header_color), header, config.name_width, paint(color), symbol(mark), truncate(text, config.max_width - CONTENT_WIDTH), reset()
+		);
 	};
 	auto result_line = [&](std::string_view header, const std::expected<std::string, std::string>& result, Style::Color ok_color) -> void
 	{

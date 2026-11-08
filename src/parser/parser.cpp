@@ -85,8 +85,7 @@ namespace
 					.name   = *name,
 				};
 			}
-			default:
-				return Cmd::Unknown{.message = std::format("Invalid number of arguments: expected one or two, got {}", args.size())};
+			default: return Cmd::Unknown{.message = std::format("Invalid number of arguments: expected one or two, got {}", args.size())};
 		}
 	}
 
@@ -101,11 +100,8 @@ namespace
 		NameWithExtra result;
 		switch (args.size())
 		{
-			case 2:
-				result.extra = std::string{args.front()};
-				[[fallthrough]];
-			case 1:
-				[[fallthrough]];
+			case 2: result.extra = std::string{args.front()}; [[fallthrough]];
+			case 1: [[fallthrough]];
 			case 0:
 			{
 				std::expected name = optional_name(args.size() == 2 ? args.last(1) : args);
@@ -116,8 +112,7 @@ namespace
 				result.name = *name;
 				return result;
 			}
-			default:
-				return std::unexpected(std::format("Too many arguments: expected at most two, got {}", args.size()));
+			default: return std::unexpected(std::format("Too many arguments: expected at most two, got {}", args.size()));
 		}
 	}
 } // namespace

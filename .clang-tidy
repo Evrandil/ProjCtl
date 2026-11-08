@@ -8,7 +8,7 @@ Checks: >
   performance-*,
   bugprone-*,
   modernize-*,
-  -cppcoreguidelines-pro-type-reinterpret-cast
+  -cppcoreguidelines-pro-type-reinterpret-cast,
   -modernize-use-trailing-return-type,
   -readability-identifier-length,
   -readability-magic-numbers,
