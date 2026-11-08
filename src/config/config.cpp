@@ -173,7 +173,6 @@ namespace {
 
 auto load_config(const std::filesystem::path& path) -> std::expected<Config, std::string> {
 	std::ifstream config_file(path);
-
 	if (!config_file) {
 		return std::unexpected("Failed to open config file: " + path.string());
 	}
@@ -183,10 +182,7 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 	std::string line;
 	while (std::getline(config_file, line)) {
 		line = trim(line);
-		if (line.empty()) {
-			continue;
-		}
-		if (line.front() == '#' || line.front() == ';') {
+		if (line.empty() || line.front() == '#' || line.front() == ';') {
 			continue;
 		}
 
