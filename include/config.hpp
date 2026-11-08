@@ -2,12 +2,12 @@
 
 #include <filesystem>
 #include <vector>
+#include <expected>
 
 #include "issue.hpp"
 #include "request.hpp"
 #include "style.hpp"
 
-// TODO Turn this into class and make public getters and members private
 struct Config {
 	std::size_t max_width             = 300;
 	std::size_t name_width            = 20;
@@ -74,5 +74,6 @@ struct Config {
 
 	std::string editor = "nvim";
 
-	void load(const std::filesystem::path& path);
 };
+
+[[nodiscard]] auto load_config(const std::filesystem::path& path) -> std::expected<Config, std::string>;

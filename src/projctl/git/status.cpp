@@ -94,7 +94,7 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	result_line("Branch", branch, config.project_branch_color);
 
 	const std::expected<std::string, std::string> changes = GitInterface::changes(content.path);
-	const auto [changes_text, changes_color]              = [&]() -> std::pair<std::string_view, Style::Color> {
+	const auto [changes_text, changes_color]              = [&] -> std::pair<std::string_view, Style::Color> {
 		if (!changes) {
 			return {changes.error(), config.error_color};
 		}

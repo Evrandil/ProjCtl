@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 #include <string_view>
-#include <utility>
+#include <expected>
 #include <vector>
 
 namespace {
@@ -94,16 +94,17 @@ namespace {
 } // namespace
 
 // TODO Make this load func more readable ?
-void Config::load(const std::filesystem::path& path) {
-	std::ifstream config(path);
+auto load_config(const std::filesystem::path& path) -> std::expected<Config, std::string> {
+	std::ifstream config_file(path);
 
-	if (!config) {
-		return;
+	if (!config_file) {
+		return std::unexpected("Failed to open config file: " + path.string());
 	}
 
+	Config config;
 	std::string section; // TODO change to enum so we can use switch statement instead of if else chain
 	std::string line;
-	while (std::getline(config, line)) {
+	while (std::getline(config_file, line)) {
 		line = trim(line);
 		if (line.empty()) {
 			continue;
@@ -127,41 +128,41 @@ void Config::load(const std::filesystem::path& path) {
 
 		if (section == "General") {
 			if (key == "editor") {
-				editor = value;
+				config.editor = value;
 			}
 			continue;
 		}
 
 		if (section == "Display") {
 			if (key == "name_width") {
-				name_width = std::stoul(value);
+				config.name_width = std::stoul(value);
 			} else if (key == "max_width") {
-				max_width = std::stoul(value);
+				config.max_width = std::stoul(value);
 			} else if (key == "path_width") {
-				path_width = std::stoul(value);
+				config.path_width = std::stoul(value);
 			} else if (key == "remote_width") {
-				remote_width = std::stoul(value);
+				config.remote_width = std::stoul(value);
 			} else if (key == "branch_width") {
-				branch_width = std::stoul(value);
+				config.branch_width = std::stoul(value);
 			}
 			continue;
 		}
 
 		if (section == "Issues") {
 			if (key == "number_width") {
-				issue_number_width = std::stoul(value);
+				config.issue_number_width = std::stoul(value);
 			} else if (key == "title_width") {
-				issue_title_width = std::stoul(value);
+				config.issue_title_width = std::stoul(value);
 			} else if (key == "author_width") {
-				issue_author_width = std::stoul(value);
+				config.issue_author_width = std::stoul(value);
 			} else if (key == "state_width") {
-				issue_state_width = std::stoul(value);
+				config.issue_state_width = std::stoul(value);
 			} else if (key == "labels_width") {
-				issue_labels_width = std::stoul(value);
+				config.issue_labels_width = std::stoul(value);
 			} else if (key == "columns") {
 				std::vector<IssueField> parsed = parse_issue_fields(value);
 				if (!parsed.empty()) {
-					issue_columns = std::move(parsed);
+					config.issue_columns = std::move(parsed);
 				}
 			}
 			continue;
@@ -169,49 +170,50 @@ void Config::load(const std::filesystem::path& path) {
 
 		if (section == "Colors") {
 			if (key == "enabled") {
-				colors_enabled = value == "true";
+				config.colors_enabled = value == "true";
 				continue;
 			}
 			std::optional<Style::Color> color = color_from_string(value);
 			if (color) {
 				if (key == "issue_number") {
-					issue_number_color = *color;
+					config.issue_number_color = *color;
 				} else if (key == "header_color") {
-					header_color = *color;
+					config.header_color = *color;
 				} else if (key == "issue_title_color") {
-					issue_title_color = *color;
+					config.issue_title_color = *color;
 				} else if (key == "issue_open_color") {
-					issue_open_color = *color;
+					config.issue_open_color = *color;
 				} else if (key == "issue_closed_color") {
-					issue_closed_color = *color;
+					config.issue_closed_color = *color;
 				} else if (key == "issue_author_color") {
-					issue_author_color = *color;
+					config.issue_author_color = *color;
 				} else if (key == "issue_labels_color") {
-					issue_labels_color = *color;
+					config.issue_labels_color = *color;
 				} else if (key == "issue_parent_color") {
-					issue_parent_color = *color;
+					config.issue_parent_color = *color;
 				} else if (key == "error_color") {
-					error_color = *color;
+					config.error_color = *color;
 				} else if (key == "warning_color") {
-					warning_color = *color;
+					config.warning_color = *color;
 				} else if (key == "project_name_color") {
-					project_name_color = *color;
+					config.project_name_color = *color;
 				} else if (key == "project_path_color") {
-					project_path_color = *color;
+					config.project_path_color = *color;
 				} else if (key == "project_branch_color") {
-					project_branch_color = *color;
+					config.project_branch_color = *color;
 				} else if (key == "project_remote_color") {
-					project_remote_color = *color;
+					config.project_remote_color = *color;
 				} else if (key == "project_type_color") {
-					project_type_color = *color;
+					config.project_type_color = *color;
 				} else if (key == "project_short_remote_color") {
-					project_short_remote_color = *color;
+					config.project_short_remote_color = *color;
 				} else if (key == "tick_color") {
-					tick_color = *color;
+					config.tick_color = *color;
 				} else if (key == "cross_color") {
-					cross_color = *color;
+					config.cross_color = *color;
 				}
 			}
 		}
 	}
+	return config;
 }

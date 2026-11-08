@@ -7,7 +7,10 @@
 #include <string>
 
 void ProjCtl::load() {
-	config.load(config_path);
+	auto config_option = load_config(config_path);
+	if (config_option) {
+		config = std::move(*config_option);
+	}
 
 	std::ifstream projects_file{data_path};
 	std::string   line;
