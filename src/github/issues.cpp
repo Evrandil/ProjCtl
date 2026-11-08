@@ -3,48 +3,47 @@
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
 
-auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string>
-{
-	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt,parent"}), path);
+auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string> {
+	std::expected result = SystemInterface::run(
+		gh_command(
+			std::vector<std::string>{
+				"gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt,parent"
+			}
+		),
+		path
+	);
 
-	if (!result)
-	{
+	if (!result) {
 		return std::unexpected(result.error());
 	}
-	if (result->exit_code != 0)
-	{
+	if (result->exit_code != 0) {
 		return std::unexpected(result->text);
 	}
 
 	nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
-	if (json.is_discarded())
-	{
+	if (json.is_discarded()) {
 		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
 	}
 
 	std::vector<Issue> issues;
 	issues.reserve(json.size());
 
-	for (const nlohmann::json& json_issue : json)
-	{
+	for (const nlohmann::json& json_issue : json) {
 		Issue issue;
 		issue.number  = json_issue.at("number").get<int>();
 		issue.title   = json_issue.at("title").get<std::string>();
 		issue.state   = json_issue.at("state").get<std::string>();
 		issue.created = json_issue.at("createdAt").get<std::string>();
 		issue.updated = json_issue.at("updatedAt").get<std::string>();
-		if (!json_issue.at("parent").is_null())
-		{
+		if (!json_issue.at("parent").is_null()) {
 			issue.parent = json_issue.at("parent").at("title").get<std::string>();
 		}
 
-		if (!json_issue.at("author").is_null())
-		{
+		if (!json_issue.at("author").is_null()) {
 			issue.author = json_issue.at("author").at("login").get<std::string>();
 		}
 
-		for (const nlohmann::json& label : json_issue.at("labels"))
-		{
+		for (const nlohmann::json& label : json_issue.at("labels")) {
 			issue.labels.push_back(label.at("name").get<std::string>());
 		}
 
@@ -54,42 +53,43 @@ auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expe
 	return issues;
 }
 
-auto GitHubInterface::issue_create(const std::filesystem::path& path) -> std::expected<int, std::string>
-{
+auto GitHubInterface::issue_create(const std::filesystem::path& path) -> std::expected<int, std::string> {
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "create"}, path);
 }
 
-auto GitHubInterface::issue_edit(const std::filesystem::path& path, int issue_number) -> std::expected<int, std::string>
-{
-	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)}, path);
+auto GitHubInterface::issue_edit(const std::filesystem::path& path, int issue_number)
+	-> std::expected<int, std::string> {
+	return SystemInterface::run_interactive(
+		std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)}, path
+	);
 }
 
-auto GitHubInterface::issue_view(const std::filesystem::path& path, int issue_number) -> std::expected<std::string, std::string>
-{
-	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "view", std::to_string(issue_number)}), path);
+auto GitHubInterface::issue_view(const std::filesystem::path& path, int issue_number)
+	-> std::expected<std::string, std::string> {
+	std::expected result = SystemInterface::run(
+		gh_command(std::vector<std::string>{"gh", "issue", "view", std::to_string(issue_number)}), path
+	);
 
-	if (!result)
-	{
+	if (!result) {
 		return std::unexpected(result.error());
 	}
-	if (result->exit_code != 0)
-	{
+	if (result->exit_code != 0) {
 		return std::unexpected(result->text);
 	}
 
 	return result->text;
 }
 
-auto GitHubInterface::issue_close(const std::filesystem::path& path, int issue_number) -> std::expected<std::string, std::string>
-{
-	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "close", std::to_string(issue_number)}), path);
+auto GitHubInterface::issue_close(const std::filesystem::path& path, int issue_number)
+	-> std::expected<std::string, std::string> {
+	std::expected result = SystemInterface::run(
+		gh_command(std::vector<std::string>{"gh", "issue", "close", std::to_string(issue_number)}), path
+	);
 
-	if (!result)
-	{
+	if (!result) {
 		return std::unexpected(result.error());
 	}
-	if (result->exit_code != 0)
-	{
+	if (result->exit_code != 0) {
 		return std::unexpected(result->text);
 	}
 

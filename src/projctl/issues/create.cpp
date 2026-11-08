@@ -2,24 +2,28 @@
 
 #include "githostinterface.hpp"
 
-auto ProjCtl::issue_create(const std::optional<std::string>& name) const -> std::expected<int, std::string>
-{
+auto ProjCtl::issue_create(const std::optional<std::string>& name) const -> std::expected<int, std::string> {
 	std::expected project = project_find(name);
-	if (!project)
-	{
+	if (!project) {
 		return std::unexpected(project.error());
 	}
 
 	std::expected result = GitHostInterface::issue_create((*project)->second.path.string());
-	if (!result)
-	{
-		return std::unexpected(std::format("{}{}Failed to create issue: {}{}\n", paint(config.error_color), symbol(Style::Mark::Cross), result.error(), reset()));
+	if (!result) {
+		return std::unexpected(
+			std::format(
+				"{}{}Failed to create issue: {}{}\n",
+				paint(config.error_color),
+				symbol(Style::Mark::Cross),
+				result.error(),
+				reset()
+			)
+		);
 	}
 
 	return *result;
 }
 
-auto ProjCtl::handle(const Cmd::GH::IssueCreate& cmd) const -> int
-{
+auto ProjCtl::handle(const Cmd::GH::IssueCreate& cmd) const -> int {
 	return report(issue_create(cmd.name));
 }

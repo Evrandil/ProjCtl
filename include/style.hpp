@@ -4,11 +4,9 @@
 #include <string_view>
 #include <utility>
 
-namespace Style
-{
+namespace Style {
 
-	enum class Color : uint8_t
-	{
+	enum class Color : uint8_t {
 		Default,
 		Black,
 		BoldBlack,
@@ -28,10 +26,8 @@ namespace Style
 		BoldWhite,
 	};
 
-	constexpr auto color_code(const Color color) -> std::string_view
-	{
-		switch (color)
-		{
+	constexpr auto color_code(const Color color) -> std::string_view {
+		switch (color) {
 			case Color::Default:     return "\033[39m";
 			case Color::Black:       return "\033[30m";
 			case Color::BoldBlack:   return "\033[1;30m";
@@ -57,17 +53,14 @@ namespace Style
 	constexpr std::string_view TICK  = "✓ ";
 	constexpr std::string_view CROSS = "✗ ";
 
-	enum class Mark : uint8_t
-	{
+	enum class Mark : uint8_t {
 		None,
 		Tick,
 		Cross,
 	};
 
-	constexpr auto symbol(Mark mark) -> std::string_view
-	{
-		switch (mark)
-		{
+	constexpr auto symbol(Mark mark) -> std::string_view {
+		switch (mark) {
 			case Mark::None:  return "";
 			case Mark::Tick:  return TICK;
 			case Mark::Cross: return CROSS;

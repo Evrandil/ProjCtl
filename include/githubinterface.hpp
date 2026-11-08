@@ -10,8 +10,7 @@
 
 auto gh_command(std::vector<std::string> args) -> std::vector<std::string>;
 
-namespace GitHubInterface
-{
+namespace GitHubInterface {
 	auto state() -> CliState;
 	auto repo_list() -> std::expected<std::string, std::string>;
 	auto issue_list(const std::filesystem::path&) -> std::expected<std::vector<Issue>, std::string>;

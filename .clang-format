@@ -12,11 +12,11 @@ NamespaceIndentation: All
 AccessModifierOffset: 0
 
 # Braces
-BreakBeforeBraces: Allman
+BreakBeforeBraces: Attach
 InsertBraces: true
 
 # Wrapping
-ColumnLimit: 220
+ColumnLimit: 120
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortEnumsOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: true

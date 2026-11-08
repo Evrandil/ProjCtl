@@ -2,8 +2,7 @@
 
 #include <fstream>
 
-void ProjCtl::load()
-{
+void ProjCtl::load() {
 	config.load(config_path);
 
 	std::ifstream projects_file{data_path};
@@ -14,19 +13,15 @@ void ProjCtl::load()
 	std::string   run_command;
 	std::size_t   separator = 0;
 
-	while (std::getline(projects_file, line))
-	{
+	while (std::getline(projects_file, line)) {
 		line = trim(line);
-		if (line.empty() || line.front() == '#' || line.front() == ';')
-		{
+		if (line.empty() || line.front() == '#' || line.front() == ';') {
 			continue;
 		}
 
-		switch (line.front())
-		{
+		switch (line.front()) {
 			case '[':
-				if (!name.empty()) [[likely]]
-				{
+				if (!name.empty()) [[likely]] {
 					this->projects.emplace(
 						name,
 						ProjectContent{
@@ -57,8 +52,7 @@ void ProjCtl::load()
 			default: continue;
 		}
 	}
-	if (!name.empty()) [[likely]]
-	{
+	if (!name.empty()) [[likely]] {
 		this->projects.emplace(
 			name,
 			ProjectContent{

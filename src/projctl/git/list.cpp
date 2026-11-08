@@ -4,10 +4,8 @@
 #include <future>
 #include <ranges>
 
-auto ProjCtl::list_gits(bool names_only) const -> std::expected<std::string, std::string>
-{
-	auto list_one_git = [&](const std::string& name, const ProjectContent& content) -> std::string
-	{
+auto ProjCtl::list_gits(bool names_only) const -> std::expected<std::string, std::string> {
+	auto list_one_git = [&](const std::string& name, const ProjectContent& content) -> std::string {
 		std::expected branch       = GitInterface::branch(content.path);
 		std::expected remote_short = GitInterface::remote_short(content.path);
 		return std::format(
@@ -34,31 +32,41 @@ auto ProjCtl::list_gits(bool names_only) const -> std::expected<std::string, std
 
 	std::string output;
 
-	if (names_only)
-	{
-		for (const ProjectEntry& project : projects | std::views::filter(is_git))
-		{
+	if (names_only) {
+		for (const ProjectEntry& project : projects | std::views::filter(is_git)) {
 			std::format_to(std::back_inserter(output), "{}\n", project.first);
 		}
 		return output;
 	}
 
-	for (const ProjectEntry& project : projects | std::views::filter(is_git))
-	{
-		tasks.push_back(std::async(std::launch::async, list_one_git, std::cref(project.first), std::cref(project.second)));
+	for (const ProjectEntry& project : projects | std::views::filter(is_git)) {
+		tasks.push_back(
+			std::async(std::launch::async, list_one_git, std::cref(project.first), std::cref(project.second))
+		);
 	}
 
-	if (tasks.empty()) [[unlikely]]
-	{
-		return std::unexpected(std::format("{}There are no git projects saved{}\n", paint(config.error_color), reset()));
+	if (tasks.empty()) [[unlikely]] {
+		return std::unexpected(
+			std::format("{}There are no git projects saved{}\n", paint(config.error_color), reset())
+		);
 	}
 
 	std::format_to(
-		std::back_inserter(output), "{}{:<{}}{:<{}}{:<{}}{:<{}}{}\n", paint(config.header_color), "Name", config.name_width, "Path", config.path_width, "Branch", config.branch_width, "Repo", config.remote_width, reset()
+		std::back_inserter(output),
+		"{}{:<{}}{:<{}}{:<{}}{:<{}}{}\n",
+		paint(config.header_color),
+		"Name",
+		config.name_width,
+		"Path",
+		config.path_width,
+		"Branch",
+		config.branch_width,
+		"Repo",
+		config.remote_width,
+		reset()
 	);
 
-	for (std::future<std::string>& task : tasks)
-	{
+	for (std::future<std::string>& task : tasks) {
 		std::format_to(std::back_inserter(output), "{}", task.get());
 	}
 	return output;

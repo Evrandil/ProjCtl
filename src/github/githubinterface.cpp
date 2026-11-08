@@ -4,48 +4,43 @@
 #include <nlohmann/json.hpp>
 #include <ranges>
 
-auto gh_command(std::vector<std::string> args) -> std::vector<std::string>
-{
-	std::vector<std::string> command = std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1"};
+auto gh_command(std::vector<std::string> args) -> std::vector<std::string> {
+	std::vector<std::string> command =
+		std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1"};
 	command.append_range(args | std::views::as_rvalue);
 	return command;
 }
 
-auto GitHubInterface::state() -> CliState
-{
+auto GitHubInterface::state() -> CliState {
 	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "auth", "status"}));
 
-	if (!result)
-	{
+	if (!result) {
 		return CliState::NotInstalled;
 	}
 
 	return result->exit_code == 0 ? CliState::Ready : CliState::NotAuthenticated;
 }
 
-auto GitHubInterface::repo_list() -> std::expected<std::string, std::string>
-{
-	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "repo", "list", "--json", "nameWithOwner", "--limit", "100"}));
+auto GitHubInterface::repo_list() -> std::expected<std::string, std::string> {
+	std::expected result = SystemInterface::run(
+		gh_command(std::vector<std::string>{"gh", "repo", "list", "--json", "nameWithOwner", "--limit", "100"})
+	);
 
-	if (!result)
-	{
+	if (!result) {
 		return std::unexpected(result.error());
 	}
-	if (result->exit_code != 0)
-	{
+	if (result->exit_code != 0) {
 		return std::unexpected(result->text);
 	}
 
 	std::string output;
 
 	const nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
-	if (json.is_discarded())
-	{
+	if (json.is_discarded()) {
 		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
 	}
 
-	for (const nlohmann::json& repo : json)
-	{
+	for (const nlohmann::json& repo : json) {
 		output += repo.at("nameWithOwner").get<std::string>();
 		output += '\n';
 	}

@@ -6,8 +6,7 @@
 #include <filesystem>
 #include <vector>
 
-struct Config
-{
+struct Config {
 	std::size_t max_width            = 300;
 	std::size_t name_width           = 20;
 	std::size_t path_width           = 50;

@@ -2,23 +2,22 @@
 
 #include "gitinterface.hpp"
 
-auto ProjCtl::log(const std::optional<std::string>& name, bool oneline) const -> std::expected<std::string, std::string>
-{
+auto ProjCtl::log(const std::optional<std::string>& name, bool oneline) const
+	-> std::expected<std::string, std::string> {
 	std::expected project = project_find(name);
-	if (!project)
-	{
+	if (!project) {
 		return std::unexpected(project.error());
 	}
 
 	std::expected result = GitInterface::log((*project)->second.path, oneline);
-	if (!result)
-	{
-		return std::unexpected(std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, result.error(), reset()));
+	if (!result) {
+		return std::unexpected(
+			std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, result.error(), reset())
+		);
 	}
 	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
 }
 
-auto ProjCtl::handle(const Cmd::Git::Log& cmd) const -> int
-{
+auto ProjCtl::handle(const Cmd::Git::Log& cmd) const -> int {
 	return report(log(cmd.name, cmd.oneline));
 }

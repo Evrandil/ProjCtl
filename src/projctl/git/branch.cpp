@@ -2,20 +2,17 @@
 
 #include "gitinterface.hpp"
 
-auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const -> std::expected<std::string, std::string>
-{
+auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const
+	-> std::expected<std::string, std::string> {
 	std::expected project = project_find(name);
-	if (!project)
-	{
+	if (!project) {
 		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
 
-	if (!branch_name)
-	{
+	if (!branch_name) {
 		std::expected result = GitInterface::branch(content.path);
-		if (!result)
-		{
+		if (!result) {
 			return std::unexpected(std::format("{}{}{}", paint(config.error_color), result.error(), reset()));
 		}
 
@@ -23,16 +20,22 @@ auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional
 	}
 
 	std::expected result = GitInterface::branch_switch(content.path, *branch_name);
-	if (!result)
-	{
+	if (!result) {
 		return std::unexpected(
-			std::format("{}Couldn't switch branches for {}{}{}: {}{}", paint(config.error_color), paint(config.project_name_color), (*project)->first, paint(config.error_color), result.error(), reset())
+			std::format(
+				"{}Couldn't switch branches for {}{}{}: {}{}",
+				paint(config.error_color),
+				paint(config.project_name_color),
+				(*project)->first,
+				paint(config.error_color),
+				result.error(),
+				reset()
+			)
 		);
 	}
 	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
 }
 
-auto ProjCtl::handle(const Cmd::Git::Branch& cmd) const -> int
-{
+auto ProjCtl::handle(const Cmd::Git::Branch& cmd) const -> int {
 	return report(branch(cmd.name, cmd.branch_name));
 }

@@ -7,8 +7,7 @@
 #include <filesystem>
 #include <string>
 
-namespace GitLabInterface
-{
+namespace GitLabInterface {
 	auto state() -> CliState;
 	auto repo_list() -> std::expected<std::string, std::string>;
 	auto issue_list(const std::filesystem::path&) -> std::expected<std::vector<Issue>, std::string>;

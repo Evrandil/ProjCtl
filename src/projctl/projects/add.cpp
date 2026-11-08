@@ -1,11 +1,12 @@
 #include "projctl.hpp"
 
-auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path) -> std::expected<std::string, std::string>
-{
+auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path)
+	-> std::expected<std::string, std::string> {
 	std::error_code             error;
-	const std::filesystem::path full_path = std::filesystem::weakly_canonical(std::filesystem::absolute(path.value_or(std::filesystem::current_path())), error);
-	if (error || !std::filesystem::is_directory(full_path))
-	{
+	const std::filesystem::path full_path = std::filesystem::weakly_canonical(
+		std::filesystem::absolute(path.value_or(std::filesystem::current_path())), error
+	);
+	if (error || !std::filesystem::is_directory(full_path)) {
 		return std::unexpected(
 			std::format(
 				"{}{}Path {}{}{} doesn't exist!{}",
@@ -20,15 +21,23 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 	}
 
 	const std::string actual_name = name.value_or(full_path.filename().string());
-	if (actual_name.empty())
-	{
-		return std::unexpected(std::format("{}{}Can't derive project name from {}{}{}", paint(config.error_color), symbol(Style::Mark::Cross), paint(config.project_path_color), path.value_or(".").string(), reset()));
+	if (actual_name.empty()) {
+		return std::unexpected(
+			std::format(
+				"{}{}Can't derive project name from {}{}{}",
+				paint(config.error_color),
+				symbol(Style::Mark::Cross),
+				paint(config.project_path_color),
+				path.value_or(".").string(),
+				reset()
+			)
+		);
 	}
 
-	const auto [entry, inserted] = projects.try_emplace(actual_name, ProjectContent{full_path, detect_project_type(full_path)});
+	const auto [entry, inserted] =
+		projects.try_emplace(actual_name, ProjectContent{full_path, detect_project_type(full_path)});
 
-	if (!inserted)
-	{
+	if (!inserted) {
 		return std::unexpected(
 			std::format(
 				"{}{}Project with name {}{}{} already exists!{}",
@@ -61,7 +70,6 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 	);
 }
 
-auto ProjCtl::handle(const Cmd::Base::Add& cmd) -> int
-{
+auto ProjCtl::handle(const Cmd::Base::Add& cmd) -> int {
 	return report_save(add(cmd.name, cmd.path));
 }

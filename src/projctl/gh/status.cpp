@@ -3,10 +3,8 @@
 #include "githostinterface.hpp"
 #include <future>
 
-auto ProjCtl::g_status() const -> BatchResult
-{
-	auto status_one = [&](HostOption host) -> std::string
-	{
+auto ProjCtl::g_status() const -> BatchResult {
+	auto status_one = [&](HostOption host) -> std::string {
 		std::string output;
 		CliState    state = GitHostInterface::state(host);
 		std::format_to(
@@ -39,15 +37,13 @@ auto ProjCtl::g_status() const -> BatchResult
 	};
 
 	BatchResult results;
-	for (auto& task : tasks)
-	{
+	for (auto& task : tasks) {
 		std::string result = task.get();
 		std::format_to(std::back_inserter(results.output), "{}\n", result);
 	}
 	return results;
 }
 
-auto ProjCtl::handle(const Cmd::GH::Status&) const -> int
-{
+auto ProjCtl::handle(const Cmd::GH::Status&) const -> int {
 	return report(g_status());
 }

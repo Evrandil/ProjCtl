@@ -2,11 +2,9 @@
 
 #include "systeminterface.hpp"
 
-auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expected<std::string, std::string>
-{
+auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
 	std::expected project = project_find(name);
-	if (!project)
-	{
+	if (!project) {
 		return std::unexpected(project.error());
 	}
 
@@ -14,21 +12,39 @@ auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expecte
 
 	const std::string shell_command = std::format("{} .{}", config.editor, background ? " &" : "");
 
-	std::expected<int, std::string> result = SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", shell_command}, (*project)->second.path);
+	std::expected<int, std::string> result =
+		SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", shell_command}, (*project)->second.path);
 
-	if (!result)
-	{
-		return std::unexpected(std::format("{}{} {}{}", paint(config.error_color), symbol(Style::Mark::Cross), result.error(), reset()));
+	if (!result) {
+		return std::unexpected(
+			std::format("{}{} {}{}", paint(config.error_color), symbol(Style::Mark::Cross), result.error(), reset())
+		);
 	}
-	if (*result != 0)
-	{
-		return std::unexpected(std::format("{}{} {} exited with code {}{}", paint(config.error_color), symbol(Style::Mark::Cross), config.editor, *result, reset()));
+	if (*result != 0) {
+		return std::unexpected(
+			std::format(
+				"{}{} {} exited with code {}{}",
+				paint(config.error_color),
+				symbol(Style::Mark::Cross),
+				config.editor,
+				*result,
+				reset()
+			)
+		);
 	}
 
-	return std::format("{}{}{}{}{}{}{}", paint(config.tick_color), symbol(Style::Mark::Tick), paint(config.header_color), "Opened project: ", paint(config.project_name_color), (*project)->first, reset());
+	return std::format(
+		"{}{}{}{}{}{}{}",
+		paint(config.tick_color),
+		symbol(Style::Mark::Tick),
+		paint(config.header_color),
+		"Opened project: ",
+		paint(config.project_name_color),
+		(*project)->first,
+		reset()
+	);
 }
 
-auto ProjCtl::handle(const Cmd::Base::Open& cmd) const -> int
-{
+auto ProjCtl::handle(const Cmd::Base::Open& cmd) const -> int {
 	return report(open(cmd.name));
 }

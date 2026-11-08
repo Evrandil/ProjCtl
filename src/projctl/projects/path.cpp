@@ -2,23 +2,19 @@
 
 #include <print>
 
-auto ProjCtl::path_show(const std::optional<std::string>& name) const -> std::expected<std::string, std::string>
-{
+auto ProjCtl::path_show(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
 	std::expected project = project_find(name);
-	if (!project)
-	{
+	if (!project) {
 		return std::unexpected(project.error());
 	}
 
 	return (*project)->second.path.string();
 }
 
-auto ProjCtl::handle(const Cmd::Base::Path& cmd) const -> int
-{
+auto ProjCtl::handle(const Cmd::Base::Path& cmd) const -> int {
 	std::expected<std::string, std::string> result = path_show(cmd.name);
 
-	if (!result)
-	{
+	if (!result) {
 		std::println(stderr, "\n\n{}\n\n", result.error());
 		return 1;
 	}

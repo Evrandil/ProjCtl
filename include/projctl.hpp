@@ -23,14 +23,12 @@ using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
 using ResultString = std::expected<std::string, std::string>;
 using ResultInt    = std::expected<int, std::string>;
 
-struct BatchResult
-{
+struct BatchResult {
 	std::string output;
 	std::size_t failed = 0;
 };
 
-class ProjCtl
-{
+class ProjCtl {
 	std::map<std::string, ProjectContent> projects;
 	std::filesystem::path                 config_path;
 	std::filesystem::path                 data_path;
@@ -42,7 +40,8 @@ class ProjCtl
 
 	auto               load() -> void;
 	[[nodiscard]] auto save() const noexcept -> std::expected<void, std::string>;
-	[[nodiscard]] auto project_find(const std::optional<std::string>&) const -> std::expected<ProjectIterator, std::string>;
+	[[nodiscard]] auto project_find(const std::optional<std::string>&) const
+		-> std::expected<ProjectIterator, std::string>;
 	[[nodiscard]] auto current_project_name() const -> std::optional<std::string>;
 
 	[[nodiscard]] auto report(const ResultString&) const -> int;
@@ -58,7 +57,8 @@ class ProjCtl
 	[[nodiscard]] auto list(bool) const -> ResultString;
 	[[nodiscard]] auto list_gits(bool) const -> ResultString;
 	[[nodiscard]] auto path_show(const std::optional<std::string>&) const -> ResultString;
-	[[nodiscard]] auto add(const std::optional<std::string>&, const std::optional<std::filesystem::path>&) -> ResultString;
+	[[nodiscard]] auto add(const std::optional<std::string>&, const std::optional<std::filesystem::path>&)
+		-> ResultString;
 	[[nodiscard]] auto remove(const std::string&) -> ResultString;
 	[[nodiscard]] auto open(const std::optional<std::string>&) const -> ResultString;
 	[[nodiscard]] auto build(const std::optional<std::string>&) const -> ResultInt;
@@ -85,9 +85,11 @@ class ProjCtl
 	[[nodiscard]] auto push(const std::optional<std::string>&, bool) const -> ResultString;
 	[[nodiscard]] auto git_merge(const std::optional<std::string>&) const -> ResultString;
 	[[nodiscard]] auto log(const std::optional<std::string>&, bool) const -> ResultString;
-	[[nodiscard]] auto branch(const std::optional<std::string>&, const std::optional<std::string>&) const -> ResultString;
+	[[nodiscard]] auto branch(const std::optional<std::string>&, const std::optional<std::string>&) const
+		-> ResultString;
 	[[nodiscard]] auto commit(const std::optional<std::string>&, std::optional<std::string_view>) const -> ResultString;
-	[[nodiscard]] auto diff(const std::optional<std::string>&, const std::optional<std::filesystem::path>&) const -> ResultInt;
+	[[nodiscard]] auto diff(const std::optional<std::string>&, const std::optional<std::filesystem::path>&) const
+		-> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::Git::Status&) const -> int;
 	[[nodiscard]] auto handle(const Cmd::Git::Fetch&) const -> int;
 	[[nodiscard]] auto handle(const Cmd::Git::Commit&) const -> int;
@@ -135,8 +137,7 @@ class ProjCtl
 	public:
 	ProjCtl();
 
-	auto execute(const Command& command) -> int
-	{
+	auto execute(const Command& command) -> int {
 		return std::visit([this](const auto& cmd) -> auto { return handle(cmd); }, command);
 	}
 };

@@ -9,8 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace GitHostInterface
-{
+namespace GitHostInterface {
 	[[nodiscard]] auto state(HostOption) -> CliState;
 	[[nodiscard]] auto repo_list(HostOption) -> std::expected<std::string, std::string>;
 	[[nodiscard]] auto issue_list(const std::filesystem::path&) -> std::expected<std::vector<Issue>, std::string>;

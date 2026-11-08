@@ -4,112 +4,90 @@
 #include <string>
 #include <variant>
 
-namespace Cmd
-{
+namespace Cmd {
 
-	struct Version
-	{
-	};
+	struct Version {};
 
-	struct Unknown
-	{
+	struct Unknown {
 		std::string message;
 	};
 
-	namespace Base
-	{
+	namespace Base {
 
-		struct List
-		{
+		struct List {
 			bool gits_only  = false;
 			bool names_only = false;
 		};
 
-		struct Path
-		{
+		struct Path {
 			std::optional<std::string> name;
 		};
 
-		struct Add
-		{
+		struct Add {
 			std::optional<std::string>           name;
 			std::optional<std::filesystem::path> path;
 		};
 
-		struct Remove
-		{
+		struct Remove {
 			std::string name;
 		};
 
-		struct Open
-		{
+		struct Open {
 			std::optional<std::string> name;
 		};
 
-		struct Build
-		{
+		struct Build {
 			std::optional<std::string> name;
 		};
 
-		struct Run
-		{
+		struct Run {
 			std::optional<std::string> name;
 		};
 
 	} // namespace Base
 
-	namespace Git
-	{
+	namespace Git {
 
-		struct Status
-		{
+		struct Status {
 			bool                       all = false;
 			std::optional<std::string> name;
 		};
 
-		struct Commit
-		{
+		struct Commit {
 			std::optional<std::string> name;
 			std::optional<std::string> message;
 		};
 
-		struct Push
-		{
+		struct Push {
 			bool                       branch_upstream = false;
 			std::optional<std::string> name;
 		};
 
-		struct Pull
-		{
+		struct Pull {
 			bool                       all = false;
 			std::optional<std::string> name;
 		};
 
-		struct Fetch
-		{
+		struct Fetch {
 			bool                       all = false;
 			std::optional<std::string> name;
 		};
 
-		struct Branch
-		{
+		struct Branch {
 			std::optional<std::string> name;
 			std::optional<std::string> branch_name;
 		};
 
-		struct Merge
-		{
+		struct Merge {
 			std::optional<std::string> name;
 		};
 
-		struct Log
-		{
+		struct Log {
 			bool                       oneline = false;
 			std::optional<std::string> name;
 		};
 
-		struct Diff
-		{
+		struct Diff {
 			std::optional<std::string>           name;
 			std::optional<std::filesystem::path> path;
 		};
@@ -117,77 +95,61 @@ namespace Cmd
 	} // namespace Git
 
 	// TODO Split that to Issue and Request subnamespaces?
-	namespace GH
-	{
+	namespace GH {
 
-		struct Status
-		{
-		};
+		struct Status {};
 
-		struct RepoList
-		{
-		};
+		struct RepoList {};
 
-		struct IssueList
-		{
+		struct IssueList {
 			bool                       all = false;
 			std::optional<std::string> name;
 		};
 
-		struct IssueCreate
-		{
+		struct IssueCreate {
 			std::optional<std::string> name;
 		};
 
-		struct IssueEdit
-		{
+		struct IssueEdit {
 			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
-		struct IssueView
-		{
+		struct IssueView {
 			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
-		struct IssueClose
-		{
+		struct IssueClose {
 			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
-		struct RequestList
-		{
+		struct RequestList {
 			bool                       all = false;
 			std::optional<std::string> name;
 		};
 
-		struct RequestCreate
-		{
+		struct RequestCreate {
 			std::optional<std::string> name;
 		};
 
-		struct RequestEdit
-		{
+		struct RequestEdit {
 			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
-		struct RequestView
-		{
+		struct RequestView {
 			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
-		struct RequestClose
-		{
+		struct RequestClose {
 			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
-		struct RequestMerge
-		{
+		struct RequestMerge {
 			std::optional<std::string> name;
 		};
 
@@ -196,6 +158,9 @@ namespace Cmd
 } // namespace Cmd
 
 using Command = std::variant<
-	Cmd::Unknown, Cmd::Version, Cmd::Base::List, Cmd::Base::Path, Cmd::Base::Add, Cmd::Base::Remove, Cmd::Base::Open, Cmd::Base::Build, Cmd::Base::Run, Cmd::Git::Status, Cmd::Git::Commit, Cmd::Git::Push, Cmd::Git::Pull,
-	Cmd::Git::Fetch, Cmd::Git::Branch, Cmd::Git::Merge, Cmd::Git::Log, Cmd::Git::Diff, Cmd::GH::Status, Cmd::GH::RepoList, Cmd::GH::IssueList, Cmd::GH::IssueCreate, Cmd::GH::IssueEdit, Cmd::GH::IssueView,
-	Cmd::GH::IssueClose, Cmd::GH::RequestList, Cmd::GH::RequestCreate, Cmd::GH::RequestEdit, Cmd::GH::RequestView, Cmd::GH::RequestClose, Cmd::GH::RequestMerge>;
+	Cmd::Unknown, Cmd::Version, Cmd::Base::List, Cmd::Base::Path, Cmd::Base::Add, Cmd::Base::Remove, Cmd::Base::Open,
+	Cmd::Base::Build, Cmd::Base::Run, Cmd::Git::Status, Cmd::Git::Commit, Cmd::Git::Push, Cmd::Git::Pull,
+	Cmd::Git::Fetch, Cmd::Git::Branch, Cmd::Git::Merge, Cmd::Git::Log, Cmd::Git::Diff, Cmd::GH::Status,
+	Cmd::GH::RepoList, Cmd::GH::IssueList, Cmd::GH::IssueCreate, Cmd::GH::IssueEdit, Cmd::GH::IssueView,
+	Cmd::GH::IssueClose, Cmd::GH::RequestList, Cmd::GH::RequestCreate, Cmd::GH::RequestEdit, Cmd::GH::RequestView,
+	Cmd::GH::RequestClose, Cmd::GH::RequestMerge>;

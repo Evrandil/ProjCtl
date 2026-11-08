@@ -4,8 +4,7 @@
 #include <string>
 #include <string_view>
 
-enum class ProjectType : uint8_t
-{
+enum class ProjectType : uint8_t {
 	Rust,
 	CMake,
 	Node,
@@ -14,10 +13,8 @@ enum class ProjectType : uint8_t
 	Unknown,
 };
 
-constexpr auto project_type_to_string(ProjectType type) -> std::string_view
-{
-	switch (type)
-	{
+constexpr auto project_type_to_string(ProjectType type) -> std::string_view {
+	switch (type) {
 		case ProjectType::Rust:    return "Rust";
 		case ProjectType::CMake:   return "CMake/C++";
 		case ProjectType::Node:    return "Node";
@@ -29,10 +26,8 @@ constexpr auto project_type_to_string(ProjectType type) -> std::string_view
 	return "No type";
 }
 
-constexpr auto build_command_for(ProjectType type) -> std::optional<std::string_view>
-{
-	switch (type)
-	{
+constexpr auto build_command_for(ProjectType type) -> std::optional<std::string_view> {
+	switch (type) {
 		case ProjectType::Rust:  return "cargo build 2>&1";
 		case ProjectType::CMake: return "cmake -S . -B build -G Ninja 2>&1 && cmake --build build 2>&1";
 		case ProjectType::Node:  return "npm run build 2>&1";
@@ -41,10 +36,8 @@ constexpr auto build_command_for(ProjectType type) -> std::optional<std::string_
 	}
 }
 
-constexpr auto run_command_for(ProjectType type) -> std::optional<std::string_view>
-{
-	switch (type)
-	{
+constexpr auto run_command_for(ProjectType type) -> std::optional<std::string_view> {
+	switch (type) {
 		case ProjectType::Rust:  return "cargo run 2>&1";
 		case ProjectType::CMake: return std::nullopt;
 		case ProjectType::Node:  return "npm start 2>&1";
@@ -53,8 +46,7 @@ constexpr auto run_command_for(ProjectType type) -> std::optional<std::string_vi
 	}
 }
 
-struct ProjectContent
-{
+struct ProjectContent {
 	std::filesystem::path      path;
 	ProjectType                type;
 	std::optional<std::string> build_command = std::nullopt;
