@@ -51,5 +51,4 @@ struct ProjectContent {
 	ProjectType                type;
 	std::optional<std::string> build_command = std::nullopt;
 	std::optional<std::string> run_command   = std::nullopt;
-	auto                       display() -> std::string;
 };

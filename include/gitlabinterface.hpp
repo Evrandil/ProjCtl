@@ -1,11 +1,12 @@
 #pragma once
 
-#include "clistate.hpp"
-#include "issue.hpp"
-#include "request.hpp"
 #include <expected>
 #include <filesystem>
 #include <string>
+
+#include "clistate.hpp"
+#include "issue.hpp"
+#include "request.hpp"
 
 namespace GitLabInterface {
 	auto state() -> CliState;

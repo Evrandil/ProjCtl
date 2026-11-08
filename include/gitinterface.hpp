@@ -1,9 +1,10 @@
 #pragma once
 
-#include "githostoption.hpp"
 #include <expected>
 #include <filesystem>
 #include <string>
+
+#include "githostoption.hpp"
 
 namespace GitInterface {
 	[[nodiscard]] auto add(const std::filesystem::path&) -> std::expected<std::string, std::string>;

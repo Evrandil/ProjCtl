@@ -1,12 +1,13 @@
 #pragma once
 
-#include "clistate.hpp"
-#include "issue.hpp"
-#include "request.hpp"
 #include <expected>
 #include <filesystem>
 #include <string>
 #include <vector>
+
+#include "clistate.hpp"
+#include "issue.hpp"
+#include "request.hpp"
 
 auto gh_command(std::vector<std::string> args) -> std::vector<std::string>;
 

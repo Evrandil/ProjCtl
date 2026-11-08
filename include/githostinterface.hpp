@@ -1,13 +1,14 @@
 #pragma once
 
-#include "clistate.hpp"
-#include "githostoption.hpp"
-#include "issue.hpp"
-#include "request.hpp"
 #include <expected>
 #include <filesystem>
 #include <string>
 #include <vector>
+
+#include "clistate.hpp"
+#include "githostoption.hpp"
+#include "issue.hpp"
+#include "request.hpp"
 
 namespace GitHostInterface {
 	[[nodiscard]] auto state(HostOption) -> CliState;

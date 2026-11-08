@@ -1,13 +1,13 @@
 #pragma once
 
-#include "command.hpp"
-#include "config.hpp"
-#include "projectcontent.hpp"
-
 #include <expected>
 #include <filesystem>
 #include <map>
 #include <vector>
+
+#include "command.hpp"
+#include "config.hpp"
+#include "projectcontent.hpp"
 
 constexpr std::string_view MARGIN       = "    ";
 constexpr int              MARGIN_WIDTH = 20;
