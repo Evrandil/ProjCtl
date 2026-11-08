@@ -6,6 +6,7 @@ FetchContent_Declare(
 	GIT_REPOSITORY https://github.com/doctest/doctest.git
 	GIT_TAG v2.4.12
 )
+set(DOCTEST_WITH_MAIN_IN_STATIC_LIB OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(doctest)
 
 add_executable(projctl_tests

@@ -64,4 +64,4 @@ jobs:
           -DPROJCTL_BUILD_TESTS=OFF
 
       - name: Run clang-tidy
-        run: run-clang-tidy -p build -quiet -warnings-as-errors='*' 'src/.*'
+        run: run-clang-tidy -p build -quiet -warnings-as-errors='*' "$PWD/src/"

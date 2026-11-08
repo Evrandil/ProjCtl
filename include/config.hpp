@@ -7,6 +7,7 @@
 #include "request.hpp"
 #include "style.hpp"
 
+// TODO Turn this into class and make public getters and members private
 struct Config {
 	std::size_t max_width            = 300;
 	std::size_t name_width           = 20;

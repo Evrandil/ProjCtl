@@ -19,5 +19,6 @@ CheckOptions:
   readability-implicit-bool-conversion.AllowPointerConditions: true
   concurrency-mt-unsafe.FunctionSet: glibc
 
-HeaderFilterRegex: '(include|src)/.*'
+HeaderFilterRegex: '/(include|src)/.*'
+ExcludeHeaderFilterRegex: '_deps/'
 FormatStyle: file
