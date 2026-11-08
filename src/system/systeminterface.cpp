@@ -1,21 +1,22 @@
 #include "systeminterface.hpp"
 
+#include <spawn.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
 #include <array>
 #include <cerrno>
+#include <cstdlib>
 #include <cstring>
 #include <expected>
 #include <filesystem>
 #include <format>
 #include <span>
-#include <cstdlib>
 #include <string>
-#include <sys/types.h>
 #include <utility>
 #include <vector>
 
-#include <spawn.h>
-#include <sys/wait.h>
-#include <unistd.h>
 
 namespace {
 	constexpr std::size_t READ_CHUNK_SIZE  = 4096;

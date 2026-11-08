@@ -16,6 +16,10 @@ tidy:
     cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
     run-clang-tidy -p build -quiet '{{justfile_directory()}}/src/'
 
+includes:
+    run-clang-tidy -p build -checks='-*,misc-include-cleaner' -fix '{{justfile_directory()}}/src/'
+    just format
+
 test *args: configure
     cmake --build build --target projctl_tests
     ./build/tests/projctl_tests {{args}}

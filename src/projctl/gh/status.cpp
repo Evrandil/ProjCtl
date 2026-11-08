@@ -14,8 +14,8 @@
 
 auto ProjCtl::g_status() const -> BatchResult {
 	const auto status_one = [&](const HostOption host) -> std::string {
-		std::string output;
-		const CliState    state = GitHostInterface::state(host);
+		std::string    output;
+		const CliState state = GitHostInterface::state(host);
 		std::format_to(
 			std::back_inserter(output),
 			"{}{:<{}}{}{}{}{}\n",

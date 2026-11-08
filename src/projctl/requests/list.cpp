@@ -21,7 +21,7 @@
 
 auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::string {
 	std::string table;
-	const auto        field_name = [&](RequestField field) -> std::string_view {
+	const auto  field_name = [&](RequestField field) -> std::string_view {
 		switch (field) {
 			case RequestField::Number:  return "Number";
 			case RequestField::Title:   return "Title";

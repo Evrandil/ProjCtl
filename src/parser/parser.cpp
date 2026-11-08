@@ -4,6 +4,7 @@
 #include <charconv>
 #include <expected>
 #include <format>
+#include <memory>
 #include <optional>
 #include <span>
 #include <string>
@@ -51,8 +52,12 @@ namespace {
 
 	auto parse_number(std::string_view text) -> std::optional<int> {
 		int value               = 0;
-		const auto [end, error] = std::from_chars(text.data(), text.data() + text.size(), value);
-		if (error != std::errc{} || end != text.data() + text.size() || value <= 0) {
+		const char* const first = text.data();
+		const char* const last  = std::to_address(text.end());
+
+		const auto [end, error] = std::from_chars(first, last, value);
+
+		if (error != std::errc{} || end != last || value <= 0) {
 			return std::nullopt;
 		}
 		return value;
