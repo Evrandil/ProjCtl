@@ -1,6 +1,8 @@
 #include "parser.hpp"
 #include "command.hpp"
 
+#include <algorithm>
+#include <array>
 #include <charconv>
 #include <expected>
 #include <format>
@@ -11,8 +13,6 @@
 #include <string_view>
 #include <system_error>
 #include <utility>
-#include <array>
-#include <algorithm>
 
 // grammar: see tests/parser_test.cpp
 
@@ -54,7 +54,7 @@ namespace {
 	}
 
 	auto parse_number(std::string_view text) -> std::optional<int> {
-		int value               = 0;
+		int               value = 0;
 		const char* const first = text.data();
 		const char* const last  = std::to_address(text.end());
 
@@ -118,12 +118,14 @@ namespace {
 	}
 
 	using SubParser = auto (*)(std::span<const std::string_view>) -> Command;
+
 	auto parse_version(std::span<const std::string_view> args) -> Command {
 		if (!args.empty()) {
 			return Cmd::Unknown{.message = "Doesn't take any arguments"};
 		}
 		return Cmd::Version{};
 	}
+
 	auto parse_list(std::span<const std::string_view> args) -> Command {
 		if (args.empty()) {
 			return Cmd::Base::List{.gits_only = false};
@@ -139,6 +141,7 @@ namespace {
 		}
 		return Cmd::Unknown{.message = std::format("Too many arguments: expected at most one, got {}", args.size())};
 	}
+
 	auto parse_add(std::span<const std::string_view> args) -> Command {
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-'))) {
@@ -149,6 +152,7 @@ namespace {
 			.path = parts->extra,
 		};
 	}
+
 	auto parse_remove(std::span<const std::string_view> args) -> Command {
 		const std::expected name = optional_name(args);
 		if (!name || !*name) {
@@ -156,6 +160,7 @@ namespace {
 		}
 		return Cmd::Base::Remove{.name = **name};
 	}
+
 	auto parse_commit(std::span<const std::string_view> args) -> Command {
 		const std::expected parts = name_with_extra(args);
 		if (!parts) {
@@ -166,6 +171,7 @@ namespace {
 			.message = parts->extra,
 		};
 	}
+
 	auto parse_push(std::span<const std::string_view> args) -> Command {
 		const bool          upstream = !args.empty() && args.front() == "-u";
 		const std::expected name     = optional_name(upstream ? args.subspan(1) : args);
@@ -177,6 +183,7 @@ namespace {
 			.name            = *name,
 		};
 	}
+
 	auto parse_branch(std::span<const std::string_view> args) -> Command {
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-'))) {
@@ -187,6 +194,7 @@ namespace {
 			.branch_name = parts->extra,
 		};
 	}
+
 	auto parse_log(std::span<const std::string_view> args) -> Command {
 		const bool          oneline = !args.empty() && args.front() == "-o";
 		const std::expected name    = optional_name(oneline ? args.subspan(1) : args);
@@ -198,6 +206,7 @@ namespace {
 			.name    = *name,
 		};
 	}
+
 	auto parse_diff(std::span<const std::string_view> args) -> Command {
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-'))) {
@@ -208,12 +217,14 @@ namespace {
 			.path = parts->extra,
 		};
 	}
+
 	auto parse_gh(std::span<const std::string_view> args) -> Command {
 		if (!args.empty()) {
 			return Cmd::Unknown{.message = "Doesn't take any arguments"};
 		}
 		return Cmd::GH::Status{};
 	}
+
 	auto parse_repos(std::span<const std::string_view> args) -> Command {
 		if (!args.empty()) {
 			return Cmd::Unknown{.message = "Doesn't take any arguments"};
@@ -267,7 +278,8 @@ auto parser(const std::span<const std::string_view> input) -> Command {
 		return Cmd::Unknown{};
 	}
 
-	const auto *const found = std::ranges::find(COMMANDS, input.front(), &std::pair<std::string_view, SubParser>::first);
+	const auto* const found =
+		std::ranges::find(COMMANDS, input.front(), &std::pair<std::string_view, SubParser>::first);
 	if (found != COMMANDS.end()) {
 		return found->second(input.subspan(1));
 	}

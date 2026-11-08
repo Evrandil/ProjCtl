@@ -1,21 +1,21 @@
 #pragma once
 
+#include <cstdlib>
 #include <expected>
 #include <filesystem>
 #include <map>
-#include <vector>
-#include <string>
 #include <optional>
-#include <variant>
+#include <string>
 #include <string_view>
-#include <cstdlib>
+#include <variant>
+#include <vector>
 
-#include "style.hpp"
-#include "issue.hpp"
-#include "request.hpp"
 #include "command.hpp"
 #include "config.hpp"
+#include "issue.hpp"
 #include "projectcontent.hpp"
+#include "request.hpp"
+#include "style.hpp"
 
 constexpr std::string_view MARGIN       = "    ";
 constexpr int              MARGIN_WIDTH = 20;

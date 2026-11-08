@@ -1,7 +1,7 @@
 #include <cstddef>
+#include <cstdio> // Bc println has ability to throw up...
 #include <cstdlib>
 #include <exception>
-#include <cstdio> // Bc println has ability to throw up...
 #include <ranges>
 #include <span>
 #include <string_view>

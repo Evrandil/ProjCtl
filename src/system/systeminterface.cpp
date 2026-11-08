@@ -17,7 +17,6 @@
 #include <utility>
 #include <vector>
 
-
 namespace {
 	constexpr std::size_t READ_CHUNK_SIZE  = 4096;
 	constexpr int         SIGNAL_EXIT_BASE = 128; // shell convention: killed by signal N -> exit code 128 + N
