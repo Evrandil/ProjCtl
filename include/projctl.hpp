@@ -4,7 +4,15 @@
 #include <filesystem>
 #include <map>
 #include <vector>
+#include <string>
+#include <optional>
+#include <variant>
+#include <string_view>
+#include <cstdlib>
 
+#include "style.hpp"
+#include "issue.hpp"
+#include "request.hpp"
 #include "command.hpp"
 #include "config.hpp"
 #include "projectcontent.hpp"
@@ -39,7 +47,7 @@ class ProjCtl {
 	[[nodiscard]] auto reset() const -> std::string_view;
 
 	auto               load() -> void;
-	[[nodiscard]] auto save() const noexcept -> std::expected<void, std::string>;
+	[[nodiscard]] auto save() const -> std::expected<void, std::string>;
 	[[nodiscard]] auto project_find(const std::optional<std::string>& name) const
 		-> std::expected<ProjectIterator, std::string>;
 	[[nodiscard]] auto current_project_name() const -> std::optional<std::string>;

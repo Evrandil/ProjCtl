@@ -8,7 +8,7 @@
 #include <string>
 #include <system_error>
 
-auto ProjCtl::save() const noexcept -> std::expected<void, std::string> {
+auto ProjCtl::save() const -> std::expected<void, std::string> {
 	std::error_code error;
 	std::filesystem::create_directories(data_path.parent_path(), error);
 
