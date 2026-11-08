@@ -2,6 +2,8 @@ Checks: >
   -*,
   clang-analyzer-*,
   cppcoreguidelines-*,
+  misc-*,
+  concurrency-*,
   readability-*,
   performance-*,
   bugprone-*,
@@ -13,8 +15,8 @@ Checks: >
   -readability-braces-around-statements,
   -bugprone-easily-swappable-parameters
 
-#CheckOptions:
-#  - key: readability-implicit-bool-conversion.AllowPointerConditions
-#    value: true
+CheckOptions:
+  readability-implicit-bool-conversion.AllowPointerConditions: true
 
 HeaderFilterRegex: '(include|src)/.*'
+FormatStyle: file

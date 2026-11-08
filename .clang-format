@@ -1,27 +1,39 @@
 BasedOnStyle: LLVM
+Language: Cpp
+Standard: Latest
 
+# Indentation
 IndentWidth: 4
 TabWidth: 4
-UseTab: ForContinuationAndIndentation
+UseTab: AlignWithSpaces
 ContinuationIndentWidth: 4
-
-BreakBeforeBraces: Allman
-InsertBraces: true
-ColumnLimit: 120
-
-PointerAlignment: Left
-ReferenceAlignment: Left
-DerivePointerAlignment: false
-
-#AllowShortBlocksOnASingleLine: Always
-#AllowShortIfStatementsOnASingleLine: AllIfsAndElse
-#AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: Inline
-AlignConsecutiveAssignments: Consecutive
-
 IndentCaseLabels: true
 NamespaceIndentation: All
 AccessModifierOffset: 0
+
+# Braces
+BreakBeforeBraces: Allman
+InsertBraces: true
+
+# Wrapping
+ColumnLimit: 120
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortEnumsOnASingleLine: false
+BreakTemplateDeclarations: Yes
+
+# Alignment
+PointerAlignment: Left
+ReferenceAlignment: Left
+DerivePointerAlignment: false
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveDeclarations: Consecutive
+
+# Blank lines
+SeparateDefinitionBlocks: Always
 EmptyLineBeforeAccessModifier: Leave
-MaxEmptyLinesToKeep: 2
-SortIncludes: Never
+MaxEmptyLinesToKeep: 1
+InsertNewlineAtEOF: true
+
+# Includes
+SortIncludes: CaseSensitive
+IncludeBlocks: Preserve
