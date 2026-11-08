@@ -9,7 +9,8 @@ namespace
 	// Does this exact ref exist? e.g. "refs/heads/main" or "refs/remotes/origin/feature"
 	bool ref_exists(const std::filesystem::path& path, const std::string& branch)
 	{
-		std::expected result = SystemInterface::run(std::vector<std::string>{"git", "show-ref", "--verify", "--quiet", branch}, path);
+		std::expected result =
+			SystemInterface::run(std::vector<std::string>{"git", "show-ref", "--verify", "--quiet", branch}, path);
 		return result && result->exit_code == 0;
 	}
 } // namespace
@@ -49,7 +50,8 @@ std::expected<std::string, std::string> GitInterface::branch_list(const std::fil
 }
 
 
-std::expected<std::string, std::string> GitInterface::branch_switch(const std::filesystem::path& path, std::string_view branch)
+std::expected<std::string, std::string> GitInterface::branch_switch(const std::filesystem::path& path,
+																	std::string_view branch)
 {
 	const std::string name{branch};
 

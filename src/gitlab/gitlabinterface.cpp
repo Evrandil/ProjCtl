@@ -19,7 +19,8 @@ CliState GitLabInterface::state()
 
 std::expected<std::string, std::string> GitLabInterface::repo_list()
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "repo", "list", "--output", "json", "--per-page", "100"});
+	std::expected result =
+		SystemInterface::run(std::vector<std::string>{"glab", "repo", "list", "--output", "json", "--per-page", "100"});
 
 	if (!result)
 	{

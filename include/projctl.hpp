@@ -9,15 +9,15 @@
 #include <vector>
 
 
-constexpr std::string_view MARGIN	= "    ";
-constexpr int MARGIN_WIDTH			= 20;
-constexpr int MARGIN_SIZE			= 20;
+constexpr std::string_view MARGIN = "    ";
+constexpr int MARGIN_WIDTH        = 20;
+constexpr int MARGIN_SIZE         = 20;
 
 
 ProjectType detect_project_type(const std::filesystem::path&);
 std::string trim(std::string_view);
 std::string truncate(std::string_view, size_t);
-using ProjectEntry = std::map<std::string, ProjectContent>::value_type;
+using ProjectEntry    = std::map<std::string, ProjectContent>::value_type;
 using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
 
 struct BatchResult
@@ -25,7 +25,6 @@ struct BatchResult
 	std::string output;
 	std::size_t failed = 0;
 };
-
 
 
 class ProjCtl
@@ -57,7 +56,8 @@ class ProjCtl
 	[[nodiscard]] std::expected<std::string, std::string> list(bool) const;
 	[[nodiscard]] std::expected<std::string, std::string> list_gits(bool) const;
 	[[nodiscard]] std::expected<std::string, std::string> path_show(const std::optional<std::string>&) const;
-	[[nodiscard]] std::expected<std::string, std::string> add(const std::optional<std::string>&, const std::optional<std::filesystem::path>&);
+	[[nodiscard]] std::expected<std::string, std::string> add(const std::optional<std::string>&,
+															  const std::optional<std::filesystem::path>&);
 	[[nodiscard]] std::expected<std::string, std::string> remove(const std::string&);
 	[[nodiscard]] std::expected<std::string, std::string> open(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<int, std::string> build(const std::optional<std::string>&) const;
@@ -80,12 +80,15 @@ class ProjCtl
 	[[nodiscard]] std::expected<std::string, std::string> pull(const ProjectEntry&) const;
 	[[nodiscard]] std::expected<std::string, std::string> pull(const std::optional<std::string>&) const;
 	[[nodiscard]] BatchResult pull_all() const;
-	[[nodiscard]] std::expected<std::string, std::string> git_commit(const std::optional<std::string>&, std::optional<std::string_view>) const;
+	[[nodiscard]] std::expected<std::string, std::string> git_commit(const std::optional<std::string>&,
+																	 std::optional<std::string_view>) const;
 	[[nodiscard]] std::expected<std::string, std::string> push(const std::optional<std::string>&, bool) const;
-	[[nodiscard]] std::expected<std::string, std::string> branch(const std::optional<std::string>&, const std::optional<std::string>&) const;
+	[[nodiscard]] std::expected<std::string, std::string> branch(const std::optional<std::string>&,
+																 const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> git_merge(const std::optional<std::string>&) const;
 	[[nodiscard]] std::expected<std::string, std::string> log(const std::optional<std::string>&, bool) const;
-	[[nodiscard]] std::expected<int, std::string> diff(const std::optional<std::string>&, const std::optional<std::filesystem::path>&) const;
+	[[nodiscard]] std::expected<int, std::string> diff(const std::optional<std::string>&,
+													   const std::optional<std::filesystem::path>&) const;
 	[[nodiscard]] int handle(const Cmd::Git::Status&) const;
 	[[nodiscard]] int handle(const Cmd::Git::Fetch&) const;
 	[[nodiscard]] int handle(const Cmd::Git::Commit&) const;

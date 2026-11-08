@@ -29,7 +29,8 @@ namespace
 		{
 			std::size_t comma = value.find(',', start);
 
-			std::string field = trim(value.substr(start, comma == std::string_view::npos ? value.size() - start : comma - start));
+			std::string field =
+				trim(value.substr(start, comma == std::string_view::npos ? value.size() - start : comma - start));
 
 			if (field == "number")
 			{

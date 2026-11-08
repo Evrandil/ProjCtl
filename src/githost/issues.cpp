@@ -62,7 +62,8 @@ std::expected<int, std::string> GitHostInterface::issue_edit(const std::filesyst
 }
 
 
-std::expected<std::string, std::string> GitHostInterface::issue_view(const std::filesystem::path& path, int issue_number)
+std::expected<std::string, std::string> GitHostInterface::issue_view(const std::filesystem::path& path,
+																	 int issue_number)
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -81,7 +82,8 @@ std::expected<std::string, std::string> GitHostInterface::issue_view(const std::
 }
 
 
-std::expected<std::string, std::string> GitHostInterface::issue_close(const std::filesystem::path& path, int issue_number)
+std::expected<std::string, std::string> GitHostInterface::issue_close(const std::filesystem::path& path,
+																	  int issue_number)
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)

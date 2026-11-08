@@ -57,4 +57,3 @@ std::string truncate(std::string_view text, std::size_t max_length)
 
 	return std::string(text.substr(0, max_length - TRUNCATE_SIZE)) + "...";
 }
-

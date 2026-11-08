@@ -62,7 +62,8 @@ std::expected<int, std::string> GitHostInterface::request_edit(const std::filesy
 }
 
 
-std::expected<std::string, std::string> GitHostInterface::request_view(const std::filesystem::path& path, int request_number)
+std::expected<std::string, std::string> GitHostInterface::request_view(const std::filesystem::path& path,
+																	   int request_number)
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -81,7 +82,8 @@ std::expected<std::string, std::string> GitHostInterface::request_view(const std
 }
 
 
-std::expected<std::string, std::string> GitHostInterface::request_close(const std::filesystem::path& path, int request_number)
+std::expected<std::string, std::string> GitHostInterface::request_close(const std::filesystem::path& path,
+																		int request_number)
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)

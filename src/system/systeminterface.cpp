@@ -51,7 +51,8 @@ namespace
 } // namespace
 
 
-std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::span<const std::string> args, const std::filesystem::path& cwd)
+std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::span<const std::string> args,
+																		 const std::filesystem::path& cwd)
 {
 	if (args.empty())
 	{
@@ -125,7 +126,8 @@ std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::sp
 }
 
 
-std::expected<int, std::string> SystemInterface::run_interactive(std::span<const std::string> args, const std::filesystem::path& cwd)
+std::expected<int, std::string> SystemInterface::run_interactive(std::span<const std::string> args,
+																 const std::filesystem::path& cwd)
 {
 	if (args.empty())
 	{

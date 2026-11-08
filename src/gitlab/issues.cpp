@@ -6,7 +6,8 @@
 
 std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(const std::filesystem::path& path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "issue", "list", "--output", "json"}, path);
+	std::expected result =
+		SystemInterface::run(std::vector<std::string>{"glab", "issue", "list", "--output", "json"}, path);
 
 	if (!result)
 	{
@@ -55,12 +56,14 @@ std::expected<int, std::string> GitLabInterface::issue_create(const std::filesys
 
 std::expected<int, std::string> GitLabInterface::issue_edit(const std::filesystem::path& path, int issue_number)
 {
-	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "issue", "edit", std::to_string(issue_number)}, path);
+	return SystemInterface::run_interactive(
+		std::vector<std::string>{"glab", "issue", "edit", std::to_string(issue_number)}, path);
 }
 
 std::expected<std::string, std::string> GitLabInterface::issue_view(const std::filesystem::path& path, int issue_number)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "issue", "view", std::to_string(issue_number)}, path);
+	std::expected result =
+		SystemInterface::run(std::vector<std::string>{"glab", "issue", "view", std::to_string(issue_number)}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());
@@ -73,9 +76,11 @@ std::expected<std::string, std::string> GitLabInterface::issue_view(const std::f
 	return result->text;
 }
 
-std::expected<std::string, std::string> GitLabInterface::issue_close(const std::filesystem::path& path, int issue_number)
+std::expected<std::string, std::string> GitLabInterface::issue_close(const std::filesystem::path& path,
+																	 int issue_number)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "issue", "close", std::to_string(issue_number)}, path);
+	std::expected result =
+		SystemInterface::run(std::vector<std::string>{"glab", "issue", "close", std::to_string(issue_number)}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());

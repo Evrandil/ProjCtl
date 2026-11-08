@@ -15,7 +15,8 @@ namespace
 		}
 		if (args.size() > 1)
 		{
-			return std::unexpected(std::format("Too many arguments: expected at most one project name, got {}", args.size()));
+			return std::unexpected(
+				std::format("Too many arguments: expected at most one project name, got {}", args.size()));
 		}
 		if (args.front().starts_with('-'))
 		{
@@ -33,7 +34,7 @@ namespace
 		const std::expected name = optional_name(args);
 		if (!name)
 		{
-			return Cmd::Unknown{ .message = name.error() };
+			return Cmd::Unknown{.message = name.error()};
 		}
 		return CommandType{.name = *name};
 	}
@@ -49,7 +50,7 @@ namespace
 
 	std::optional<int> parse_number(std::string_view text)
 	{
-		int value = 0;
+		int value               = 0;
 		const auto [end, error] = std::from_chars(text.data(), text.data() + text.size(), value);
 		if (error != std::errc{} || end != text.data() + text.size() || value <= 0)
 		{
@@ -67,24 +68,25 @@ namespace
 				name = optional_name(args.last(1));
 				if (!name)
 				{
-					return Cmd::Unknown{ .message = name.error() };
+					return Cmd::Unknown{.message = name.error()};
 				}
 				[[fallthrough]];
 			case 1:
+			{
+				std::optional<int> number = parse_number(args.front());
+				if (!number)
 				{
-					std::optional<int> number = parse_number(args.front());
-					if (!number)
-					{
-						return Cmd::Unknown{ .message = std::format("Invalid number: {}", args.front()) };
-					}
-
-					return CommandType{
-						.number = *number,
-						.name = *name,
-					};
+					return Cmd::Unknown{.message = std::format("Invalid number: {}", args.front())};
 				}
+
+				return CommandType{
+					.number = *number,
+					.name   = *name,
+				};
+			}
 			default:
-				return Cmd::Unknown{ .message = std::format("Invalid number of arguments: expected one or two, got {}", args.size()) };
+				return Cmd::Unknown{
+					.message = std::format("Invalid number of arguments: expected one or two, got {}", args.size())};
 		}
 	}
 
@@ -135,7 +137,7 @@ Command parser(const std::span<const std::string_view> input)
 	{
 		if (!args.empty())
 		{
-			return Cmd::Unknown{ .message = "Doesn't take any arguments" };
+			return Cmd::Unknown{.message = "Doesn't take any arguments"};
 		}
 		return Cmd::Version{};
 	}
@@ -158,7 +160,7 @@ Command parser(const std::span<const std::string_view> input)
 		{
 			return Cmd::Base::List{.gits_only = true, .names_only = true};
 		}
-		return Cmd::Unknown{ .message = std::format("Too many arguments: expected at most one, got {}", args.size()) };
+		return Cmd::Unknown{.message = std::format("Too many arguments: expected at most one, got {}", args.size())};
 	}
 
 	if (command == "path")
@@ -171,7 +173,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-')))
 		{
-			return Cmd::Unknown{ .message = parts ? "Invalid path: must not start with '-'" : parts.error() };
+			return Cmd::Unknown{.message = parts ? "Invalid path: must not start with '-'" : parts.error()};
 		}
 		return Cmd::Base::Add{
 			.name = parts->name,
@@ -184,7 +186,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected name = optional_name(args);
 		if (!name || !*name)
 		{
-			return Cmd::Unknown{ .message = name ? "Missing project name" : name.error() };
+			return Cmd::Unknown{.message = name ? "Missing project name" : name.error()};
 		}
 		return Cmd::Base::Remove{.name = **name};
 	}
@@ -215,7 +217,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected parts = name_with_extra(args);
 		if (!parts)
 		{
-			return Cmd::Unknown{ .message = parts.error() };
+			return Cmd::Unknown{.message = parts.error()};
 		}
 		return Cmd::Git::Commit{
 			.name    = parts->name,
@@ -229,7 +231,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected name = optional_name(upstream ? args.subspan(1) : args);
 		if (!name)
 		{
-			return Cmd::Unknown{ .message = name.error() };
+			return Cmd::Unknown{.message = name.error()};
 		}
 		return Cmd::Git::Push{
 			.branch_upstream = upstream,
@@ -252,7 +254,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-')))
 		{
-			return Cmd::Unknown{ .message = parts ? "Invalid ref: can't start with '-'" : parts.error() };
+			return Cmd::Unknown{.message = parts ? "Invalid ref: can't start with '-'" : parts.error()};
 		}
 		return Cmd::Git::Branch{
 			.name        = parts->name,
@@ -267,15 +269,15 @@ Command parser(const std::span<const std::string_view> input)
 
 	if (command == "log")
 	{
-		const bool oneline = !args.empty() && args.front() == "-o";
+		const bool oneline       = !args.empty() && args.front() == "-o";
 		const std::expected name = optional_name(oneline ? args.subspan(1) : args);
 		if (!name)
 		{
-			return Cmd::Unknown{ .message = name.error() };
+			return Cmd::Unknown{.message = name.error()};
 		}
 		return Cmd::Git::Log{
 			.oneline = oneline,
-			.name = *name,
+			.name    = *name,
 		};
 	}
 
@@ -284,7 +286,7 @@ Command parser(const std::span<const std::string_view> input)
 		const std::expected parts = name_with_extra(args);
 		if (!parts || (parts->extra && parts->extra->starts_with('-')))
 		{
-			return Cmd::Unknown{ .message = parts ? "Invalid path: must not start with '-'" : parts.error() };
+			return Cmd::Unknown{.message = parts ? "Invalid path: must not start with '-'" : parts.error()};
 		}
 		return Cmd::Git::Diff{
 			.name = parts->name,
@@ -293,11 +295,11 @@ Command parser(const std::span<const std::string_view> input)
 	}
 
 
-	if (command == "git" || command == "gits"|| command == "gh")
+	if (command == "git" || command == "gits" || command == "gh")
 	{
 		if (!args.empty())
 		{
-			return Cmd::Unknown{ .message = "Doesn't take any arguments" };
+			return Cmd::Unknown{.message = "Doesn't take any arguments"};
 		}
 		return Cmd::GH::Status{};
 	}
@@ -306,7 +308,7 @@ Command parser(const std::span<const std::string_view> input)
 	{
 		if (!args.empty())
 		{
-			return Cmd::Unknown{ .message = "Doesn't take any arguments" };
+			return Cmd::Unknown{.message = "Doesn't take any arguments"};
 		}
 		return Cmd::GH::RepoList{};
 	}
@@ -366,5 +368,5 @@ Command parser(const std::span<const std::string_view> input)
 		return parser_with_name<Cmd::GH::RequestMerge>(args);
 	}
 
-	return Cmd::Unknown{ .message = "No command specified (check grammar :-)" };
+	return Cmd::Unknown{.message = "No command specified (check grammar :-)"};
 }

@@ -6,7 +6,8 @@
 
 std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(const std::filesystem::path& path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "list", "--output", "json"}, path);
+	std::expected result =
+		SystemInterface::run(std::vector<std::string>{"glab", "mr", "list", "--output", "json"}, path);
 
 	if (!result)
 	{
@@ -55,12 +56,15 @@ std::expected<int, std::string> GitLabInterface::request_create(const std::files
 
 std::expected<int, std::string> GitLabInterface::request_edit(const std::filesystem::path& path, int request_number)
 {
-	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "mr", "edit", std::to_string(request_number)}, path);
+	return SystemInterface::run_interactive(
+		std::vector<std::string>{"glab", "mr", "edit", std::to_string(request_number)}, path);
 }
 
-std::expected<std::string, std::string> GitLabInterface::request_view(const std::filesystem::path& path, int request_number)
+std::expected<std::string, std::string> GitLabInterface::request_view(const std::filesystem::path& path,
+																	  int request_number)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
+	std::expected result =
+		SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());
@@ -73,9 +77,11 @@ std::expected<std::string, std::string> GitLabInterface::request_view(const std:
 	return result->text;
 }
 
-std::expected<std::string, std::string> GitLabInterface::request_close(const std::filesystem::path& path, int request_number)
+std::expected<std::string, std::string> GitLabInterface::request_close(const std::filesystem::path& path,
+																	   int request_number)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
+	std::expected result =
+		SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());
@@ -91,7 +97,8 @@ std::expected<std::string, std::string> GitLabInterface::request_close(const std
 
 std::expected<std::string, std::string> GitLabInterface::request_merge(const std::filesystem::path& path)
 {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "merge", "--squash", "--remove-source-branch"}, path);
+	std::expected result = SystemInterface::run(
+		std::vector<std::string>{"glab", "mr", "merge", "--squash", "--remove-source-branch"}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());

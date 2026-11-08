@@ -7,7 +7,8 @@
 std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(const std::filesystem::path& path)
 {
 	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt,parent"}),
+		gh_command(std::vector<std::string>{"gh", "issue", "list", "--json",
+											"number,title,state,author,labels,createdAt,updatedAt,parent"}),
 		path);
 
 	if (!result)
@@ -65,12 +66,14 @@ std::expected<int, std::string> GitHubInterface::issue_create(const std::filesys
 
 std::expected<int, std::string> GitHubInterface::issue_edit(const std::filesystem::path& path, int issue_number)
 {
-	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)}, path);
+	return SystemInterface::run_interactive(
+		std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)}, path);
 }
 
 std::expected<std::string, std::string> GitHubInterface::issue_view(const std::filesystem::path& path, int issue_number)
 {
-	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "view", std::to_string(issue_number)}), path);
+	std::expected result = SystemInterface::run(
+		gh_command(std::vector<std::string>{"gh", "issue", "view", std::to_string(issue_number)}), path);
 
 	if (!result)
 	{
@@ -84,9 +87,11 @@ std::expected<std::string, std::string> GitHubInterface::issue_view(const std::f
 	return result->text;
 }
 
-std::expected<std::string, std::string> GitHubInterface::issue_close(const std::filesystem::path& path, int issue_number)
+std::expected<std::string, std::string> GitHubInterface::issue_close(const std::filesystem::path& path,
+																	 int issue_number)
 {
-	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "close", std::to_string(issue_number)}), path);
+	std::expected result = SystemInterface::run(
+		gh_command(std::vector<std::string>{"gh", "issue", "close", std::to_string(issue_number)}), path);
 
 	if (!result)
 	{

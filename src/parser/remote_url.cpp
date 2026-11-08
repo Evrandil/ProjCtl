@@ -26,24 +26,24 @@ namespace
 				return std::unexpected(std::format("No repository path in {}", remote));
 			}
 
-			std::string_view authority = rest.substr(0, path_start);       // user@host:port
+			std::string_view authority = rest.substr(0, path_start); // user@host:port
 			if (const std::size_t at_sign = authority.find('@'); at_sign != std::string_view::npos)
 			{
-				authority.remove_prefix(at_sign + 1);                           // host:port
+				authority.remove_prefix(at_sign + 1); // host:port
 			}
-			const std::string_view host = authority.substr(0, authority.find(':'));   // host
+			const std::string_view host = authority.substr(0, authority.find(':')); // host
 
 			if (host.empty())
 			{
 				return std::unexpected(std::format("No host in {}", remote));
 			}
-			return RemoteParts{ .host = host, .path = rest.substr(path_start + 1) };
+			return RemoteParts{.host = host, .path = rest.substr(path_start + 1)};
 		}
 
 		std::string_view rest = remote;
 		if (const std::size_t at_sign = rest.find('@'); at_sign != std::string_view::npos)
 		{
-			rest.remove_prefix(at_sign + 1);                                    // host:path
+			rest.remove_prefix(at_sign + 1); // host:path
 		}
 
 		const std::size_t colon = rest.find(':');
@@ -51,7 +51,7 @@ namespace
 		{
 			return std::unexpected(std::format("Not a remote URL: {}", remote));
 		}
-		return RemoteParts{ .host = rest.substr(0, colon), .path = rest.substr(colon + 1) };
+		return RemoteParts{.host = rest.substr(0, colon), .path = rest.substr(colon + 1)};
 	}
 } // namespace
 

@@ -6,7 +6,7 @@
 
 [[nodiscard]] std::expected<std::string, std::string> GitInterface::log(const std::filesystem::path& path, bool oneline)
 {
-	std::vector<std::string>command {"git", "log"};
+	std::vector<std::string> command{"git", "log"};
 	if (oneline)
 	{
 		command.push_back("--oneline");

@@ -22,7 +22,7 @@ namespace Cmd
 
 		struct List
 		{
-			bool gits_only = false;
+			bool gits_only  = false;
 			bool names_only = false;
 		};
 
@@ -169,7 +169,7 @@ namespace Cmd
 			std::optional<std::string> name;
 		};
 
-		struct RequestEdit 
+		struct RequestEdit
 		{
 			int number = 0;
 			std::optional<std::string> name;
@@ -197,6 +197,10 @@ namespace Cmd
 } // namespace Cmd
 
 
-using Command = std::variant<Cmd::Unknown, Cmd::Version, Cmd::Base::List, Cmd::Base::Path, Cmd::Base::Add, Cmd::Base::Remove, Cmd::Base::Open, Cmd::Base::Build, Cmd::Base::Run, Cmd::Git::Status, Cmd::Git::Commit,
-							 Cmd::Git::Push, Cmd::Git::Pull, Cmd::Git::Fetch, Cmd::Git::Branch, Cmd::Git::Merge, Cmd::Git::Log, Cmd::Git::Diff, Cmd::GH::Status, Cmd::GH::RepoList, Cmd::GH::IssueList, Cmd::GH::IssueCreate, Cmd::GH::IssueEdit, Cmd::GH::IssueView, Cmd::GH::IssueClose,
-							 Cmd::GH::RequestList, Cmd::GH::RequestCreate, Cmd::GH::RequestEdit, Cmd::GH::RequestView, Cmd::GH::RequestClose, Cmd::GH::RequestMerge>;
+using Command =
+	std::variant<Cmd::Unknown, Cmd::Version, Cmd::Base::List, Cmd::Base::Path, Cmd::Base::Add, Cmd::Base::Remove,
+				 Cmd::Base::Open, Cmd::Base::Build, Cmd::Base::Run, Cmd::Git::Status, Cmd::Git::Commit, Cmd::Git::Push,
+				 Cmd::Git::Pull, Cmd::Git::Fetch, Cmd::Git::Branch, Cmd::Git::Merge, Cmd::Git::Log, Cmd::Git::Diff,
+				 Cmd::GH::Status, Cmd::GH::RepoList, Cmd::GH::IssueList, Cmd::GH::IssueCreate, Cmd::GH::IssueEdit,
+				 Cmd::GH::IssueView, Cmd::GH::IssueClose, Cmd::GH::RequestList, Cmd::GH::RequestCreate,
+				 Cmd::GH::RequestEdit, Cmd::GH::RequestView, Cmd::GH::RequestClose, Cmd::GH::RequestMerge>;

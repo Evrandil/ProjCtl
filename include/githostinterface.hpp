@@ -10,10 +10,6 @@
 #include <string>
 
 
-
-
-
-
 namespace GitHostInterface
 {
 	[[nodiscard]] CliState state(HostOption);
