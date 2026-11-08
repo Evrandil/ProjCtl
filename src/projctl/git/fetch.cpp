@@ -6,7 +6,11 @@
 
 auto ProjCtl::fetch(const ProjectEntry& project) const -> std::expected<std::string, std::string> {
 	std::string output = std::format(
-		"{}Fetching: {}{}{}\n", paint(config.header_color), paint(config.project_name_color), project.first, reset()
+		"{}Fetching: {}{}{}\n",
+		paint(config.header_color),
+		paint(config.project_name_color),
+		project.first,
+		reset()
 	);
 	std::expected<std::string, std::string> result = GitInterface::fetch(project.second.path);
 	if (!result) {

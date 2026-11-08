@@ -90,7 +90,11 @@ auto ProjCtl::issues(const ProjectEntry& project) const -> std::expected<std::st
 	const std::string&    project_name = project.first;
 
 	std::string output = std::format(
-		"{}Issues for {}{}{}:\n", paint(config.header_color), paint(config.project_name_color), project_name, reset()
+		"{}Issues for {}{}{}:\n",
+		paint(config.header_color),
+		paint(config.project_name_color),
+		project_name,
+		reset()
 	);
 	std::expected list = GitHostInterface::issue_list(content.path.string());
 	if (!list) {

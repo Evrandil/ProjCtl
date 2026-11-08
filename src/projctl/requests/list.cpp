@@ -89,7 +89,11 @@ auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::
 	const std::string&    project_name = project.first;
 
 	std::string output = std::format(
-		"{}Requests for {}{}{}:\n", paint(config.header_color), paint(config.project_name_color), project_name, reset()
+		"{}Requests for {}{}{}:\n",
+		paint(config.header_color),
+		paint(config.project_name_color),
+		project_name,
+		reset()
 	);
 	std::expected list = GitHostInterface::request_list(content.path.string());
 	if (!list) {

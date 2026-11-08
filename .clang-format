@@ -25,6 +25,8 @@ AlignConsecutiveShortCaseStatements:
 BreakTemplateDeclarations: Yes
 BinPackArguments: false
 AlignAfterOpenBracket: BlockIndent
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
 
 # Alignment
 PointerAlignment: Left

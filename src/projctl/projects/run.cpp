@@ -29,7 +29,8 @@ auto ProjCtl::run(const std::optional<std::string>& name) const -> std::expected
 	}
 
 	return SystemInterface::run_interactive(
-		std::vector<std::string>{"sh", "-c", std::string{*command_option}}, content.path
+		std::vector<std::string>{"sh", "-c", std::string{*command_option}},
+		content.path
 	);
 }
 

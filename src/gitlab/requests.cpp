@@ -49,7 +49,8 @@ auto GitLabInterface::request_create(const std::filesystem::path& path) -> std::
 auto GitLabInterface::request_edit(const std::filesystem::path& path, int request_number)
 	-> std::expected<int, std::string> {
 	return SystemInterface::run_interactive(
-		std::vector<std::string>{"glab", "mr", "edit", std::to_string(request_number)}, path
+		std::vector<std::string>{"glab", "mr", "edit", std::to_string(request_number)},
+		path
 	);
 }
 
@@ -83,7 +84,8 @@ auto GitLabInterface::request_close(const std::filesystem::path& path, int reque
 
 auto GitLabInterface::request_merge(const std::filesystem::path& path) -> std::expected<std::string, std::string> {
 	std::expected result = SystemInterface::run(
-		std::vector<std::string>{"glab", "mr", "merge", "--squash", "--remove-source-branch"}, path
+		std::vector<std::string>{"glab", "mr", "merge", "--squash", "--remove-source-branch"},
+		path
 	);
 	if (!result) {
 		return std::unexpected(result.error());

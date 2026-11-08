@@ -26,7 +26,10 @@ auto ProjCtl::list(bool names_only) const -> std::expected<std::string, std::str
 	if (projects.empty()) [[unlikely]] {
 		return std::unexpected(
 			std::format(
-				"{}{}There are no projects saved{}\n", paint(config.error_color), symbol(Style::Mark::Cross), reset()
+				"{}{}There are no projects saved{}\n",
+				paint(config.error_color),
+				symbol(Style::Mark::Cross),
+				reset()
 			)
 		);
 	}

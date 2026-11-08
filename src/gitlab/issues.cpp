@@ -48,7 +48,8 @@ auto GitLabInterface::issue_create(const std::filesystem::path& path) -> std::ex
 auto GitLabInterface::issue_edit(const std::filesystem::path& path, int issue_number)
 	-> std::expected<int, std::string> {
 	return SystemInterface::run_interactive(
-		std::vector<std::string>{"glab", "issue", "edit", std::to_string(issue_number)}, path
+		std::vector<std::string>{"glab", "issue", "edit", std::to_string(issue_number)},
+		path
 	);
 }
 

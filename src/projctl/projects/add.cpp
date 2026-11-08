@@ -4,7 +4,8 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 	-> std::expected<std::string, std::string> {
 	std::error_code             error;
 	const std::filesystem::path full_path = std::filesystem::weakly_canonical(
-		std::filesystem::absolute(path.value_or(std::filesystem::current_path())), error
+		std::filesystem::absolute(path.value_or(std::filesystem::current_path())),
+		error
 	);
 	if (error || !std::filesystem::is_directory(full_path)) {
 		return std::unexpected(

@@ -10,7 +10,10 @@ auto ProjCtl::project_find(const std::optional<std::string>& name) const
 		if (!current) {
 			return std::unexpected(
 				std::format(
-					"{}{}Current directory isn't a saved project{}", paint(config.error_color), Style::CROSS, reset()
+					"{}{}Current directory isn't a saved project{}",
+					paint(config.error_color),
+					Style::CROSS,
+					reset()
 				)
 			);
 		}
