@@ -1,4 +1,4 @@
-![CI](https://github.com/Evrandil/ProjCtl/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Evrandil/ProjCtl/actions/workflows/ci.yml/badge.svg)<br>
 Just for record I did have [this](https://github.com/Projctl/projctl) repo stolen by some guy that got my auth token so until I get my org with repo back here's gonna be continuation
 # Project Control
 Have you ever wondered if you're in gh or glab repo so what command to run?<br>
