@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <string>
 #include <variant>
+#include <optional>
 
 namespace Cmd {
 

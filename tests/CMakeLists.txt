@@ -12,10 +12,12 @@ FetchContent_MakeAvailable(doctest)
 add_executable(projctl_tests
 	parser_test.cpp
 	remote_test.cpp
+	config_loader_test.cpp
 )
 
 target_link_libraries(projctl_tests
 	PRIVATE
+		projctl_config
 		projctl_parser
 		doctest::doctest
 )

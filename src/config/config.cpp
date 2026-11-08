@@ -181,9 +181,7 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 		}
 
 		if (trimmed.front() == '[' && trimmed.back() == ']') {
-			if (const std::optional section_option = lookup(SECTIONS, trimmed)) {
-				section = *section_option;
-			}
+			section = lookup(SECTIONS, trimmed.substr(1, trimmed.size() - 2)).value_or(Section::Unknown);
 			continue;
 		}
 

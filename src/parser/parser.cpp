@@ -17,6 +17,13 @@
 // grammar: see tests/parser_test.cpp
 
 namespace {
+	template <typename CommandType>
+	auto without_args(std::span<const std::string_view> args) -> Command {
+		if (!args.empty()) {
+			return Cmd::Unknown{.message = "Doesn't take any arguments"};
+		}
+		return CommandType{};
+	}
 	auto optional_name(std::span<const std::string_view> args)
 		-> std::expected<std::optional<std::string>, std::string> {
 		if (args.empty() || (args.size() == 1 && args.front() == ".")) {
@@ -117,15 +124,6 @@ namespace {
 		}
 	}
 
-	using SubParser = auto (*)(std::span<const std::string_view>) -> Command;
-
-	auto parse_version(std::span<const std::string_view> args) -> Command {
-		if (!args.empty()) {
-			return Cmd::Unknown{.message = "Doesn't take any arguments"};
-		}
-		return Cmd::Version{};
-	}
-
 	auto parse_list(std::span<const std::string_view> args) -> Command {
 		if (args.empty()) {
 			return Cmd::Base::List{.gits_only = false};
@@ -218,24 +216,11 @@ namespace {
 		};
 	}
 
-	auto parse_gh(std::span<const std::string_view> args) -> Command {
-		if (!args.empty()) {
-			return Cmd::Unknown{.message = "Doesn't take any arguments"};
-		}
-		return Cmd::GH::Status{};
-	}
-
-	auto parse_repos(std::span<const std::string_view> args) -> Command {
-		if (!args.empty()) {
-			return Cmd::Unknown{.message = "Doesn't take any arguments"};
-		}
-		return Cmd::GH::RepoList{};
-	}
-
+	using SubParser = auto (*)(std::span<const std::string_view>) -> Command;
 	constexpr auto COMMANDS = std::to_array<std::pair<std::string_view, SubParser>>({
-		{"version", parse_version},
-		{"--version", parse_version},
-		{"-v", parse_version},
+		{"version", without_args<Cmd::Version>},
+		{"--version", without_args<Cmd::Version>},
+		{"-v", without_args<Cmd::Version>},
 		{"list", parse_list},
 		{"path", parser_with_name<Cmd::Base::Path>},
 		{"add", parse_add},
@@ -253,10 +238,10 @@ namespace {
 		{"merge", parser_with_name<Cmd::Git::Merge>},
 		{"log", parse_log},
 		{"diff", parse_diff},
-		{"gh", parse_gh},
-		{"git", parse_gh},
-		{"gits", parse_gh},
-		{"repos", parse_repos},
+		{"gh", without_args<Cmd::GH::Status>},
+		{"git", without_args<Cmd::GH::Status>},
+		{"gits", without_args<Cmd::GH::Status>},
+		{"repos", without_args<Cmd::GH::RepoList>},
 		{"ilist", with_name_or_all<Cmd::GH::IssueList>},
 		{"issues", with_name_or_all<Cmd::GH::IssueList>},
 		{"icreate", parser_with_name<Cmd::GH::IssueCreate>},
@@ -284,5 +269,5 @@ auto parser(const std::span<const std::string_view> input) -> Command {
 		return found->second(input.subspan(1));
 	}
 
-	return Cmd::Unknown{.message = "No command specified (check grammar :-)"};
+	return Cmd::Unknown{.message = std::format("Unknown command: {}", input.front())};
 }
