@@ -200,11 +200,11 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 				if (key == "editor") {
 					config.editor = value;
 				}
-				break;
+				continue;
 
 			case Section::Display: {
 				set_width(config, DISPLAY_WIDTHS, key, value);
-				break;
+				continue;
 			}
 
 			case Section::Tables: {
@@ -213,26 +213,26 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 					if (!parsed.empty()) {
 						config.issue_columns = std::move(parsed);
 					}
-					break;
+					continue;
 				}
 				set_width(config, TABLE_WIDTHS, key, value);
-				break;
+				continue;
 			}
 
 			case Section::Colors: {
 				if (key == "enabled") {
 					config.colors_enabled = value == "true";
-					break;
+					continue;
 				}
 				const std::optional color = lookup(COLOR_NAMES, value);
 				const std::optional field            = lookup(COLORS, key);
 				if (color && field) {
 					config.**field = *color;
 				}
-				break;
+				continue;
 			}
 
-			case Section::Unknown: break;
+			case Section::Unknown: continue;
 		}
 	}
 	return config;
