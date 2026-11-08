@@ -1,22 +1,20 @@
 #pragma once
 
-#include "projectcontent.hpp"
-#include "config.hpp"
 #include "command.hpp"
+#include "config.hpp"
+#include "projectcontent.hpp"
+#include <expected>
 #include <filesystem>
 #include <map>
-#include <expected>
 #include <vector>
 
+constexpr std::string_view MARGIN       = "    ";
+constexpr int              MARGIN_WIDTH = 20;
+constexpr int              MARGIN_SIZE  = 20;
 
-constexpr std::string_view MARGIN = "    ";
-constexpr int MARGIN_WIDTH        = 20;
-constexpr int MARGIN_SIZE         = 20;
-
-
-ProjectType detect_project_type(const std::filesystem::path&);
-std::string trim(std::string_view);
-std::string truncate(std::string_view, size_t);
+auto detect_project_type(const std::filesystem::path&) -> ProjectType;
+auto trim(std::string_view) -> std::string;
+auto truncate(std::string_view, size_t) -> std::string;
 using ProjectEntry    = std::map<std::string, ProjectContent>::value_type;
 using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
 
@@ -26,117 +24,113 @@ struct BatchResult
 	std::size_t failed = 0;
 };
 
-
 class ProjCtl
 {
 	std::map<std::string, ProjectContent> projects;
-	std::filesystem::path config_path;
-	std::filesystem::path data_path;
-	Config config;
+	std::filesystem::path                 config_path;
+	std::filesystem::path                 data_path;
+	Config                                config;
 
 	bool use_colors = true;
-	std::string_view paint(Style::Color color) const;
-	std::string_view reset() const;
+	auto paint(Style::Color color) const -> std::string_view;
+	auto reset() const -> std::string_view;
 
-	void load();
-	[[nodiscard]] std::expected<void, std::string> save() const noexcept;
-	[[nodiscard]] std::expected<ProjectIterator, std::string> project_find(const std::optional<std::string>&) const;
-	[[nodiscard]] std::optional<std::string> current_project_name() const;
+	void               load();
+	[[nodiscard]] auto save() const noexcept -> std::expected<void, std::string>;
+	[[nodiscard]] auto project_find(const std::optional<std::string>&) const -> std::expected<ProjectIterator, std::string>;
+	[[nodiscard]] auto current_project_name() const -> std::optional<std::string>;
 
-	[[nodiscard]] int report(const std::expected<std::string, std::string>&) const;
-	[[nodiscard]] int report(const std::expected<int, std::string>&) const;
-	[[nodiscard]] int report(const BatchResult&) const;
-	[[nodiscard]] int report_save(const std::expected<std::string, std::string>&) const;
+	[[nodiscard]] auto report(const std::expected<std::string, std::string>&) const -> int;
+	[[nodiscard]] auto report(const std::expected<int, std::string>&) const -> int;
+	[[nodiscard]] auto report(const BatchResult&) const -> int;
+	[[nodiscard]] auto report_save(const std::expected<std::string, std::string>&) const -> int;
 
 	// Program's functionality
-	[[nodiscard]] int handle(const Cmd::Unknown&) const;
-	[[nodiscard]] int handle(const Cmd::Version&) const;
+	[[nodiscard]] auto handle(const Cmd::Unknown&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Version&) const -> int;
 
 	// Base functionality
-	[[nodiscard]] std::expected<std::string, std::string> list(bool) const;
-	[[nodiscard]] std::expected<std::string, std::string> list_gits(bool) const;
-	[[nodiscard]] std::expected<std::string, std::string> path_show(const std::optional<std::string>&) const;
-	[[nodiscard]] std::expected<std::string, std::string> add(const std::optional<std::string>&,
-															  const std::optional<std::filesystem::path>&);
-	[[nodiscard]] std::expected<std::string, std::string> remove(const std::string&);
-	[[nodiscard]] std::expected<std::string, std::string> open(const std::optional<std::string>&) const;
-	[[nodiscard]] std::expected<int, std::string> build(const std::optional<std::string>&) const;
-	[[nodiscard]] std::expected<int, std::string> run(const std::optional<std::string>&) const;
-	[[nodiscard]] int handle(const Cmd::Base::List&) const;
-	[[nodiscard]] int handle(const Cmd::Base::Path&) const;
-	[[nodiscard]] int handle(const Cmd::Base::Add&);
-	[[nodiscard]] int handle(const Cmd::Base::Remove&);
-	[[nodiscard]] int handle(const Cmd::Base::Open&) const;
-	[[nodiscard]] int handle(const Cmd::Base::Build&) const;
-	[[nodiscard]] int handle(const Cmd::Base::Run&) const;
+	[[nodiscard]] auto list(bool) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto list_gits(bool) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto path_show(const std::optional<std::string>&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto add(const std::optional<std::string>&, const std::optional<std::filesystem::path>&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto remove(const std::string&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto open(const std::optional<std::string>&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto build(const std::optional<std::string>&) const -> std::expected<int, std::string>;
+	[[nodiscard]] auto run(const std::optional<std::string>&) const -> std::expected<int, std::string>;
+	[[nodiscard]] auto handle(const Cmd::Base::List&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Base::Path&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Base::Add&) -> int;
+	[[nodiscard]] auto handle(const Cmd::Base::Remove&) -> int;
+	[[nodiscard]] auto handle(const Cmd::Base::Open&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Base::Build&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Base::Run&) const -> int;
 
 	// Git functionality
-	[[nodiscard]] std::string status(const ProjectEntry&) const;
-	[[nodiscard]] std::expected<std::string, std::string> status(const std::optional<std::string>&) const;
-	[[nodiscard]] std::expected<std::string, std::string> status_all() const;
-	[[nodiscard]] std::expected<std::string, std::string> fetch(const ProjectEntry&) const;
-	[[nodiscard]] std::expected<std::string, std::string> fetch(const std::optional<std::string>&) const;
-	[[nodiscard]] BatchResult fetch_all() const;
-	[[nodiscard]] std::expected<std::string, std::string> pull(const ProjectEntry&) const;
-	[[nodiscard]] std::expected<std::string, std::string> pull(const std::optional<std::string>&) const;
-	[[nodiscard]] BatchResult pull_all() const;
-	[[nodiscard]] std::expected<std::string, std::string> git_commit(const std::optional<std::string>&,
-																	 std::optional<std::string_view>) const;
-	[[nodiscard]] std::expected<std::string, std::string> push(const std::optional<std::string>&, bool) const;
-	[[nodiscard]] std::expected<std::string, std::string> branch(const std::optional<std::string>&,
-																 const std::optional<std::string>&) const;
-	[[nodiscard]] std::expected<std::string, std::string> git_merge(const std::optional<std::string>&) const;
-	[[nodiscard]] std::expected<std::string, std::string> log(const std::optional<std::string>&, bool) const;
-	[[nodiscard]] std::expected<int, std::string> diff(const std::optional<std::string>&,
-													   const std::optional<std::filesystem::path>&) const;
-	[[nodiscard]] int handle(const Cmd::Git::Status&) const;
-	[[nodiscard]] int handle(const Cmd::Git::Fetch&) const;
-	[[nodiscard]] int handle(const Cmd::Git::Commit&) const;
-	[[nodiscard]] int handle(const Cmd::Git::Push&) const;
-	[[nodiscard]] int handle(const Cmd::Git::Pull&) const;
-	[[nodiscard]] int handle(const Cmd::Git::Branch&) const;
-	[[nodiscard]] int handle(const Cmd::Git::Merge&) const;
-	[[nodiscard]] int handle(const Cmd::Git::Log&) const;
-	[[nodiscard]] int handle(const Cmd::Git::Diff&) const;
+	[[nodiscard]] auto status(const ProjectEntry&) const -> std::string;
+	[[nodiscard]] auto status(const std::optional<std::string>&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto status_all() const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto fetch(const ProjectEntry&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto fetch(const std::optional<std::string>&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto fetch_all() const -> BatchResult;
+	[[nodiscard]] auto pull(const ProjectEntry&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto pull(const std::optional<std::string>&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto pull_all() const -> BatchResult;
+	[[nodiscard]] auto git_commit(const std::optional<std::string>&, std::optional<std::string_view>) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto push(const std::optional<std::string>&, bool) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto branch(const std::optional<std::string>&, const std::optional<std::string>&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto git_merge(const std::optional<std::string>&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto log(const std::optional<std::string>&, bool) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto diff(const std::optional<std::string>&, const std::optional<std::filesystem::path>&) const -> std::expected<int, std::string>;
+	[[nodiscard]] auto handle(const Cmd::Git::Status&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Git::Fetch&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Git::Commit&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Git::Push&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Git::Pull&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Git::Branch&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Git::Merge&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Git::Log&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Git::Diff&) const -> int;
 
 	// GH functionality
-	[[nodiscard]] BatchResult g_status() const;
-	[[nodiscard]] BatchResult repo_list() const;
-	[[nodiscard]] std::string issue_table(const std::vector<Issue>&) const;
-	[[nodiscard]] std::expected<std::string, std::string> issues(const ProjectEntry&) const;
-	[[nodiscard]] std::expected<std::string, std::string> issues(const std::optional<std::string>&) const;
-	[[nodiscard]] BatchResult issues_all() const;
-	[[nodiscard]] std::expected<int, std::string> issue_create(const std::optional<std::string>&) const;
-	[[nodiscard]] std::expected<int, std::string> issue_edit(const std::optional<std::string>&, int) const;
-	[[nodiscard]] std::expected<std::string, std::string> issue_view(const std::optional<std::string>&, int) const;
-	[[nodiscard]] std::expected<std::string, std::string> issue_close(const std::optional<std::string>&, int) const;
-	[[nodiscard]] std::string request_table(const std::vector<Request>&) const;
-	[[nodiscard]] std::expected<std::string, std::string> requests(const ProjectEntry&) const;
-	[[nodiscard]] std::expected<std::string, std::string> requests(const std::optional<std::string>&) const;
-	[[nodiscard]] BatchResult requests_all() const;
-	[[nodiscard]] std::expected<int, std::string> request_create(const std::optional<std::string>&) const;
-	[[nodiscard]] std::expected<int, std::string> request_edit(const std::optional<std::string>&, int) const;
-	[[nodiscard]] std::expected<std::string, std::string> request_view(const std::optional<std::string>&, int) const;
-	[[nodiscard]] std::expected<std::string, std::string> request_close(const std::optional<std::string>&, int) const;
-	[[nodiscard]] std::expected<std::string, std::string> request_merge(const std::optional<std::string>&) const;
-	[[nodiscard]] int handle(const Cmd::GH::Status&) const;
-	[[nodiscard]] int handle(const Cmd::GH::RepoList&) const;
-	[[nodiscard]] int handle(const Cmd::GH::IssueList&) const;
-	[[nodiscard]] int handle(const Cmd::GH::IssueCreate&) const;
-	[[nodiscard]] int handle(const Cmd::GH::IssueEdit&) const;
-	[[nodiscard]] int handle(const Cmd::GH::IssueView&) const;
-	[[nodiscard]] int handle(const Cmd::GH::IssueClose&) const;
-	[[nodiscard]] int handle(const Cmd::GH::RequestList&) const;
-	[[nodiscard]] int handle(const Cmd::GH::RequestCreate&) const;
-	[[nodiscard]] int handle(const Cmd::GH::RequestEdit&) const;
-	[[nodiscard]] int handle(const Cmd::GH::RequestView&) const;
-	[[nodiscard]] int handle(const Cmd::GH::RequestClose&) const;
-	[[nodiscard]] int handle(const Cmd::GH::RequestMerge&) const;
+	[[nodiscard]] auto g_status() const -> BatchResult;
+	[[nodiscard]] auto repo_list() const -> BatchResult;
+	[[nodiscard]] auto issue_table(const std::vector<Issue>&) const -> std::string;
+	[[nodiscard]] auto issues(const ProjectEntry&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto issues(const std::optional<std::string>&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto issues_all() const -> BatchResult;
+	[[nodiscard]] auto issue_create(const std::optional<std::string>&) const -> std::expected<int, std::string>;
+	[[nodiscard]] auto issue_edit(const std::optional<std::string>&, int) const -> std::expected<int, std::string>;
+	[[nodiscard]] auto issue_view(const std::optional<std::string>&, int) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto issue_close(const std::optional<std::string>&, int) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto request_table(const std::vector<Request>&) const -> std::string;
+	[[nodiscard]] auto requests(const ProjectEntry&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto requests(const std::optional<std::string>&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto requests_all() const -> BatchResult;
+	[[nodiscard]] auto request_create(const std::optional<std::string>&) const -> std::expected<int, std::string>;
+	[[nodiscard]] auto request_edit(const std::optional<std::string>&, int) const -> std::expected<int, std::string>;
+	[[nodiscard]] auto request_view(const std::optional<std::string>&, int) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto request_close(const std::optional<std::string>&, int) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto request_merge(const std::optional<std::string>&) const -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto handle(const Cmd::GH::Status&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::RepoList&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::IssueList&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::IssueCreate&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::IssueEdit&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::IssueView&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::IssueClose&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::RequestList&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::RequestCreate&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::RequestEdit&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::RequestView&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::RequestClose&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::RequestMerge&) const -> int;
 
 	public:
 	ProjCtl();
-	int execute(const Command& command)
+
+	auto execute(const Command& command) -> int
 	{
-		return std::visit([this](const auto& cmd) { return handle(cmd); }, command);
+		return std::visit([this](const auto& cmd) -> auto { return handle(cmd); }, command);
 	}
 };

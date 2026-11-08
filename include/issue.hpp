@@ -1,10 +1,9 @@
 #pragma once
 
+#include <cstdint>
+#include <optional>
 #include <string>
 #include <vector>
-#include <optional>
-#include <cstdint>
-
 
 enum class IssueField : uint8_t
 {
@@ -18,15 +17,14 @@ enum class IssueField : uint8_t
 	Parent,
 };
 
-
 struct Issue
 {
-	int number;
-	std::string title;
-	std::string state;
-	std::string author;
-	std::string created;
-	std::string updated;
-	std::vector<std::string> labels;
+	int                        number;
+	std::string                title;
+	std::string                state;
+	std::string                author;
+	std::string                created;
+	std::string                updated;
+	std::vector<std::string>   labels;
 	std::optional<std::string> parent;
 };

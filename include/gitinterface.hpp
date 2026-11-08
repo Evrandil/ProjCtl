@@ -1,29 +1,26 @@
 #pragma once
 
 #include "githostoption.hpp"
-#include <filesystem>
 #include <expected>
+#include <filesystem>
 #include <string>
-
 
 namespace GitInterface
 {
-	[[nodiscard]] std::expected<std::string, std::string> add(const std::filesystem::path&);
-	[[nodiscard]] bool is_repo(const std::filesystem::path&);
-	[[nodiscard]] std::expected<HostOption, std::string> host(const std::filesystem::path&);
-	[[nodiscard]] std::expected<std::string, std::string> changes(const std::filesystem::path&);
-	[[nodiscard]] std::expected<std::string, std::string> branch(const std::filesystem::path&);
-	[[nodiscard]] std::expected<std::string, std::string> branch_list(const std::filesystem::path&);
-	[[nodiscard]] std::expected<std::string, std::string> branch_switch(const std::filesystem::path&, std::string_view);
-	[[nodiscard]] std::expected<std::string, std::string> remote(const std::filesystem::path&);
-	[[nodiscard]] std::expected<std::string, std::string> remote_short(const std::filesystem::path&);
-	[[nodiscard]] std::expected<std::string, std::string> commit(const std::filesystem::path&,
-																 std::optional<std::string_view>);
-	[[nodiscard]] std::expected<std::string, std::string> push(const std::filesystem::path&, bool upstream = false);
-	[[nodiscard]] std::expected<std::string, std::string> pull(const std::filesystem::path&);
-	[[nodiscard]] std::expected<std::string, std::string> fetch(const std::filesystem::path&);
-	[[nodiscard]] std::expected<std::string, std::string> default_merge(const std::filesystem::path&);
-	[[nodiscard]] std::expected<std::string, std::string> log(const std::filesystem::path&, bool oneline = false);
-	[[nodiscard]] std::expected<int, std::string> diff(const std::filesystem::path&,
-													   const std::optional<std::filesystem::path>&);
+	[[nodiscard]] auto add(const std::filesystem::path&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto is_repo(const std::filesystem::path&) -> bool;
+	[[nodiscard]] auto host(const std::filesystem::path&) -> std::expected<HostOption, std::string>;
+	[[nodiscard]] auto changes(const std::filesystem::path&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto branch(const std::filesystem::path&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto branch_list(const std::filesystem::path&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto branch_switch(const std::filesystem::path&, std::string_view) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto remote(const std::filesystem::path&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto remote_short(const std::filesystem::path&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto commit(const std::filesystem::path&, std::optional<std::string_view>) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto push(const std::filesystem::path&, bool upstream = false) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto pull(const std::filesystem::path&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto fetch(const std::filesystem::path&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto default_merge(const std::filesystem::path&) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto log(const std::filesystem::path&, bool oneline = false) -> std::expected<std::string, std::string>;
+	[[nodiscard]] auto diff(const std::filesystem::path&, const std::optional<std::filesystem::path>&) -> std::expected<int, std::string>;
 }; // namespace GitInterface

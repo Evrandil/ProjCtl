@@ -3,8 +3,7 @@
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
 
-
-CliState GitLabInterface::state()
+auto GitLabInterface::state() -> CliState
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "auth", "status"});
 
@@ -16,11 +15,9 @@ CliState GitLabInterface::state()
 	return result->exit_code == 0 ? CliState::Ready : CliState::NotAuthenticated;
 }
 
-
-std::expected<std::string, std::string> GitLabInterface::repo_list()
+auto GitLabInterface::repo_list() -> std::expected<std::string, std::string>
 {
-	std::expected result =
-		SystemInterface::run(std::vector<std::string>{"glab", "repo", "list", "--output", "json", "--per-page", "100"});
+	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "repo", "list", "--output", "json", "--per-page", "100"});
 
 	if (!result)
 	{

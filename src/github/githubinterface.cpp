@@ -4,16 +4,14 @@
 #include <nlohmann/json.hpp>
 #include <ranges>
 
-
-std::vector<std::string> gh_command(std::vector<std::string> args)
+auto gh_command(std::vector<std::string> args) -> std::vector<std::string>
 {
-	std::vector<std::string> command =
-		std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1"};
+	std::vector<std::string> command = std::vector<std::string>{"env", "NO_COLOR=1", "CLICOLOR_FORCE=0", "GH_NO_UPDATE_NOTIFIER=1"};
 	command.append_range(args | std::views::as_rvalue);
 	return command;
 }
 
-CliState GitHubInterface::state()
+auto GitHubInterface::state() -> CliState
 {
 	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "auth", "status"}));
 
@@ -25,11 +23,9 @@ CliState GitHubInterface::state()
 	return result->exit_code == 0 ? CliState::Ready : CliState::NotAuthenticated;
 }
 
-
-std::expected<std::string, std::string> GitHubInterface::repo_list()
+auto GitHubInterface::repo_list() -> std::expected<std::string, std::string>
 {
-	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "repo", "list", "--json", "nameWithOwner", "--limit", "100"}));
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "repo", "list", "--json", "nameWithOwner", "--limit", "100"}));
 
 	if (!result)
 	{

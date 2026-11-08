@@ -1,13 +1,12 @@
 #include "parser.hpp"
-#include <expected>
 #include <charconv>
-
+#include <expected>
 
 // grammar: see tests/parser_test.cpp
 
 namespace
 {
-	std::expected<std::optional<std::string>, std::string> optional_name(std::span<const std::string_view> args)
+	auto optional_name(std::span<const std::string_view> args) -> std::expected<std::optional<std::string>, std::string>
 	{
 		if (args.empty() || (args.size() == 1 && args.front() == "."))
 		{
@@ -15,8 +14,7 @@ namespace
 		}
 		if (args.size() > 1)
 		{
-			return std::unexpected(
-				std::format("Too many arguments: expected at most one project name, got {}", args.size()));
+			return std::unexpected(std::format("Too many arguments: expected at most one project name, got {}", args.size()));
 		}
 		if (args.front().starts_with('-'))
 		{
@@ -29,7 +27,8 @@ namespace
 		return std::string{args.front()};
 	}
 
-	template <typename CommandType> Command parser_with_name(std::span<const std::string_view> args)
+	template <typename CommandType>
+	auto parser_with_name(std::span<const std::string_view> args) -> Command
 	{
 		const std::expected name = optional_name(args);
 		if (!name)
@@ -39,7 +38,8 @@ namespace
 		return CommandType{.name = *name};
 	}
 
-	template <typename CommandType> Command with_name_or_all(std::span<const std::string_view> args)
+	template <typename CommandType>
+	auto with_name_or_all(std::span<const std::string_view> args) -> Command
 	{
 		if (args.size() == 1 && (args.front() == "--all" || args.front() == "-a"))
 		{
@@ -48,7 +48,7 @@ namespace
 		return parser_with_name<CommandType>(args);
 	}
 
-	std::optional<int> parse_number(std::string_view text)
+	auto parse_number(std::string_view text) -> std::optional<int>
 	{
 		int value               = 0;
 		const auto [end, error] = std::from_chars(text.data(), text.data() + text.size(), value);
@@ -59,7 +59,8 @@ namespace
 		return value;
 	}
 
-	template <typename CommandType> Command number_with_optional_name(std::span<const std::string_view> args)
+	template <typename CommandType>
+	auto number_with_optional_name(std::span<const std::string_view> args) -> Command
 	{
 		std::expected<std::optional<std::string>, std::string> name = std::nullopt;
 		switch (args.size())
@@ -85,8 +86,7 @@ namespace
 				};
 			}
 			default:
-				return Cmd::Unknown{
-					.message = std::format("Invalid number of arguments: expected one or two, got {}", args.size())};
+				return Cmd::Unknown{.message = std::format("Invalid number of arguments: expected one or two, got {}", args.size())};
 		}
 	}
 
@@ -96,7 +96,7 @@ namespace
 		std::optional<std::string> extra;
 	};
 
-	std::expected<NameWithExtra, std::string> name_with_extra(std::span<const std::string_view> args)
+	auto name_with_extra(std::span<const std::string_view> args) -> std::expected<NameWithExtra, std::string>
 	{
 		NameWithExtra result;
 		switch (args.size())
@@ -122,8 +122,7 @@ namespace
 	}
 } // namespace
 
-
-Command parser(const std::span<const std::string_view> input)
+auto parser(const std::span<const std::string_view> input) -> Command
 {
 	if (input.empty())
 	{
@@ -131,7 +130,7 @@ Command parser(const std::span<const std::string_view> input)
 	}
 
 	const std::string_view command = input.front();
-	const std::span args           = input.subspan(1);
+	const std::span        args    = input.subspan(1);
 
 	if (command == "version" || command == "-v" || command == "--version")
 	{
@@ -206,7 +205,6 @@ Command parser(const std::span<const std::string_view> input)
 		return parser_with_name<Cmd::Base::Run>(args);
 	}
 
-
 	if (command == "status")
 	{
 		return with_name_or_all<Cmd::Git::Status>(args);
@@ -227,8 +225,8 @@ Command parser(const std::span<const std::string_view> input)
 
 	if (command == "push")
 	{
-		const bool upstream      = !args.empty() && args.front() == "-u";
-		const std::expected name = optional_name(upstream ? args.subspan(1) : args);
+		const bool          upstream = !args.empty() && args.front() == "-u";
+		const std::expected name     = optional_name(upstream ? args.subspan(1) : args);
 		if (!name)
 		{
 			return Cmd::Unknown{.message = name.error()};
@@ -269,8 +267,8 @@ Command parser(const std::span<const std::string_view> input)
 
 	if (command == "log")
 	{
-		const bool oneline       = !args.empty() && args.front() == "-o";
-		const std::expected name = optional_name(oneline ? args.subspan(1) : args);
+		const bool          oneline = !args.empty() && args.front() == "-o";
+		const std::expected name    = optional_name(oneline ? args.subspan(1) : args);
 		if (!name)
 		{
 			return Cmd::Unknown{.message = name.error()};
@@ -293,7 +291,6 @@ Command parser(const std::span<const std::string_view> input)
 			.path = parts->extra,
 		};
 	}
-
 
 	if (command == "git" || command == "gits" || command == "gh")
 	{

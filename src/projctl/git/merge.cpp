@@ -2,8 +2,7 @@
 
 #include "gitinterface.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::git_merge(const std::optional<std::string>& name) const
+auto ProjCtl::git_merge(const std::optional<std::string>& name) const -> std::expected<std::string, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -21,8 +20,7 @@ std::expected<std::string, std::string> ProjCtl::git_merge(const std::optional<s
 	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
 }
 
-
-int ProjCtl::handle(const Cmd::Git::Merge& cmd) const
+auto ProjCtl::handle(const Cmd::Git::Merge& cmd) const -> int
 {
 	return report(git_merge(cmd.name));
 }

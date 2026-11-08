@@ -2,18 +2,17 @@
 
 #include <fstream>
 
-
 void ProjCtl::load()
 {
 	config.load(config_path);
 
 	std::ifstream projects_file{data_path};
-	std::string line;
-	std::string name;
-	std::string path_str;
-	std::string build_command;
-	std::string run_command;
-	std::size_t separator = 0;
+	std::string   line;
+	std::string   name;
+	std::string   path_str;
+	std::string   build_command;
+	std::string   run_command;
+	std::size_t   separator = 0;
 
 	while (std::getline(projects_file, line))
 	{

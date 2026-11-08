@@ -2,8 +2,7 @@
 
 #include "remote_url.hpp"
 
-
-std::expected<HostOption, std::string> GitInterface::host(const std::filesystem::path& path)
+auto GitInterface::host(const std::filesystem::path& path) -> std::expected<HostOption, std::string>
 {
 	std::expected<std::string, std::string> remote_output = remote(path);
 	if (!remote_output) [[unlikely]]

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string_view>
 #include <cstdint>
+#include <string_view>
 #include <utility>
 
 namespace Style
@@ -28,7 +28,7 @@ namespace Style
 		BaldWhite,
 	};
 
-	constexpr std::string_view color_code(const Color color)
+	constexpr auto color_code(const Color color) -> std::string_view
 	{
 		switch (color)
 		{
@@ -81,7 +81,7 @@ namespace Style
 		Cross,
 	};
 
-	constexpr std::string_view symbol(Mark mark)
+	constexpr auto symbol(Mark mark) -> std::string_view
 	{
 		switch (mark)
 		{

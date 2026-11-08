@@ -3,8 +3,7 @@
 #include "systeminterface.hpp"
 #include <vector>
 
-
-[[nodiscard]] std::expected<std::string, std::string> GitInterface::log(const std::filesystem::path& path, bool oneline)
+[[nodiscard]] auto GitInterface::log(const std::filesystem::path& path, bool oneline) -> std::expected<std::string, std::string>
 {
 	std::vector<std::string> command{"git", "log"};
 	if (oneline)

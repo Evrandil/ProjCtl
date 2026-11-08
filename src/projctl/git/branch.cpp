@@ -2,8 +2,7 @@
 
 #include "gitinterface.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const
+auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const -> std::expected<std::string, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -26,13 +25,13 @@ std::expected<std::string, std::string> ProjCtl::branch(const std::optional<std:
 	std::expected result = GitInterface::branch_switch(content.path, *branch_name);
 	if (!result)
 	{
-		return std::unexpected(std::format("{}Couldn't switch branches for {}{}{}: {}{}", paint(config.error_color), paint(config.project_name_color), (*project)->first, paint(config.error_color), result.error(), reset()));
+		return std::unexpected(
+			std::format("{}Couldn't switch branches for {}{}{}: {}{}", paint(config.error_color), paint(config.project_name_color), (*project)->first, paint(config.error_color), result.error(), reset()));
 	}
 	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
 }
 
-
-int ProjCtl::handle(const Cmd::Git::Branch& cmd) const
+auto ProjCtl::handle(const Cmd::Git::Branch& cmd) const -> int
 {
 	return report(branch(cmd.name, cmd.branch_name));
 }

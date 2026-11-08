@@ -2,8 +2,7 @@
 
 #include "systeminterface.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::open(const std::optional<std::string>& name) const
+auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expected<std::string, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -29,10 +28,7 @@ std::expected<std::string, std::string> ProjCtl::open(const std::optional<std::s
 	return std::format("{}{}{}{}{}{}{}", paint(config.tick_color), symbol(Style::Mark::Tick), paint(config.header_color), "Opened project: ", paint(config.project_name_color), (*project)->first, reset());
 }
 
-
-int ProjCtl::handle(const Cmd::Base::Open& cmd) const
+auto ProjCtl::handle(const Cmd::Base::Open& cmd) const -> int
 {
 	return report(open(cmd.name));
 }
-
-

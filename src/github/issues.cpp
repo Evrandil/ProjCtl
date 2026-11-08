@@ -3,13 +3,9 @@
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
 
-
-std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(const std::filesystem::path& path)
+auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string>
 {
-	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "issue", "list", "--json",
-											"number,title,state,author,labels,createdAt,updatedAt,parent"}),
-		path);
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt,parent"}), path);
 
 	if (!result)
 	{
@@ -58,22 +54,19 @@ std::expected<std::vector<Issue>, std::string> GitHubInterface::issue_list(const
 	return issues;
 }
 
-
-std::expected<int, std::string> GitHubInterface::issue_create(const std::filesystem::path& path)
+auto GitHubInterface::issue_create(const std::filesystem::path& path) -> std::expected<int, std::string>
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "create"}, path);
 }
 
-std::expected<int, std::string> GitHubInterface::issue_edit(const std::filesystem::path& path, int issue_number)
+auto GitHubInterface::issue_edit(const std::filesystem::path& path, int issue_number) -> std::expected<int, std::string>
 {
-	return SystemInterface::run_interactive(
-		std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)}, path);
+	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)}, path);
 }
 
-std::expected<std::string, std::string> GitHubInterface::issue_view(const std::filesystem::path& path, int issue_number)
+auto GitHubInterface::issue_view(const std::filesystem::path& path, int issue_number) -> std::expected<std::string, std::string>
 {
-	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "issue", "view", std::to_string(issue_number)}), path);
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "view", std::to_string(issue_number)}), path);
 
 	if (!result)
 	{
@@ -87,11 +80,9 @@ std::expected<std::string, std::string> GitHubInterface::issue_view(const std::f
 	return result->text;
 }
 
-std::expected<std::string, std::string> GitHubInterface::issue_close(const std::filesystem::path& path,
-																	 int issue_number)
+auto GitHubInterface::issue_close(const std::filesystem::path& path, int issue_number) -> std::expected<std::string, std::string>
 {
-	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "issue", "close", std::to_string(issue_number)}), path);
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "issue", "close", std::to_string(issue_number)}), path);
 
 	if (!result)
 	{

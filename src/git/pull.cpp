@@ -3,8 +3,7 @@
 #include "systeminterface.hpp"
 #include <vector>
 
-
-std::expected<std::string, std::string> GitInterface::pull(const std::filesystem::path& path)
+auto GitInterface::pull(const std::filesystem::path& path) -> std::expected<std::string, std::string>
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "pull"}, path);
 

@@ -16,7 +16,7 @@ BreakBeforeBraces: Allman
 InsertBraces: true
 
 # Wrapping
-ColumnLimit: 120
+ColumnLimit: 220
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortEnumsOnASingleLine: false
 BreakTemplateDeclarations: Yes
@@ -37,3 +37,4 @@ InsertNewlineAtEOF: true
 # Includes
 SortIncludes: CaseSensitive
 IncludeBlocks: Preserve
+

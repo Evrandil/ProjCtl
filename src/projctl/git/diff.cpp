@@ -2,8 +2,7 @@
 
 #include "gitinterface.hpp"
 
-
-std::expected<int, std::string> ProjCtl::diff(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path) const
+auto ProjCtl::diff(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path) const -> std::expected<int, std::string>
 {
 	auto project = project_find(name);
 	if (!project)
@@ -14,8 +13,7 @@ std::expected<int, std::string> ProjCtl::diff(const std::optional<std::string>& 
 	return GitInterface::diff((*project)->second.path, path);
 }
 
-
-int ProjCtl::handle(const Cmd::Git::Diff& cmd) const
+auto ProjCtl::handle(const Cmd::Git::Diff& cmd) const -> int
 {
 	return report(diff(cmd.name, cmd.path));
 }

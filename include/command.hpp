@@ -1,9 +1,8 @@
 #pragma once
 
-#include <variant>
-#include <string>
 #include <filesystem>
-
+#include <string>
+#include <variant>
 
 namespace Cmd
 {
@@ -33,7 +32,7 @@ namespace Cmd
 
 		struct Add
 		{
-			std::optional<std::string> name;
+			std::optional<std::string>           name;
 			std::optional<std::filesystem::path> path;
 		};
 
@@ -64,7 +63,7 @@ namespace Cmd
 
 		struct Status
 		{
-			bool all = false;
+			bool                       all = false;
 			std::optional<std::string> name;
 		};
 
@@ -76,19 +75,19 @@ namespace Cmd
 
 		struct Push
 		{
-			bool branch_upstream = false;
+			bool                       branch_upstream = false;
 			std::optional<std::string> name;
 		};
 
 		struct Pull
 		{
-			bool all = false;
+			bool                       all = false;
 			std::optional<std::string> name;
 		};
 
 		struct Fetch
 		{
-			bool all = false;
+			bool                       all = false;
 			std::optional<std::string> name;
 		};
 
@@ -105,13 +104,13 @@ namespace Cmd
 
 		struct Log
 		{
-			bool oneline = false;
+			bool                       oneline = false;
 			std::optional<std::string> name;
 		};
 
 		struct Diff
 		{
-			std::optional<std::string> name;
+			std::optional<std::string>           name;
 			std::optional<std::filesystem::path> path;
 		};
 
@@ -131,7 +130,7 @@ namespace Cmd
 
 		struct IssueList
 		{
-			bool all = false;
+			bool                       all = false;
 			std::optional<std::string> name;
 		};
 
@@ -142,25 +141,25 @@ namespace Cmd
 
 		struct IssueEdit
 		{
-			int number = 0;
+			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
 		struct IssueView
 		{
-			int number = 0;
+			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
 		struct IssueClose
 		{
-			int number = 0;
+			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
 		struct RequestList
 		{
-			bool all = false;
+			bool                       all = false;
 			std::optional<std::string> name;
 		};
 
@@ -171,19 +170,19 @@ namespace Cmd
 
 		struct RequestEdit
 		{
-			int number = 0;
+			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
 		struct RequestView
 		{
-			int number = 0;
+			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
 		struct RequestClose
 		{
-			int number = 0;
+			int                        number = 0;
 			std::optional<std::string> name;
 		};
 
@@ -196,11 +195,7 @@ namespace Cmd
 
 } // namespace Cmd
 
-
 using Command =
-	std::variant<Cmd::Unknown, Cmd::Version, Cmd::Base::List, Cmd::Base::Path, Cmd::Base::Add, Cmd::Base::Remove,
-				 Cmd::Base::Open, Cmd::Base::Build, Cmd::Base::Run, Cmd::Git::Status, Cmd::Git::Commit, Cmd::Git::Push,
-				 Cmd::Git::Pull, Cmd::Git::Fetch, Cmd::Git::Branch, Cmd::Git::Merge, Cmd::Git::Log, Cmd::Git::Diff,
-				 Cmd::GH::Status, Cmd::GH::RepoList, Cmd::GH::IssueList, Cmd::GH::IssueCreate, Cmd::GH::IssueEdit,
-				 Cmd::GH::IssueView, Cmd::GH::IssueClose, Cmd::GH::RequestList, Cmd::GH::RequestCreate,
-				 Cmd::GH::RequestEdit, Cmd::GH::RequestView, Cmd::GH::RequestClose, Cmd::GH::RequestMerge>;
+	std::variant<Cmd::Unknown, Cmd::Version, Cmd::Base::List, Cmd::Base::Path, Cmd::Base::Add, Cmd::Base::Remove, Cmd::Base::Open, Cmd::Base::Build, Cmd::Base::Run, Cmd::Git::Status, Cmd::Git::Commit, Cmd::Git::Push,
+	             Cmd::Git::Pull, Cmd::Git::Fetch, Cmd::Git::Branch, Cmd::Git::Merge, Cmd::Git::Log, Cmd::Git::Diff, Cmd::GH::Status, Cmd::GH::RepoList, Cmd::GH::IssueList, Cmd::GH::IssueCreate, Cmd::GH::IssueEdit,
+	             Cmd::GH::IssueView, Cmd::GH::IssueClose, Cmd::GH::RequestList, Cmd::GH::RequestCreate, Cmd::GH::RequestEdit, Cmd::GH::RequestView, Cmd::GH::RequestClose, Cmd::GH::RequestMerge>;

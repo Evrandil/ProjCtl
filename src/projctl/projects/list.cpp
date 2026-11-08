@@ -1,19 +1,18 @@
 #include "projctl.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::list(bool names_only) const
+auto ProjCtl::list(bool names_only) const -> std::expected<std::string, std::string>
 {
-	auto list_one = [&](const std::string& name, const std::filesystem::path& path)
+	auto list_one = [&](const std::string& name, const std::filesystem::path& path) -> std::string
 	{
-		return std::format("{}{:<{}}{}{:<{}}{}\n", paint(config.project_name_color), truncate(name, config.name_width), config.name_width, paint(config.project_path_color),
-						   truncate(path.string(), config.path_width), config.path_width, reset());
+		return std::format("{}{:<{}}{}{:<{}}{}\n", paint(config.project_name_color), truncate(name, config.name_width), config.name_width, paint(config.project_path_color), truncate(path.string(), config.path_width),
+		                   config.path_width, reset());
 	};
 
 	std::string output;
 
 	if (names_only)
 	{
-		for (const ProjectEntry& project: projects)
+		for (const ProjectEntry& project : projects)
 		{
 			std::format_to(std::back_inserter(output), "{}\n", project.first);
 		}
@@ -35,8 +34,7 @@ std::expected<std::string, std::string> ProjCtl::list(bool names_only) const
 	return output;
 }
 
-
-int ProjCtl::handle(const Cmd::Base::List& cmd) const
+auto ProjCtl::handle(const Cmd::Base::List& cmd) const -> int
 {
 	return cmd.gits_only ? report(list_gits(cmd.names_only)) : report(list(cmd.names_only));
 }

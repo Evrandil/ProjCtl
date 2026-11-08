@@ -2,8 +2,7 @@
 
 #include "githostinterface.hpp"
 
-
-std::expected<int, std::string> ProjCtl::request_edit(const std::optional<std::string>& name, int issue_number) const
+auto ProjCtl::request_edit(const std::optional<std::string>& name, int issue_number) const -> std::expected<int, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -20,8 +19,7 @@ std::expected<int, std::string> ProjCtl::request_edit(const std::optional<std::s
 	return *result;
 }
 
-
-int ProjCtl::handle(const Cmd::GH::RequestEdit& cmd) const
+auto ProjCtl::handle(const Cmd::GH::RequestEdit& cmd) const -> int
 {
 	return report(request_edit(cmd.name, cmd.number));
 }

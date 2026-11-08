@@ -1,9 +1,9 @@
 #include "projctl.hpp"
 
-#include <print>
 #include "version.hpp"
+#include <print>
 
-int ProjCtl::report(const std::expected<std::string, std::string>& result) const
+auto ProjCtl::report(const std::expected<std::string, std::string>& result) const -> int
 {
 	if (!result)
 	{
@@ -15,7 +15,7 @@ int ProjCtl::report(const std::expected<std::string, std::string>& result) const
 	return 0;
 }
 
-int ProjCtl::report(const std::expected<int, std::string>& result) const
+auto ProjCtl::report(const std::expected<int, std::string>& result) const -> int
 {
 	if (!result)
 	{
@@ -26,7 +26,7 @@ int ProjCtl::report(const std::expected<int, std::string>& result) const
 	return *result;
 }
 
-int ProjCtl::report(const BatchResult& results) const
+auto ProjCtl::report(const BatchResult& results) const -> int
 {
 	std::println(stdout, "\n\n{}\n\n", results.output);
 	if (results.failed > 0)
@@ -37,7 +37,7 @@ int ProjCtl::report(const BatchResult& results) const
 	return 0;
 }
 
-int ProjCtl::report_save(const std::expected<std::string, std::string>& result) const
+auto ProjCtl::report_save(const std::expected<std::string, std::string>& result) const -> int
 {
 	if (!result)
 	{
@@ -56,14 +56,13 @@ int ProjCtl::report_save(const std::expected<std::string, std::string>& result) 
 	return 0;
 }
 
-
-int ProjCtl::handle(const Cmd::Unknown& cmd) const
+auto ProjCtl::handle(const Cmd::Unknown& cmd) const -> int
 {
 	std::println(stderr, "\n\n{}{}{}{}\n\n", paint(config.error_color), Style::CROSS, cmd.message, reset());
 	return 1;
 }
 
-int ProjCtl::handle(const Cmd::Version&) const
+auto ProjCtl::handle(const Cmd::Version&) const -> int
 {
 	std::println(stdout, "\n\n{}ProjCtl version: {}{}\n\n", paint(config.header_color), Version::STRING, reset());
 	return 0;

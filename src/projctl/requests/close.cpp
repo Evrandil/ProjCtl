@@ -2,8 +2,7 @@
 
 #include "githostinterface.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::request_close(const std::optional<std::string>& name, int request_number) const
+auto ProjCtl::request_close(const std::optional<std::string>& name, int request_number) const -> std::expected<std::string, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -19,8 +18,7 @@ std::expected<std::string, std::string> ProjCtl::request_close(const std::option
 	return *result;
 }
 
-
-int ProjCtl::handle(const Cmd::GH::RequestClose& cmd) const
+auto ProjCtl::handle(const Cmd::GH::RequestClose& cmd) const -> int
 {
 	return report(request_close(cmd.name, cmd.number));
 }

@@ -1,7 +1,6 @@
 #include "systeminterface.hpp"
 
-
-std::filesystem::path SystemInterface::config_home()
+auto SystemInterface::config_home() -> std::filesystem::path
 {
 	const char* xdg = std::getenv("XDG_CONFIG_HOME");
 
@@ -20,8 +19,7 @@ std::filesystem::path SystemInterface::config_home()
 	return {};
 }
 
-
-std::filesystem::path SystemInterface::data_home()
+auto SystemInterface::data_home() -> std::filesystem::path
 {
 	const char* xdg = std::getenv("XDG_DATA_HOME");
 
@@ -40,8 +38,7 @@ std::filesystem::path SystemInterface::data_home()
 	return {};
 }
 
-
-std::filesystem::path SystemInterface::cache_home()
+auto SystemInterface::cache_home() -> std::filesystem::path
 {
 	const char* xdg = std::getenv("XDG_CACHE_HOME");
 

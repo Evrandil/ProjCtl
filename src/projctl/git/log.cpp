@@ -2,8 +2,7 @@
 
 #include "gitinterface.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::log(const std::optional<std::string>& name, bool oneline) const
+auto ProjCtl::log(const std::optional<std::string>& name, bool oneline) const -> std::expected<std::string, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -19,8 +18,7 @@ std::expected<std::string, std::string> ProjCtl::log(const std::optional<std::st
 	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
 }
 
-
-int ProjCtl::handle(const Cmd::Git::Log& cmd) const
+auto ProjCtl::handle(const Cmd::Git::Log& cmd) const -> int
 {
 	return report(log(cmd.name, cmd.oneline));
 }

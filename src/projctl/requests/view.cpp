@@ -2,8 +2,7 @@
 
 #include "githostinterface.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::request_view(const std::optional<std::string>& name, int request_number) const
+auto ProjCtl::request_view(const std::optional<std::string>& name, int request_number) const -> std::expected<std::string, std::string>
 {
 	const std::expected project = project_find(name);
 	if (!project)
@@ -13,8 +12,7 @@ std::expected<std::string, std::string> ProjCtl::request_view(const std::optiona
 	return GitHostInterface::request_view((*project)->second.path, request_number);
 }
 
-
-int ProjCtl::handle(const Cmd::GH::RequestView& cmd) const
+auto ProjCtl::handle(const Cmd::GH::RequestView& cmd) const -> int
 {
 	return report(request_view(cmd.name, cmd.number));
 }

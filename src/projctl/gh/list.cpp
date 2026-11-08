@@ -3,19 +3,18 @@
 #include "githostinterface.hpp"
 #include <future>
 
-
-BatchResult ProjCtl::repo_list() const
+auto ProjCtl::repo_list() const -> BatchResult
 {
 	auto list_one = [&](HostOption host) -> std::expected<std::string, std::string>
 	{
 		std::expected repo_list = GitHostInterface::repo_list(host);
 		if (!repo_list)
 		{
-			return std::unexpected(std::format("{}{} {}repos\n{}{}{}", paint(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", paint(config.header_color),
-						   paint(config.error_color), repo_list.error(), reset()));
+			return std::unexpected(
+				std::format("{}{} {}repos\n{}{}{}", paint(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", paint(config.header_color), paint(config.error_color), repo_list.error(), reset()));
 		}
-		return std::format("{}{} {}repos\n{}{}{}", paint(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", paint(config.header_color),
-					   paint(config.project_short_remote_color), *repo_list, reset());
+		return std::format("{}{} {}repos\n{}{}{}", paint(config.project_name_color), host == HostOption::GitHub ? "GitHub" : "GitLab", paint(config.header_color), paint(config.project_short_remote_color), *repo_list,
+		                   reset());
 	};
 
 	std::array<std::future<std::expected<std::string, std::string>>, 2> tasks = std::array<std::future<std::expected<std::string, std::string>>, 2>{
@@ -36,8 +35,7 @@ BatchResult ProjCtl::repo_list() const
 	return results;
 }
 
-
-int ProjCtl::handle(const Cmd::GH::RepoList&) const
+auto ProjCtl::handle(const Cmd::GH::RepoList&) const -> int
 {
 	return report(repo_list());
 }

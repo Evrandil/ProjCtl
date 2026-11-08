@@ -3,8 +3,7 @@
 #include "systeminterface.hpp"
 #include <vector>
 
-
-std::expected<std::string, std::string> GitInterface::add(const std::filesystem::path& path)
+auto GitInterface::add(const std::filesystem::path& path) -> std::expected<std::string, std::string>
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "add", "."}, path);
 
@@ -20,9 +19,7 @@ std::expected<std::string, std::string> GitInterface::add(const std::filesystem:
 	return result->text;
 }
 
-
-std::expected<std::string, std::string> GitInterface::commit(const std::filesystem::path& path,
-															 std::optional<std::string_view> message)
+auto GitInterface::commit(const std::filesystem::path& path, std::optional<std::string_view> message) -> std::expected<std::string, std::string>
 {
 	std::expected add_result = add(path);
 	if (!add_result) [[unlikely]]
@@ -32,8 +29,7 @@ std::expected<std::string, std::string> GitInterface::commit(const std::filesyst
 
 	if (!message)
 	{
-		std::expected<int, std::string> exit_code =
-			SystemInterface::run_interactive(std::vector<std::string>{"git", "commit"}, path);
+		std::expected<int, std::string> exit_code = SystemInterface::run_interactive(std::vector<std::string>{"git", "commit"}, path);
 		if (!exit_code)
 		{
 			return std::unexpected(exit_code.error());
@@ -46,8 +42,7 @@ std::expected<std::string, std::string> GitInterface::commit(const std::filesyst
 		return "Committed";
 	}
 
-	std::expected<SystemInterface::Output, std::string> result =
-		SystemInterface::run(std::vector<std::string>{"git", "commit", "-m", std::string{*message}}, path);
+	std::expected<SystemInterface::Output, std::string> result = SystemInterface::run(std::vector<std::string>{"git", "commit", "-m", std::string{*message}}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());

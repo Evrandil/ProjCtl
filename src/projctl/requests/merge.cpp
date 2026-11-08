@@ -2,8 +2,7 @@
 
 #include "githostinterface.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::request_merge(const std::optional<std::string>& name) const
+auto ProjCtl::request_merge(const std::optional<std::string>& name) const -> std::expected<std::string, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -19,8 +18,7 @@ std::expected<std::string, std::string> ProjCtl::request_merge(const std::option
 	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
 }
 
-
-int ProjCtl::handle(const Cmd::GH::RequestMerge& cmd) const
+auto ProjCtl::handle(const Cmd::GH::RequestMerge& cmd) const -> int
 {
 	return report(request_merge(cmd.name));
 }

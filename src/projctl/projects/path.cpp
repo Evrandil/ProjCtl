@@ -2,8 +2,7 @@
 
 #include <print>
 
-
-std::expected<std::string, std::string> ProjCtl::path_show(const std::optional<std::string>& name) const
+auto ProjCtl::path_show(const std::optional<std::string>& name) const -> std::expected<std::string, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -14,8 +13,7 @@ std::expected<std::string, std::string> ProjCtl::path_show(const std::optional<s
 	return (*project)->second.path.string();
 }
 
-
-int ProjCtl::handle(const Cmd::Base::Path& cmd) const
+auto ProjCtl::handle(const Cmd::Base::Path& cmd) const -> int
 {
 	std::expected<std::string, std::string> result = path_show(cmd.name);
 

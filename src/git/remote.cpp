@@ -3,8 +3,7 @@
 #include "systeminterface.hpp"
 #include <vector>
 
-
-std::expected<std::string, std::string> GitInterface::remote(const std::filesystem::path& path)
+auto GitInterface::remote(const std::filesystem::path& path) -> std::expected<std::string, std::string>
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "remote", "get-url", "origin"}, path);
 
@@ -20,8 +19,7 @@ std::expected<std::string, std::string> GitInterface::remote(const std::filesyst
 	return result->text;
 }
 
-
-std::expected<std::string, std::string> GitInterface::remote_short(const std::filesystem::path& path)
+auto GitInterface::remote_short(const std::filesystem::path& path) -> std::expected<std::string, std::string>
 {
 	std::expected<std::string, std::string> remote_output = remote(path);
 	if (!remote_output) [[unlikely]]

@@ -1,23 +1,20 @@
 #pragma once
 
 #include <expected>
-#include <string>
 #include <filesystem>
-
+#include <string>
 
 namespace SystemInterface
 {
 	struct Output
 	{
-		int exit_code;
+		int         exit_code;
 		std::string text;
 	};
 
-	[[nodiscard]] std::expected<SystemInterface::Output, std::string> run(std::span<const std::string> args,
-																		  const std::filesystem::path& cwd = {});
-	[[nodiscard]] std::expected<int, std::string> run_interactive(std::span<const std::string> args,
-																  const std::filesystem::path& cwd = {});
-	[[nodiscard]] std::filesystem::path config_home();
-	[[nodiscard]] std::filesystem::path data_home();
-	[[nodiscard]] std::filesystem::path cache_home();
+	[[nodiscard]] auto run(std::span<const std::string> args, const std::filesystem::path& cwd = {}) -> std::expected<SystemInterface::Output, std::string>;
+	[[nodiscard]] auto run_interactive(std::span<const std::string> args, const std::filesystem::path& cwd = {}) -> std::expected<int, std::string>;
+	[[nodiscard]] auto config_home() -> std::filesystem::path;
+	[[nodiscard]] auto data_home() -> std::filesystem::path;
+	[[nodiscard]] auto cache_home() -> std::filesystem::path;
 }; // namespace SystemInterface

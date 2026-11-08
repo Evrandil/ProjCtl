@@ -2,8 +2,7 @@
 
 #include "githostinterface.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::issue_close(const std::optional<std::string>& name, int issue_number) const
+auto ProjCtl::issue_close(const std::optional<std::string>& name, int issue_number) const -> std::expected<std::string, std::string>
 {
 	std::expected project_option = project_find(name);
 	if (!project_option)
@@ -20,8 +19,7 @@ std::expected<std::string, std::string> ProjCtl::issue_close(const std::optional
 	return *result;
 }
 
-
-int ProjCtl::handle(const Cmd::GH::IssueClose& cmd) const
+auto ProjCtl::handle(const Cmd::GH::IssueClose& cmd) const -> int
 {
 	return report(issue_close(cmd.name, cmd.number));
 }

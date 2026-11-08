@@ -3,11 +3,9 @@
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
 
-
-std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(const std::filesystem::path& path)
+auto GitLabInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string>
 {
-	std::expected result =
-		SystemInterface::run(std::vector<std::string>{"glab", "issue", "list", "--output", "json"}, path);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "issue", "list", "--output", "json"}, path);
 
 	if (!result)
 	{
@@ -48,22 +46,19 @@ std::expected<std::vector<Issue>, std::string> GitLabInterface::issue_list(const
 	return issues;
 }
 
-
-std::expected<int, std::string> GitLabInterface::issue_create(const std::filesystem::path& path)
+auto GitLabInterface::issue_create(const std::filesystem::path& path) -> std::expected<int, std::string>
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "issue", "create"}, path);
 }
 
-std::expected<int, std::string> GitLabInterface::issue_edit(const std::filesystem::path& path, int issue_number)
+auto GitLabInterface::issue_edit(const std::filesystem::path& path, int issue_number) -> std::expected<int, std::string>
 {
-	return SystemInterface::run_interactive(
-		std::vector<std::string>{"glab", "issue", "edit", std::to_string(issue_number)}, path);
+	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "issue", "edit", std::to_string(issue_number)}, path);
 }
 
-std::expected<std::string, std::string> GitLabInterface::issue_view(const std::filesystem::path& path, int issue_number)
+auto GitLabInterface::issue_view(const std::filesystem::path& path, int issue_number) -> std::expected<std::string, std::string>
 {
-	std::expected result =
-		SystemInterface::run(std::vector<std::string>{"glab", "issue", "view", std::to_string(issue_number)}, path);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "issue", "view", std::to_string(issue_number)}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());
@@ -76,11 +71,9 @@ std::expected<std::string, std::string> GitLabInterface::issue_view(const std::f
 	return result->text;
 }
 
-std::expected<std::string, std::string> GitLabInterface::issue_close(const std::filesystem::path& path,
-																	 int issue_number)
+auto GitLabInterface::issue_close(const std::filesystem::path& path, int issue_number) -> std::expected<std::string, std::string>
 {
-	std::expected result =
-		SystemInterface::run(std::vector<std::string>{"glab", "issue", "close", std::to_string(issue_number)}, path);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "issue", "close", std::to_string(issue_number)}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());

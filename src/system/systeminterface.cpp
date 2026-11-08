@@ -1,6 +1,5 @@
 #include "systeminterface.hpp"
 
-
 #include <cerrno>
 #include <cstring>
 #include <format>
@@ -10,12 +9,12 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-
 namespace
 {
-	constexpr std::size_t READ_CHUNK_SIZE = 4096;
-	constexpr int SIGNAL_EXIT_BASE        = 128; // shell convention: killed by signal N -> exit code 128 + N
-	std::vector<char*> make_argv(std::span<const std::string> args)
+	constexpr std::size_t READ_CHUNK_SIZE  = 4096;
+	constexpr int         SIGNAL_EXIT_BASE = 128; // shell convention: killed by signal N -> exit code 128 + N
+
+	auto make_argv(std::span<const std::string> args) -> std::vector<char*>
 	{
 		std::vector<char*> argv;
 		argv.reserve(args.size() + 1);
@@ -27,7 +26,7 @@ namespace
 		return argv;
 	}
 
-	int wait_for(pid_t pid)
+	auto wait_for(pid_t pid) -> int
 	{
 		int status = 0;
 		while (waitpid(pid, &status, 0) == -1)
@@ -50,9 +49,7 @@ namespace
 	}
 } // namespace
 
-
-std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::span<const std::string> args,
-																		 const std::filesystem::path& cwd)
+auto SystemInterface::run(std::span<const std::string> args, const std::filesystem::path& cwd) -> std::expected<SystemInterface::Output, std::string>
 {
 	if (args.empty())
 	{
@@ -86,7 +83,7 @@ std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::sp
 	}
 
 	std::vector<char*> argv = make_argv(args);
-	pid_t pid               = 0;
+	pid_t              pid  = 0;
 
 	const int error = posix_spawnp(&pid, argv.front(), &actions, nullptr, argv.data(), environ);
 
@@ -99,7 +96,7 @@ std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::sp
 		return std::unexpected(std::format("Couldn't run {}: {}", args.front(), std::strerror(error)));
 	}
 
-	std::string text;
+	std::string                       text;
 	std::array<char, READ_CHUNK_SIZE> buffer = {};
 	while (true)
 	{
@@ -125,9 +122,7 @@ std::expected<SystemInterface::Output, std::string> SystemInterface::run(std::sp
 	return Output{wait_for(pid), std::move(text)};
 }
 
-
-std::expected<int, std::string> SystemInterface::run_interactive(std::span<const std::string> args,
-																 const std::filesystem::path& cwd)
+auto SystemInterface::run_interactive(std::span<const std::string> args, const std::filesystem::path& cwd) -> std::expected<int, std::string>
 {
 	if (args.empty())
 	{
@@ -145,9 +140,9 @@ std::expected<int, std::string> SystemInterface::run_interactive(std::span<const
 		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());
 	}
 
-	std::vector<char*> argv = make_argv(args);
-	pid_t pid               = 0;
-	const int error         = posix_spawnp(&pid, argv.front(), &actions, nullptr, argv.data(), environ);
+	std::vector<char*> argv  = make_argv(args);
+	pid_t              pid   = 0;
+	const int          error = posix_spawnp(&pid, argv.front(), &actions, nullptr, argv.data(), environ);
 
 	posix_spawn_file_actions_destroy(&actions);
 

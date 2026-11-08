@@ -3,13 +3,9 @@
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
 
-
-std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(const std::filesystem::path& path)
+auto GitHubInterface::request_list(const std::filesystem::path& path) -> std::expected<std::vector<Request>, std::string>
 {
-	std::expected result =
-		SystemInterface::run(gh_command(std::vector<std::string>{
-								 "gh", "pr", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}),
-							 path);
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "pr", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}), path);
 
 	if (!result)
 	{
@@ -54,23 +50,19 @@ std::expected<std::vector<Request>, std::string> GitHubInterface::request_list(c
 	return requests;
 }
 
-
-std::expected<int, std::string> GitHubInterface::request_create(const std::filesystem::path& path)
+auto GitHubInterface::request_create(const std::filesystem::path& path) -> std::expected<int, std::string>
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "create"}, path);
 }
 
-std::expected<int, std::string> GitHubInterface::request_edit(const std::filesystem::path& path, int request_number)
+auto GitHubInterface::request_edit(const std::filesystem::path& path, int request_number) -> std::expected<int, std::string>
 {
-	return SystemInterface::run_interactive(
-		std::vector<std::string>{"gh", "pr", "edit", std::to_string(request_number)}, path);
+	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "edit", std::to_string(request_number)}, path);
 }
 
-std::expected<std::string, std::string> GitHubInterface::request_view(const std::filesystem::path& path,
-																	  int request_number)
+auto GitHubInterface::request_view(const std::filesystem::path& path, int request_number) -> std::expected<std::string, std::string>
 {
-	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "pr", "close", std::to_string(request_number)}), path);
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "pr", "close", std::to_string(request_number)}), path);
 
 	if (!result)
 	{
@@ -84,11 +76,9 @@ std::expected<std::string, std::string> GitHubInterface::request_view(const std:
 	return result->text;
 }
 
-std::expected<std::string, std::string> GitHubInterface::request_close(const std::filesystem::path& path,
-																	   int request_number)
+auto GitHubInterface::request_close(const std::filesystem::path& path, int request_number) -> std::expected<std::string, std::string>
 {
-	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "pr", "close", std::to_string(request_number)}), path);
+	std::expected result = SystemInterface::run(gh_command(std::vector<std::string>{"gh", "pr", "close", std::to_string(request_number)}), path);
 
 	if (!result)
 	{
@@ -102,11 +92,9 @@ std::expected<std::string, std::string> GitHubInterface::request_close(const std
 	return result->text;
 }
 
-
-std::expected<std::string, std::string> GitHubInterface::request_merge(const std::filesystem::path& path)
+auto GitHubInterface::request_merge(const std::filesystem::path& path) -> std::expected<std::string, std::string>
 {
-	std::expected result =
-		SystemInterface::run(std::vector<std::string>{"gh", "pr", "merge", "--squash", "--delete-branch"}, path);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"gh", "pr", "merge", "--squash", "--delete-branch"}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());

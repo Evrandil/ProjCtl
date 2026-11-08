@@ -3,11 +3,9 @@
 #include "systeminterface.hpp"
 #include <nlohmann/json.hpp>
 
-
-std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(const std::filesystem::path& path)
+auto GitLabInterface::request_list(const std::filesystem::path& path) -> std::expected<std::vector<Request>, std::string>
 {
-	std::expected result =
-		SystemInterface::run(std::vector<std::string>{"glab", "mr", "list", "--output", "json"}, path);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "list", "--output", "json"}, path);
 
 	if (!result)
 	{
@@ -48,23 +46,19 @@ std::expected<std::vector<Request>, std::string> GitLabInterface::request_list(c
 	return requests;
 }
 
-
-std::expected<int, std::string> GitLabInterface::request_create(const std::filesystem::path& path)
+auto GitLabInterface::request_create(const std::filesystem::path& path) -> std::expected<int, std::string>
 {
 	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "mr", "create"}, path);
 }
 
-std::expected<int, std::string> GitLabInterface::request_edit(const std::filesystem::path& path, int request_number)
+auto GitLabInterface::request_edit(const std::filesystem::path& path, int request_number) -> std::expected<int, std::string>
 {
-	return SystemInterface::run_interactive(
-		std::vector<std::string>{"glab", "mr", "edit", std::to_string(request_number)}, path);
+	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "mr", "edit", std::to_string(request_number)}, path);
 }
 
-std::expected<std::string, std::string> GitLabInterface::request_view(const std::filesystem::path& path,
-																	  int request_number)
+auto GitLabInterface::request_view(const std::filesystem::path& path, int request_number) -> std::expected<std::string, std::string>
 {
-	std::expected result =
-		SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());
@@ -77,11 +71,9 @@ std::expected<std::string, std::string> GitLabInterface::request_view(const std:
 	return result->text;
 }
 
-std::expected<std::string, std::string> GitLabInterface::request_close(const std::filesystem::path& path,
-																	   int request_number)
+auto GitLabInterface::request_close(const std::filesystem::path& path, int request_number) -> std::expected<std::string, std::string>
 {
-	std::expected result =
-		SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());
@@ -94,11 +86,9 @@ std::expected<std::string, std::string> GitLabInterface::request_close(const std
 	return result->text;
 }
 
-
-std::expected<std::string, std::string> GitLabInterface::request_merge(const std::filesystem::path& path)
+auto GitLabInterface::request_merge(const std::filesystem::path& path) -> std::expected<std::string, std::string>
 {
-	std::expected result = SystemInterface::run(
-		std::vector<std::string>{"glab", "mr", "merge", "--squash", "--remove-source-branch"}, path);
+	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "mr", "merge", "--squash", "--remove-source-branch"}, path);
 	if (!result)
 	{
 		return std::unexpected(result.error());

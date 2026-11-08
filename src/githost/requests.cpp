@@ -1,11 +1,10 @@
 #include "githostinterface.hpp"
 
-#include "gitinterface.hpp"
 #include "githubinterface.hpp"
+#include "gitinterface.hpp"
 #include "gitlabinterface.hpp"
 
-
-std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(const std::filesystem::path& path)
+auto GitHostInterface::request_list(const std::filesystem::path& path) -> std::expected<std::vector<Request>, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -23,8 +22,7 @@ std::expected<std::vector<Request>, std::string> GitHostInterface::request_list(
 	}
 }
 
-
-std::expected<int, std::string> GitHostInterface::request_create(const std::filesystem::path& path)
+auto GitHostInterface::request_create(const std::filesystem::path& path) -> std::expected<int, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -42,8 +40,7 @@ std::expected<int, std::string> GitHostInterface::request_create(const std::file
 	}
 }
 
-
-std::expected<int, std::string> GitHostInterface::request_edit(const std::filesystem::path& path, int request_number)
+auto GitHostInterface::request_edit(const std::filesystem::path& path, int request_number) -> std::expected<int, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -61,9 +58,7 @@ std::expected<int, std::string> GitHostInterface::request_edit(const std::filesy
 	}
 }
 
-
-std::expected<std::string, std::string> GitHostInterface::request_view(const std::filesystem::path& path,
-																	   int request_number)
+auto GitHostInterface::request_view(const std::filesystem::path& path, int request_number) -> std::expected<std::string, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -81,9 +76,7 @@ std::expected<std::string, std::string> GitHostInterface::request_view(const std
 	}
 }
 
-
-std::expected<std::string, std::string> GitHostInterface::request_close(const std::filesystem::path& path,
-																		int request_number)
+auto GitHostInterface::request_close(const std::filesystem::path& path, int request_number) -> std::expected<std::string, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -101,8 +94,7 @@ std::expected<std::string, std::string> GitHostInterface::request_close(const st
 	}
 }
 
-
-std::expected<std::string, std::string> GitHostInterface::request_merge(const std::filesystem::path& path)
+auto GitHostInterface::request_merge(const std::filesystem::path& path) -> std::expected<std::string, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)

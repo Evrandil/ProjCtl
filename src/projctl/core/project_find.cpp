@@ -1,8 +1,6 @@
 #include "projctl.hpp"
 
-
-
-std::expected<ProjectIterator, std::string> ProjCtl::project_find(const std::optional<std::string>& name) const
+auto ProjCtl::project_find(const std::optional<std::string>& name) const -> std::expected<ProjectIterator, std::string>
 {
 	std::string actual_name;
 	if (name)

@@ -4,7 +4,6 @@
 #include <string>
 #include <string_view>
 
-
 enum class ProjectType : uint8_t
 {
 	Rust,
@@ -15,8 +14,7 @@ enum class ProjectType : uint8_t
 	Unknown,
 };
 
-
-constexpr std::string_view project_type_to_string(ProjectType type)
+constexpr auto project_type_to_string(ProjectType type) -> std::string_view
 {
 	switch (type)
 	{
@@ -37,8 +35,7 @@ constexpr std::string_view project_type_to_string(ProjectType type)
 	return "No type";
 }
 
-
-constexpr std::optional<std::string_view> build_command_for(ProjectType type)
+constexpr auto build_command_for(ProjectType type) -> std::optional<std::string_view>
 {
 	switch (type)
 	{
@@ -55,8 +52,7 @@ constexpr std::optional<std::string_view> build_command_for(ProjectType type)
 	}
 }
 
-
-constexpr std::optional<std::string_view> run_command_for(ProjectType type)
+constexpr auto run_command_for(ProjectType type) -> std::optional<std::string_view>
 {
 	switch (type)
 	{
@@ -73,12 +69,11 @@ constexpr std::optional<std::string_view> run_command_for(ProjectType type)
 	}
 }
 
-
 struct ProjectContent
 {
-	std::filesystem::path path;
-	ProjectType type;
+	std::filesystem::path      path;
+	ProjectType                type;
 	std::optional<std::string> build_command = std::nullopt;
 	std::optional<std::string> run_command   = std::nullopt;
-	std::string display();
+	auto                       display() -> std::string;
 };

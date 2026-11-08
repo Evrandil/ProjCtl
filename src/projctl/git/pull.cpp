@@ -1,11 +1,10 @@
 #include "projctl.hpp"
 
+#include "gitinterface.hpp"
 #include <future>
 #include <ranges>
-#include "gitinterface.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::pull(const ProjectEntry& project) const
+auto ProjCtl::pull(const ProjectEntry& project) const -> std::expected<std::string, std::string>
 {
 	std::string output;
 	std::format_to(std::back_inserter(output), "{}Pulling: {}{}{}\n", paint(config.header_color), paint(config.project_name_color), project.first, reset());
@@ -13,7 +12,8 @@ std::expected<std::string, std::string> ProjCtl::pull(const ProjectEntry& projec
 
 	if (!result)
 	{
-		std::format_to(std::back_inserter(output), "{}{}Couldn't pull {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), project.first, paint(config.error_color), result.error(), reset());
+		std::format_to(std::back_inserter(output), "{}{}Couldn't pull {}{}{}: {}{}", paint(config.error_color), Style::CROSS, paint(config.project_name_color), project.first, paint(config.error_color), result.error(),
+		               reset());
 		return std::unexpected(output);
 	}
 
@@ -21,8 +21,7 @@ std::expected<std::string, std::string> ProjCtl::pull(const ProjectEntry& projec
 	return output;
 }
 
-
-std::expected<std::string, std::string> ProjCtl::pull(const std::optional<std::string>& name) const
+auto ProjCtl::pull(const std::optional<std::string>& name) const -> std::expected<std::string, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -33,17 +32,16 @@ std::expected<std::string, std::string> ProjCtl::pull(const std::optional<std::s
 	return pull(**project);
 }
 
-
-BatchResult ProjCtl::pull_all() const
+auto ProjCtl::pull_all() const -> BatchResult
 {
 	std::vector<std::future<std::expected<std::string, std::string>>> tasks;
 	tasks.reserve(projects.size());
 
-	auto is_git = [](const ProjectEntry& project) { return GitInterface::is_repo(project.second.path); };
+	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
 
 	for (const ProjectEntry& project : projects | std::views::filter(is_git))
 	{
-		tasks.push_back(std::async(std::launch::async, [this, &project] {return pull(project); }));
+		tasks.push_back(std::async(std::launch::async, [this, &project] -> std::expected<std::string, std::string> { return pull(project); }));
 	}
 
 	BatchResult results;
@@ -62,8 +60,7 @@ BatchResult ProjCtl::pull_all() const
 	return results;
 }
 
-
-int ProjCtl::handle(const Cmd::Git::Pull& cmd) const
+auto ProjCtl::handle(const Cmd::Git::Pull& cmd) const -> int
 {
 	return cmd.all ? report(pull_all()) : report(pull(cmd.name));
 }

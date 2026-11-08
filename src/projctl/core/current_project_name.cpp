@@ -1,16 +1,15 @@
 #include "projctl.hpp"
 
-
-std::optional<std::string> ProjCtl::current_project_name() const
+auto ProjCtl::current_project_name() const -> std::optional<std::string>
 {
-	std::error_code error;
+	std::error_code       error;
 	std::filesystem::path cwd = std::filesystem::weakly_canonical(std::filesystem::current_path(error), error);
 	if (error)
 	{
 		return std::nullopt;
 	}
-	const ProjectEntry* best	= nullptr;
-	std::ptrdiff_t best_depth	= 0;
+	const ProjectEntry* best       = nullptr;
+	std::ptrdiff_t      best_depth = 0;
 	for (const ProjectEntry& project : projects)
 	{
 		std::filesystem::path project_path = std::filesystem::weakly_canonical(project.second.path, error);
@@ -28,7 +27,7 @@ std::optional<std::string> ProjCtl::current_project_name() const
 		const std::ptrdiff_t depth = std::ranges::distance(project_path);
 		if (depth > best_depth)
 		{
-			best = &project;
+			best       = &project;
 			best_depth = depth;
 		}
 	}

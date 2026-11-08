@@ -3,8 +3,7 @@
 #include "systeminterface.hpp"
 #include <vector>
 
-
-std::expected<std::string, std::string> GitInterface::push(const std::filesystem::path& path, bool upstream)
+auto GitInterface::push(const std::filesystem::path& path, bool upstream) -> std::expected<std::string, std::string>
 {
 	std::vector<std::string> command = {"git", "push"};
 	if (upstream)

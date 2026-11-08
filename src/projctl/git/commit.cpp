@@ -2,8 +2,7 @@
 
 #include "gitinterface.hpp"
 
-
-std::expected<std::string, std::string> ProjCtl::git_commit(const std::optional<std::string>& name, std::optional<std::string_view> message) const
+auto ProjCtl::git_commit(const std::optional<std::string>& name, std::optional<std::string_view> message) const -> std::expected<std::string, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -22,8 +21,7 @@ std::expected<std::string, std::string> ProjCtl::git_commit(const std::optional<
 	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
 }
 
-
-int ProjCtl::handle(const Cmd::Git::Commit& cmd) const
+auto ProjCtl::handle(const Cmd::Git::Commit& cmd) const -> int
 {
 	return report(git_commit(cmd.name, cmd.message));
 }

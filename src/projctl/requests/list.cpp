@@ -1,16 +1,15 @@
 #include "projctl.hpp"
 
-#include "gitinterface.hpp"
 #include "githostinterface.hpp"
-#include <ranges>
+#include "gitinterface.hpp"
 #include <future>
+#include <ranges>
 #include <utility>
 
-
-std::string ProjCtl::request_table(const std::vector<Request>& requests) const
+auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::string
 {
 	std::string table;
-	auto field_name = [&](RequestField field) -> std::string_view
+	auto        field_name = [&](RequestField field) -> std::string_view
 	{
 		switch (field)
 		{
@@ -123,17 +122,17 @@ std::string ProjCtl::request_table(const std::vector<Request>& requests) const
 	return table;
 }
 
-
-std::expected<std::string, std::string> ProjCtl::requests(const ProjectEntry& project) const
+auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::string, std::string>
 {
-	const ProjectContent& content = project.second;
-	const std::string& project_name = project.first;
+	const ProjectContent& content      = project.second;
+	const std::string&    project_name = project.first;
 
-	std::string output = std::format("{}Requests for {}{}{}:\n", paint(config.header_color), paint(config.project_name_color), project_name, reset());
-	std::expected list = GitHostInterface::request_list(content.path.string());
+	std::string   output = std::format("{}Requests for {}{}{}:\n", paint(config.header_color), paint(config.project_name_color), project_name, reset());
+	std::expected list   = GitHostInterface::request_list(content.path.string());
 	if (!list)
 	{
-		return std::unexpected(std::format("{}{}Couldn't list requests for {}{}{}: {}", paint(config.error_color), symbol(Style::Mark::Cross), paint(config.project_name_color), paint(config.error_color), list.error(), reset()));
+		return std::unexpected(
+			std::format("{}{}Couldn't list requests for {}{}{}: {}", paint(config.error_color), symbol(Style::Mark::Cross), paint(config.project_name_color), paint(config.error_color), list.error(), reset()));
 	}
 	if (list->empty())
 	{
@@ -146,8 +145,7 @@ std::expected<std::string, std::string> ProjCtl::requests(const ProjectEntry& pr
 	return output;
 }
 
-
-std::expected<std::string, std::string> ProjCtl::requests(const std::optional<std::string>& name) const
+auto ProjCtl::requests(const std::optional<std::string>& name) const -> std::expected<std::string, std::string>
 {
 	std::expected project = project_find(name);
 	if (!project)
@@ -158,8 +156,7 @@ std::expected<std::string, std::string> ProjCtl::requests(const std::optional<st
 	return requests(**project);
 }
 
-
-BatchResult ProjCtl::requests_all() const
+auto ProjCtl::requests_all() const -> BatchResult
 {
 	std::vector<std::future<std::expected<std::string, std::string>>> tasks;
 	tasks.reserve(projects.size());
@@ -168,7 +165,7 @@ BatchResult ProjCtl::requests_all() const
 
 	for (const auto& project : projects | std::views::filter(is_git))
 	{
-		tasks.push_back(std::async(std::launch::async, [this, &project]() { return requests(project); }));
+		tasks.push_back(std::async(std::launch::async, [this, &project]() -> std::expected<std::string, std::string> { return requests(project); }));
 	}
 
 	BatchResult results;
@@ -187,8 +184,7 @@ BatchResult ProjCtl::requests_all() const
 	return results;
 }
 
-
-int ProjCtl::handle(const Cmd::GH::RequestList& cmd) const
+auto ProjCtl::handle(const Cmd::GH::RequestList& cmd) const -> int
 {
 	return cmd.all ? report(requests_all()) : report(requests(cmd.name));
 }

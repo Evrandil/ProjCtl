@@ -5,7 +5,7 @@
 namespace
 {
 
-	std::string trim(std::string_view text)
+	auto trim(std::string_view text) -> std::string
 	{
 		std::size_t first = text.find_first_not_of(" \t\r\n");
 
@@ -19,7 +19,7 @@ namespace
 		return std::string(text.substr(first, last - first + 1));
 	}
 
-	std::vector<IssueField> parse_issue_fields(std::string_view value)
+	auto parse_issue_fields(std::string_view value) -> std::vector<IssueField>
 	{
 		std::vector<IssueField> fields;
 
@@ -29,8 +29,7 @@ namespace
 		{
 			std::size_t comma = value.find(',', start);
 
-			std::string field =
-				trim(value.substr(start, comma == std::string_view::npos ? value.size() - start : comma - start));
+			std::string field = trim(value.substr(start, comma == std::string_view::npos ? value.size() - start : comma - start));
 
 			if (field == "number")
 			{
@@ -67,7 +66,7 @@ namespace
 		return fields;
 	}
 
-	std::optional<Style::Color> color_from_string(std::string_view value)
+	auto color_from_string(std::string_view value) -> std::optional<Style::Color>
 	{
 		if (value == "default")
 		{
@@ -110,7 +109,6 @@ namespace
 	}
 
 } // namespace
-
 
 // TODO Make this load func more readable ?
 void Config::load(const std::filesystem::path& path)

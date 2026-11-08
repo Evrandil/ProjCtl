@@ -1,9 +1,8 @@
 #include "projctl.hpp"
 
 #include "systeminterface.hpp"
-#include <unistd.h>   // isatty, STDOUT_FILENO
-#include <cstdlib>    // std::getenv
-
+#include <cstdlib>  // std::getenv
+#include <unistd.h> // isatty, STDOUT_FILENO
 
 ProjCtl::ProjCtl()
 {

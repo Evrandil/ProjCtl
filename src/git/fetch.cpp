@@ -3,8 +3,7 @@
 #include "systeminterface.hpp"
 #include <vector>
 
-
-std::expected<std::string, std::string> GitInterface::fetch(const std::filesystem::path& path)
+auto GitInterface::fetch(const std::filesystem::path& path) -> std::expected<std::string, std::string>
 {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "fetch", "--verbose"}, path);
 

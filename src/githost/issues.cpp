@@ -1,11 +1,10 @@
 #include "githostinterface.hpp"
 
-#include "gitinterface.hpp"
 #include "githubinterface.hpp"
+#include "gitinterface.hpp"
 #include "gitlabinterface.hpp"
 
-
-std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(const std::filesystem::path& path)
+auto GitHostInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -23,8 +22,7 @@ std::expected<std::vector<Issue>, std::string> GitHostInterface::issue_list(cons
 	}
 }
 
-
-std::expected<int, std::string> GitHostInterface::issue_create(const std::filesystem::path& path)
+auto GitHostInterface::issue_create(const std::filesystem::path& path) -> std::expected<int, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -42,8 +40,7 @@ std::expected<int, std::string> GitHostInterface::issue_create(const std::filesy
 	}
 }
 
-
-std::expected<int, std::string> GitHostInterface::issue_edit(const std::filesystem::path& path, int issue_number)
+auto GitHostInterface::issue_edit(const std::filesystem::path& path, int issue_number) -> std::expected<int, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -61,9 +58,7 @@ std::expected<int, std::string> GitHostInterface::issue_edit(const std::filesyst
 	}
 }
 
-
-std::expected<std::string, std::string> GitHostInterface::issue_view(const std::filesystem::path& path,
-																	 int issue_number)
+auto GitHostInterface::issue_view(const std::filesystem::path& path, int issue_number) -> std::expected<std::string, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)
@@ -81,9 +76,7 @@ std::expected<std::string, std::string> GitHostInterface::issue_view(const std::
 	}
 }
 
-
-std::expected<std::string, std::string> GitHostInterface::issue_close(const std::filesystem::path& path,
-																	  int issue_number)
+auto GitHostInterface::issue_close(const std::filesystem::path& path, int issue_number) -> std::expected<std::string, std::string>
 {
 	std::expected host = GitInterface::host(path);
 	if (!host)

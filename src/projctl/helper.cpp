@@ -5,8 +5,7 @@ namespace
 	constexpr int TRUNCATE_SIZE = 3;
 }
 
-
-ProjectType detect_project_type(const std::filesystem::path& path)
+auto detect_project_type(const std::filesystem::path& path) -> ProjectType
 {
 	if (std::filesystem::exists(path / "Cargo.toml"))
 	{
@@ -27,8 +26,7 @@ ProjectType detect_project_type(const std::filesystem::path& path)
 	return ProjectType::Unknown;
 }
 
-
-std::string trim(std::string_view text)
+auto trim(std::string_view text) -> std::string
 {
 	std::size_t first = text.find_first_not_of(" \t\r\n");
 
@@ -42,8 +40,7 @@ std::string trim(std::string_view text)
 	return std::string(text.substr(first, last - first + 1));
 }
 
-
-std::string truncate(std::string_view text, std::size_t max_length)
+auto truncate(std::string_view text, std::size_t max_length) -> std::string
 {
 	if (text.size() <= max_length)
 	{

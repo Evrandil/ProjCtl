@@ -3,8 +3,7 @@
 #include "githubinterface.hpp"
 #include "gitlabinterface.hpp"
 
-
-CliState GitHostInterface::state(HostOption host)
+auto GitHostInterface::state(HostOption host) -> CliState
 {
 	switch (host)
 	{
@@ -17,8 +16,7 @@ CliState GitHostInterface::state(HostOption host)
 	}
 }
 
-
-std::expected<std::string, std::string> GitHostInterface::repo_list(HostOption host)
+auto GitHostInterface::repo_list(HostOption host) -> std::expected<std::string, std::string>
 {
 	switch (host)
 	{

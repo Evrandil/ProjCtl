@@ -1,29 +1,28 @@
 #pragma once
 
+#include "clistate.hpp"
 #include "issue.hpp"
 #include "request.hpp"
-#include "clistate.hpp"
-#include <filesystem>
-#include <vector>
 #include <expected>
+#include <filesystem>
 #include <string>
+#include <vector>
 
-std::vector<std::string> gh_command(std::vector<std::string> args);
-
+auto gh_command(std::vector<std::string> args) -> std::vector<std::string>;
 
 namespace GitHubInterface
 {
-	CliState state();
-	std::expected<std::string, std::string> repo_list();
-	std::expected<std::vector<Issue>, std::string> issue_list(const std::filesystem::path&);
-	std::expected<int, std::string> issue_create(const std::filesystem::path&);
-	std::expected<int, std::string> issue_edit(const std::filesystem::path&, int);
-	std::expected<std::string, std::string> issue_view(const std::filesystem::path&, int);
-	std::expected<std::string, std::string> issue_close(const std::filesystem::path&, int);
-	std::expected<std::vector<Request>, std::string> request_list(const std::filesystem::path&);
-	std::expected<int, std::string> request_create(const std::filesystem::path&);
-	std::expected<int, std::string> request_edit(const std::filesystem::path&, int);
-	std::expected<std::string, std::string> request_view(const std::filesystem::path&, int);
-	std::expected<std::string, std::string> request_close(const std::filesystem::path&, int);
-	std::expected<std::string, std::string> request_merge(const std::filesystem::path&);
+	auto state() -> CliState;
+	auto repo_list() -> std::expected<std::string, std::string>;
+	auto issue_list(const std::filesystem::path&) -> std::expected<std::vector<Issue>, std::string>;
+	auto issue_create(const std::filesystem::path&) -> std::expected<int, std::string>;
+	auto issue_edit(const std::filesystem::path&, int) -> std::expected<int, std::string>;
+	auto issue_view(const std::filesystem::path&, int) -> std::expected<std::string, std::string>;
+	auto issue_close(const std::filesystem::path&, int) -> std::expected<std::string, std::string>;
+	auto request_list(const std::filesystem::path&) -> std::expected<std::vector<Request>, std::string>;
+	auto request_create(const std::filesystem::path&) -> std::expected<int, std::string>;
+	auto request_edit(const std::filesystem::path&, int) -> std::expected<int, std::string>;
+	auto request_view(const std::filesystem::path&, int) -> std::expected<std::string, std::string>;
+	auto request_close(const std::filesystem::path&, int) -> std::expected<std::string, std::string>;
+	auto request_merge(const std::filesystem::path&) -> std::expected<std::string, std::string>;
 }; // namespace GitHubInterface

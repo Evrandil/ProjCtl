@@ -2,7 +2,6 @@
 
 #include <format>
 
-
 namespace
 {
 	struct RemoteParts
@@ -14,7 +13,7 @@ namespace
 	// Splits a remote URL into host and path. Two shapes:
 	//   scheme://[user@]host[:port]/path     (https, http, ssh, git)
 	//   [user@]host:path                     (scp-like ssh)
-	std::expected<RemoteParts, std::string> split_remote(std::string_view remote)
+	auto split_remote(std::string_view remote) -> std::expected<RemoteParts, std::string>
 	{
 		if (const std::size_t scheme_end = remote.find("://"); scheme_end != std::string_view::npos)
 		{
@@ -55,8 +54,7 @@ namespace
 	}
 } // namespace
 
-
-std::expected<HostOption, std::string> host_from_remote(std::string_view remote)
+auto host_from_remote(std::string_view remote) -> std::expected<HostOption, std::string>
 {
 	const std::expected<RemoteParts, std::string> parts = split_remote(remote);
 	if (!parts)
@@ -75,8 +73,7 @@ std::expected<HostOption, std::string> host_from_remote(std::string_view remote)
 	return HostOption::Unknown;
 }
 
-
-std::expected<std::string_view, std::string> short_from_remote(std::string_view remote)
+auto short_from_remote(std::string_view remote) -> std::expected<std::string_view, std::string>
 {
 	const std::expected<RemoteParts, std::string> parts = split_remote(remote);
 	if (!parts)

@@ -2,7 +2,6 @@
 
 #include "remote_url.hpp"
 
-
 TEST_CASE("host_from_remote")
 {
 	SUBCASE("ssh, scp-like")
@@ -15,7 +14,7 @@ TEST_CASE("host_from_remote")
 	SUBCASE("ssh, URL form")
 	{
 		CHECK(host_from_remote("ssh://git@github.com/Evrandil/projctl.git") == HostOption::GitHub);
-		CHECK(host_from_remote("ssh://git@gitlab.com:2222/group/repo.git") == HostOption::GitLab);   // custom port
+		CHECK(host_from_remote("ssh://git@gitlab.com:2222/group/repo.git") == HostOption::GitLab); // custom port
 	}
 
 	SUBCASE("https / http")
@@ -23,7 +22,7 @@ TEST_CASE("host_from_remote")
 		CHECK(host_from_remote("https://github.com/Evrandil/projctl") == HostOption::GitHub);
 		CHECK(host_from_remote("https://github.com/Evrandil/projctl.git") == HostOption::GitHub);
 		CHECK(host_from_remote("https://github.com/Evrandil/projctl/") == HostOption::GitHub);
-		CHECK(host_from_remote("https://user@gitlab.com/group/repo.git") == HostOption::GitLab);   // user in URL
+		CHECK(host_from_remote("https://user@gitlab.com/group/repo.git") == HostOption::GitLab); // user in URL
 		CHECK(host_from_remote("http://gitlab.com/group/repo") == HostOption::GitLab);
 	}
 
@@ -46,7 +45,6 @@ TEST_CASE("host_from_remote")
 		CHECK_FALSE(host_from_remote("https://"));
 	}
 }
-
 
 TEST_CASE("short_from_remote")
 {
