@@ -13,9 +13,9 @@ constexpr std::string_view MARGIN       = "    ";
 constexpr int              MARGIN_WIDTH = 20;
 constexpr int              MARGIN_SIZE  = 20;
 
-auto detect_project_type(const std::filesystem::path&) -> ProjectType;
-auto trim(std::string_view) -> std::string;
-auto truncate(std::string_view, size_t) -> std::string;
+auto detect_project_type(const std::filesystem::path& path) -> ProjectType;
+auto trim(std::string_view text) -> std::string;
+auto truncate(std::string_view text, size_t max_length) -> std::string;
 
 using ProjectEntry    = std::map<std::string, ProjectContent>::value_type;
 using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;

@@ -7,7 +7,7 @@
 #include <filesystem>
 #include <format>
 #include <span>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
 #include <sys/types.h>
 #include <utility>
@@ -110,7 +110,7 @@ auto SystemInterface::run(std::span<const std::string> args, const std::filesyst
 		text.pop_back();
 	}
 
-	return Output{wait_for(pid), std::move(text)};
+	return Output{.exit_code = wait_for(pid), .text = std::move(text)};
 }
 
 auto SystemInterface::run_interactive(std::span<const std::string> args, const std::filesystem::path& cwd)

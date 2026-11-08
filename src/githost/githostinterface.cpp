@@ -8,7 +8,7 @@
 #include "githubinterface.hpp"
 #include "gitlabinterface.hpp"
 
-auto GitHostInterface::state(HostOption host) -> CliState {
+auto GitHostInterface::state(const HostOption host) -> CliState {
 	switch (host) {
 		case HostOption::GitHub: return GitHubInterface::state();
 		case HostOption::GitLab: return GitLabInterface::state();
@@ -16,7 +16,7 @@ auto GitHostInterface::state(HostOption host) -> CliState {
 	}
 }
 
-auto GitHostInterface::repo_list(HostOption host) -> std::expected<std::string, std::string> {
+auto GitHostInterface::repo_list(const HostOption host) -> std::expected<std::string, std::string> {
 	switch (host) {
 		case HostOption::GitHub: return GitHubInterface::repo_list();
 		case HostOption::GitLab: return GitLabInterface::repo_list();

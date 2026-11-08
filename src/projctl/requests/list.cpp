@@ -21,7 +21,7 @@
 
 auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::string {
 	std::string table;
-	auto        field_name = [&](RequestField field) -> std::string_view {
+	const auto        field_name = [&](RequestField field) -> std::string_view {
 		switch (field) {
 			case RequestField::Number:  return "Number";
 			case RequestField::Title:   return "Title";
@@ -34,7 +34,7 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 		}
 		std::unreachable();
 	};
-	auto field_width = [&](RequestField field) -> std::size_t {
+	const auto field_width = [&](RequestField field) -> std::size_t {
 		switch (field) {
 			case RequestField::Number:  return config.request_number_width - 1;
 			case RequestField::Title:   return config.request_title_width - 1;
@@ -47,7 +47,7 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 		}
 		std::unreachable();
 	};
-	auto field_color = [&](RequestField field, const Request& request) -> Style::Color {
+	const auto field_color = [&](RequestField field, const Request& request) -> Style::Color {
 		switch (field) {
 			case RequestField::Number: return config.request_number_color;
 			case RequestField::Title:  return config.request_title_color;
@@ -63,13 +63,13 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 		}
 	};
 	table += paint(config.header_color);
-	for (RequestField field : config.request_columns) {
+	for (const RequestField field : config.request_columns) {
 		std::format_to(std::back_inserter(table), "{:<{}}", field_name(field), field_width(field));
 	}
 	table += reset();
 	table += '\n';
 	for (const Request& request : requests) {
-		for (RequestField field : config.request_columns) {
+		for (const RequestField field : config.request_columns) {
 			std::string value;
 
 			switch (field) {
@@ -110,7 +110,7 @@ auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::
 		project_name,
 		reset()
 	);
-	std::expected list = GitHostInterface::request_list(content.path.string());
+	const std::expected list = GitHostInterface::request_list(content.path.string());
 	if (!list) {
 		return std::unexpected(
 			std::format(
@@ -135,7 +135,7 @@ auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::
 }
 
 auto ProjCtl::requests(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
@@ -147,7 +147,7 @@ auto ProjCtl::requests_all() const -> BatchResult {
 	std::vector<std::future<std::expected<std::string, std::string>>> tasks;
 	tasks.reserve(projects.size());
 
-	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
+	const auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
 
 	for (const auto& project : projects | std::views::filter(is_git)) {
 		tasks.push_back(std::async(std::launch::async, [this, &project] -> std::expected<std::string, std::string> {
@@ -157,7 +157,7 @@ auto ProjCtl::requests_all() const -> BatchResult {
 
 	BatchResult results;
 	for (decltype(tasks)::value_type& task : tasks) {
-		std::expected result = task.get();
+		const std::expected result = task.get();
 		if (!result) {
 			std::format_to(std::back_inserter(results.output), "{}\n", result.error());
 			++results.failed;

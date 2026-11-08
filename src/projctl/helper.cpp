@@ -26,13 +26,13 @@ auto detect_project_type(const std::filesystem::path& path) -> ProjectType {
 }
 
 auto trim(std::string_view text) -> std::string {
-	std::size_t first = text.find_first_not_of(" \t\r\n");
+	const std::size_t first = text.find_first_not_of(" \t\r\n");
 
 	if (first == std::string_view::npos) {
 		return "";
 	}
 
-	std::size_t last = text.find_last_not_of(" \t\r\n");
+	const std::size_t last = text.find_last_not_of(" \t\r\n");
 
 	return std::string(text.substr(first, last - first + 1));
 }

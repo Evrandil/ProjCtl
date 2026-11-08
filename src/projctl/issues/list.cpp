@@ -158,7 +158,7 @@ auto ProjCtl::issues_all() const -> BatchResult {
 
 	BatchResult results;
 	for (decltype(tasks)::value_type& task : tasks) {
-		std::expected result = task.get();
+		const std::expected result = task.get();
 		if (!result) {
 			std::format_to(std::back_inserter(results.output), "{}\n", result.error());
 			++results.failed;

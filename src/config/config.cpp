@@ -15,13 +15,13 @@
 namespace {
 
 	auto trim(std::string_view text) -> std::string {
-		std::size_t first = text.find_first_not_of(" \t\r\n");
+		const std::size_t first = text.find_first_not_of(" \t\r\n");
 
 		if (first == std::string_view::npos) {
 			return "";
 		}
 
-		std::size_t last = text.find_last_not_of(" \t\r\n");
+		const std::size_t last = text.find_last_not_of(" \t\r\n");
 
 		return std::string(text.substr(first, last - first + 1));
 	}
@@ -32,9 +32,9 @@ namespace {
 		std::size_t start = 0;
 
 		while (start < value.size()) {
-			std::size_t comma = value.find(',', start);
+			const std::size_t comma = value.find(',', start);
 
-			std::string field =
+			const std::string field =
 				trim(value.substr(start, comma == std::string_view::npos ? value.size() - start : comma - start));
 
 			if (field == "number") {
@@ -119,13 +119,13 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 			continue;
 		}
 
-		std::size_t separator = line.find('=');
+		const std::size_t separator = line.find('=');
 		if (separator == std::string::npos) {
 			continue;
 		}
 
-		std::string key   = trim(std::string_view(line.substr(0, separator)));
-		std::string value = trim(std::string_view(line.substr(separator + 1)));
+		const std::string key   = trim(std::string_view(line.substr(0, separator)));
+		const std::string value = trim(std::string_view(line.substr(separator + 1)));
 
 		if (section == "General") {
 			if (key == "editor") {
@@ -174,7 +174,7 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 				config.colors_enabled = value == "true";
 				continue;
 			}
-			std::optional<Style::Color> color = color_from_string(value);
+			const std::optional<Style::Color> color = color_from_string(value);
 			if (color) {
 				if (key == "issue_number") {
 					config.issue_number_color = *color;
