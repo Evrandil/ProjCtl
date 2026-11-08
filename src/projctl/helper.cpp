@@ -1,4 +1,9 @@
 #include "projctl.hpp"
+#include "projectcontent.hpp"
+#include <cstddef>
+#include <filesystem>
+#include <string>
+#include <string_view>
 
 namespace {
 	constexpr int TRUNCATE_SIZE = 3;

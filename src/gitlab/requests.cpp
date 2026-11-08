@@ -1,8 +1,16 @@
 #include "gitlabinterface.hpp"
 
+#include "request.hpp"
 #include "systeminterface.hpp"
 
+#include <expected>
+#include <filesystem>
+#include <format>
 #include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
+#include <string>
+#include <utility>
+#include <vector>
 
 auto GitLabInterface::request_list(const std::filesystem::path& path)
 	-> std::expected<std::vector<Request>, std::string> {

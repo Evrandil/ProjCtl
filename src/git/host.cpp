@@ -1,6 +1,10 @@
+#include "githostoption.hpp"
 #include "gitinterface.hpp"
 
 #include "remote_url.hpp"
+#include <expected>
+#include <filesystem>
+#include <string>
 
 auto GitInterface::host(const std::filesystem::path& path) -> std::expected<HostOption, std::string> {
 	std::expected<std::string, std::string> remote_output = remote(path);

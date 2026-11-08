@@ -1,8 +1,16 @@
+#include "clistate.hpp"
+#include "command.hpp"
+#include "githostoption.hpp"
 #include "projctl.hpp"
 
+#include <array>
+#include <format>
 #include <future>
+#include <iterator>
+#include <string>
 
 #include "githostinterface.hpp"
+#include "style.hpp"
 
 auto ProjCtl::g_status() const -> BatchResult {
 	auto status_one = [&](HostOption host) -> std::string {

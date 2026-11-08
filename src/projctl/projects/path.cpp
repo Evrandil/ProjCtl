@@ -1,6 +1,10 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
+#include <expected>
+#include <optional>
 #include <print>
+#include <string>
 
 auto ProjCtl::path_show(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
 	std::expected project = project_find(name);

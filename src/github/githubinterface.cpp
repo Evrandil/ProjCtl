@@ -1,10 +1,16 @@
 #include "githubinterface.hpp"
 
+#include <expected>
+#include <format>
+#include <nlohmann/json_fwd.hpp>
 #include <ranges>
 
+#include "clistate.hpp"
 #include "systeminterface.hpp"
 
 #include <nlohmann/json.hpp>
+#include <string>
+#include <vector>
 
 auto gh_command(std::vector<std::string> args) -> std::vector<std::string> {
 	std::vector<std::string> command =

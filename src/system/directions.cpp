@@ -1,4 +1,6 @@
 #include "systeminterface.hpp"
+#include <cstdlib>
+#include <filesystem>
 
 auto SystemInterface::config_home() -> std::filesystem::path {
 	const char* xdg = std::getenv("XDG_CONFIG_HOME");

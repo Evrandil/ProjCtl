@@ -1,6 +1,14 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
 #include "gitinterface.hpp"
+#include "projectcontent.hpp"
+#include "style.hpp"
+#include <expected>
+#include <format>
+#include <optional>
+#include <string>
+#include <string_view>
 
 auto ProjCtl::commit(const std::optional<std::string>& name, std::optional<std::string_view> message) const
 	-> std::expected<std::string, std::string> {

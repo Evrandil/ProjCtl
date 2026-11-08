@@ -1,9 +1,17 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
+#include <expected>
+#include <format>
 #include <future>
+#include <iterator>
+#include <optional>
 #include <ranges>
+#include <string>
+#include <vector>
 
 #include "gitinterface.hpp"
+#include "style.hpp"
 
 auto ProjCtl::pull(const ProjectEntry& project) const -> std::expected<std::string, std::string> {
 	std::string output;

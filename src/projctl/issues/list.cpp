@@ -1,11 +1,23 @@
+#include "command.hpp"
+#include "issue.hpp"
 #include "projctl.hpp"
 
+#include <cstddef>
+#include <expected>
+#include <format>
 #include <future>
+#include <iterator>
+#include <optional>
 #include <ranges>
+#include <string>
+#include <string_view>
 #include <utility>
+#include <vector>
 
 #include "githostinterface.hpp"
 #include "gitinterface.hpp"
+#include "projectcontent.hpp"
+#include "style.hpp"
 
 auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string {
 	std::string table;

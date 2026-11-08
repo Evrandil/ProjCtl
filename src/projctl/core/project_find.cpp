@@ -1,4 +1,9 @@
 #include "projctl.hpp"
+#include "style.hpp"
+#include <expected>
+#include <format>
+#include <optional>
+#include <string>
 
 auto ProjCtl::project_find(const std::optional<std::string>& name) const
 	-> std::expected<ProjectIterator, std::string> {

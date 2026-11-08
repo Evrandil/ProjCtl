@@ -1,4 +1,13 @@
+#include "command.hpp"
 #include "projctl.hpp"
+#include "projectcontent.hpp"
+#include "style.hpp"
+#include <expected>
+#include <filesystem>
+#include <format>
+#include <optional>
+#include <string>
+#include <system_error>
 
 auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path)
 	-> std::expected<std::string, std::string> {
@@ -35,11 +44,13 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 		);
 	}
 
-	const auto [entry, inserted] =
-		projects.try_emplace(actual_name, ProjectContent{
-				.path = full_path, 
-				.type = detect_project_type(full_path),
-				});
+	const auto [entry, inserted] = projects.try_emplace(
+		actual_name,
+		ProjectContent{
+			.path = full_path,
+			.type = detect_project_type(full_path),
+		}
+	);
 
 	if (!inserted) {
 		return std::unexpected(

@@ -1,5 +1,9 @@
 #include "gitinterface.hpp"
 
+#include <expected>
+#include <filesystem>
+#include <optional>
+#include <string>
 #include <vector>
 
 #include "systeminterface.hpp"

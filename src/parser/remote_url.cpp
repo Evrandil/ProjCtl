@@ -1,6 +1,11 @@
 #include "remote_url.hpp"
+#include "githostoption.hpp"
 
+#include <cstddef>
+#include <expected>
 #include <format>
+#include <string>
+#include <string_view>
 
 namespace {
 	struct RemoteParts {

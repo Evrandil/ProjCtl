@@ -1,8 +1,14 @@
 #include "gitlabinterface.hpp"
 
+#include "clistate.hpp"
 #include "systeminterface.hpp"
 
+#include <expected>
+#include <format>
 #include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
+#include <string>
+#include <vector>
 
 auto GitLabInterface::state() -> CliState {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"glab", "auth", "status"});

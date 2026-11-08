@@ -1,6 +1,12 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
 #include "gitinterface.hpp"
+#include "style.hpp"
+#include <expected>
+#include <format>
+#include <optional>
+#include <string>
 
 auto ProjCtl::log(const std::optional<std::string>& name, bool oneline) const
 	-> std::expected<std::string, std::string> {

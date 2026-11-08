@@ -1,7 +1,14 @@
 #include "parser.hpp"
+#include "command.hpp"
 
 #include <charconv>
 #include <expected>
+#include <format>
+#include <optional>
+#include <span>
+#include <string>
+#include <string_view>
+#include <system_error>
 
 // grammar: see tests/parser_test.cpp
 

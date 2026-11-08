@@ -1,8 +1,14 @@
 #include "githostinterface.hpp"
 
+#include "githostoption.hpp"
 #include "githubinterface.hpp"
 #include "gitinterface.hpp"
 #include "gitlabinterface.hpp"
+#include "issue.hpp"
+#include <expected>
+#include <filesystem>
+#include <string>
+#include <vector>
 
 auto GitHostInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string> {
 	std::expected host = GitInterface::host(path);

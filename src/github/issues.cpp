@@ -1,8 +1,16 @@
 #include "githubinterface.hpp"
 
+#include "issue.hpp"
 #include "systeminterface.hpp"
 
+#include <expected>
+#include <filesystem>
+#include <format>
 #include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
+#include <string>
+#include <utility>
+#include <vector>
 
 auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string> {
 	std::expected result = SystemInterface::run(

@@ -1,4 +1,11 @@
+#include "command.hpp"
 #include "projctl.hpp"
+#include "style.hpp"
+#include <expected>
+#include <filesystem>
+#include <format>
+#include <iterator>
+#include <string>
 
 auto ProjCtl::list(bool names_only) const -> std::expected<std::string, std::string> {
 	auto list_one = [&](const std::string& name, const std::filesystem::path& path) -> std::string {

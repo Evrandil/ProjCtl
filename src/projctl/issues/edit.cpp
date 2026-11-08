@@ -1,6 +1,12 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
 #include "githostinterface.hpp"
+#include "style.hpp"
+#include <expected>
+#include <format>
+#include <optional>
+#include <string>
 
 auto ProjCtl::issue_edit(const std::optional<std::string>& name, int issue_number) const
 	-> std::expected<int, std::string> {

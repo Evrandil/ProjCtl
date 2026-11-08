@@ -1,6 +1,12 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
 #include "gitinterface.hpp"
+#include "style.hpp"
+#include <expected>
+#include <format>
+#include <optional>
+#include <string>
 
 auto ProjCtl::push(const std::optional<std::string>& name, const bool upstream) const
 	-> std::expected<std::string, std::string> {

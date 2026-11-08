@@ -9,27 +9,27 @@
 
 // TODO Turn this into class and make public getters and members private
 struct Config {
-	std::size_t max_width            = 300;
-	std::size_t name_width           = 20;
-	std::size_t path_width           = 50;
-	std::size_t remote_width         = 50;
-	std::size_t branch_width         = 15;
-	std::size_t issue_number_width   = 8;
-	std::size_t issue_title_width    = 40;
-	std::size_t issue_author_width   = 20;
-	std::size_t issue_state_width    = 12;
-	std::size_t issue_labels_width   = 30;
-	std::size_t issue_created_width  = 22;
-	std::size_t issue_updated_width  = 22;
-	std::size_t issue_parent_width   = 10;
-	std::size_t request_number_width = 8;
-	std::size_t request_title_width  = 40;
-	std::size_t request_author_width = 20;
-	std::size_t request_state_width  = 12;
-	std::size_t request_labels_width = 30;
-	std::size_t request_created_width= 22;
-	std::size_t request_updated_width= 22;
-	std::size_t request_parent_width = 10;
+	std::size_t max_width             = 300;
+	std::size_t name_width            = 20;
+	std::size_t path_width            = 50;
+	std::size_t remote_width          = 50;
+	std::size_t branch_width          = 15;
+	std::size_t issue_number_width    = 8;
+	std::size_t issue_title_width     = 40;
+	std::size_t issue_author_width    = 20;
+	std::size_t issue_state_width     = 12;
+	std::size_t issue_labels_width    = 30;
+	std::size_t issue_created_width   = 22;
+	std::size_t issue_updated_width   = 22;
+	std::size_t issue_parent_width    = 10;
+	std::size_t request_number_width  = 8;
+	std::size_t request_title_width   = 40;
+	std::size_t request_author_width  = 20;
+	std::size_t request_state_width   = 12;
+	std::size_t request_labels_width  = 30;
+	std::size_t request_created_width = 22;
+	std::size_t request_updated_width = 22;
+	std::size_t request_parent_width  = 10;
 
 	std::vector<IssueField> issue_columns{
 		IssueField::Number,

@@ -1,6 +1,15 @@
 #include "config.hpp"
+#include "issue.hpp"
+#include "style.hpp"
 
+#include <cstddef>
+#include <filesystem>
 #include <fstream>
+#include <optional>
+#include <string>
+#include <string_view>
+#include <utility>
+#include <vector>
 
 namespace {
 

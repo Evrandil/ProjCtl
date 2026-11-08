@@ -1,4 +1,9 @@
+#include "command.hpp"
 #include "projctl.hpp"
+#include "style.hpp"
+#include <expected>
+#include <format>
+#include <string>
 
 auto ProjCtl::remove(const std::string& name) -> std::expected<std::string, std::string> {
 	if (projects.erase(name) == 0) {

@@ -1,6 +1,13 @@
+#include "command.hpp"
+#include "githostoption.hpp"
 #include "projctl.hpp"
 
+#include <array>
+#include <expected>
+#include <format>
 #include <future>
+#include <iterator>
+#include <string>
 
 #include "githostinterface.hpp"
 

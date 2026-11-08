@@ -1,8 +1,14 @@
 #include "githostinterface.hpp"
 
+#include "githostoption.hpp"
 #include "githubinterface.hpp"
 #include "gitinterface.hpp"
 #include "gitlabinterface.hpp"
+#include "request.hpp"
+#include <expected>
+#include <filesystem>
+#include <string>
+#include <vector>
 
 auto GitHostInterface::request_list(const std::filesystem::path& path)
 	-> std::expected<std::vector<Request>, std::string> {

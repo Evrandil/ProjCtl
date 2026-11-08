@@ -1,6 +1,13 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
 #include "gitinterface.hpp"
+#include "projectcontent.hpp"
+#include "style.hpp"
+#include <expected>
+#include <format>
+#include <optional>
+#include <string>
 
 auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const
 	-> std::expected<std::string, std::string> {

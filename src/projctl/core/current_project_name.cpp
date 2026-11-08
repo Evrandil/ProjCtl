@@ -1,4 +1,11 @@
 #include "projctl.hpp"
+#include <algorithm>
+#include <cstddef>
+#include <filesystem>
+#include <iterator>
+#include <optional>
+#include <string>
+#include <system_error>
 
 auto ProjCtl::current_project_name() const -> std::optional<std::string> {
 	std::error_code       error;

@@ -1,6 +1,10 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
 #include "githostinterface.hpp"
+#include <expected>
+#include <optional>
+#include <string>
 
 auto ProjCtl::request_view(const std::optional<std::string>& name, int request_number) const
 	-> std::expected<std::string, std::string> {

@@ -1,6 +1,12 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
 #include "githostinterface.hpp"
+#include "style.hpp"
+#include <expected>
+#include <format>
+#include <optional>
+#include <string>
 
 auto ProjCtl::request_close(const std::optional<std::string>& name, int request_number) const
 	-> std::expected<std::string, std::string> {

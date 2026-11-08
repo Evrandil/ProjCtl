@@ -1,8 +1,16 @@
 #include "systeminterface.hpp"
 
+#include <array>
 #include <cerrno>
 #include <cstring>
+#include <expected>
+#include <filesystem>
 #include <format>
+#include <span>
+#include <stdlib.h>
+#include <string>
+#include <sys/types.h>
+#include <utility>
 #include <vector>
 
 #include <spawn.h>

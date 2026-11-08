@@ -1,11 +1,23 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
+#include <cstddef>
+#include <expected>
+#include <format>
 #include <future>
+#include <iterator>
+#include <optional>
 #include <ranges>
+#include <string>
+#include <string_view>
 #include <utility>
+#include <vector>
 
 #include "githostinterface.hpp"
 #include "gitinterface.hpp"
+#include "projectcontent.hpp"
+#include "request.hpp"
+#include "style.hpp"
 
 auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::string {
 	std::string table;

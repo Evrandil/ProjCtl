@@ -1,6 +1,15 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
+#include "projectcontent.hpp"
+#include "style.hpp"
 #include "systeminterface.hpp"
+#include <expected>
+#include <format>
+#include <optional>
+#include <string>
+#include <string_view>
+#include <vector>
 
 auto ProjCtl::run(const std::optional<std::string>& name) const -> std::expected<int, std::string> {
 	std::expected project = project_find(name);

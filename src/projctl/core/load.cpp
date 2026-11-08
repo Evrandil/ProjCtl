@@ -1,6 +1,10 @@
 #include "projctl.hpp"
+#include "projectcontent.hpp"
 
+#include <cstddef>
 #include <fstream>
+#include <optional>
+#include <string>
 
 void ProjCtl::load() {
 	config.load(config_path);
@@ -27,7 +31,8 @@ void ProjCtl::load() {
 						ProjectContent{
 							.path = std::filesystem::path{path_str},
 							.type = detect_project_type(path_str),
-							.build_command = build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
+							.build_command =
+								build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
 							.run_command = run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
 						}
 					);
@@ -56,10 +61,10 @@ void ProjCtl::load() {
 		this->projects.emplace(
 			name,
 			ProjectContent{
-				.path = std::filesystem::path{path_str},
-				.type = detect_project_type(path_str),
+				.path          = std::filesystem::path{path_str},
+				.type          = detect_project_type(path_str),
 				.build_command = build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
-				.run_command = run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
+				.run_command   = run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
 			}
 		);
 	}

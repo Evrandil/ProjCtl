@@ -1,5 +1,10 @@
 #include "gitinterface.hpp"
 
+#include <cstddef>
+#include <expected>
+#include <filesystem>
+#include <format>
+#include <string>
 #include <vector>
 
 #include "systeminterface.hpp"

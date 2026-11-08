@@ -1,6 +1,10 @@
+#include "command.hpp"
 #include "projctl.hpp"
 
 #include "githostinterface.hpp"
+#include <expected>
+#include <optional>
+#include <string>
 
 auto ProjCtl::issue_view(const std::optional<std::string>& name, int issue_number) const
 	-> std::expected<std::string, std::string> {

@@ -1,6 +1,12 @@
 #include "projctl.hpp"
+#include "style.hpp"
 
+#include <expected>
+#include <filesystem>
+#include <format>
 #include <fstream>
+#include <string>
+#include <system_error>
 
 auto ProjCtl::save() const noexcept -> std::expected<void, std::string> {
 	std::error_code error;
