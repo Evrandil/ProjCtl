@@ -53,7 +53,7 @@ auto ProjCtl::fetch_all() const -> BatchResult {
 	std::vector<std::future<std::expected<std::string, std::string>>> tasks;
 	tasks.reserve(projects.size());
 
-	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
+	const auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
 
 	for (const ProjectEntry& project : projects | std::views::filter(is_git)) {
 		tasks.push_back(std::async(std::launch::async, [this, &project] -> std::expected<std::string, std::string> {

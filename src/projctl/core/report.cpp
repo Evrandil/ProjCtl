@@ -56,7 +56,7 @@ auto ProjCtl::handle(const Cmd::Unknown& cmd) const -> int {
 	return 1;
 }
 
-auto ProjCtl::handle(const Cmd::Version&) const -> int {
+auto ProjCtl::handle(const Cmd::Version& /*unused*/) const -> int {
 	std::println(stdout, "\n\n{}ProjCtl version: {}{}\n\n", paint(config.header_color), Version::STRING, reset());
 	return 0;
 }

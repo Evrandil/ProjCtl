@@ -13,9 +13,9 @@
 #include "projectcontent.hpp"
 
 auto ProjCtl::list_gits(bool names_only) const -> std::expected<std::string, std::string> {
-	auto list_one_git = [&](const std::string& name, const ProjectContent& content) -> std::string {
-		std::expected branch       = GitInterface::branch(content.path);
-		std::expected remote_short = GitInterface::remote_short(content.path);
+	const auto list_one_git = [&](const std::string& name, const ProjectContent& content) -> std::string {
+		const std::expected branch       = GitInterface::branch(content.path);
+		const std::expected remote_short = GitInterface::remote_short(content.path);
 		return std::format(
 			"{}{:<{}}{}{:<{}}{}{:<{}}{}{:<{}}\n",
 			paint(config.project_name_color),
@@ -36,7 +36,7 @@ auto ProjCtl::list_gits(bool names_only) const -> std::expected<std::string, std
 	std::vector<std::future<std::string>> tasks;
 	tasks.reserve(projects.size());
 
-	auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
+	const auto is_git = [](const ProjectEntry& project) -> bool { return GitInterface::is_repo(project.second.path); };
 
 	std::string output;
 

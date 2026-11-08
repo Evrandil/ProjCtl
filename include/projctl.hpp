@@ -51,7 +51,7 @@ class ProjCtl {
 
 	// Program's functionality
 	[[nodiscard]] auto handle(const Cmd::Unknown& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Version&) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Version& /*unused*/) const -> int;
 
 	// Base functionality
 	[[nodiscard]] auto list(bool names_only) const -> ResultString;

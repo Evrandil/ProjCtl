@@ -8,7 +8,7 @@
 #include <string>
 
 auto ProjCtl::list(bool names_only) const -> std::expected<std::string, std::string> {
-	auto list_one = [&](const std::string& name, const std::filesystem::path& path) -> std::string {
+	const auto list_one = [&](const std::string& name, const std::filesystem::path& path) -> std::string {
 		return std::format(
 			"{}{:<{}}{}{:<{}}{}\n",
 			paint(config.project_name_color),
