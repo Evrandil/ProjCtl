@@ -46,8 +46,8 @@ class ProjCtl {
 
 	[[nodiscard]] static auto report(const ResultString& result) -> int;
 	[[nodiscard]] static auto report(const ResultInt& result) -> int;
-	[[nodiscard]] auto report(const BatchResult& result) const -> int;
-	[[nodiscard]] auto report_save(const ResultString& result) const -> int;
+	[[nodiscard]] auto        report(const BatchResult& result) const -> int;
+	[[nodiscard]] auto        report_save(const ResultString& result) const -> int;
 
 	// Program's functionality
 	[[nodiscard]] auto handle(const Cmd::Unknown& cmd) const -> int;
@@ -85,11 +85,12 @@ class ProjCtl {
 	[[nodiscard]] auto push(const std::optional<std::string>& name, bool upstream) const -> ResultString;
 	[[nodiscard]] auto git_merge(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto log(const std::optional<std::string>& name, bool oneline) const -> ResultString;
-	[[nodiscard]] auto branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const
+	[[nodiscard]] auto
+	branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const -> ResultString;
+	[[nodiscard]] auto commit(const std::optional<std::string>& name, std::optional<std::string_view> message) const
 		-> ResultString;
-	[[nodiscard]] auto commit(const std::optional<std::string>& name, std::optional<std::string_view> message) const -> ResultString;
-	[[nodiscard]] auto diff(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path) const
-		-> ResultInt;
+	[[nodiscard]] auto
+	diff(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::Git::Status& cmd) const -> int;
 	[[nodiscard]] auto handle(const Cmd::Git::Fetch& cmd) const -> int;
 	[[nodiscard]] auto handle(const Cmd::Git::Commit& cmd) const -> int;
@@ -120,8 +121,8 @@ class ProjCtl {
 	[[nodiscard]] auto issue_close(const std::optional<std::string>& name, int issue_number) const -> ResultString;
 	[[nodiscard]] auto request_close(const std::optional<std::string>& name, int request_number) const -> ResultString;
 	[[nodiscard]] auto request_merge(const std::optional<std::string>& name) const -> ResultString;
-	[[nodiscard]] auto handle(const Cmd::GH::Status& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::RepoList& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Status& /*unused*/) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::RepoList& /*unused*/) const -> int;
 	[[nodiscard]] auto handle(const Cmd::GH::IssueList& cmd) const -> int;
 	[[nodiscard]] auto handle(const Cmd::GH::IssueCreate& cmd) const -> int;
 	[[nodiscard]] auto handle(const Cmd::GH::IssueEdit& cmd) const -> int;

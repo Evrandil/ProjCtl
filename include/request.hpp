@@ -17,7 +17,7 @@ enum class RequestField : uint8_t {
 };
 
 struct Request {
-	int                        number;
+	int                        number = 0;
 	std::string                title;
 	std::string                state;
 	std::string                author;

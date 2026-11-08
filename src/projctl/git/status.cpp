@@ -23,10 +23,10 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	constexpr uint8_t CONTENT_WIDTH = 24;
 	std::string       output;
 
-	auto parse_line = [&](const std::string_view header,
-	                      const Style::Mark&     mark,
-	                      const std::string_view text,
-	                      const Style::Color     text_color) -> void {
+	const auto parse_line = [&](const std::string_view header,
+	                            const Style::Mark&     mark,
+	                            const std::string_view text,
+	                            const Style::Color     text_color) -> void {
 		Style::Color color = text_color;
 		if (mark == Style::Mark::Tick) {
 			color = config.tick_color;
@@ -46,9 +46,9 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 			reset()
 		);
 	};
-	auto result_line = [&](std::string_view                               header,
-	                       const std::expected<std::string, std::string>& result,
-	                       Style::Color                                   ok_color) -> void {
+	const auto result_line = [&](std::string_view                               header,
+	                             const std::expected<std::string, std::string>& result,
+	                             Style::Color                                   ok_color) -> void {
 		if (result) {
 			parse_line(header, Style::Mark::None, *result, ok_color);
 		} else {

@@ -13,7 +13,7 @@
 #include <vector>
 
 auto GitLabInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string> {
-	std::expected result =
+	const std::expected result =
 		SystemInterface::run(std::vector<std::string>{"glab", "issue", "list", "--output", "json"}, path);
 
 	if (!result) {

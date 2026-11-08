@@ -5,4 +5,4 @@
 
 #include "command.hpp"
 
-auto parser(std::span<const std::string_view>) -> Command;
+auto parser(std::span<const std::string_view> input) -> Command;

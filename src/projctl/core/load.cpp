@@ -1,3 +1,4 @@
+#include "config.hpp"
 #include "projctl.hpp"
 #include "projectcontent.hpp"
 
@@ -5,6 +6,7 @@
 #include <fstream>
 #include <optional>
 #include <string>
+#include <utility>
 
 void ProjCtl::load() {
 	auto config_option = load_config(config_path);

@@ -12,7 +12,7 @@
 #include "githostinterface.hpp"
 
 auto ProjCtl::repo_list() const -> BatchResult {
-	auto list_one = [&](HostOption host) -> std::expected<std::string, std::string> {
+	const auto list_one = [&](HostOption host) -> std::expected<std::string, std::string> {
 		std::expected repo_list = GitHostInterface::repo_list(host);
 		if (!repo_list) {
 			return std::unexpected(
@@ -55,6 +55,6 @@ auto ProjCtl::repo_list() const -> BatchResult {
 	return results;
 }
 
-auto ProjCtl::handle(const Cmd::GH::RepoList&) const -> int {
+auto ProjCtl::handle(const Cmd::GH::RepoList& /*unused*/) const -> int {
 	return report(repo_list());
 }

@@ -14,7 +14,7 @@
 
 auto GitLabInterface::request_list(const std::filesystem::path& path)
 	-> std::expected<std::vector<Request>, std::string> {
-	std::expected result =
+	const std::expected result =
 		SystemInterface::run(std::vector<std::string>{"glab", "mr", "list", "--output", "json"}, path);
 
 	if (!result) {

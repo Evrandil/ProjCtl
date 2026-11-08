@@ -13,7 +13,7 @@
 #include "style.hpp"
 
 auto ProjCtl::g_status() const -> BatchResult {
-	auto status_one = [&](HostOption host) -> std::string {
+	const auto status_one = [&](HostOption host) -> std::string {
 		std::string output;
 		CliState    state = GitHostInterface::state(host);
 		std::format_to(
@@ -53,6 +53,6 @@ auto ProjCtl::g_status() const -> BatchResult {
 	return results;
 }
 
-auto ProjCtl::handle(const Cmd::GH::Status&) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Status& /*unused*/) const -> int {
 	return report(g_status());
 }

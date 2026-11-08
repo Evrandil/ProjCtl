@@ -14,7 +14,7 @@
 
 auto GitHubInterface::request_list(const std::filesystem::path& path)
 	-> std::expected<std::vector<Request>, std::string> {
-	std::expected result = SystemInterface::run(
+	const std::expected result = SystemInterface::run(
 		gh_command(
 			std::vector<
 				std::string>{"gh", "pr", "list", "--json", "number,title,state,author,labels,createdAt,updatedAt"}
@@ -29,7 +29,7 @@ auto GitHubInterface::request_list(const std::filesystem::path& path)
 		return std::unexpected(result->text);
 	}
 
-	nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
+	const nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
 	if (json.is_discarded()) {
 		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
 	}

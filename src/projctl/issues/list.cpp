@@ -21,7 +21,7 @@
 
 auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string {
 	std::string table;
-	auto        field_name = [&](IssueField field) -> std::string_view {
+	const auto  field_name = [&](IssueField field) -> std::string_view {
 		switch (field) {
 			case IssueField::Number:  return "Number";
 			case IssueField::Title:   return "Title";
@@ -34,7 +34,7 @@ auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string
 		}
 		std::unreachable();
 	};
-	auto field_width = [&](IssueField field) -> std::size_t {
+	const auto field_width = [&](IssueField field) -> std::size_t {
 		switch (field) {
 			case IssueField::Number:  return config.issue_number_width - 1;
 			case IssueField::Title:   return config.issue_title_width - 1;
@@ -47,13 +47,15 @@ auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string
 		}
 		std::unreachable();
 	};
-	auto field_color = [&](IssueField field, const Issue& issue) -> Style::Color {
+	const auto field_color = [&](IssueField field, const Issue& issue) -> Style::Color {
 		switch (field) {
 			case IssueField::Number: return config.issue_number_color;
 			case IssueField::Title:  return config.issue_title_color;
 			case IssueField::State:
-				return issue.state == "OPEN" || issue.state == "opened" ? config.issue_open_color
-				                                                        : config.issue_closed_color;
+				if (issue.state == "OPEN" || issue.state == "opened") {
+					return config.issue_open_color;
+				}
+				return config.issue_closed_color;
 			case IssueField::Author: return config.issue_author_color;
 			case IssueField::Labels: return config.issue_labels_color;
 			case IssueField::Parent: return config.issue_parent_color;
@@ -61,13 +63,13 @@ auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string
 		}
 	};
 	table += paint(config.header_color);
-	for (IssueField field : config.issue_columns) {
+	for (const IssueField field : config.issue_columns) {
 		std::format_to(std::back_inserter(table), "{:<{}}", field_name(field), field_width(field));
 	}
 	table += reset();
 	table += '\n';
 	for (const Issue& issue : issues) {
-		for (IssueField field : config.issue_columns) {
+		for (const IssueField field : config.issue_columns) {
 			std::string value;
 
 			switch (field) {
@@ -81,7 +83,7 @@ auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string
 					break;
 				case IssueField::Created: value = issue.created; break;
 				case IssueField::Updated: value = issue.updated; break;
-				case IssueField::Parent:  value = issue.parent ? *issue.parent : "-"; break;
+				case IssueField::Parent:  value = issue.parent.value_or("-"); break;
 			}
 
 			std::format_to(
@@ -109,7 +111,7 @@ auto ProjCtl::issues(const ProjectEntry& project) const -> std::expected<std::st
 		project_name,
 		reset()
 	);
-	std::expected list = GitHostInterface::issue_list(content.path.string());
+	const std::expected list = GitHostInterface::issue_list(content.path.string());
 	if (!list) {
 		return std::unexpected(
 			std::format(
@@ -134,7 +136,7 @@ auto ProjCtl::issues(const ProjectEntry& project) const -> std::expected<std::st
 }
 
 auto ProjCtl::issues(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}

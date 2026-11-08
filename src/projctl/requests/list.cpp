@@ -52,8 +52,10 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 			case RequestField::Number: return config.request_number_color;
 			case RequestField::Title:  return config.request_title_color;
 			case RequestField::State:
-				return request.state == "OPEN" || request.state == "opened" ? config.request_open_color
-				                                                            : config.request_closed_color;
+				if (request.state == "OPEN" || request.state == "opened") {
+					return config.request_open_color;
+				}
+				return config.request_closed_color;
 			case RequestField::Author: return config.request_author_color;
 			case RequestField::Labels: return config.request_labels_color;
 			case RequestField::Parent: return config.request_parent_color;
@@ -81,7 +83,7 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 					break;
 				case RequestField::Created: value = request.created; break;
 				case RequestField::Updated: value = request.updated; break;
-				case RequestField::Parent:  value = request.parent ? std::format("#{}", *request.parent) : "-"; break;
+				case RequestField::Parent:  value = request.parent.value_or("-"); break;
 			}
 			std::format_to(
 				std::back_inserter(table),

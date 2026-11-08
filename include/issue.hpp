@@ -17,7 +17,7 @@ enum class IssueField : uint8_t {
 };
 
 struct Issue {
-	int                        number;
+	int                        number = 0;
 	std::string                title;
 	std::string                state;
 	std::string                author;

@@ -13,7 +13,7 @@
 #include <vector>
 
 auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string> {
-	std::expected result = SystemInterface::run(
+	const std::expected result = SystemInterface::run(
 		gh_command(
 			std::vector<std::string>{
 				"gh",
@@ -33,7 +33,7 @@ auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expe
 		return std::unexpected(result->text);
 	}
 
-	nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
+	const nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
 	if (json.is_discarded()) {
 		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
 	}
