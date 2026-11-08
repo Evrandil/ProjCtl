@@ -1,9 +1,10 @@
 #include "projctl.hpp"
 
-#include "version.hpp"
 #include <print>
 
-auto ProjCtl::report(const std::expected<std::string, std::string>& result) const -> int {
+#include "version.hpp"
+
+auto ProjCtl::report(const ResultString& result) const -> int {
 	if (!result) {
 		std::println(stderr, "\n\n{}\n\n", result.error());
 		return 1;
@@ -13,7 +14,7 @@ auto ProjCtl::report(const std::expected<std::string, std::string>& result) cons
 	return 0;
 }
 
-auto ProjCtl::report(const std::expected<int, std::string>& result) const -> int {
+auto ProjCtl::report(const ResultInt& result) const -> int {
 	if (!result) {
 		std::println(stderr, "\n\n{}\n\n", result.error());
 		return 1;
@@ -31,7 +32,7 @@ auto ProjCtl::report(const BatchResult& results) const -> int {
 	return 0;
 }
 
-auto ProjCtl::report_save(const std::expected<std::string, std::string>& result) const -> int {
+auto ProjCtl::report_save(const ResultString& result) const -> int {
 	if (!result) {
 		std::println(stderr, "\n\n{}\n\n", result.error());
 		return 1;

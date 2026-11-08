@@ -25,10 +25,10 @@ void ProjCtl::load() {
 					this->projects.emplace(
 						name,
 						ProjectContent{
-							std::filesystem::path{path_str},
-							detect_project_type(path_str),
-							build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
-							run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
+							.path = std::filesystem::path{path_str},
+							.type = detect_project_type(path_str),
+							.build_command = build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
+							.run_command = run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
 						}
 					);
 					path_str.clear();
@@ -56,10 +56,10 @@ void ProjCtl::load() {
 		this->projects.emplace(
 			name,
 			ProjectContent{
-				std::filesystem::path{path_str},
-				detect_project_type(path_str),
-				build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
-				run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
+				.path = std::filesystem::path{path_str},
+				.type = detect_project_type(path_str),
+				.build_command = build_command.empty() ? std::nullopt : std::optional<std::string>{build_command},
+				.run_command = run_command.empty() ? std::nullopt : std::optional<std::string>{run_command},
 			}
 		);
 	}

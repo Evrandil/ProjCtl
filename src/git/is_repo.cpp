@@ -1,7 +1,8 @@
 #include "gitinterface.hpp"
 
-#include "systeminterface.hpp"
 #include <vector>
+
+#include "systeminterface.hpp"
 
 auto GitInterface::is_repo(const std::filesystem::path& path) -> bool {
 	std::expected result =

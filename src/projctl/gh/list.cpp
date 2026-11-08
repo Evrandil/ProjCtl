@@ -1,7 +1,8 @@
 #include "projctl.hpp"
 
-#include "githostinterface.hpp"
 #include <future>
+
+#include "githostinterface.hpp"
 
 auto ProjCtl::repo_list() const -> BatchResult {
 	auto list_one = [&](HostOption host) -> std::expected<std::string, std::string> {

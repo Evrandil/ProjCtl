@@ -1,7 +1,8 @@
 #include "gitinterface.hpp"
 
-#include "systeminterface.hpp"
 #include <vector>
+
+#include "systeminterface.hpp"
 
 auto GitInterface::changes(const std::filesystem::path& path) -> std::expected<std::string, std::string> {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "status", "--porcelain"}, path);

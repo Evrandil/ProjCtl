@@ -36,7 +36,10 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 	}
 
 	const auto [entry, inserted] =
-		projects.try_emplace(actual_name, ProjectContent{full_path, detect_project_type(full_path)});
+		projects.try_emplace(actual_name, ProjectContent{
+				.path = full_path, 
+				.type = detect_project_type(full_path),
+				});
 
 	if (!inserted) {
 		return std::unexpected(

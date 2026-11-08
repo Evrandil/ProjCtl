@@ -1,6 +1,7 @@
 #include "gitlabinterface.hpp"
 
 #include "systeminterface.hpp"
+
 #include <nlohmann/json.hpp>
 
 auto GitLabInterface::state() -> CliState {

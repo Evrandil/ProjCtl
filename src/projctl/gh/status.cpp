@@ -1,7 +1,8 @@
 #include "projctl.hpp"
 
-#include "githostinterface.hpp"
 #include <future>
+
+#include "githostinterface.hpp"
 
 auto ProjCtl::g_status() const -> BatchResult {
 	auto status_one = [&](HostOption host) -> std::string {

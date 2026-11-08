@@ -1,4 +1,5 @@
 #include "parser.hpp"
+
 #include <charconv>
 #include <expected>
 
@@ -73,7 +74,7 @@ namespace {
 			}
 			default:
 				return Cmd::Unknown{
-					.message = std::format("Invalid number of arguments: expected one or two, got {}", args.size())
+					.message = std::format("Invalid number of arguments: expected one or two, got {}", args.size()),
 				};
 		}
 	}

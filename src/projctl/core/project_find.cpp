@@ -19,7 +19,7 @@ auto ProjCtl::project_find(const std::optional<std::string>& name) const
 		}
 		actual_name = *current;
 	}
-	std::map<std::string, ProjectContent>::const_iterator project = projects.find(actual_name);
+	auto project = projects.find(actual_name);
 	if (project == projects.end()) {
 		return std::unexpected(
 			std::format(

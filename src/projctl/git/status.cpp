@@ -1,12 +1,13 @@
 #include "projctl.hpp"
 
-#include "config.hpp"
-#include "gitinterface.hpp"
-#include "remote_url.hpp"
 #include <format>
 #include <future>
 #include <iterator>
 #include <vector>
+
+#include "config.hpp"
+#include "gitinterface.hpp"
+#include "remote_url.hpp"
 
 auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	constexpr uint8_t CONTENT_WIDTH = 24;

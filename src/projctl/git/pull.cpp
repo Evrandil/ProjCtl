@@ -1,8 +1,9 @@
 #include "projctl.hpp"
 
-#include "gitinterface.hpp"
 #include <future>
 #include <ranges>
+
+#include "gitinterface.hpp"
 
 auto ProjCtl::pull(const ProjectEntry& project) const -> std::expected<std::string, std::string> {
 	std::string output;

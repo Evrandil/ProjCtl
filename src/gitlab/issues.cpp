@@ -1,6 +1,7 @@
 #include "gitlabinterface.hpp"
 
 #include "systeminterface.hpp"
+
 #include <nlohmann/json.hpp>
 
 auto GitLabInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string> {
@@ -14,7 +15,7 @@ auto GitLabInterface::issue_list(const std::filesystem::path& path) -> std::expe
 		return std::unexpected(result->text);
 	}
 
-	nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
+	const nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
 	if (json.is_discarded()) {
 		return std::unexpected(std::format("Unexpected output from glab:\n{}", result->text));
 	}

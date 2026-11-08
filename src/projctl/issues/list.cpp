@@ -1,10 +1,11 @@
 #include "projctl.hpp"
 
-#include "githostinterface.hpp"
-#include "gitinterface.hpp"
 #include <future>
 #include <ranges>
 #include <utility>
+
+#include "githostinterface.hpp"
+#include "gitinterface.hpp"
 
 auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string {
 	std::string table;
@@ -28,9 +29,9 @@ auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string
 			case IssueField::State:   return config.issue_state_width - 1;
 			case IssueField::Author:  return config.issue_author_width - 1;
 			case IssueField::Labels:  return config.issue_labels_width - 1;
-			case IssueField::Created: [[fallthrough]];
-			case IssueField::Updated: return 22;
-			case IssueField::Parent:  return 10;
+			case IssueField::Created: return config.issue_created_width - 1;
+			case IssueField::Updated: return config.issue_updated_width - 1;
+			case IssueField::Parent:  return config.issue_parent_width - 1;
 		}
 		std::unreachable();
 	};

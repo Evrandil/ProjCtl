@@ -1,10 +1,11 @@
 #include "projctl.hpp"
 
-#include "githostinterface.hpp"
-#include "gitinterface.hpp"
 #include <future>
 #include <ranges>
 #include <utility>
+
+#include "githostinterface.hpp"
+#include "gitinterface.hpp"
 
 auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::string {
 	std::string table;
@@ -23,14 +24,14 @@ auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::
 	};
 	auto field_width = [&](RequestField field) -> std::size_t {
 		switch (field) {
-			case RequestField::Number:  return config.request_number_width;
-			case RequestField::Title:   return config.request_title_width;
-			case RequestField::State:   return config.request_state_width;
-			case RequestField::Author:  return config.request_author_width;
-			case RequestField::Labels:  return config.request_labels_width;
-			case RequestField::Created: [[fallthrough]];
-			case RequestField::Updated: return 22;
-			case RequestField::Parent:  return 10;
+			case RequestField::Number:  return config.request_number_width - 1;
+			case RequestField::Title:   return config.request_title_width - 1;
+			case RequestField::State:   return config.request_state_width - 1;
+			case RequestField::Author:  return config.request_author_width - 1;
+			case RequestField::Labels:  return config.request_labels_width - 1;
+			case RequestField::Created: return config.request_created_width - 1;
+			case RequestField::Updated: return config.request_updated_width - 1;
+			case RequestField::Parent:  return config.request_parent_width - 1;
 		}
 		std::unreachable();
 	};

@@ -1,8 +1,10 @@
 #include "githubinterface.hpp"
 
-#include "systeminterface.hpp"
-#include <nlohmann/json.hpp>
 #include <ranges>
+
+#include "systeminterface.hpp"
+
+#include <nlohmann/json.hpp>
 
 auto gh_command(std::vector<std::string> args) -> std::vector<std::string> {
 	std::vector<std::string> command =

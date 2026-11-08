@@ -1,7 +1,8 @@
 #include "gitinterface.hpp"
 
-#include "systeminterface.hpp"
 #include <vector>
+
+#include "systeminterface.hpp"
 
 auto GitInterface::diff(const std::filesystem::path& path, const std::optional<std::filesystem::path>& file_path)
 	-> std::expected<int, std::string> {

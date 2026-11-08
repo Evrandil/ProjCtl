@@ -1,13 +1,14 @@
 #include "gitinterface.hpp"
 
-#include "systeminterface.hpp"
 #include <vector>
+
+#include "systeminterface.hpp"
 
 [[nodiscard]] auto GitInterface::log(const std::filesystem::path& path, bool oneline)
 	-> std::expected<std::string, std::string> {
 	std::vector<std::string> command{"git", "log"};
 	if (oneline) {
-		command.push_back("--oneline");
+		command.emplace_back("--oneline");
 	}
 	std::expected result = SystemInterface::run(command, path);
 	if (!result) [[unlikely]] {

@@ -1,10 +1,10 @@
 #include "gitinterface.hpp"
 
-#include "systeminterface.hpp"
 #include <vector>
 
+#include "systeminterface.hpp"
+
 namespace {
-	// Does this exact ref exist? e.g. "refs/heads/main" or "refs/remotes/origin/feature"
 	auto ref_exists(const std::filesystem::path& path, const std::string& branch) -> bool {
 		std::expected result =
 			SystemInterface::run(std::vector<std::string>{"git", "show-ref", "--verify", "--quiet", branch}, path);

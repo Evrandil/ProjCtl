@@ -17,6 +17,7 @@ Checks: >
 
 CheckOptions:
   readability-implicit-bool-conversion.AllowPointerConditions: true
+  concurrency-mt-unsafe.FunctionSet: glibc
 
 HeaderFilterRegex: '(include|src)/.*'
 FormatStyle: file

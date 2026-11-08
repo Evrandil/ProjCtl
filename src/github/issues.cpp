@@ -1,6 +1,7 @@
 #include "githubinterface.hpp"
 
 #include "systeminterface.hpp"
+
 #include <nlohmann/json.hpp>
 
 auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string> {
@@ -11,7 +12,7 @@ auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expe
 				"issue",
 				"list",
 				"--json",
-				"number,title,state,author,labels,createdAt,updatedAt,parent"
+				"number,title,state,author,labels,createdAt,updatedAt,parent",
 			}
 		),
 		path
