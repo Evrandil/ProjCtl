@@ -14,8 +14,8 @@ cmake 3.20
 ninja
 just
 ```
-C++ standard is set to 23 so I guess that's requirement for compiler<br>
-\(RIP folks on Windows\)<br>
+C++ standard is set to 23<br>
+Git, gh cli and glab cli are not required tho like half of functionality of this project is dependant on one or other<>
 # Installatoin
 ## If you have just
 ```fish
