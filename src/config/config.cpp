@@ -55,25 +55,18 @@ namespace {
 		{"parent_width", &Settings::Tables::TableStyle::parent},
 	});
 
-	constexpr auto COLORS = std::to_array<Field<Style::Color>>({
-		{"header", &Config::header_color},
-		{"project_name", &Config::project_name_color},
-		{"project_path", &Config::project_path_color},
-		{"project_branch", &Config::project_branch_color},
-		{"project_remote", &Config::project_remote_color},
-		{"project_type", &Config::project_type_color},
-		{"project_short_remote", &Config::project_short_remote_color},
-		{"tick", &Config::tick_color},
-		{"cross", &Config::cross_color},
-		{"table_number", &Config::table_number_color},
-		{"table_title", &Config::table_title_color},
-		{"table_open", &Config::table_open_color},
-		{"table_closed", &Config::table_closed_color},
-		{"table_author", &Config::table_author_color},
-		{"table_labels", &Config::table_labels_color},
-		{"table_parent", &Config::table_parent_color},
-		{"error", &Config::error_color},
-		{"warning", &Config::warning_color},
+	constexpr auto COLORS = std::to_array<Field<Settings::Colors, Style::Color>>({
+		{"header", &Settings::Colors::header_color},
+		{"project_name", &Settings::Colors::project_name_color},
+		{"project_path", &Settings::Colors::project_path_color},
+		{"project_branch", &Settings::Colors::project_branch_color},
+		{"project_remote", &Settings::Colors::project_remote_color},
+		{"project_type", &Settings::Colors::project_type_color},
+		{"project_short_remote", &Settings::Colors::project_short_remote_color},
+		{"tick", &Settings::Colors::tick_color},
+		{"cross", &Settings::Colors::cross_color},
+		{"error", &Settings::Colors::error_color},
+		{"warning", &Settings::Colors::warning_color},
 	});
 
 	constexpr auto COLOR_NAMES = std::to_array<Named<Style::Color>>({
@@ -127,19 +120,16 @@ namespace {
 		return value;
 	}
 
-	template <size_t N>
-	auto
-	set_width(Config& config, const std::array<Field<size_t>, N>& fields, std::string_view key, std::string_view value)
-		-> void {
-		const std::optional<size_t Config::*> field = lookup(fields, key);
-		const std::optional<size_t>           width = parse_size(value);
+	auto set_width(Settings::Widths& widths, std::string_view key, std::string_view value) -> void {
+		const std::optional field = lookup(WIDTHS, key);
+		const std::optional           width = parse_size(value);
 		if (field && width) {
-			config.** field = *width;
+			widths.*(*field) = *width;
 		}
 	}
 
-	auto parse_table_fields(std::string_view value) -> std::vector<IssueField> {
-		std::vector<IssueField> fields;
+	auto parse_table_fields(std::string_view value) -> std::vector<TableField> {
+		std::vector<TableField> fields;
 
 		std::size_t start = 0;
 
@@ -172,15 +162,15 @@ namespace {
 		return fields;
 	}
 
-	auto set_color(Config& config, std::string_view key, std::string_view value) -> void {
+	auto set_color(Settings::Colors& colors, std::string_view key, std::string_view value) -> void {
 		if (key == "enabled") {
-			config.colors_enabled = value == "true";
+			colors.colors_enabled = value == "true";
 			return;
 		}
 		const std::optional field = lookup(COLORS, key);
 		const std::optional color = lookup(COLOR_NAMES, value);
 		if (field && color) {
-			config.** field = *color;
+			colors.*(*field) = *color;
 		}
 	}
 
