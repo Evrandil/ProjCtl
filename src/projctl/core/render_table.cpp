@@ -13,7 +13,7 @@
 #include <vector>
 
 namespace {
-	auto cell_text(const Row& row, const TableField& field) -> std::string {
+	auto cell_text(const Row& row, const TableField field) -> std::string {
 		switch (field) {
 			case TableField::Number: return std::format("#{}", row.number);
 			case TableField::Title:  return row.title;
