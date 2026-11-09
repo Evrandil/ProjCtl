@@ -79,13 +79,21 @@ namespace {
 	constexpr auto COLOR_NAMES = std::to_array<Named<Style::Color>>({
 		{"default", Style::Color::Default},
 		{"black", Style::Color::Black},
+		{"boldBlack", Style::Color::BoldBlack},
 		{"red", Style::Color::Red},
+		{"boldRed", Style::Color::BoldRed},
 		{"green", Style::Color::Green},
+		{"boldGreen", Style::Color::BoldGreen},
 		{"yellow", Style::Color::Yellow},
+		{"boldYellow", Style::Color::BoldYellow},
 		{"blue", Style::Color::Blue},
+		{"boldBlue", Style::Color::BoldBlue},
 		{"magenta", Style::Color::Magenta},
+		{"boldMagenta", Style::Color::BoldMagenta},
 		{"cyan", Style::Color::Cyan},
+		{"boldCyan", Style::Color::BoldCyan},
 		{"white", Style::Color::White},
+		{"boldWhite", Style::Color::BoldWhite},
 	});
 
 	template <typename T, size_t N>

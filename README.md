@@ -22,7 +22,7 @@ C++ standard is set to 23 so I guess that's requirement for compiler<br>
 just install
 ```
 ## No just
-Tbh just doesn't give you any advantage, it just lists those comand for shell so you don't have to think what commands to run<br>
+If you don't<br>
 ```fish
 cmake -S . -B build-release -G Ninja -DCMAKE_BUILD_TYPE=Release -DPROJCTL_BUILD_TESTS=OFF
 cmake --build build-release
@@ -187,7 +187,7 @@ projctl repos
 ```
 
 ### Issues
-List or create issues for repo<br>
+List or do smth else with issues for repo<br>
 ```fish
 projctl ilist [<name> | --all | -a]
 projctl icreate [<name>]
@@ -197,7 +197,7 @@ projctl iclose [<name>]
 ```
 
 ### Requests (PR \(GH\) / MR \(GLab\))
-List, create requests or merge open requests for repo<br>
+List or do smth else with requests for repo<br>
 Reqmerge is just squash merge with delete source repo option
 ```fish
 projctl reqlist [<name> | --all | -a]
@@ -211,6 +211,55 @@ projctl reqmerge [<name>]
 <br><br><br>
 Also minor thing but for process to be actually saving some time everything with --all flag is done in parrallel but for that to happen program stores output and when everything is done prints it in order so there's no classic `some console print -> some waiting -> some more printing` for example in pull command, everything gets printed all at once when waiting is done, but thanks to that all thing are async so it's kinda faster one could argue<br>
 And it automatically detects non-interactive sessions so you can use it in nvim as `!pc [whatever functionality you want]`
+
+# Config
+In `$XDG_CONFIG_HOME/projctl/config.ini`
+It's split to 4 sections<br>
+In file start section by typing<br>
+`[Section]`<br>
+And values go underneath<br>
+Here you have example \(with default values as well :-\)<br>
+Also for all values except `Colors::enabled` it's gonna fall to default value if value is of bad format or smth, for enabled it falls to false<br>
+```
+[General]
+editor=nvim
+[Display]
+max_width    = 300
+name_width   = 20
+path_width   = 50
+remote_width = 50
+branch_width = 15
+[Colors]
+enabled = true
+header               = cyan
+project_name         = boldYellow
+project_path         = magenta
+project_branch       = cyan
+project_remote       = blue
+project_type         = boldMagenta
+project_short_remote = boldBlue
+tick                 = boldGreen
+cross                = boldRed
+table_number         = boldMagenta
+table_title          = white
+table_open           = boldGreen
+table_closed         = boldRed
+table_author         = blue
+table_labels         = magenta
+table_parent         = cyan
+error                = boldRed
+warning              = yellow
+[Tables]
+columns = number title state author labels parent
+table_number_width  = 8;
+table_title_width   = 40;
+table_author_width  = 20;
+table_state_width   = 12;
+table_labels_width  = 30;
+table_created_width = 22;
+table_updated_width = 22;
+table_parent_width  = 10;
+```
 
 # Development
 Any help is welcome<br>Just remember after to run<br>
