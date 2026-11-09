@@ -39,7 +39,7 @@ perf-quick *args: profile
 perf-record *args: profile
 	perf record -g build-profile/projctl {{args}}
 
-perf-report *args: perf-record {{args}}
+perf-report *args: (perf-record args)
 	perf report
 
 
