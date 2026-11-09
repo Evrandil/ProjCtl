@@ -1,6 +1,9 @@
 # Build output
 /build/
 /build-release/
+/build-profile/
+perf.data
+trace.txt
 /cmake-build-*/
 
 # CMake generated files
