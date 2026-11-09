@@ -24,6 +24,10 @@ test *args: configure
     cmake --build build --target projctl_tests
     ./build/tests/projctl_tests {{args}}
 
+profile:
+    cmake -S . -B build-profile -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_FLAGS="-fno-omit-frame-pointer" -DPROJCTL_BUILD_TESTS=OFF
+    cmake --build build-profile
+
 run *args: build
     ./build/projctl {{args}}
 
