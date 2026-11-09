@@ -13,10 +13,10 @@
 #include "githostinterface.hpp"
 #include "gitinterface.hpp"
 #include "projectcontent.hpp"
-#include "field.hpp"
+#include "row.hpp"
 #include "style.hpp"
 
-auto ProjCtl::request_table(const std::vector<Field>& requests) const -> std::string {
+auto ProjCtl::request_table(const std::vector<Row>& requests) const -> std::string {
 	return render_table(requests, config.tables.request_columns);
 }
 

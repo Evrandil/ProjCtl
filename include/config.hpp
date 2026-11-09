@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "field.hpp"
+#include "row.hpp"
 #include "style.hpp"
 
 namespace Settings {
@@ -37,17 +37,17 @@ namespace Settings {
 		Column updated{.width = 22, .color = Style::Color::Default};
 		Column parent{.width = 10, .color = Style::Color::Cyan};
 
-		std::vector<TableField> issue_columns{
-			TableField::Number,
-			TableField::Title,
-			TableField::State,
-			TableField::Author,
-			TableField::Labels,
+		std::vector<TableRow> issue_columns{
+			TableRow::Number,
+			TableRow::Title,
+			TableRow::State,
+			TableRow::Author,
+			TableRow::Labels,
 		};
-		std::vector<TableField> request_columns{
-			TableField::Number,
-			TableField::Title,
-			TableField::Author,
+		std::vector<TableRow> request_columns{
+			TableRow::Number,
+			TableRow::Title,
+			TableRow::Author,
 		};
 	};
 
@@ -79,5 +79,5 @@ struct Config {
 	Settings::Colors  colors;
 };
 
-[[nodiscard]] auto column_of(const Settings::Tables& tables, TableField field) -> const Settings::Column&;
+[[nodiscard]] auto column_of(const Settings::Tables& tables, TableRow field) -> const Settings::Column&;
 [[nodiscard]] auto load_config(const std::filesystem::path& path) -> std::expected<Config, std::string>;

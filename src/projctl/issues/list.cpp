@@ -1,5 +1,5 @@
 #include "command.hpp"
-#include "field.hpp"
+#include "row.hpp"
 #include "projctl.hpp"
 
 #include <expected>
@@ -16,7 +16,7 @@
 #include "projectcontent.hpp"
 #include "style.hpp"
 
-auto ProjCtl::issue_table(const std::vector<Field>& issues) const -> std::string {
+auto ProjCtl::issue_table(const std::vector<Row>& issues) const -> std::string {
 	return render_table(issues, config.tables.issue_columns);
 }
 

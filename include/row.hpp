@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-enum class TableField : uint8_t {
+enum class TableRow : uint8_t {
 	Number,
 	Title,
 	State,
@@ -16,7 +16,7 @@ enum class TableField : uint8_t {
 	Parent,
 };
 
-struct Field {
+struct Row {
 	int                        number = 0;
 	std::string                title;
 	std::string                state;

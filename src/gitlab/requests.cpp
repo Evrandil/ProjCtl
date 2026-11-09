@@ -1,6 +1,6 @@
 #include "gitlabinterface.hpp"
 
-#include "field.hpp"
+#include "row.hpp"
 #include "systeminterface.hpp"
 
 #include <expected>
@@ -13,7 +13,7 @@
 #include <vector>
 
 auto GitLabInterface::request_list(const std::filesystem::path& path)
-	-> std::expected<std::vector<Field>, std::string> {
+	-> std::expected<std::vector<Row>, std::string> {
 	const std::expected result =
 		SystemInterface::run(std::vector<std::string>{"glab", "mr", "list", "--output", "json"}, path);
 
@@ -29,11 +29,11 @@ auto GitLabInterface::request_list(const std::filesystem::path& path)
 		return std::unexpected(std::format("Unexpected output from glab:\n{}", result->text));
 	}
 
-	std::vector<Field> requests;
+	std::vector<Row> requests;
 	requests.reserve(json.size());
 
 	for (const nlohmann::json& json_request : json) {
-		Field request;
+		Row request;
 		request.number  = json_request.at("iid").get<int>();
 		request.title   = json_request.at("title").get<std::string>();
 		request.state   = json_request.at("state").get<std::string>();
