@@ -1,5 +1,5 @@
 #include "config.hpp"
-#include "issue.hpp"
+#include "field.hpp"
 #include "style.hpp"
 
 #include <algorithm>
@@ -21,38 +21,38 @@
 namespace {
 	template <typename T>
 	using Named = std::pair<std::string_view, T>;
-	template <typename T>
-	using Field = std::pair<std::string_view, T Config::*>;
+	template <typename Owner, typename T>
+	using Field = Named<T Owner::*>;
 
 	enum class Section : uint8_t {
 		General,
-		Display,
+		Widths,
 		Tables,
 		Colors,
 		Unknown,
 	};
-	constexpr std::array<Named<Section>, 4> SECTIONS{
+	constexpr auto SECTIONS = std::to_array<Named<Section>>({
 		std::pair{"General", Section::General},
-		std::pair{"Display", Section::Display},
+		std::pair{"Display", Section::Widths},
 		std::pair{"Tables", Section::Tables},
 		std::pair{"Colors", Section::Colors},
-	};
-	constexpr auto DISPLAY_WIDTHS = std::to_array<Field<size_t>>({
-		{"max_width", &Config::max_width},
-		{"name_width", &Config::name_width},
-		{"path_width", &Config::path_width},
-		{"remote_width", &Config::remote_width},
-		{"branch_width", &Config::branch_width},
 	});
-	constexpr auto TABLE_WIDTHS   = std::to_array<Field<size_t>>({
-		{"number_width", &Config::table_number_width},
-		{"title_width", &Config::table_title_width},
-		{"author_width", &Config::table_author_width},
-		{"state_width", &Config::table_state_width},
-		{"labels_width", &Config::table_labels_width},
-		{"created_width", &Config::table_created_width},
-		{"updated_width", &Config::table_updated_width},
-		{"parent_width", &Config::table_parent_width},
+	constexpr auto WIDTHS = std::to_array<Field<Settings::Widths, size_t>>({
+		{"max_width", &Settings::Widths::max_width},
+		{"name_width", &Settings::Widths::name_width},
+		{"path_width", &Settings::Widths::path_width},
+		{"remote_width", &Settings::Widths::remote_width},
+		{"branch_width", &Settings::Widths::branch_width},
+	});
+	constexpr auto TABLE_WIDTHS   = std::to_array<Field<Settings::Tables::TableStyle, Settings::Column>>({
+		{"number_width", &Settings::Tables::TableStyle::number},
+		{"title_width", &Settings::Tables::TableStyle::title},
+		{"author_width", &Settings::Tables::TableStyle::author},
+		{"state_width", &Settings::Tables::TableStyle::state},
+		{"labels_width", &Settings::Tables::TableStyle::labels},
+		{"created_width", &Settings::Tables::TableStyle::created},
+		{"updated_width", &Settings::Tables::TableStyle::updated},
+		{"parent_width", &Settings::Tables::TableStyle::parent},
 	});
 
 	constexpr auto COLORS = std::to_array<Field<Style::Color>>({
@@ -150,17 +150,17 @@ namespace {
 				trim(value.substr(start, comma == std::string_view::npos ? value.size() - start : comma - start));
 
 			if (field == "number") {
-				fields.push_back(IssueField::Number);
+				fields.push_back(TableField::Number);
 			} else if (field == "title") {
-				fields.push_back(IssueField::Title);
+				fields.push_back(TableField::Title);
 			} else if (field == "state") {
-				fields.push_back(IssueField::State);
+				fields.push_back(TableField::State);
 			} else if (field == "author") {
-				fields.push_back(IssueField::Author);
+				fields.push_back(TableField::Author);
 			} else if (field == "labels") {
-				fields.push_back(IssueField::Labels);
+				fields.push_back(TableField::Labels);
 			} else if (field == "parent") {
-				fields.push_back(IssueField::Parent);
+				fields.push_back(TableField::Parent);
 			}
 
 			if (comma == std::string_view::npos) {
