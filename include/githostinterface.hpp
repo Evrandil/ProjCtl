@@ -29,4 +29,4 @@ namespace GitHostInterface {
 	[[nodiscard]] auto request_close(const std::filesystem::path& path, int request_number)
 		-> std::expected<std::string, std::string>;
 	[[nodiscard]] auto request_merge(const std::filesystem::path& path) -> std::expected<std::string, std::string>;
-}; // namespace GitHostInterface
+} // namespace GitHostInterface
