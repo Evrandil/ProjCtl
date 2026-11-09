@@ -1,8 +1,8 @@
 
 add_library(projctl_githost
 	githostinterface.cpp
-	issues.cpp
 	requests.cpp
+	rest.cpp
 )
 
 target_include_directories(projctl_githost

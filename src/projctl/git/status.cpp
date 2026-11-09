@@ -21,7 +21,7 @@
 
 auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	constexpr std::uint8_t CONTENT_WIDTH = 24;
-	std::string       output;
+	std::string            output;
 
 	const auto parse_line = [&](const std::string_view header,
 	                            const Style::Mark&     mark,
