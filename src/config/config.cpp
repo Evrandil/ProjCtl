@@ -46,9 +46,7 @@ namespace {
 	constexpr auto SECTIONS = std::to_array<Named<Section>>({
 		{"General", Section::General},
 		{"Widths", Section::Widths},
-		{"Display", Section::Widths},
 		{"Tables", Section::Tables},
-		{"Issues", Section::Tables},
 		{"Colors", Section::Colors},
 	});
 
@@ -130,7 +128,7 @@ namespace {
 		return *found;
 	}
 
-	static_assert(lookup(SECTIONS, "Display") == Section::Widths);
+	static_assert(lookup(SECTIONS, "Widths") == Section::Widths);
 	static_assert(lookup(COLOR_NAMES, "bold_red") == Style::Color::BoldRed);
 	static_assert(find_column("parent")->field == TableField::Parent);
 	static_assert(!find_column("nope").has_value());
@@ -161,11 +159,12 @@ namespace {
 	auto parse_column_list(std::string_view value) -> std::vector<TableField> {
 		std::vector<TableField> fields;
 		while (!value.empty()) {
-			const std::size_t comma = value.find(',');
-			if (const std::optional<ColumnInfo> column = find_column(trim(value.substr(0, comma)))) {
+			const std::size_t space = value.find(' ');
+			const std::optional<ColumnInfo> column = find_column(trim(value.substr(0, space)));
+			if (column) {
 				fields.push_back(column->field);
 			}
-			value = comma == std::string_view::npos ? std::string_view{} : value.substr(comma + 1);
+			value = space == std::string_view::npos ? std::string_view{} : value.substr(space + 1);
 		}
 		return fields;
 	}
@@ -207,11 +206,11 @@ namespace {
 	}
 
 	auto set_table(Settings::Tables& tables, std::string_view key, std::string_view value) -> void {
-		if (key == "issue_columns" || key == "columns") {
+		if (key == "issues") {
 			set_column_list(tables.issue_columns, value);
 			return;
 		}
-		if (key == "request_columns") {
+		if (key == "requests") {
 			set_column_list(tables.request_columns, value);
 			return;
 		}

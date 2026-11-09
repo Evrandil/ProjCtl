@@ -74,11 +74,11 @@ auto ProjCtl::request_table(const std::vector<Field>& requests) const -> std::st
 
 			switch (field) {
 				case TableField::Number: value = std::format("#{}", request.number); break;
-				case TableField::Title:  value = truncate(request.title, config.tables.title.width - 1); break;
+				case TableField::Title:  value = request.title; break;
 				case TableField::State:  value = request.state; break;
 				case TableField::Author: value = request.author; break;
 				case TableField::Labels:
-					table +=
+					value +=
 						request.labels | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>();
 					break;
 				case TableField::Created: value = request.created; break;
