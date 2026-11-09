@@ -13,12 +13,7 @@
 #include "githostinterface.hpp"
 #include "gitinterface.hpp"
 #include "projectcontent.hpp"
-#include "row.hpp"
 #include "style.hpp"
-
-auto ProjCtl::request_table(const std::vector<Row>& requests) const -> std::string {
-	return render_table(requests, config.tables.request_columns);
-}
 
 auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::string, std::string> {
 	const ProjectContent& content      = project.second;
@@ -51,7 +46,7 @@ auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::
 		return output;
 	}
 
-	std::format_to(std::back_inserter(output), "{}\n", request_table(*list));
+	std::format_to(std::back_inserter(output), "{}\n", render_table(*list, config.tables.request_columns));
 
 	return output;
 }

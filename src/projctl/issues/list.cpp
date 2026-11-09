@@ -1,5 +1,5 @@
 #include "command.hpp"
-#include "row.hpp"
+
 #include "projctl.hpp"
 
 #include <expected>
@@ -15,10 +15,6 @@
 #include "gitinterface.hpp"
 #include "projectcontent.hpp"
 #include "style.hpp"
-
-auto ProjCtl::issue_table(const std::vector<Row>& issues) const -> std::string {
-	return render_table(issues, config.tables.issue_columns);
-}
 
 auto ProjCtl::issues(const ProjectEntry& project) const -> std::expected<std::string, std::string> {
 	const ProjectContent& content      = project.second;
@@ -51,7 +47,7 @@ auto ProjCtl::issues(const ProjectEntry& project) const -> std::expected<std::st
 		return output;
 	}
 
-	std::format_to(std::back_inserter(output), "{}\n", issue_table(*list));
+	std::format_to(std::back_inserter(output), "{}\n", render_table(*list, config.tables.issue_columns));
 
 	return output;
 }

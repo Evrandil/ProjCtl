@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-enum class TableRow : uint8_t {
+enum class TableField : uint8_t {
 	Number,
 	Title,
 	State,

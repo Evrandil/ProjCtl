@@ -10,7 +10,7 @@ TEST_CASE("load_config") {
 	const std::filesystem::path path = std::filesystem::temp_directory_path() / "projctl_test_config.ini";
 	{
 		std::ofstream file{path};
-		file << "[Display]\n"
+		file << "[Widths]\n"
 		     << "name_width = 33\n"
 		     << "[Colors]\n"
 		     << "error = cyan\n"

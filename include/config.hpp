@@ -37,24 +37,24 @@ namespace Settings {
 		Column updated{.width = 22, .color = Style::Color::Default};
 		Column parent{.width = 10, .color = Style::Color::Cyan};
 
-		std::vector<TableRow> issue_columns{
-			TableRow::Number,
-			TableRow::Title,
-			TableRow::State,
-			TableRow::Author,
-			TableRow::Labels,
+		std::vector<TableField> issue_columns{
+			TableField::Number,
+			TableField::Title,
+			TableField::State,
+			TableField::Author,
+			TableField::Labels,
 		};
-		std::vector<TableRow> request_columns{
-			TableRow::Number,
-			TableRow::Title,
-			TableRow::Author,
+		std::vector<TableField> request_columns{
+			TableField::Number,
+			TableField::Title,
+			TableField::Author,
 		};
 	};
 
 	struct Colors {
 		bool enabled = true;
 
-		Style::Color header               = Style::Color::Cyan;
+		Style::Color header       = Style::Color::Cyan;
 		Style::Color name         = Style::Color::BoldYellow;
 		Style::Color path         = Style::Color::Magenta;
 		Style::Color branch       = Style::Color::Cyan;
@@ -67,10 +67,10 @@ namespace Settings {
 		Style::Color error   = Style::Color::BoldRed;
 		Style::Color warning = Style::Color::Yellow;
 
-		Style::Color open    = Style::Color::BoldGreen;
-		Style::Color closed  = Style::Color::BoldRed;
+		Style::Color open   = Style::Color::BoldGreen;
+		Style::Color closed = Style::Color::BoldRed;
 	};
-}
+} // namespace Settings
 
 struct Config {
 	Settings::General general;
@@ -79,5 +79,5 @@ struct Config {
 	Settings::Colors  colors;
 };
 
-[[nodiscard]] auto column_of(const Settings::Tables& tables, TableRow field) -> const Settings::Column&;
+[[nodiscard]] auto column_of(const Settings::Tables& tables, TableField field) -> const Settings::Column&;
 [[nodiscard]] auto load_config(const std::filesystem::path& path) -> std::expected<Config, std::string>;

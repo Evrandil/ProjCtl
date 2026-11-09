@@ -25,11 +25,11 @@ namespace {
 	using Named = std::pair<std::string_view, T>;
 
 	template <typename Owner, typename T>
-	using Row = Named<T Owner::*>;
+	using Field = Named<T Owner::*>;
 
 	struct ColumnInfo {
-		std::string_view                     name;
-		TableRow                           field;
+		std::string_view name;
+		TableField       field;
 		Settings::Column Settings::Tables::* member;
 	};
 
@@ -50,11 +50,11 @@ namespace {
 		{"Colors", Section::Colors},
 	});
 
-	constexpr auto GENERAL = std::to_array<Row<Settings::General, std::string>>({
+	constexpr auto GENERAL = std::to_array<Field<Settings::General, std::string>>({
 		{"editor", &Settings::General::editor},
 	});
 
-	constexpr auto WIDTHS = std::to_array<Row<Settings::Widths, std::size_t>>({
+	constexpr auto WIDTHS = std::to_array<Field<Settings::Widths, std::size_t>>({
 		{"max_width", &Settings::Widths::max},
 		{"name_width", &Settings::Widths::name},
 		{"path_width", &Settings::Widths::path},
@@ -63,17 +63,17 @@ namespace {
 	});
 
 	constexpr auto COLUMNS = std::to_array<ColumnInfo>({
-		{.name = "number", .field = TableRow::Number, .member = &Settings::Tables::number},
-		{.name = "title", .field = TableRow::Title, .member = &Settings::Tables::title},
-		{.name = "state", .field = TableRow::State, .member = &Settings::Tables::state},
-		{.name = "author", .field = TableRow::Author, .member = &Settings::Tables::author},
-		{.name = "labels", .field = TableRow::Labels, .member = &Settings::Tables::labels},
-		{.name = "created", .field = TableRow::Created, .member = &Settings::Tables::created},
-		{.name = "updated", .field = TableRow::Updated, .member = &Settings::Tables::updated},
-		{.name = "parent", .field = TableRow::Parent, .member = &Settings::Tables::parent},
+		{.name = "number", .field = TableField::Number, .member = &Settings::Tables::number},
+		{.name = "title", .field = TableField::Title, .member = &Settings::Tables::title},
+		{.name = "state", .field = TableField::State, .member = &Settings::Tables::state},
+		{.name = "author", .field = TableField::Author, .member = &Settings::Tables::author},
+		{.name = "labels", .field = TableField::Labels, .member = &Settings::Tables::labels},
+		{.name = "created", .field = TableField::Created, .member = &Settings::Tables::created},
+		{.name = "updated", .field = TableField::Updated, .member = &Settings::Tables::updated},
+		{.name = "parent", .field = TableField::Parent, .member = &Settings::Tables::parent},
 	});
 
-	constexpr auto COLORS = std::to_array<Row<Settings::Colors, Style::Color>>({
+	constexpr auto COLORS = std::to_array<Field<Settings::Colors, Style::Color>>({
 		{"header", &Settings::Colors::header},
 		{"project_name", &Settings::Colors::name},
 		{"project_path", &Settings::Colors::path},
@@ -130,7 +130,7 @@ namespace {
 
 	static_assert(lookup(SECTIONS, "Widths") == Section::Widths);
 	static_assert(lookup(COLOR_NAMES, "bold_red") == Style::Color::BoldRed);
-	static_assert(find_column("parent")->field == TableRow::Parent);
+	static_assert(find_column("parent")->field == TableField::Parent);
 	static_assert(!find_column("nope").has_value());
 
 	// ---- value parsing --------------------------------------------------------------------------
@@ -156,10 +156,10 @@ namespace {
 	}
 
 	// "number, title, state" -> {Number, Title, State}; unknown names are skipped
-	auto parse_column_list(std::string_view value) -> std::vector<TableRow> {
-		std::vector<TableRow> fields;
+	auto parse_column_list(std::string_view value) -> std::vector<TableField> {
+		std::vector<TableField> fields;
 		while (!value.empty()) {
-			const std::size_t space = value.find(' ');
+			const std::size_t               space  = value.find(' ');
 			const std::optional<ColumnInfo> column = find_column(trim(value.substr(0, space)));
 			if (column) {
 				fields.push_back(column->field);
@@ -185,8 +185,8 @@ namespace {
 		}
 	}
 
-	auto set_column_list(std::vector<TableRow>& target, std::string_view value) -> void {
-		std::vector<TableRow> parsed = parse_column_list(value);
+	auto set_column_list(std::vector<TableField>& target, std::string_view value) -> void {
+		std::vector<TableField> parsed = parse_column_list(value);
 		if (!parsed.empty()) {
 			target = std::move(parsed);
 		}
@@ -246,16 +246,16 @@ namespace {
 	}
 } // namespace
 
-auto column_of(const Settings::Tables& tables, TableRow field) -> const Settings::Column& {
+auto column_of(const Settings::Tables& tables, TableField field) -> const Settings::Column& {
 	switch (field) {
-		case TableRow::Number:  return tables.number;
-		case TableRow::Title:   return tables.title;
-		case TableRow::State:   return tables.state;
-		case TableRow::Author:  return tables.author;
-		case TableRow::Labels:  return tables.labels;
-		case TableRow::Created: return tables.created;
-		case TableRow::Updated: return tables.updated;
-		case TableRow::Parent:  return tables.parent;
+		case TableField::Number:  return tables.number;
+		case TableField::Title:   return tables.title;
+		case TableField::State:   return tables.state;
+		case TableField::Author:  return tables.author;
+		case TableField::Labels:  return tables.labels;
+		case TableField::Created: return tables.created;
+		case TableField::Updated: return tables.updated;
+		case TableField::Parent:  return tables.parent;
 	}
 	std::unreachable();
 }

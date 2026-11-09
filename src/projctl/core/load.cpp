@@ -3,11 +3,11 @@
 #include "projectcontent.hpp"
 
 #include <cstddef>
+#include <filesystem>
 #include <fstream>
 #include <optional>
 #include <string>
 #include <utility>
-#include <filesystem>
 
 void ProjCtl::load() {
 	auto config_option = load_config(config_path);

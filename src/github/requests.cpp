@@ -12,8 +12,7 @@
 #include <utility>
 #include <vector>
 
-auto GitHubInterface::request_list(const std::filesystem::path& path)
-	-> std::expected<std::vector<Row>, std::string> {
+auto GitHubInterface::request_list(const std::filesystem::path& path) -> std::expected<std::vector<Row>, std::string> {
 	const std::expected result = SystemInterface::run(
 		gh_command(
 			std::vector<

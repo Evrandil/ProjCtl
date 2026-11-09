@@ -10,8 +10,7 @@
 #include <string>
 #include <vector>
 
-auto GitHostInterface::request_list(const std::filesystem::path& path)
-	-> std::expected<std::vector<Row>, std::string> {
+auto GitHostInterface::request_list(const std::filesystem::path& path) -> std::expected<std::vector<Row>, std::string> {
 	std::expected host = GitInterface::host(path);
 	if (!host) {
 		return std::unexpected(host.error());
