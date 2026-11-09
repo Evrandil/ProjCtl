@@ -1,5 +1,5 @@
 #include "config.hpp"
-#include "issue.hpp"
+#include "row.hpp"
 #include "style.hpp"
 
 #include <algorithm>
@@ -19,199 +19,246 @@
 #include <vector>
 
 namespace {
+	// ---- table types ----------------------------------------------------------------------------
+
 	template <typename T>
 	using Named = std::pair<std::string_view, T>;
-	template <typename T>
-	using Field = std::pair<std::string_view, T Config::*>;
 
-	enum class Section : uint8_t {
+	template <typename Owner, typename T>
+	using Field = Named<T Owner::*>;
+
+	struct ColumnInfo {
+		std::string_view name;
+		TableField       field;
+		Settings::Column Settings::Tables::* member;
+	};
+
+	enum class Section : std::uint8_t {
 		General,
-		Display,
+		Widths,
 		Tables,
 		Colors,
 		Unknown,
 	};
-	constexpr std::array<Named<Section>, 4> SECTIONS{
-		std::pair{"General", Section::General},
-		std::pair{"Display", Section::Display},
-		std::pair{"Tables", Section::Tables},
-		std::pair{"Colors", Section::Colors},
-	};
-	constexpr auto DISPLAY_WIDTHS = std::to_array<Field<size_t>>({
-		{"max_width", &Config::max_width},
-		{"name_width", &Config::name_width},
-		{"path_width", &Config::path_width},
-		{"remote_width", &Config::remote_width},
-		{"branch_width", &Config::branch_width},
-	});
-	constexpr auto TABLE_WIDTHS   = std::to_array<Field<size_t>>({
-		{"number_width", &Config::table_number_width},
-		{"title_width", &Config::table_title_width},
-		{"author_width", &Config::table_author_width},
-		{"state_width", &Config::table_state_width},
-		{"labels_width", &Config::table_labels_width},
-		{"created_width", &Config::table_created_width},
-		{"updated_width", &Config::table_updated_width},
-		{"parent_width", &Config::table_parent_width},
+
+	// ---- tables ---------------------------------------------------------------------------------
+
+	constexpr auto SECTIONS = std::to_array<Named<Section>>({
+		{"General", Section::General},
+		{"Widths", Section::Widths},
+		{"Tables", Section::Tables},
+		{"Colors", Section::Colors},
 	});
 
-	constexpr auto COLORS = std::to_array<Field<Style::Color>>({
-		{"header", &Config::header_color},
-		{"project_name", &Config::project_name_color},
-		{"project_path", &Config::project_path_color},
-		{"project_branch", &Config::project_branch_color},
-		{"project_remote", &Config::project_remote_color},
-		{"project_type", &Config::project_type_color},
-		{"project_short_remote", &Config::project_short_remote_color},
-		{"tick", &Config::tick_color},
-		{"cross", &Config::cross_color},
-		{"table_number", &Config::table_number_color},
-		{"table_title", &Config::table_title_color},
-		{"table_open", &Config::table_open_color},
-		{"table_closed", &Config::table_closed_color},
-		{"table_author", &Config::table_author_color},
-		{"table_labels", &Config::table_labels_color},
-		{"table_parent", &Config::table_parent_color},
-		{"error", &Config::error_color},
-		{"warning", &Config::warning_color},
+	constexpr auto GENERAL = std::to_array<Field<Settings::General, std::string>>({
+		{"editor", &Settings::General::editor},
+	});
+
+	constexpr auto WIDTHS = std::to_array<Field<Settings::Widths, std::size_t>>({
+		{"max_width", &Settings::Widths::max},
+		{"name_width", &Settings::Widths::name},
+		{"path_width", &Settings::Widths::path},
+		{"remote_width", &Settings::Widths::remote},
+		{"branch_width", &Settings::Widths::branch},
+	});
+
+	constexpr auto COLUMNS = std::to_array<ColumnInfo>({
+		{.name = "number", .field = TableField::Number, .member = &Settings::Tables::number},
+		{.name = "title", .field = TableField::Title, .member = &Settings::Tables::title},
+		{.name = "state", .field = TableField::State, .member = &Settings::Tables::state},
+		{.name = "author", .field = TableField::Author, .member = &Settings::Tables::author},
+		{.name = "labels", .field = TableField::Labels, .member = &Settings::Tables::labels},
+		{.name = "created", .field = TableField::Created, .member = &Settings::Tables::created},
+		{.name = "updated", .field = TableField::Updated, .member = &Settings::Tables::updated},
+		{.name = "parent", .field = TableField::Parent, .member = &Settings::Tables::parent},
+	});
+
+	constexpr auto COLORS = std::to_array<Field<Settings::Colors, Style::Color>>({
+		{"header", &Settings::Colors::header},
+		{"project_name", &Settings::Colors::name},
+		{"project_path", &Settings::Colors::path},
+		{"project_branch", &Settings::Colors::branch},
+		{"project_remote", &Settings::Colors::remote},
+		{"project_type", &Settings::Colors::type},
+		{"project_short_remote", &Settings::Colors::short_remote},
+		{"open", &Settings::Colors::open},
+		{"closed", &Settings::Colors::closed},
+		{"tick", &Settings::Colors::tick},
+		{"cross", &Settings::Colors::cross},
+		{"error", &Settings::Colors::error},
+		{"warning", &Settings::Colors::warning},
 	});
 
 	constexpr auto COLOR_NAMES = std::to_array<Named<Style::Color>>({
 		{"default", Style::Color::Default},
 		{"black", Style::Color::Black},
-		{"boldBlack", Style::Color::BoldBlack},
+		{"bold_black", Style::Color::BoldBlack},
 		{"red", Style::Color::Red},
-		{"boldRed", Style::Color::BoldRed},
+		{"bold_red", Style::Color::BoldRed},
 		{"green", Style::Color::Green},
-		{"boldGreen", Style::Color::BoldGreen},
+		{"bold_green", Style::Color::BoldGreen},
 		{"yellow", Style::Color::Yellow},
-		{"boldYellow", Style::Color::BoldYellow},
+		{"bold_yellow", Style::Color::BoldYellow},
 		{"blue", Style::Color::Blue},
-		{"boldBlue", Style::Color::BoldBlue},
+		{"bold_blue", Style::Color::BoldBlue},
 		{"magenta", Style::Color::Magenta},
-		{"boldMagenta", Style::Color::BoldMagenta},
+		{"bold_magenta", Style::Color::BoldMagenta},
 		{"cyan", Style::Color::Cyan},
-		{"boldCyan", Style::Color::BoldCyan},
+		{"bold_cyan", Style::Color::BoldCyan},
 		{"white", Style::Color::White},
-		{"boldWhite", Style::Color::BoldWhite},
+		{"bold_white", Style::Color::BoldWhite},
 	});
 
-	template <typename T, size_t N>
+	// ---- lookups --------------------------------------------------------------------------------
+
+	template <typename T, std::size_t N>
 	constexpr auto lookup(const std::array<Named<T>, N>& table, std::string_view name) -> std::optional<T> {
-		const auto* const found = std::ranges::find(table, name, &Named<T>::first);
+		const auto found = std::ranges::find(table, name, &Named<T>::first);
 		if (found == table.end()) {
 			return std::nullopt;
 		}
 		return found->second;
 	}
 
+	constexpr auto find_column(std::string_view name) -> std::optional<ColumnInfo> {
+		const auto* const found = std::ranges::find(COLUMNS, name, &ColumnInfo::name);
+		if (found == COLUMNS.end()) {
+			return std::nullopt;
+		}
+		return *found;
+	}
+
+	static_assert(lookup(SECTIONS, "Widths") == Section::Widths);
+	static_assert(lookup(COLOR_NAMES, "bold_red") == Style::Color::BoldRed);
+	static_assert(find_column("parent")->field == TableField::Parent);
+	static_assert(!find_column("nope").has_value());
+
+	// ---- value parsing --------------------------------------------------------------------------
+
 	auto trim(std::string_view text) -> std::string_view {
 		const std::size_t first = text.find_first_not_of(" \t\r\n");
-
 		if (first == std::string_view::npos) {
-			return "";
+			return {};
 		}
-
 		const std::size_t last = text.find_last_not_of(" \t\r\n");
-
 		return text.substr(first, last - first + 1);
 	}
 
 	auto parse_size(std::string_view text) -> std::optional<std::size_t> {
 		std::size_t       value = 0;
+		const char* const first = std::to_address(text.begin());
 		const char* const last  = std::to_address(text.end());
-		const auto [end, error] = std::from_chars(std::to_address(text.begin()), last, value);
+		const auto [end, error] = std::from_chars(first, last, value);
 		if (error != std::errc{} || end != last) {
 			return std::nullopt;
 		}
 		return value;
 	}
 
-	template <size_t N>
-	auto
-	set_width(Config& config, const std::array<Field<size_t>, N>& fields, std::string_view key, std::string_view value)
-		-> void {
-		const std::optional<size_t Config::*> field = lookup(fields, key);
-		const std::optional<size_t>           width = parse_size(value);
-		if (field && width) {
-			config.** field = *width;
-		}
-	}
-
-	auto parse_table_fields(std::string_view value) -> std::vector<IssueField> {
-		std::vector<IssueField> fields;
-
-		std::size_t start = 0;
-
-		while (start < value.size()) {
-			const std::size_t comma = value.find(',', start);
-
-			const std::string_view field =
-				trim(value.substr(start, comma == std::string_view::npos ? value.size() - start : comma - start));
-
-			if (field == "number") {
-				fields.push_back(IssueField::Number);
-			} else if (field == "title") {
-				fields.push_back(IssueField::Title);
-			} else if (field == "state") {
-				fields.push_back(IssueField::State);
-			} else if (field == "author") {
-				fields.push_back(IssueField::Author);
-			} else if (field == "labels") {
-				fields.push_back(IssueField::Labels);
-			} else if (field == "parent") {
-				fields.push_back(IssueField::Parent);
+	// "number, title, state" -> {Number, Title, State}; unknown names are skipped
+	auto parse_column_list(std::string_view value) -> std::vector<TableField> {
+		std::vector<TableField> fields;
+		while (!value.empty()) {
+			const std::size_t               space  = value.find(' ');
+			const std::optional<ColumnInfo> column = find_column(trim(value.substr(0, space)));
+			if (column) {
+				fields.push_back(column->field);
 			}
-
-			if (comma == std::string_view::npos) {
-				break;
-			}
-			start = comma + 1;
+			value = space == std::string_view::npos ? std::string_view{} : value.substr(space + 1);
 		}
-
 		return fields;
 	}
 
-	auto set_color(Config& config, std::string_view key, std::string_view value) -> void {
-		if (key == "enabled") {
-			config.colors_enabled = value == "true";
-			return;
-		}
-		const std::optional field = lookup(COLORS, key);
-		const std::optional color = lookup(COLOR_NAMES, value);
-		if (field && color) {
-			config.** field = *color;
+	// ---- one setter per section -----------------------------------------------------------------
+
+	auto set_general(Settings::General& general, std::string_view key, std::string_view value) -> void {
+		if (const std::optional<std::string Settings::General::*> field = lookup(GENERAL, key)) {
+			general.*(*field) = value;
 		}
 	}
 
-	auto set_table(Config& config, std::string_view key, std::string_view value) -> void {
-		if (key != "columns") {
-			set_width(config, TABLE_WIDTHS, key, value);
-			return;
+	auto set_width(Settings::Widths& widths, std::string_view key, std::string_view value) -> void {
+		const std::optional<std::size_t Settings::Widths::*> field = lookup(WIDTHS, key);
+		const std::optional<std::size_t>                     width = parse_size(value);
+		if (field && width) {
+			widths.*(*field) = *width;
 		}
-		std::vector<IssueField> parsed = parse_table_fields(value);
+	}
+
+	auto set_column_list(std::vector<TableField>& target, std::string_view value) -> void {
+		std::vector<TableField> parsed = parse_column_list(value);
 		if (!parsed.empty()) {
-			config.issue_columns = std::move(parsed);
+			target = std::move(parsed);
 		}
 	}
 
-	auto apply_setting(Config& config, const Section section, std::string_view key, std::string_view value) -> void {
+	// <column>_width = 40   or   <column>_color = bold_red
+	auto set_column_property(Settings::Column& column, std::string_view property, std::string_view value) -> void {
+		if (property == "width") {
+			if (const std::optional<std::size_t> width = parse_size(value)) {
+				column.width = *width;
+			}
+		} else if (property == "color") {
+			if (const std::optional<Style::Color> color = lookup(COLOR_NAMES, value)) {
+				column.color = *color;
+			}
+		}
+	}
+
+	auto set_table(Settings::Tables& tables, std::string_view key, std::string_view value) -> void {
+		if (key == "issues") {
+			set_column_list(tables.issue_columns, value);
+			return;
+		}
+		if (key == "requests") {
+			set_column_list(tables.request_columns, value);
+			return;
+		}
+
+		const std::size_t               underscore = key.rfind('_');
+		const std::optional<ColumnInfo> column     = find_column(key.substr(0, underscore));
+		if (underscore == std::string_view::npos || !column) {
+			return;
+		}
+		set_column_property(tables.*column->member, key.substr(underscore + 1), value);
+	}
+
+	auto set_color(Settings::Colors& colors, std::string_view key, std::string_view value) -> void {
+		if (key == "enabled") {
+			colors.enabled = value == "true";
+			return;
+		}
+		const std::optional<Style::Color Settings::Colors::*> field = lookup(COLORS, key);
+		const std::optional<Style::Color>                     color = lookup(COLOR_NAMES, value);
+		if (field && color) {
+			colors.*(*field) = *color;
+		}
+	}
+
+	auto apply_setting(Config& config, Section section, std::string_view key, std::string_view value) -> void {
 		switch (section) {
-			case Section::General:
-				if (key == "editor") {
-					config.editor = value;
-				}
-				return;
-
-			case Section::Display: set_width(config, DISPLAY_WIDTHS, key, value); return;
-
-			case Section::Tables: set_table(config, key, value); return;
-
-			case Section::Colors:  set_color(config, key, value); return;
-			case Section::Unknown: return;
+			case Section::General: set_general(config.general, key, value); break;
+			case Section::Widths:  set_width(config.widths, key, value); break;
+			case Section::Tables:  set_table(config.tables, key, value); break;
+			case Section::Colors:  set_color(config.colors, key, value); break;
+			case Section::Unknown: break;
 		}
 	}
 } // namespace
+
+auto column_of(const Settings::Tables& tables, TableField field) -> const Settings::Column& {
+	switch (field) {
+		case TableField::Number:  return tables.number;
+		case TableField::Title:   return tables.title;
+		case TableField::State:   return tables.state;
+		case TableField::Author:  return tables.author;
+		case TableField::Labels:  return tables.labels;
+		case TableField::Created: return tables.created;
+		case TableField::Updated: return tables.updated;
+		case TableField::Parent:  return tables.parent;
+	}
+	std::unreachable();
+}
 
 auto load_config(const std::filesystem::path& path) -> std::expected<Config, std::string> {
 	std::ifstream config_file(path);
@@ -227,21 +274,14 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 		if (trimmed.empty() || trimmed.front() == '#' || trimmed.front() == ';') {
 			continue;
 		}
-
 		if (trimmed.front() == '[' && trimmed.back() == ']') {
-			section = lookup(SECTIONS, trimmed.substr(1, trimmed.size() - 2)).value_or(Section::Unknown);
+			section = lookup(SECTIONS, trim(trimmed.substr(1, trimmed.size() - 2))).value_or(Section::Unknown);
 			continue;
 		}
-
 		const std::size_t separator = trimmed.find('=');
-		if (separator == std::string::npos) {
-			continue;
+		if (separator != std::string_view::npos) {
+			apply_setting(config, section, trim(trimmed.substr(0, separator)), trim(trimmed.substr(separator + 1)));
 		}
-
-		const std::string_view key   = trim(trimmed.substr(0, separator));
-		const std::string_view value = trim(trimmed.substr(separator + 1));
-
-		apply_setting(config, section, key, value);
 	}
 	return config;
 }

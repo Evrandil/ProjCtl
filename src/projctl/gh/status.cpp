@@ -19,10 +19,10 @@ auto ProjCtl::g_status() const -> BatchResult {
 		std::format_to(
 			std::back_inserter(output),
 			"{}{:<{}}{}{}{}{}\n",
-			paint(config.header_color),
+			paint(config.colors.header),
 			std::format("{} Cli", host == HostOption::GitHub ? "GitHub" : "GitLab"),
-			config.name_width,
-			state != CliState::NotInstalled ? paint(config.tick_color) : paint(config.error_color),
+			config.widths.name,
+			state != CliState::NotInstalled ? paint(config.colors.tick) : paint(config.colors.error),
 			state != CliState::NotInstalled ? Style::TICK : Style::CROSS,
 			state != CliState::NotInstalled ? "Installed" : "Not installed",
 			reset()
@@ -30,10 +30,10 @@ auto ProjCtl::g_status() const -> BatchResult {
 		std::format_to(
 			std::back_inserter(output),
 			"{}{:<{}}{}{}{}{}\n",
-			paint(config.header_color),
+			paint(config.colors.header),
 			"Auth",
-			config.name_width,
-			state == CliState::Ready ? paint(config.tick_color) : paint(config.error_color),
+			config.widths.name,
+			state == CliState::Ready ? paint(config.colors.tick) : paint(config.colors.error),
 			state == CliState::Ready ? Style::TICK : Style::CROSS,
 			state == CliState::Ready ? "Authenticated" : "Not authenticated",
 			reset()

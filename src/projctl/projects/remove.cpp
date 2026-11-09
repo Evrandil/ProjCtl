@@ -10,11 +10,11 @@ auto ProjCtl::remove(const std::string& name) -> std::expected<std::string, std:
 		return std::unexpected(
 			std::format(
 				"{}{}Project with name {}{}{} doesn't exist!{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
-				paint(config.project_name_color),
-				truncate(name, config.name_width),
-				paint(config.error_color),
+				paint(config.colors.name),
+				truncate(name, config.widths.name),
+				paint(config.colors.error),
 				reset()
 			)
 		);
@@ -22,12 +22,12 @@ auto ProjCtl::remove(const std::string& name) -> std::expected<std::string, std:
 
 	return std::format(
 		"{}{}{}{:<{}}{}{}{}",
-		paint(config.tick_color),
+		paint(config.colors.tick),
 		symbol(Style::Mark::Tick),
-		paint(config.header_color),
+		paint(config.colors.header),
 		"Removed project:",
-		config.name_width,
-		paint(config.project_name_color),
+		config.widths.name,
+		paint(config.colors.name),
 		name,
 		reset()
 	);

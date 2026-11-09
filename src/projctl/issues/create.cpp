@@ -19,7 +19,7 @@ auto ProjCtl::issue_create(const std::optional<std::string>& name) const -> std:
 		return std::unexpected(
 			std::format(
 				"{}{}Failed to create issue: {}{}\n",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				result.error(),
 				reset()

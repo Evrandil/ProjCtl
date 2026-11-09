@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdlib>
+#include <cstddef>
 #include <expected>
 #include <filesystem>
 #include <map>
@@ -12,9 +12,8 @@
 
 #include "command.hpp"
 #include "config.hpp"
-#include "issue.hpp"
 #include "projectcontent.hpp"
-#include "request.hpp"
+#include "row.hpp"
 #include "style.hpp"
 
 constexpr std::string_view MARGIN       = "    ";
@@ -23,7 +22,7 @@ constexpr int              MARGIN_SIZE  = 20;
 
 auto detect_project_type(const std::filesystem::path& path) -> ProjectType;
 auto trim(std::string_view text) -> std::string;
-auto truncate(std::string_view text, size_t max_length) -> std::string;
+auto truncate(std::string_view text, std::size_t max_length) -> std::string;
 
 using ProjectEntry    = std::map<std::string, ProjectContent>::value_type;
 using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
@@ -112,8 +111,8 @@ class ProjCtl {
 	// GH functionality
 	[[nodiscard]] auto g_status() const -> BatchResult;
 	[[nodiscard]] auto repo_list() const -> BatchResult;
-	[[nodiscard]] auto issue_table(const std::vector<Issue>& issues) const -> std::string;
-	[[nodiscard]] auto request_table(const std::vector<Request>& requests) const -> std::string;
+	[[nodiscard]] auto render_table(const std::vector<Row>& rows, const std::vector<TableField>& columns) const
+		-> std::string;
 	[[nodiscard]] auto issues(const ProjectEntry& project) const -> ResultString;
 	[[nodiscard]] auto requests(const ProjectEntry& project) const -> ResultString;
 	[[nodiscard]] auto issues(const std::optional<std::string>& name) const -> ResultString;

@@ -1,6 +1,6 @@
 #include "githubinterface.hpp"
 
-#include "issue.hpp"
+#include "row.hpp"
 #include "systeminterface.hpp"
 
 #include <expected>
@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Issue>, std::string> {
+auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Row>, std::string> {
 	const std::expected result = SystemInterface::run(
 		gh_command(
 			std::vector<std::string>{
@@ -38,11 +38,11 @@ auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expe
 		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
 	}
 
-	std::vector<Issue> issues;
+	std::vector<Row> issues;
 	issues.reserve(json.size());
 
 	for (const nlohmann::json& json_issue : json) {
-		Issue issue;
+		Row issue;
 		issue.number  = json_issue.at("number").get<int>();
 		issue.title   = json_issue.at("title").get<std::string>();
 		issue.state   = json_issue.at("state").get<std::string>();

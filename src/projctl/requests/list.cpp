@@ -1,7 +1,6 @@
 #include "command.hpp"
 #include "projctl.hpp"
 
-#include <cstddef>
 #include <expected>
 #include <format>
 #include <future>
@@ -9,95 +8,12 @@
 #include <optional>
 #include <ranges>
 #include <string>
-#include <string_view>
-#include <utility>
 #include <vector>
 
 #include "githostinterface.hpp"
 #include "gitinterface.hpp"
 #include "projectcontent.hpp"
-#include "request.hpp"
 #include "style.hpp"
-
-auto ProjCtl::request_table(const std::vector<Request>& requests) const -> std::string {
-	std::string table;
-	const auto  field_name = [&](RequestField field) -> std::string_view {
-		switch (field) {
-			case RequestField::Number:  return "Number";
-			case RequestField::Title:   return "Title";
-			case RequestField::State:   return "State";
-			case RequestField::Author:  return "Author";
-			case RequestField::Labels:  return "Labels";
-			case RequestField::Created: return "Created";
-			case RequestField::Updated: return "Updated";
-			case RequestField::Parent:  return "Parent";
-		}
-		std::unreachable();
-	};
-	const auto field_width = [&](RequestField field) -> std::size_t {
-		switch (field) {
-			case RequestField::Number:  return config.table_number_width - 1;
-			case RequestField::Title:   return config.table_title_width - 1;
-			case RequestField::State:   return config.table_state_width - 1;
-			case RequestField::Author:  return config.table_author_width - 1;
-			case RequestField::Labels:  return config.table_labels_width - 1;
-			case RequestField::Created: return config.table_created_width - 1;
-			case RequestField::Updated: return config.table_updated_width - 1;
-			case RequestField::Parent:  return config.table_parent_width - 1;
-		}
-		std::unreachable();
-	};
-	const auto field_color = [&](RequestField field, const Request& request) -> Style::Color {
-		switch (field) {
-			case RequestField::Number: return config.table_number_color;
-			case RequestField::Title:  return config.table_title_color;
-			case RequestField::State:
-				if (request.state == "OPEN" || request.state == "opened") {
-					return config.table_open_color;
-				}
-				return config.table_closed_color;
-			case RequestField::Author: return config.table_author_color;
-			case RequestField::Labels: return config.table_labels_color;
-			case RequestField::Parent: return config.table_parent_color;
-			default:                   return Style::Color::Default;
-		}
-	};
-	table += paint(config.header_color);
-	for (const RequestField field : config.request_columns) {
-		std::format_to(std::back_inserter(table), "{:<{}}", field_name(field), field_width(field));
-	}
-	table += reset();
-	table += '\n';
-	for (const Request& request : requests) {
-		for (const RequestField field : config.request_columns) {
-			std::string value;
-
-			switch (field) {
-				case RequestField::Number: value = std::format("#{}", request.number); break;
-				case RequestField::Title:  value = truncate(request.title, config.table_title_width - 1); break;
-				case RequestField::State:  value = request.state; break;
-				case RequestField::Author: value = request.author; break;
-				case RequestField::Labels:
-					table +=
-						request.labels | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>();
-					break;
-				case RequestField::Created: value = request.created; break;
-				case RequestField::Updated: value = request.updated; break;
-				case RequestField::Parent:  value = request.parent.value_or("-"); break;
-			}
-			std::format_to(
-				std::back_inserter(table),
-				"{}{:<{}}{}",
-				paint(field_color(field, request)),
-				truncate(value, field_width(field)),
-				field_width(field),
-				reset()
-			);
-		}
-		table += '\n';
-	}
-	return table;
-}
 
 auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::string, std::string> {
 	const ProjectContent& content      = project.second;
@@ -105,8 +21,8 @@ auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::
 
 	std::string output = std::format(
 		"{}Requests for {}{}{}:\n",
-		paint(config.header_color),
-		paint(config.project_name_color),
+		paint(config.colors.header),
+		paint(config.colors.name),
 		project_name,
 		reset()
 	);
@@ -114,22 +30,23 @@ auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::
 	if (!list) {
 		return std::unexpected(
 			std::format(
-				"{}{}Couldn't list requests for {}{}{}: {}",
-				paint(config.error_color),
+				"{}{}Couldn't list requests for {}{}{}: {}{}",
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
-				paint(config.project_name_color),
-				paint(config.error_color),
+				paint(config.colors.name),
+				project_name,
+				paint(config.colors.error),
 				list.error(),
 				reset()
 			)
 		);
 	}
 	if (list->empty()) {
-		std::format_to(std::back_inserter(output), "{}No requests{}\n", paint(config.header_color), reset());
+		std::format_to(std::back_inserter(output), "{}No requests{}\n", paint(config.colors.header), reset());
 		return output;
 	}
 
-	std::format_to(std::back_inserter(output), "{}\n", request_table(*list));
+	std::format_to(std::back_inserter(output), "{}\n", render_table(*list, config.tables.request_columns));
 
 	return output;
 }

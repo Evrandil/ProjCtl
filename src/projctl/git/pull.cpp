@@ -18,8 +18,8 @@ auto ProjCtl::pull(const ProjectEntry& project) const -> std::expected<std::stri
 	std::format_to(
 		std::back_inserter(output),
 		"{}Pulling: {}{}{}\n",
-		paint(config.header_color),
-		paint(config.project_name_color),
+		paint(config.colors.header),
+		paint(config.colors.name),
 		project.first,
 		reset()
 	);
@@ -29,18 +29,18 @@ auto ProjCtl::pull(const ProjectEntry& project) const -> std::expected<std::stri
 		std::format_to(
 			std::back_inserter(output),
 			"{}{}Couldn't pull {}{}{}: {}{}",
-			paint(config.error_color),
+			paint(config.colors.error),
 			Style::CROSS,
-			paint(config.project_name_color),
+			paint(config.colors.name),
 			project.first,
-			paint(config.error_color),
+			paint(config.colors.error),
 			result.error(),
 			reset()
 		);
 		return std::unexpected(output);
 	}
 
-	std::format_to(std::back_inserter(output), "{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
+	std::format_to(std::back_inserter(output), "{}{}{}{}", paint(config.colors.tick), Style::TICK, *result, reset());
 	return output;
 }
 

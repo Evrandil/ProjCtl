@@ -18,18 +18,18 @@ auto ProjCtl::list_gits(bool names_only) const -> std::expected<std::string, std
 		const std::expected remote_short = GitInterface::remote_short(content.path);
 		return std::format(
 			"{}{:<{}}{}{:<{}}{}{:<{}}{}{:<{}}\n",
-			paint(config.project_name_color),
-			truncate(name, config.name_width),
-			config.name_width,
-			paint(config.project_path_color),
-			truncate(content.path.string(), config.path_width),
-			config.path_width,
-			paint(config.project_branch_color),
-			truncate(branch.value_or("-"), config.branch_width),
-			config.branch_width,
-			paint(config.project_short_remote_color),
-			truncate(remote_short.value_or("-"), config.remote_width),
-			config.remote_width
+			paint(config.colors.name),
+			truncate(name, config.widths.name),
+			config.widths.name,
+			paint(config.colors.path),
+			truncate(content.path.string(), config.widths.path),
+			config.widths.path,
+			paint(config.colors.branch),
+			truncate(branch.value_or("-"), config.widths.branch),
+			config.widths.branch,
+			paint(config.colors.short_remote),
+			truncate(remote_short.value_or("-"), config.widths.remote),
+			config.widths.remote
 		);
 	};
 
@@ -55,22 +55,22 @@ auto ProjCtl::list_gits(bool names_only) const -> std::expected<std::string, std
 
 	if (tasks.empty()) [[unlikely]] {
 		return std::unexpected(
-			std::format("{}There are no git projects saved{}\n", paint(config.error_color), reset())
+			std::format("{}There are no git projects saved{}\n", paint(config.colors.error), reset())
 		);
 	}
 
 	std::format_to(
 		std::back_inserter(output),
 		"{}{:<{}}{:<{}}{:<{}}{:<{}}{}\n",
-		paint(config.header_color),
+		paint(config.colors.header),
 		"Name",
-		config.name_width,
+		config.widths.name,
 		"Path",
-		config.path_width,
+		config.widths.path,
 		"Branch",
-		config.branch_width,
+		config.widths.branch,
 		"Repo",
-		config.remote_width,
+		config.widths.remote,
 		reset()
 	);
 

@@ -16,7 +16,7 @@ auto ProjCtl::project_find(const std::optional<std::string>& name) const
 			return std::unexpected(
 				std::format(
 					"{}{}Current directory isn't a saved project{}",
-					paint(config.error_color),
+					paint(config.colors.error),
 					Style::CROSS,
 					reset()
 				)
@@ -29,11 +29,11 @@ auto ProjCtl::project_find(const std::optional<std::string>& name) const
 		return std::unexpected(
 			std::format(
 				"{}{}Project with name {}{}{} doesn't exist{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				Style::CROSS,
-				paint(config.project_name_color),
+				paint(config.colors.name),
 				actual_name,
-				paint(config.error_color),
+				paint(config.colors.error),
 				reset()
 			)
 		);

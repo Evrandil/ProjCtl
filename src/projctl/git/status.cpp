@@ -20,7 +20,7 @@
 #include "style.hpp"
 
 auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
-	constexpr uint8_t CONTENT_WIDTH = 24;
+	constexpr std::uint8_t CONTENT_WIDTH = 24;
 	std::string       output;
 
 	const auto parse_line = [&](const std::string_view header,
@@ -29,20 +29,20 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	                            const Style::Color     text_color) -> void {
 		Style::Color color = text_color;
 		if (mark == Style::Mark::Tick) {
-			color = config.tick_color;
+			color = config.colors.tick;
 		} else if (mark == Style::Mark::Cross) {
-			color = config.cross_color;
+			color = config.colors.cross;
 		}
 		std::format_to(
 			std::back_inserter(output),
 			"{}{}{:<{}}{}{}{}{}\n",
 			MARGIN,
-			paint(config.header_color),
+			paint(config.colors.header),
 			header,
-			config.name_width,
+			config.widths.name,
 			paint(color),
 			symbol(mark),
-			truncate(text, config.max_width - CONTENT_WIDTH),
+			truncate(text, config.widths.max - CONTENT_WIDTH),
 			reset()
 		);
 	};
@@ -52,7 +52,7 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 		if (result) {
 			parse_line(header, Style::Mark::None, *result, ok_color);
 		} else {
-			parse_line(header, Style::Mark::None, result.error(), config.error_color);
+			parse_line(header, Style::Mark::None, result.error(), config.colors.error);
 		}
 	};
 
@@ -60,8 +60,8 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	const ProjectContent& content = project.second;
 	const bool            exists  = std::filesystem::exists(content.path);
 
-	parse_line("Name:", Style::Mark::None, name, config.project_name_color);
-	parse_line("Path:", Style::Mark::None, content.path.string(), config.project_path_color);
+	parse_line("Name:", Style::Mark::None, name, config.colors.name);
+	parse_line("Path:", Style::Mark::None, content.path.string(), config.colors.path);
 
 	if (!exists) {
 		parse_line("Exists:", Style::Mark::Cross, "No", Style::Color::Default);
@@ -69,10 +69,10 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	}
 
 	parse_line("Exists:", Style::Mark::Tick, "Yes", Style::Color::Default);
-	parse_line("Type:", Style::Mark::None, project_type_to_string(content.type), config.project_type_color);
+	parse_line("Type:", Style::Mark::None, project_type_to_string(content.type), config.colors.type);
 
 	if (!GitInterface::is_repo(content.path)) {
-		parse_line("Git:", Style::Mark::Cross, "Not a git repo", config.cross_color);
+		parse_line("Git:", Style::Mark::Cross, "Not a git repo", config.colors.error);
 		return output;
 	}
 	const std::expected<std::string, std::string>      remote = GitInterface::remote(content.path);
@@ -88,24 +88,24 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 		return "No remote";
 	}();
 	parse_line("Git:", Style::Mark::Tick, repo_text, Style::Color::Default);
-	result_line("Full remote:", remote, config.project_remote_color);
+	result_line("Full remote:", remote, config.colors.remote);
 
 	const std::expected<std::string, std::string> branch = GitInterface::branch(content.path);
-	result_line("Branch", branch, config.project_branch_color);
+	result_line("Branch", branch, config.colors.branch);
 
 	const std::expected<std::string, std::string> changes = GitInterface::changes(content.path);
 	const auto [changes_text, changes_color]              = [&] -> std::pair<std::string_view, Style::Color> {
 		if (!changes) {
-			return {changes.error(), config.error_color};
+			return {changes.error(), config.colors.error};
 		}
 		if (changes->empty()) {
-			return {"No changes", config.tick_color};
+			return {"No changes", config.colors.tick};
 		}
-		return {"Changes", config.warning_color};
+		return {"Changes", config.colors.warning};
 	}();
 	parse_line("Status:", Style::Mark::None, changes_text, changes_color);
 	if (changes && !changes->empty()) {
-		std::format_to(std::back_inserter(output), "\n{}{}{}\n", paint(config.warning_color), *changes, reset());
+		std::format_to(std::back_inserter(output), "\n{}{}{}\n", paint(config.colors.warning), *changes, reset());
 	}
 
 	return output;

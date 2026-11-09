@@ -3,6 +3,7 @@
 #include "projectcontent.hpp"
 
 #include <cstddef>
+#include <filesystem>
 #include <fstream>
 #include <optional>
 #include <string>

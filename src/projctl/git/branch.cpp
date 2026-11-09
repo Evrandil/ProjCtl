@@ -20,10 +20,10 @@ auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional
 	if (!branch_name) {
 		std::expected result = GitInterface::branch(content.path);
 		if (!result) {
-			return std::unexpected(std::format("{}{}{}", paint(config.error_color), result.error(), reset()));
+			return std::unexpected(std::format("{}{}{}", paint(config.colors.error), result.error(), reset()));
 		}
 
-		return std::format("{}{}{}", paint(config.project_branch_color), *result, reset());
+		return std::format("{}{}{}", paint(config.colors.branch), *result, reset());
 	}
 
 	std::expected result = GitInterface::branch_switch(content.path, *branch_name);
@@ -31,16 +31,16 @@ auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional
 		return std::unexpected(
 			std::format(
 				"{}Couldn't switch branches for {}{}{}: {}{}",
-				paint(config.error_color),
-				paint(config.project_name_color),
+				paint(config.colors.error),
+				paint(config.colors.name),
 				(*project)->first,
-				paint(config.error_color),
+				paint(config.colors.error),
 				result.error(),
 				reset()
 			)
 		);
 	}
-	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
+	return std::format("{}{}{}{}", paint(config.colors.tick), Style::TICK, *result, reset());
 }
 
 auto ProjCtl::handle(const Cmd::Git::Branch& cmd) const -> int {

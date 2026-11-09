@@ -6,7 +6,7 @@
 
 namespace Style {
 
-	enum class Color : uint8_t {
+	enum class Color : std::uint8_t {
 		Default,
 		Black,
 		BoldBlack,
@@ -53,7 +53,7 @@ namespace Style {
 	constexpr std::string_view TICK  = "✓ ";
 	constexpr std::string_view CROSS = "✗ ";
 
-	enum class Mark : uint8_t {
+	enum class Mark : std::uint8_t {
 		None,
 		Tick,
 		Cross,

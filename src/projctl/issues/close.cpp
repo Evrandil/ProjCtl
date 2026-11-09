@@ -20,7 +20,7 @@ auto ProjCtl::issue_close(const std::optional<std::string>& name, int issue_numb
 		return std::unexpected(
 			std::format(
 				"{}{}Failed to Close issue {}: {}{}\n",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				issue_number,
 				result.error(),

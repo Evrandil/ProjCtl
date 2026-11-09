@@ -29,7 +29,7 @@ auto ProjCtl::report(const ResultInt& result) -> int {
 auto ProjCtl::report(const BatchResult& results) const -> int {
 	std::println(stdout, "\n\n{}\n\n", results.output);
 	if (results.failed > 0) {
-		std::println(stderr, "{}{}{}{} failed\n\n", paint(config.error_color), Style::CROSS, results.failed, reset());
+		std::println(stderr, "{}{}{}{} failed\n\n", paint(config.colors.error), Style::CROSS, results.failed, reset());
 		return 1;
 	}
 	return 0;
@@ -52,11 +52,11 @@ auto ProjCtl::report_save(const ResultString& result) const -> int {
 }
 
 auto ProjCtl::handle(const Cmd::Unknown& cmd) const -> int {
-	std::println(stderr, "\n\n{}{}{}{}\n\n", paint(config.error_color), Style::CROSS, cmd.message, reset());
+	std::println(stderr, "\n\n{}{}{}{}\n\n", paint(config.colors.error), Style::CROSS, cmd.message, reset());
 	return 1;
 }
 
 auto ProjCtl::handle(const Cmd::Version& /*unused*/) const -> int {
-	std::println(stdout, "\n\n{}ProjCtl version: {}{}\n\n", paint(config.header_color), Version::STRING, reset());
+	std::println(stdout, "\n\n{}ProjCtl version: {}{}\n\n", paint(config.colors.header), Version::STRING, reset());
 	return 0;
 }

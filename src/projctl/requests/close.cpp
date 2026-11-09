@@ -20,7 +20,7 @@ auto ProjCtl::request_close(const std::optional<std::string>& name, int request_
 		return std::unexpected(
 			std::format(
 				"{}{} Failed to close request {}: {}{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				request_number,
 				result.error(),

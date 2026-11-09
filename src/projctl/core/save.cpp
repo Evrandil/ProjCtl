@@ -16,11 +16,11 @@ auto ProjCtl::save() const -> std::expected<void, std::string> {
 		return std::unexpected(
 			std::format(
 				"{}{}Couldn't create {}{}{}: {}{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				Style::CROSS,
-				paint(config.project_path_color),
+				paint(config.colors.path),
 				data_path.parent_path().string(),
-				paint(config.error_color),
+				paint(config.colors.error),
 				error.message(),
 				reset()
 			)
@@ -52,9 +52,9 @@ auto ProjCtl::save() const -> std::expected<void, std::string> {
 			return std::unexpected(
 				std::format(
 					"{}{}Couldn't write to: {}{}{}",
-					paint(config.error_color),
+					paint(config.colors.error),
 					Style::CROSS,
-					paint(config.project_path_color),
+					paint(config.colors.path),
 					temp_path.string(),
 					reset()
 				)
@@ -67,11 +67,11 @@ auto ProjCtl::save() const -> std::expected<void, std::string> {
 		return std::unexpected(
 			std::format(
 				"{}{}Couldn't save {}{}{}: {}{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				Style::CROSS,
-				paint(config.project_path_color),
+				paint(config.colors.path),
 				data_path.string(),
-				paint(config.error_color),
+				paint(config.colors.error),
 				error.message(),
 				reset()
 			)
