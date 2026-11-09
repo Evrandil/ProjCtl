@@ -71,7 +71,6 @@ auto GitHostInterface::issue_close(const std::filesystem::path& path, int issue_
 	);
 }
 
-
 auto GitHostInterface::request_list(const std::filesystem::path& path) -> std::expected<std::vector<Row>, std::string> {
 	return on_host(
 		path,
