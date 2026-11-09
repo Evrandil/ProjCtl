@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdlib>
+#include <cstddef>
 #include <expected>
 #include <filesystem>
 #include <map>
@@ -22,7 +22,7 @@ constexpr int              MARGIN_SIZE  = 20;
 
 auto detect_project_type(const std::filesystem::path& path) -> ProjectType;
 auto trim(std::string_view text) -> std::string;
-auto truncate(std::string_view text, size_t max_length) -> std::string;
+auto truncate(std::string_view text, std::size_t max_length) -> std::string;
 
 using ProjectEntry    = std::map<std::string, ProjectContent>::value_type;
 using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;

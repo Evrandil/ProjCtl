@@ -1,10 +1,12 @@
 #pragma once
 
+#include <cstdint>
 #include <filesystem>
 #include <string>
 #include <string_view>
+#include <optional>
 
-enum class ProjectType : uint8_t {
+enum class ProjectType : std::uint8_t {
 	Rust,
 	CMake,
 	Node,

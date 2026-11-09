@@ -20,7 +20,7 @@
 #include "style.hpp"
 
 auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
-	constexpr uint8_t CONTENT_WIDTH = 24;
+	constexpr std::uint8_t CONTENT_WIDTH = 24;
 	std::string       output;
 
 	const auto parse_line = [&](const std::string_view header,

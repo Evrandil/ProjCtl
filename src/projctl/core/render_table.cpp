@@ -44,7 +44,7 @@ namespace {
 } // namespace
 
 auto ProjCtl::render_table(const std::vector<Row>& rows, const std::vector<TableField>& columns) const -> std::string {
-	auto state_color = [&](const std::string& state) -> Style::Color {
+	const auto state_color = [&](const std::string& state) -> Style::Color {
 		return (state == "OPEN" || state == "opened") ? config.colors.open : config.colors.closed;
 	};
 

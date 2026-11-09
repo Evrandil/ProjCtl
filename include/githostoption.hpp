@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum class HostOption : uint8_t {
+enum class HostOption : std::uint8_t {
 	GitHub,
 	GitLab,
 	Unknown,

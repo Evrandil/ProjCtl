@@ -12,7 +12,7 @@
 
 auto main(int argc, char** argv) -> int {
 	try {
-		const std::span<char*>              all_args{argv, static_cast<size_t>(argc)};
+		const std::span<char*>              all_args{argv, static_cast<std::size_t>(argc)};
 		const std::vector<std::string_view> args{std::from_range, all_args.subspan(1)};
 
 		ProjCtl proj_ctl;

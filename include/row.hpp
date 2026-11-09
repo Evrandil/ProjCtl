@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-enum class TableField : uint8_t {
+enum class TableField : std::uint8_t {
 	Number,
 	Title,
 	State,
