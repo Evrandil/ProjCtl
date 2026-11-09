@@ -1,7 +1,6 @@
 #include "command.hpp"
 #include "projctl.hpp"
 
-#include <cstddef>
 #include <expected>
 #include <format>
 #include <future>
@@ -9,8 +8,6 @@
 #include <optional>
 #include <ranges>
 #include <string>
-#include <string_view>
-#include <utility>
 #include <vector>
 
 #include "githostinterface.hpp"
@@ -20,83 +17,7 @@
 #include "style.hpp"
 
 auto ProjCtl::request_table(const std::vector<Field>& requests) const -> std::string {
-	std::string table;
-	const auto  field_name = [&](TableField field) -> std::string_view {
-		switch (field) {
-			case TableField::Number:  return "Number";
-			case TableField::Title:   return "Title";
-			case TableField::State:   return "State";
-			case TableField::Author:  return "Author";
-			case TableField::Labels:  return "Labels";
-			case TableField::Created: return "Created";
-			case TableField::Updated: return "Updated";
-			case TableField::Parent:  return "Parent";
-		}
-		std::unreachable();
-	};
-	const auto field_width = [&](TableField field) -> std::size_t {
-		switch (field) {
-			case TableField::Number:  return config.tables.number.width - 1;
-			case TableField::Title:   return config.tables.title.width - 1;
-			case TableField::State:   return config.tables.state.width - 1;
-			case TableField::Author:  return config.tables.author.width - 1;
-			case TableField::Labels:  return config.tables.labels.width - 1;
-			case TableField::Created: return config.tables.created.width - 1;
-			case TableField::Updated: return config.tables.updated.width - 1;
-			case TableField::Parent:  return config.tables.parent.width - 1;
-		}
-		std::unreachable();
-	};
-	const auto field_color = [&](TableField field, const Field& request) -> Style::Color {
-		switch (field) {
-			case TableField::Number: return config.tables.number.color;
-			case TableField::Title:  return config.tables.title.color;
-			case TableField::State:
-				if (request.state == "OPEN" || request.state == "opened") {
-					return config.colors.open;
-				}
-				return config.colors.closed;
-			case TableField::Author: return config.tables.author.color;
-			case TableField::Labels: return config.tables.labels.color;
-			case TableField::Parent: return config.tables.parent.color;
-			default:                   return Style::Color::Default;
-		}
-	};
-	table += paint(config.colors.header);
-	for (const TableField field : config.tables.request_columns) {
-		std::format_to(std::back_inserter(table), "{:<{}}", field_name(field), field_width(field));
-	}
-	table += reset();
-	table += '\n';
-	for (const Field& request : requests) {
-		for (const TableField& field : config.tables.request_columns) {
-			std::string value;
-
-			switch (field) {
-				case TableField::Number: value = std::format("#{}", request.number); break;
-				case TableField::Title:  value = request.title; break;
-				case TableField::State:  value = request.state; break;
-				case TableField::Author: value = request.author; break;
-				case TableField::Labels:
-					value +=
-						request.labels | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>();
-					break;
-				case TableField::Created: value = request.created; break;
-				case TableField::Updated: value = request.updated; break;
-				case TableField::Parent:  value = request.parent.value_or("-"); break;
-			}
-			std::format_to(
-				std::back_inserter(table),
-				"{}{:<{}}{}",
-				paint(field_color(field, request)),
-				truncate(value, field_width(field)),
-				field_width(field),
-				reset()
-			);
-		}
-		table += '\n';
-	}
-	return table;
+	return render_table(requests, config.tables.request_columns);
 }
 
 auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::string, std::string> {
