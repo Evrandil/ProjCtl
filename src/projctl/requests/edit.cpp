@@ -20,7 +20,7 @@ auto ProjCtl::request_edit(const std::optional<std::string>& name, int request_n
 		return std::unexpected(
 			std::format(
 				"{}{}Failed to edit request {}: {}{}\n",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				request_number,
 				result.error(),

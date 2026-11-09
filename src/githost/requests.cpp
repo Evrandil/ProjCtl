@@ -4,14 +4,14 @@
 #include "githubinterface.hpp"
 #include "gitinterface.hpp"
 #include "gitlabinterface.hpp"
-#include "request.hpp"
+#include "field.hpp"
 #include <expected>
 #include <filesystem>
 #include <string>
 #include <vector>
 
 auto GitHostInterface::request_list(const std::filesystem::path& path)
-	-> std::expected<std::vector<Request>, std::string> {
+	-> std::expected<std::vector<Field>, std::string> {
 	std::expected host = GitInterface::host(path);
 	if (!host) {
 		return std::unexpected(host.error());

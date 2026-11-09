@@ -15,25 +15,25 @@ auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expecte
 		return std::unexpected(project.error());
 	}
 
-	const bool background = config.editor == "neovide" || config.editor == "emacs";
+	const bool background = config.general.editor == "neovide" || config.general.editor == "emacs";
 
-	const std::string shell_command = std::format("{} .{}", config.editor, background ? " &" : "");
+	const std::string shell_command = std::format("{} .{}", config.general.editor, background ? " &" : "");
 
 	std::expected<int, std::string> result =
 		SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", shell_command}, (*project)->second.path);
 
 	if (!result) {
 		return std::unexpected(
-			std::format("{}{} {}{}", paint(config.error_color), symbol(Style::Mark::Cross), result.error(), reset())
+			std::format("{}{} {}{}", paint(config.colors.error), symbol(Style::Mark::Cross), result.error(), reset())
 		);
 	}
 	if (*result != 0) {
 		return std::unexpected(
 			std::format(
 				"{}{} {} exited with code {}{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
-				config.editor,
+				config.general.editor,
 				*result,
 				reset()
 			)
@@ -42,11 +42,11 @@ auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expecte
 
 	return std::format(
 		"{}{}{}{}{}{}{}",
-		paint(config.tick_color),
+		paint(config.colors.tick),
 		symbol(Style::Mark::Tick),
-		paint(config.header_color),
+		paint(config.colors.header),
 		"Opened project: ",
-		paint(config.project_name_color),
+		paint(config.colors.name),
 		(*project)->first,
 		reset()
 	);

@@ -19,7 +19,7 @@ auto ProjCtl::request_create(const std::optional<std::string>& name) const -> st
 		return std::unexpected(
 			std::format(
 				"{}{}Failed to create request: {}{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				result.error(),
 				reset()

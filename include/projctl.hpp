@@ -12,9 +12,8 @@
 
 #include "command.hpp"
 #include "config.hpp"
-#include "issue.hpp"
+#include "field.hpp"
 #include "projectcontent.hpp"
-#include "request.hpp"
 #include "style.hpp"
 
 constexpr std::string_view MARGIN       = "    ";
@@ -112,8 +111,8 @@ class ProjCtl {
 	// GH functionality
 	[[nodiscard]] auto g_status() const -> BatchResult;
 	[[nodiscard]] auto repo_list() const -> BatchResult;
-	[[nodiscard]] auto issue_table(const std::vector<Issue>& issues) const -> std::string;
-	[[nodiscard]] auto request_table(const std::vector<Request>& requests) const -> std::string;
+	[[nodiscard]] auto issue_table(const std::vector<Field>& issues) const -> std::string;
+	[[nodiscard]] auto request_table(const std::vector<Field>& requests) const -> std::string;
 	[[nodiscard]] auto issues(const ProjectEntry& project) const -> ResultString;
 	[[nodiscard]] auto requests(const ProjectEntry& project) const -> ResultString;
 	[[nodiscard]] auto issues(const std::optional<std::string>& name) const -> ResultString;

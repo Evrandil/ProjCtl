@@ -11,12 +11,12 @@ auto ProjCtl::list(bool names_only) const -> std::expected<std::string, std::str
 	const auto list_one = [&](const std::string& name, const std::filesystem::path& path) -> std::string {
 		return std::format(
 			"{}{:<{}}{}{:<{}}{}\n",
-			paint(config.project_name_color),
-			truncate(name, config.name_width),
-			config.name_width,
-			paint(config.project_path_color),
-			truncate(path.string(), config.path_width),
-			config.path_width,
+			paint(config.colors.name),
+			truncate(name, config.widths.name),
+			config.widths.name,
+			paint(config.colors.path),
+			truncate(path.string(), config.widths.path),
+			config.widths.path,
 			reset()
 		);
 	};
@@ -34,7 +34,7 @@ auto ProjCtl::list(bool names_only) const -> std::expected<std::string, std::str
 		return std::unexpected(
 			std::format(
 				"{}{}There are no projects saved{}\n",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				reset()
 			)
@@ -44,9 +44,9 @@ auto ProjCtl::list(bool names_only) const -> std::expected<std::string, std::str
 	std::format_to(
 		std::back_inserter(output),
 		"{}{:<{}}{}{}\n",
-		paint(config.header_color),
+		paint(config.colors.header),
 		"Name",
-		config.name_width,
+		config.widths.name,
 		"Path",
 		reset()
 	);

@@ -20,16 +20,16 @@ auto ProjCtl::push(const std::optional<std::string>& name, const bool upstream) 
 		return std::unexpected(
 			std::format(
 				"{}Couldn't push {}{}{}: {}{}",
-				paint(config.error_color),
-				paint(config.project_name_color),
+				paint(config.colors.error),
+				paint(config.colors.name),
 				(*project)->first,
-				paint(config.error_color),
+				paint(config.colors.error),
 				result.error(),
 				reset()
 			)
 		);
 	}
-	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
+	return std::format("{}{}{}{}", paint(config.colors.tick), Style::TICK, *result, reset());
 }
 
 auto ProjCtl::handle(const Cmd::Git::Push& cmd) const -> int {

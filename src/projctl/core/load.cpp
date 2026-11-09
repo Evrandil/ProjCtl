@@ -7,6 +7,7 @@
 #include <optional>
 #include <string>
 #include <utility>
+#include <filesystem>
 
 void ProjCtl::load() {
 	auto config_option = load_config(config_path);

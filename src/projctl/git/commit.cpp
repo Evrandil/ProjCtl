@@ -23,10 +23,10 @@ auto ProjCtl::commit(const std::optional<std::string>& name, std::optional<std::
 
 	if (!result) {
 		return std::unexpected(
-			std::format("{}{}{}{}", paint(config.error_color), Style::CROSS, result.error(), reset())
+			std::format("{}{}{}{}", paint(config.colors.error), Style::CROSS, result.error(), reset())
 		);
 	}
-	return std::format("{}{}{}{}", paint(config.tick_color), Style::TICK, *result, reset());
+	return std::format("{}{}{}{}", paint(config.colors.tick), Style::TICK, *result, reset());
 }
 
 auto ProjCtl::handle(const Cmd::Git::Commit& cmd) const -> int {

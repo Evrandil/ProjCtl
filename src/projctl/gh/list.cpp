@@ -18,10 +18,10 @@ auto ProjCtl::repo_list() const -> BatchResult {
 			return std::unexpected(
 				std::format(
 					"{}{} {}repos\n{}{}{}",
-					paint(config.project_name_color),
+					paint(config.colors.name),
 					host == HostOption::GitHub ? "GitHub" : "GitLab",
-					paint(config.header_color),
-					paint(config.error_color),
+					paint(config.colors.header),
+					paint(config.colors.error),
 					repo_list.error(),
 					reset()
 				)
@@ -29,10 +29,10 @@ auto ProjCtl::repo_list() const -> BatchResult {
 		}
 		return std::format(
 			"{}{} {}repos\n{}{}{}",
-			paint(config.project_name_color),
+			paint(config.colors.name),
 			host == HostOption::GitHub ? "GitHub" : "GitLab",
-			paint(config.header_color),
-			paint(config.project_short_remote_color),
+			paint(config.colors.header),
+			paint(config.colors.short_remote),
 			*repo_list,
 			reset()
 		);

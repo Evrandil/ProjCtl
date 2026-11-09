@@ -1,5 +1,5 @@
 #include "command.hpp"
-#include "issue.hpp"
+#include "field.hpp"
 #include "projctl.hpp"
 
 #include <cstddef>
@@ -19,71 +19,71 @@
 #include "projectcontent.hpp"
 #include "style.hpp"
 
-auto ProjCtl::issue_table(const std::vector<Issue>& issues) const -> std::string {
+auto ProjCtl::issue_table(const std::vector<Field>& issues) const -> std::string {
 	std::string table;
-	const auto  field_name = [&](IssueField field) -> std::string_view {
+	const auto  field_name = [&](TableField field) -> std::string_view {
 		switch (field) {
-			case IssueField::Number:  return "Number";
-			case IssueField::Title:   return "Title";
-			case IssueField::State:   return "State";
-			case IssueField::Author:  return "Author";
-			case IssueField::Labels:  return "Labels";
-			case IssueField::Created: return "Created";
-			case IssueField::Updated: return "Updated";
-			case IssueField::Parent:  return "Parent";
+			case TableField::Number:  return "Number";
+			case TableField::Title:   return "Title";
+			case TableField::State:   return "State";
+			case TableField::Author:  return "Author";
+			case TableField::Labels:  return "Labels";
+			case TableField::Created: return "Created";
+			case TableField::Updated: return "Updated";
+			case TableField::Parent:  return "Parent";
 		}
 		std::unreachable();
 	};
-	const auto field_width = [&](IssueField field) -> std::size_t {
+	const auto field_width = [&](TableField field) -> std::size_t {
 		switch (field) {
-			case IssueField::Number:  return config.table_number_width - 1;
-			case IssueField::Title:   return config.table_title_width - 1;
-			case IssueField::State:   return config.table_state_width - 1;
-			case IssueField::Author:  return config.table_author_width - 1;
-			case IssueField::Labels:  return config.table_labels_width - 1;
-			case IssueField::Created: return config.table_created_width - 1;
-			case IssueField::Updated: return config.table_updated_width - 1;
-			case IssueField::Parent:  return config.table_parent_width - 1;
+			case TableField::Number:  return config.tables.number.width;
+			case TableField::Title:   return config.tables.title.width;
+			case TableField::State:   return config.tables.state.width;
+			case TableField::Author:  return config.tables.author.width;
+			case TableField::Labels:  return config.tables.labels.width;
+			case TableField::Created: return config.tables.created.width;
+			case TableField::Updated: return config.tables.updated.width;
+			case TableField::Parent:  return config.tables.parent.width;
 		}
 		std::unreachable();
 	};
-	const auto field_color = [&](IssueField field, const Issue& issue) -> Style::Color {
+	const auto field_color = [&](TableField field, const Field& issue) -> Style::Color {
 		switch (field) {
-			case IssueField::Number: return config.table_number_color;
-			case IssueField::Title:  return config.table_title_color;
-			case IssueField::State:
+			case TableField::Number: return config.tables.number.color;
+			case TableField::Title:  return config.tables.title.color;
+			case TableField::State:
 				if (issue.state == "OPEN" || issue.state == "opened") {
-					return config.table_open_color;
+					return config.colors.open;
 				}
-				return config.table_closed_color;
-			case IssueField::Author: return config.table_author_color;
-			case IssueField::Labels: return config.table_labels_color;
-			case IssueField::Parent: return config.table_parent_color;
+				return config.colors.closed;
+			case TableField::Author: return config.tables.author.color;
+			case TableField::Labels: return config.tables.labels.color;
+			case TableField::Parent: return config.tables.parent.color;
 			default:                 return Style::Color::Default;
 		}
 	};
-	table += paint(config.header_color);
-	for (const IssueField field : config.issue_columns) {
+	table += paint(config.colors.header);
+	for (const TableField field : config.tables.issue_columns) {
 		std::format_to(std::back_inserter(table), "{:<{}}", field_name(field), field_width(field));
 	}
 	table += reset();
 	table += '\n';
-	for (const Issue& issue : issues) {
-		for (const IssueField field : config.issue_columns) {
+	for (const Field& issue : issues) {
+		for (const TableField field : config.tables.issue_columns) {
 			std::string value;
 
 			switch (field) {
-				case IssueField::Number: value = std::format("#{}", issue.number); break;
-				case IssueField::Title:  value = issue.title; break;
-				case IssueField::State:  value = issue.state; break;
-				case IssueField::Author: value = issue.author; break;
-				case IssueField::Labels:
+				case TableField::Number: value = std::format("#{}", issue.number); break;
+				case TableField::Title:  value = issue.title; break;
+				case TableField::State:  value = issue.state; break;
+				case TableField::Author: value = issue.author; break;
+				case TableField::Labels:
 					value =
 						issue.labels | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>();
 					break;
-				case IssueField::Created: value = issue.created; break;
-				case IssueField::Updated: value = issue.updated; break;
-				case IssueField::Parent:  value = issue.parent.value_or("-"); break;
+				case TableField::Created: value = issue.created; break;
+				case TableField::Updated: value = issue.updated; break;
+				case TableField::Parent:  value = issue.parent.value_or("-"); break;
 			}
 
 			std::format_to(
@@ -106,8 +106,8 @@ auto ProjCtl::issues(const ProjectEntry& project) const -> std::expected<std::st
 
 	std::string output = std::format(
 		"{}Issues for {}{}{}:\n",
-		paint(config.header_color),
-		paint(config.project_name_color),
+		paint(config.colors.header),
+		paint(config.colors.name),
 		project_name,
 		reset()
 	);
@@ -115,18 +115,19 @@ auto ProjCtl::issues(const ProjectEntry& project) const -> std::expected<std::st
 	if (!list) {
 		return std::unexpected(
 			std::format(
-				"{}{}Couldn't list issues for {}{}{}: {}",
-				paint(config.error_color),
+				"{}{}Couldn't list issues for {}{}{}: {}{}",
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
-				paint(config.project_name_color),
-				paint(config.error_color),
+				paint(config.colors.name),
+				project_name,
+				paint(config.colors.error),
 				list.error(),
 				reset()
 			)
 		);
 	}
 	if (list->empty()) {
-		std::format_to(std::back_inserter(output), "{}No issues{}\n", paint(config.header_color), reset());
+		std::format_to(std::back_inserter(output), "{}No issues{}\n", paint(config.colors.header), reset());
 		return output;
 	}
 

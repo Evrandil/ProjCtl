@@ -25,12 +25,12 @@ auto ProjCtl::run(const std::optional<std::string>& name) const -> std::expected
 		return std::unexpected(
 			std::format(
 				"{}{} There's no default run command for {}{}{} as type of project {}{}{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
-				paint(config.project_type_color),
+				paint(config.colors.type),
 				project_type_to_string(content.type),
-				paint(config.error_color),
-				paint(config.project_name_color),
+				paint(config.colors.error),
+				paint(config.colors.name),
 				(*project)->first,
 				reset()
 			)

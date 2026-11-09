@@ -20,11 +20,11 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 		return std::unexpected(
 			std::format(
 				"{}{}Path {}{}{} doesn't exist!{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
-				paint(config.project_path_color),
-				truncate(path.value_or(".").string(), config.max_width - MARGIN_SIZE),
-				paint(config.error_color),
+				paint(config.colors.path),
+				truncate(path.value_or(".").string(), config.widths.max - MARGIN_SIZE),
+				paint(config.colors.error),
 				reset()
 			)
 		);
@@ -35,9 +35,9 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 		return std::unexpected(
 			std::format(
 				"{}{}Can't derive project name from {}{}{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
-				paint(config.project_path_color),
+				paint(config.colors.path),
 				path.value_or(".").string(),
 				reset()
 			)
@@ -56,11 +56,11 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 		return std::unexpected(
 			std::format(
 				"{}{}Project with name {}{}{} already exists!{}",
-				paint(config.error_color),
+				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
-				paint(config.project_name_color),
-				truncate(actual_name, config.name_width),
-				paint(config.error_color),
+				paint(config.colors.name),
+				truncate(actual_name, config.widths.max),
+				paint(config.colors.error),
 				reset()
 			)
 		);
@@ -68,19 +68,19 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 
 	return std::format(
 		"{}{}{}{:<{}}{}{}{}\n{}{:<{}}{}{}{}",
-		paint(config.tick_color),
+		paint(config.colors.tick),
 		symbol(Style::Mark::Tick),
-		paint(config.header_color),
+		paint(config.colors.header),
 		"Added project:",
-		config.name_width,
-		paint(config.project_name_color),
-		truncate(entry->first, config.max_width - MARGIN_SIZE),
+		config.widths.name,
+		paint(config.colors.name),
+		truncate(entry->first, config.widths.max - MARGIN_SIZE),
 		reset(),
-		paint(config.header_color),
+		paint(config.colors.header),
 		"With path:",
-		config.name_width,
-		paint(config.project_path_color),
-		truncate(entry->second.path.string(), config.max_width - MARGIN_SIZE),
+		config.widths.name,
+		paint(config.colors.path),
+		truncate(entry->second.path.string(), config.widths.max - MARGIN_SIZE),
 		reset()
 	);
 }

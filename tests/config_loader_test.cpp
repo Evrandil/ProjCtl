@@ -20,8 +20,8 @@ TEST_CASE("load_config") {
 
 	const std::expected config = load_config(path);
 	REQUIRE(config.has_value());
-	CHECK(config->name_width == 33);
-	CHECK(config->error_color == Style::Color::Cyan);
+	CHECK(config->widths.name == 33);
+	CHECK(config->colors.error == Style::Color::Cyan);
 
 	std::filesystem::remove(path);
 }
