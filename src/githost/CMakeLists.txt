@@ -1,7 +1,6 @@
 
 add_library(projctl_githost
 	githostinterface.cpp
-	requests.cpp
 	rest.cpp
 )
 
