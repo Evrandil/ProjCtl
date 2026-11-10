@@ -1,19 +1,18 @@
 #pragma once
 
-#include "row.hpp"
 #include "config.hpp"
+#include "row.hpp"
 #include "style.hpp"
 
-#include <string_view>
-#include <string>
-#include <utility>
-#include <array>
-#include <cstdint>
-#include <cstddef>
-#include <optional>
 #include <algorithm>
+#include <array>
+#include <cstddef>
+#include <cstdint>
+#include <optional>
+#include <string>
+#include <string_view>
+#include <utility>
 #include <vector>
-
 
 namespace ConfigParsing {
 	// ---- table types ----------------------------------------------------------------------------
@@ -144,4 +143,4 @@ namespace ConfigParsing {
 	auto set_table(Settings::Tables& tables, std::string_view key, std::string_view value) -> void;
 	auto set_color(Settings::Colors& colors, std::string_view key, std::string_view value) -> void;
 	auto apply_setting(Config& config, Section section, std::string_view key, std::string_view value) -> void;
-}
+} // namespace ConfigParsing

@@ -1,8 +1,8 @@
 #include "config.hpp"
 
+#include "config_parsing.hpp"
 #include "row.hpp"
 #include "text.hpp"
-#include "config_parsing.hpp"
 
 #include <cstddef>
 #include <expected>
@@ -11,7 +11,6 @@
 #include <string>
 #include <string_view>
 #include <utility>
-
 
 auto column_of(const Settings::Tables& tables, TableField field) -> const Settings::Column& {
 	switch (field) {
@@ -33,16 +32,17 @@ auto load_config(const std::filesystem::path& path) -> std::expected<Config, std
 		return std::unexpected("Failed to open config file: " + path.string());
 	}
 
-	Config      config;
-	ConfigParsing::Section     section = ConfigParsing::Section::Unknown;
-	std::string line;
+	Config                 config;
+	ConfigParsing::Section section = ConfigParsing::Section::Unknown;
+	std::string            line;
 	while (std::getline(config_file, line)) {
 		const std::string_view trimmed = trim(line);
 		if (trimmed.empty() || trimmed.front() == '#' || trimmed.front() == ';') {
 			continue;
 		}
 		if (trimmed.front() == '[' && trimmed.back() == ']') {
-			section = lookup(ConfigParsing::SECTIONS, trim(trimmed.substr(1, trimmed.size() - 2))).value_or(ConfigParsing::Section::Unknown);
+			section = lookup(ConfigParsing::SECTIONS, trim(trimmed.substr(1, trimmed.size() - 2)))
+			              .value_or(ConfigParsing::Section::Unknown);
 			continue;
 		}
 		if (const std::size_t separator = trimmed.find('='); separator != std::string_view::npos) {

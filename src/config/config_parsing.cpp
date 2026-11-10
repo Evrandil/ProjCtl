@@ -1,19 +1,19 @@
 #include "config_parsing.hpp"
 
-#include "row.hpp"
 #include "config.hpp"
+#include "row.hpp"
 #include "style.hpp"
 #include "text.hpp"
 
-#include <string_view>
-#include <string>
-#include <utility>
-#include <cstddef>
-#include <optional>
-#include <memory>
-#include <vector>
 #include <charconv>
+#include <cstddef>
+#include <memory>
+#include <optional>
+#include <string>
+#include <string_view>
 #include <system_error>
+#include <utility>
+#include <vector>
 
 namespace ConfigParsing {
 
@@ -117,4 +117,4 @@ namespace ConfigParsing {
 			case Section::Unknown: break;
 		}
 	}
-} // namespace
+} // namespace ConfigParsing
