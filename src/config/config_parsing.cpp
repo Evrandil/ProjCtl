@@ -5,6 +5,8 @@
 #include "style.hpp"
 #include "text.hpp"
 
+#include <algorithm>
+#include <array>
 #include <charconv>
 #include <cstddef>
 #include <memory>
@@ -15,9 +17,83 @@
 #include <utility>
 #include <vector>
 
-namespace ConfigParsing {
+namespace {
+	struct ColumnInfo {
+		std::string_view name;
+		TableField       field;
+		Settings::Column Settings::Tables::* member;
+	};
 
-	// ---- value parsing --------------------------------------------------------------------------
+	template <typename Owner, typename T>
+	using Field = ConfigParsing::Named<T Owner::*>;
+
+	inline constexpr auto GENERAL = std::to_array<Field<Settings::General, std::string>>({
+		{"editor", &Settings::General::editor},
+	});
+
+	inline constexpr auto WIDTHS = std::to_array<Field<Settings::Widths, std::size_t>>({
+		{"max_width", &Settings::Widths::max},
+		{"name_width", &Settings::Widths::name},
+		{"path_width", &Settings::Widths::path},
+		{"remote_width", &Settings::Widths::remote},
+		{"branch_width", &Settings::Widths::branch},
+	});
+
+	inline constexpr auto COLUMNS = std::to_array<ColumnInfo>({
+		{.name = "number", .field = TableField::Number, .member = &Settings::Tables::number},
+		{.name = "title", .field = TableField::Title, .member = &Settings::Tables::title},
+		{.name = "state", .field = TableField::State, .member = &Settings::Tables::state},
+		{.name = "author", .field = TableField::Author, .member = &Settings::Tables::author},
+		{.name = "labels", .field = TableField::Labels, .member = &Settings::Tables::labels},
+		{.name = "created", .field = TableField::Created, .member = &Settings::Tables::created},
+		{.name = "updated", .field = TableField::Updated, .member = &Settings::Tables::updated},
+		{.name = "parent", .field = TableField::Parent, .member = &Settings::Tables::parent},
+	});
+
+	inline constexpr auto COLORS = std::to_array<Field<Settings::Colors, Style::Color>>({
+		{"header", &Settings::Colors::header},
+		{"project_name", &Settings::Colors::name},
+		{"project_path", &Settings::Colors::path},
+		{"project_branch", &Settings::Colors::branch},
+		{"project_remote", &Settings::Colors::remote},
+		{"project_type", &Settings::Colors::type},
+		{"project_short_remote", &Settings::Colors::short_remote},
+		{"open", &Settings::Colors::open},
+		{"closed", &Settings::Colors::closed},
+		{"tick", &Settings::Colors::tick},
+		{"cross", &Settings::Colors::cross},
+		{"error", &Settings::Colors::error},
+		{"warning", &Settings::Colors::warning},
+	});
+
+	inline constexpr auto COLOR_NAMES = std::to_array<ConfigParsing::Named<Style::Color>>({
+		{"default", Style::Color::Default},
+		{"black", Style::Color::Black},
+		{"bold_black", Style::Color::BoldBlack},
+		{"red", Style::Color::Red},
+		{"bold_red", Style::Color::BoldRed},
+		{"green", Style::Color::Green},
+		{"bold_green", Style::Color::BoldGreen},
+		{"yellow", Style::Color::Yellow},
+		{"bold_yellow", Style::Color::BoldYellow},
+		{"blue", Style::Color::Blue},
+		{"bold_blue", Style::Color::BoldBlue},
+		{"magenta", Style::Color::Magenta},
+		{"bold_magenta", Style::Color::BoldMagenta},
+		{"cyan", Style::Color::Cyan},
+		{"bold_cyan", Style::Color::BoldCyan},
+		{"white", Style::Color::White},
+		{"bold_white", Style::Color::BoldWhite},
+	});
+
+	constexpr auto find_column(std::string_view name) -> std::optional<ColumnInfo> {
+		const auto* const found = std::ranges::find(COLUMNS, name, &ColumnInfo::name);
+		if (found == COLUMNS.end()) {
+			return std::nullopt;
+		}
+		return *found;
+	}
+
 	auto parse_size(std::string_view text) -> std::optional<std::size_t> {
 		std::size_t       value = 0;
 		const char* const first = std::to_address(text.begin());
@@ -29,7 +105,6 @@ namespace ConfigParsing {
 		return value;
 	}
 
-	// "number, title, state" -> {Number, Title, State}; unknown names are skipped
 	auto parse_column_list(std::string_view value) -> std::vector<TableField> {
 		std::vector<TableField> fields;
 		while (!value.empty()) {
@@ -43,15 +118,14 @@ namespace ConfigParsing {
 		return fields;
 	}
 
-	// ---- one setter per section -----------------------------------------------------------------
 	auto set_general(Settings::General& general, std::string_view key, std::string_view value) -> void {
-		if (const std::optional<std::string Settings::General::*> field = lookup(GENERAL, key)) {
+		if (const std::optional<std::string Settings::General::*> field = ConfigParsing::lookup(GENERAL, key)) {
 			general.*(*field) = value;
 		}
 	}
 
 	auto set_width(Settings::Widths& widths, std::string_view key, std::string_view value) -> void {
-		const std::optional<std::size_t Settings::Widths::*> field = lookup(WIDTHS, key);
+		const std::optional<std::size_t Settings::Widths::*> field = ConfigParsing::lookup(WIDTHS, key);
 		const std::optional<std::size_t>                     width = parse_size(value);
 		if (field && width) {
 			widths.*(*field) = *width;
@@ -65,14 +139,13 @@ namespace ConfigParsing {
 		}
 	}
 
-	// <column>_width = 40   or   <column>_color = bold_red
 	auto set_column_property(Settings::Column& column, std::string_view property, std::string_view value) -> void {
 		if (property == "width") {
 			if (const std::optional<std::size_t> width = parse_size(value)) {
 				column.width = *width;
 			}
 		} else if (property == "color") {
-			if (const std::optional<Style::Color> color = lookup(COLOR_NAMES, value)) {
+			if (const std::optional<Style::Color> color = ConfigParsing::lookup(COLOR_NAMES, value)) {
 				column.color = *color;
 			}
 		}
@@ -101,13 +174,15 @@ namespace ConfigParsing {
 			colors.enabled = value == "true";
 			return;
 		}
-		const std::optional<Style::Color Settings::Colors::*> field = lookup(COLORS, key);
-		const std::optional<Style::Color>                     color = lookup(COLOR_NAMES, value);
+		const std::optional<Style::Color Settings::Colors::*> field = ConfigParsing::lookup(COLORS, key);
+		const std::optional<Style::Color>                     color = ConfigParsing::lookup(COLOR_NAMES, value);
 		if (field && color) {
 			colors.*(*field) = *color;
 		}
 	}
+} // namespace
 
+namespace ConfigParsing {
 	auto apply_setting(Config& config, Section section, std::string_view key, std::string_view value) -> void {
 		switch (section) {
 			case Section::General: set_general(config.general, key, value); break;

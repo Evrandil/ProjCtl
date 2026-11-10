@@ -45,7 +45,7 @@ auto SystemInterface::run(std::span<const std::string> args, const std::filesyst
 		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());
 	}
 
-	std::vector<char*> argv = make_argv(args);
+	std::vector<char*> argv = SystemHelper::make_argv(args);
 	pid_t              pid  = 0;
 
 	const int error = posix_spawnp(&pid, argv.front(), &actions, nullptr, argv.data(), environ);
@@ -58,8 +58,8 @@ auto SystemInterface::run(std::span<const std::string> args, const std::filesyst
 		return std::unexpected(std::format("Couldn't run {}: {}", args.front(), std::strerror(error)));
 	}
 
-	std::string                       text;
-	std::array<char, READ_CHUNK_SIZE> buffer = {};
+	std::string                                     text;
+	std::array<char, SystemHelper::READ_CHUNK_SIZE> buffer = {};
 	while (true) {
 		const ssize_t count = read(read_end, buffer.data(), buffer.size());
 		if (count > 0) {
@@ -77,7 +77,7 @@ auto SystemInterface::run(std::span<const std::string> args, const std::filesyst
 		text.pop_back();
 	}
 
-	return Output{.exit_code = wait_for(pid), .text = std::move(text)};
+	return Output{.exit_code = SystemHelper::wait_for(pid), .text = std::move(text)};
 }
 
 auto SystemInterface::run_interactive(std::span<const std::string> args, const std::filesystem::path& cwd)
@@ -95,7 +95,7 @@ auto SystemInterface::run_interactive(std::span<const std::string> args, const s
 		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());
 	}
 
-	std::vector<char*> argv  = make_argv(args);
+	std::vector<char*> argv  = SystemHelper::make_argv(args);
 	pid_t              pid   = 0;
 	const int          error = posix_spawnp(&pid, argv.front(), &actions, nullptr, argv.data(), environ);
 
@@ -105,5 +105,5 @@ auto SystemInterface::run_interactive(std::span<const std::string> args, const s
 		return std::unexpected(std::format("Couldn't run {}: {}", args.front(), std::strerror(error)));
 	}
 
-	return wait_for(pid);
+	return SystemHelper::wait_for(pid);
 }

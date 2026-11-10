@@ -2,13 +2,12 @@
 
 #include <cerrno>
 #include <span>
-#include <stdlib.h> // NOLINT(modernize-deprecated-headers)
 #include <string>
 #include <sys/types.h>
 #include <sys/wait.h> // IWYU pragma: keep
 #include <vector>
 
-auto make_argv(std::span<const std::string> args) -> std::vector<char*> {
+auto SystemHelper::make_argv(std::span<const std::string> args) -> std::vector<char*> {
 	std::vector<char*> argv;
 	argv.reserve(args.size() + 1);
 	for (const std::string& arg : args) {
@@ -18,7 +17,7 @@ auto make_argv(std::span<const std::string> args) -> std::vector<char*> {
 	return argv;
 }
 
-auto wait_for(pid_t pid) -> int {
+auto SystemHelper::wait_for(pid_t pid) -> int {
 	int status = 0;
 	while (waitpid(pid, &status, 0) == -1) {
 		if (errno != EINTR) {
