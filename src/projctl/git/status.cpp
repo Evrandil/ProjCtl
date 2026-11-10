@@ -1,5 +1,12 @@
-#include "command.hpp"
 #include "projctl.hpp"
+
+#include "command.hpp"
+#include "config.hpp"
+#include "gitinterface.hpp"
+#include "projectcontent.hpp"
+#include "remote_url.hpp"
+#include "style.hpp"
+#include "text.hpp"
 
 #include <cstdint>
 #include <expected>
@@ -12,13 +19,6 @@
 #include <string_view>
 #include <utility>
 #include <vector>
-
-#include "config.hpp"
-#include "gitinterface.hpp"
-#include "projectcontent.hpp"
-#include "remote_url.hpp"
-#include "style.hpp"
-#include "text.hpp"
 
 auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	constexpr std::uint8_t CONTENT_WIDTH = 24;

@@ -1,11 +1,10 @@
 #include "text.hpp"
 
+#include <cstddef>
 #include <string>
 #include <string_view>
-#include <cstddef>
 
 constexpr std::size_t TRUNCATE_SIZE = 3;
-
 
 auto trim(std::string_view text) -> std::string_view {
 	const std::size_t first = text.find_first_not_of(" \t\r\n");

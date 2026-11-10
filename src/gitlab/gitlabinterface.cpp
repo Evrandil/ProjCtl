@@ -3,10 +3,11 @@
 #include "clistate.hpp"
 #include "systeminterface.hpp"
 
-#include <expected>
-#include <format>
 #include <nlohmann/json.hpp>
 #include <nlohmann/json_fwd.hpp>
+
+#include <expected>
+#include <format>
 #include <string>
 #include <vector>
 

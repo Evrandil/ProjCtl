@@ -1,5 +1,6 @@
-#include "config.hpp"
 #include "projctl.hpp"
+
+#include "config.hpp"
 #include "projectcontent.hpp"
 #include "text.hpp"
 

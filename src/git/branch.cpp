@@ -1,12 +1,12 @@
 #include "gitinterface.hpp"
 
+#include "systeminterface.hpp"
+
 #include <expected>
 #include <filesystem>
 #include <string>
 #include <string_view>
 #include <vector>
-
-#include "systeminterface.hpp"
 
 namespace {
 	auto ref_exists(const std::filesystem::path& path, const std::string& branch) -> bool {

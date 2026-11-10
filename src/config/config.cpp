@@ -1,4 +1,5 @@
 #include "config.hpp"
+
 #include "row.hpp"
 #include "style.hpp"
 #include "text.hpp"
@@ -135,7 +136,6 @@ namespace {
 	static_assert(!find_column("nope").has_value());
 
 	// ---- value parsing --------------------------------------------------------------------------
-
 
 	auto parse_size(std::string_view text) -> std::optional<std::size_t> {
 		std::size_t       value = 0;

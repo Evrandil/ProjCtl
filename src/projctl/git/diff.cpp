@@ -1,7 +1,8 @@
-#include "command.hpp"
 #include "projctl.hpp"
 
+#include "command.hpp"
 #include "gitinterface.hpp"
+
 #include <expected>
 #include <filesystem>
 #include <optional>

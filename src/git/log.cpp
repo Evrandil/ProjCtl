@@ -1,14 +1,13 @@
 #include "gitinterface.hpp"
 
+#include "systeminterface.hpp"
+
 #include <expected>
 #include <filesystem>
 #include <string>
 #include <vector>
 
-#include "systeminterface.hpp"
-
-[[nodiscard]] auto GitInterface::log(const std::filesystem::path& path, bool oneline)
-	-> std::expected<std::string, std::string> {
+auto GitInterface::log(const std::filesystem::path& path, bool oneline) -> std::expected<std::string, std::string> {
 	std::vector<std::string> command{"git", "log"};
 	if (oneline) {
 		command.emplace_back("--oneline");

@@ -1,5 +1,6 @@
-#include "command.hpp"
 #include "projctl.hpp"
+
+#include "command.hpp"
 
 #include <expected>
 #include <optional>

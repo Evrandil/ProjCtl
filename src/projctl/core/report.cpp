@@ -1,11 +1,11 @@
-#include "command.hpp"
 #include "projctl.hpp"
+
+#include "command.hpp"
+#include "style.hpp"
+#include "version.hpp"
 
 #include <expected>
 #include <print>
-
-#include "style.hpp"
-#include "version.hpp"
 
 auto ProjCtl::report(const ResultString& result) -> int {
 	if (!result) {

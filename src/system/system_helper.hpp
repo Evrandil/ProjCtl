@@ -2,9 +2,9 @@
 
 #include <cstddef>
 #include <span>
-#include <vector>
 #include <string>
 #include <sys/types.h>
+#include <vector>
 
 constexpr std::size_t READ_CHUNK_SIZE  = 4096;
 constexpr int         SIGNAL_EXIT_BASE = 128;

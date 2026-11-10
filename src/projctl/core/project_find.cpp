@@ -1,5 +1,7 @@
 #include "projctl.hpp"
+
 #include "style.hpp"
+
 #include <expected>
 #include <format>
 #include <optional>

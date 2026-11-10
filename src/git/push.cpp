@@ -1,11 +1,11 @@
 #include "gitinterface.hpp"
 
+#include "systeminterface.hpp"
+
 #include <expected>
 #include <filesystem>
 #include <string>
 #include <vector>
-
-#include "systeminterface.hpp"
 
 auto GitInterface::push(const std::filesystem::path& path, bool upstream) -> std::expected<std::string, std::string> {
 	std::vector<std::string> command = {"git", "push"};

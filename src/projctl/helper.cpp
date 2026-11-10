@@ -1,4 +1,5 @@
 #include "projctl.hpp"
+
 #include "projectcontent.hpp"
 
 #include <filesystem>
@@ -18,4 +19,3 @@ auto detect_project_type(const std::filesystem::path& path) -> ProjectType {
 	}
 	return ProjectType::Unknown;
 }
-

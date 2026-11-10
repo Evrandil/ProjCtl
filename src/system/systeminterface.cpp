@@ -1,10 +1,6 @@
 #include "systeminterface.hpp"
 #include "system_helper.hpp"
 
-#include <spawn.h>
-#include <sys/types.h>
-#include <unistd.h>
-
 #include <array>
 #include <cerrno>
 #include <cstdlib>
@@ -13,10 +9,12 @@
 #include <filesystem>
 #include <format>
 #include <span>
+#include <spawn.h>
 #include <string>
+#include <sys/types.h>
+#include <unistd.h>
 #include <utility>
 #include <vector>
-
 
 auto SystemInterface::run(std::span<const std::string> args, const std::filesystem::path& cwd)
 	-> std::expected<SystemInterface::Output, std::string> {
