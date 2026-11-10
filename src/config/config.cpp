@@ -1,6 +1,7 @@
 #include "config.hpp"
 #include "row.hpp"
 #include "style.hpp"
+#include "text.hpp"
 
 #include <algorithm>
 #include <array>
@@ -135,14 +136,6 @@ namespace {
 
 	// ---- value parsing --------------------------------------------------------------------------
 
-	auto trim(std::string_view text) -> std::string_view {
-		const std::size_t first = text.find_first_not_of(" \t\r\n");
-		if (first == std::string_view::npos) {
-			return {};
-		}
-		const std::size_t last = text.find_last_not_of(" \t\r\n");
-		return text.substr(first, last - first + 1);
-	}
 
 	auto parse_size(std::string_view text) -> std::optional<std::size_t> {
 		std::size_t       value = 0;

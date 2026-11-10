@@ -1,6 +1,7 @@
 #include "config.hpp"
 #include "projctl.hpp"
 #include "projectcontent.hpp"
+#include "text.hpp"
 
 #include <cstddef>
 #include <filesystem>

@@ -18,6 +18,7 @@
 #include "projectcontent.hpp"
 #include "remote_url.hpp"
 #include "style.hpp"
+#include "text.hpp"
 
 auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	constexpr std::uint8_t CONTENT_WIDTH = 24;

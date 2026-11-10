@@ -11,4 +11,5 @@ target_include_directories(projctl_config
 target_link_libraries(projctl_config
 	PRIVATE
 		projctl_warnings
+		projctl_helpers
 )

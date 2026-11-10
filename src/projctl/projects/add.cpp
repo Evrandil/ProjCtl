@@ -2,6 +2,8 @@
 #include "projctl.hpp"
 #include "projectcontent.hpp"
 #include "style.hpp"
+#include "text.hpp"
+
 #include <expected>
 #include <filesystem>
 #include <format>

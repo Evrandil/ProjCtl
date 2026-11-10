@@ -11,6 +11,7 @@
 
 #include "gitinterface.hpp"
 #include "projectcontent.hpp"
+#include "text.hpp"
 
 auto ProjCtl::list_gits(bool names_only) const -> std::expected<std::string, std::string> {
 	const auto list_one_git = [&](const std::string& name, const ProjectContent& content) -> std::string {

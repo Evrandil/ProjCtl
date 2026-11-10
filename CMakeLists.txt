@@ -86,6 +86,7 @@ add_subdirectory(src/github)
 add_subdirectory(src/gitlab)
 add_subdirectory(src/githost)
 add_subdirectory(src/projctl)
+add_subdirectory(src/helpers)
 
 # Executable
 

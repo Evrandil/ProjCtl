@@ -3,6 +3,7 @@
 #include "config.hpp"
 #include "row.hpp"
 #include "style.hpp"
+#include "text.hpp"
 
 #include <format>
 #include <iterator>
