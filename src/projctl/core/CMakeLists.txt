@@ -10,4 +10,5 @@ target_sources(projctl_core
 		render_table.cpp
 		report.cpp
 		save.cpp
+		table_helper.cpp
 )

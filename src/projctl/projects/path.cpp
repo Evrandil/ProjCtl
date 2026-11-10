@@ -1,5 +1,6 @@
-#include "command.hpp"
 #include "projctl.hpp"
+
+#include "command.hpp"
 
 #include <expected>
 #include <optional>
@@ -7,7 +8,7 @@
 #include <string>
 
 auto ProjCtl::path_show(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
@@ -16,7 +17,7 @@ auto ProjCtl::path_show(const std::optional<std::string>& name) const -> std::ex
 }
 
 auto ProjCtl::handle(const Cmd::Base::Path& cmd) const -> int {
-	std::expected<std::string, std::string> result = path_show(cmd.name);
+	const std::expected result = path_show(cmd.name);
 
 	if (!result) {
 		std::println(stderr, "\n\n{}\n\n", result.error());

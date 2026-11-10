@@ -2,6 +2,7 @@
 add_library(projctl_system
 	systeminterface.cpp
 	directions.cpp
+	system_helper.cpp
 )
 
 target_include_directories(projctl_system

@@ -1,5 +1,8 @@
-#include "command.hpp"
 #include "projctl.hpp"
+
+#include "command.hpp"
+#include "gitinterface.hpp"
+#include "style.hpp"
 
 #include <expected>
 #include <format>
@@ -10,9 +13,6 @@
 #include <string>
 #include <vector>
 
-#include "gitinterface.hpp"
-#include "style.hpp"
-
 auto ProjCtl::fetch(const ProjectEntry& project) const -> std::expected<std::string, std::string> {
 	std::string output = std::format(
 		"{}Fetching: {}{}{}\n",
@@ -21,7 +21,7 @@ auto ProjCtl::fetch(const ProjectEntry& project) const -> std::expected<std::str
 		project.first,
 		reset()
 	);
-	std::expected<std::string, std::string> result = GitInterface::fetch(project.second.path);
+	const std::expected result = GitInterface::fetch(project.second.path);
 	if (!result) {
 		std::format_to(
 			std::back_inserter(output),
@@ -41,7 +41,7 @@ auto ProjCtl::fetch(const ProjectEntry& project) const -> std::expected<std::str
 }
 
 auto ProjCtl::fetch(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
@@ -63,7 +63,7 @@ auto ProjCtl::fetch_all() const -> BatchResult {
 
 	BatchResult results;
 	for (std::future<std::expected<std::string, std::string>>& task : tasks) {
-		std::expected fetched = task.get();
+		const std::expected fetched = task.get();
 		if (!fetched) {
 			++results.failed;
 			std::format_to(std::back_inserter(results.output), "{}\n\n", fetched.error());

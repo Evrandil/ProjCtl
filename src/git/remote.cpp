@@ -1,13 +1,13 @@
 #include "gitinterface.hpp"
 
+#include "systeminterface.hpp"
+
 #include <cstddef>
 #include <expected>
 #include <filesystem>
 #include <format>
 #include <string>
 #include <vector>
-
-#include "systeminterface.hpp"
 
 auto GitInterface::remote(const std::filesystem::path& path) -> std::expected<std::string, std::string> {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "remote", "get-url", "origin"}, path);

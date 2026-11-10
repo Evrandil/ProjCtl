@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(projctl
-	VERSION 0.5.2
+	VERSION 0.5.3
 	LANGUAGES CXX
 )
 
@@ -86,6 +86,7 @@ add_subdirectory(src/github)
 add_subdirectory(src/gitlab)
 add_subdirectory(src/githost)
 add_subdirectory(src/projctl)
+add_subdirectory(src/helpers)
 
 # Executable
 

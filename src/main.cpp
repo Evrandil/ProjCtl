@@ -1,3 +1,7 @@
+
+#include "parser.hpp"
+#include "projctl.hpp"
+
 #include <cstddef>
 #include <cstdio> // Bc println has ability to throw up...
 #include <cstdlib>
@@ -6,9 +10,6 @@
 #include <span>
 #include <string_view>
 #include <vector>
-
-#include "parser.hpp"
-#include "projctl.hpp"
 
 auto main(int argc, char** argv) -> int {
 	try {

@@ -1,16 +1,16 @@
+#include "projctl.hpp"
+
 #include "clistate.hpp"
 #include "command.hpp"
+#include "githostinterface.hpp"
 #include "githostoption.hpp"
-#include "projctl.hpp"
+#include "style.hpp"
 
 #include <array>
 #include <format>
 #include <future>
 #include <iterator>
 #include <string>
-
-#include "githostinterface.hpp"
-#include "style.hpp"
 
 auto ProjCtl::g_status() const -> BatchResult {
 	const auto status_one = [&](const HostOption host) -> std::string {
@@ -46,8 +46,8 @@ auto ProjCtl::g_status() const -> BatchResult {
 	};
 
 	BatchResult results;
-	for (auto& task : tasks) {
-		std::string result = task.get();
+	for (std::future<std::string>& task : tasks) {
+		const std::string result = task.get();
 		std::format_to(std::back_inserter(results.output), "{}\n", result);
 	}
 	return results;

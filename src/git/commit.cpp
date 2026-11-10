@@ -1,13 +1,13 @@
 #include "gitinterface.hpp"
 
+#include "systeminterface.hpp"
+
 #include <expected>
 #include <filesystem>
 #include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
-
-#include "systeminterface.hpp"
 
 auto GitInterface::add(const std::filesystem::path& path) -> std::expected<std::string, std::string> {
 	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "add", "."}, path);

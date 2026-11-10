@@ -1,20 +1,21 @@
-#include "command.hpp"
 #include "projctl.hpp"
 
+#include "command.hpp"
 #include "githostinterface.hpp"
 #include "style.hpp"
+
 #include <expected>
 #include <format>
 #include <optional>
 #include <string>
 
 auto ProjCtl::request_merge(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 
-	std::expected result = GitHostInterface::request_merge((*project)->second.path.string());
+	const std::expected result = GitHostInterface::request_merge((*project)->second.path.string());
 	if (!result) {
 		return std::unexpected(
 			std::format("{}{}{}{}", paint(config.colors.error), symbol(Style::Mark::Cross), result.error(), reset())

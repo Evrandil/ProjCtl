@@ -1,26 +1,26 @@
-#include "command.hpp"
 #include "projctl.hpp"
 
+#include "command.hpp"
 #include "projectcontent.hpp"
 #include "style.hpp"
 #include "systeminterface.hpp"
+
 #include <expected>
 #include <format>
 #include <optional>
 #include <string>
-#include <string_view>
 #include <vector>
 
 auto ProjCtl::build(const std::optional<std::string>& name) const -> std::expected<int, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 
 	const ProjectContent& content = (*project)->second;
 
-	const std::optional<std::string_view> command_option =
-		content.build_command ? content.build_command : build_command_for(content.type);
+	const std::optional command_option =
+		content.build_command.or_else([&] { return std::optional<std::string>{build_command_for(content.type)}; });
 
 	if (!command_option) {
 		return std::unexpected(

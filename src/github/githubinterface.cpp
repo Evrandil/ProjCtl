@@ -1,14 +1,14 @@
 #include "githubinterface.hpp"
 
-#include <expected>
-#include <format>
-#include <nlohmann/json_fwd.hpp>
-#include <ranges>
-
 #include "clistate.hpp"
 #include "systeminterface.hpp"
 
 #include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
+
+#include <expected>
+#include <format>
+#include <ranges>
 #include <string>
 #include <vector>
 

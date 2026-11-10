@@ -1,8 +1,9 @@
 #include "projctl.hpp"
 
 #include "systeminterface.hpp"
-#include <cstdlib>  // std::getenv
-#include <unistd.h> // isatty, STDOUT_FILENO
+
+#include <cstdlib>
+#include <unistd.h>
 
 ProjCtl::ProjCtl() {
 	config_path = SystemInterface::config_home() / "projctl/config.ini";

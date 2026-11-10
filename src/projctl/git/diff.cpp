@@ -1,7 +1,8 @@
-#include "command.hpp"
 #include "projctl.hpp"
 
+#include "command.hpp"
 #include "gitinterface.hpp"
+
 #include <expected>
 #include <filesystem>
 #include <optional>
@@ -9,7 +10,7 @@
 
 auto ProjCtl::diff(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path) const
 	-> std::expected<int, std::string> {
-	auto project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}

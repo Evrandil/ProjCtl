@@ -1,5 +1,10 @@
-#include "command.hpp"
 #include "projctl.hpp"
+
+#include "command.hpp"
+#include "githostinterface.hpp"
+#include "gitinterface.hpp"
+#include "projectcontent.hpp"
+#include "style.hpp"
 
 #include <expected>
 #include <format>
@@ -9,11 +14,6 @@
 #include <ranges>
 #include <string>
 #include <vector>
-
-#include "githostinterface.hpp"
-#include "gitinterface.hpp"
-#include "projectcontent.hpp"
-#include "style.hpp"
 
 auto ProjCtl::requests(const ProjectEntry& project) const -> std::expected<std::string, std::string> {
 	const ProjectContent& content      = project.second;

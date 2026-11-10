@@ -1,13 +1,13 @@
 #include "githostinterface.hpp"
 
-#include <expected>
-#include <string>
-#include <utility>
-
 #include "clistate.hpp"
 #include "githostoption.hpp"
 #include "githubinterface.hpp"
 #include "gitlabinterface.hpp"
+
+#include <expected>
+#include <string>
+#include <utility>
 
 auto GitHostInterface::state(const HostOption host) -> CliState {
 	switch (host) {

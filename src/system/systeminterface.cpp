@@ -1,9 +1,5 @@
 #include "systeminterface.hpp"
-
-#include <spawn.h>
-#include <sys/types.h>
-#include <sys/wait.h> // IWYU pragma: keep
-#include <unistd.h>
+#include "system_helper.hpp"
 
 #include <array>
 #include <cerrno>
@@ -13,41 +9,12 @@
 #include <filesystem>
 #include <format>
 #include <span>
+#include <spawn.h>
 #include <string>
+#include <sys/types.h>
+#include <unistd.h>
 #include <utility>
 #include <vector>
-
-namespace {
-	constexpr std::size_t READ_CHUNK_SIZE  = 4096;
-	constexpr int         SIGNAL_EXIT_BASE = 128; // shell convention: killed by signal N -> exit code 128 + N
-
-	auto make_argv(std::span<const std::string> args) -> std::vector<char*> {
-		std::vector<char*> argv;
-		argv.reserve(args.size() + 1);
-		for (const std::string& arg : args) {
-			argv.push_back(const_cast<char*>(arg.c_str())); // NOLINT(cppcoreguidelines-pro-type-const-cast)
-		}
-		argv.push_back(nullptr);
-		return argv;
-	}
-
-	auto wait_for(pid_t pid) -> int {
-		int status = 0;
-		while (waitpid(pid, &status, 0) == -1) {
-			if (errno != EINTR) {
-				return 1;
-			}
-		}
-
-		if (WIFEXITED(status)) {
-			return WEXITSTATUS(status);
-		}
-		if (WIFSIGNALED(status)) {
-			return SIGNAL_EXIT_BASE + WTERMSIG(status);
-		}
-		return 1;
-	}
-} // namespace
 
 auto SystemInterface::run(std::span<const std::string> args, const std::filesystem::path& cwd)
 	-> std::expected<SystemInterface::Output, std::string> {
@@ -78,7 +45,7 @@ auto SystemInterface::run(std::span<const std::string> args, const std::filesyst
 		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());
 	}
 
-	std::vector<char*> argv = make_argv(args);
+	std::vector<char*> argv = SystemHelper::make_argv(args);
 	pid_t              pid  = 0;
 
 	const int error = posix_spawnp(&pid, argv.front(), &actions, nullptr, argv.data(), environ);
@@ -91,8 +58,8 @@ auto SystemInterface::run(std::span<const std::string> args, const std::filesyst
 		return std::unexpected(std::format("Couldn't run {}: {}", args.front(), std::strerror(error)));
 	}
 
-	std::string                       text;
-	std::array<char, READ_CHUNK_SIZE> buffer = {};
+	std::string                                     text;
+	std::array<char, SystemHelper::READ_CHUNK_SIZE> buffer = {};
 	while (true) {
 		const ssize_t count = read(read_end, buffer.data(), buffer.size());
 		if (count > 0) {
@@ -110,7 +77,7 @@ auto SystemInterface::run(std::span<const std::string> args, const std::filesyst
 		text.pop_back();
 	}
 
-	return Output{.exit_code = wait_for(pid), .text = std::move(text)};
+	return Output{.exit_code = SystemHelper::wait_for(pid), .text = std::move(text)};
 }
 
 auto SystemInterface::run_interactive(std::span<const std::string> args, const std::filesystem::path& cwd)
@@ -128,7 +95,7 @@ auto SystemInterface::run_interactive(std::span<const std::string> args, const s
 		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());
 	}
 
-	std::vector<char*> argv  = make_argv(args);
+	std::vector<char*> argv  = SystemHelper::make_argv(args);
 	pid_t              pid   = 0;
 	const int          error = posix_spawnp(&pid, argv.front(), &actions, nullptr, argv.data(), environ);
 
@@ -138,5 +105,5 @@ auto SystemInterface::run_interactive(std::span<const std::string> args, const s
 		return std::unexpected(std::format("Couldn't run {}: {}", args.front(), std::strerror(error)));
 	}
 
-	return wait_for(pid);
+	return SystemHelper::wait_for(pid);
 }
