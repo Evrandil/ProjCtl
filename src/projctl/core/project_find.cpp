@@ -9,7 +9,7 @@
 
 auto ProjCtl::project_find(const std::optional<std::string>& name) const
 	-> std::expected<ProjectIterator, std::string> {
-	auto actual_name = name.or_else([this] { return current_project_name(); });
+	const auto actual_name = name.or_else([this] { return current_project_name(); });
 	if (!actual_name) {
 		return std::unexpected(
 				std::format(
@@ -21,7 +21,7 @@ auto ProjCtl::project_find(const std::optional<std::string>& name) const
 				);
 	}
 
-	if (auto project = projects.find(*actual_name); project != projects.end()) {
+	if (const auto project = projects.find(*actual_name); project != projects.end()) {
 		return project;
 	}
 
