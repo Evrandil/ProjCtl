@@ -1,6 +1,7 @@
 
 add_library(projctl_config
 	config.cpp
+	config_parsing.cpp
 )
 
 target_include_directories(projctl_config
