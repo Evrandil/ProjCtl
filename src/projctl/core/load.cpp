@@ -5,6 +5,7 @@
 #include "text.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <optional>
@@ -13,6 +14,13 @@
 #include <utility>
 
 namespace {
+	auto key_of(const std::string_view entry) -> std::string_view {
+		if (const std::size_t separator = entry.find('='); separator != std::string_view::npos) {
+			return trim(entry.substr(0, separator));
+		}
+		return {};
+	}
+
 	auto value_of(const std::string_view entry) -> std::string_view {
 		if (const std::size_t separator = entry.find('='); separator != std::string_view::npos) {
 			return trim(entry.substr(separator + 1));
@@ -25,6 +33,31 @@ namespace {
 			return std::nullopt;
 		}
 		return std::string{value};
+	}
+
+	enum class Line : std::uint8_t {
+		Section,
+		Path,
+		Run,
+		Build,
+		Unknown,
+	};
+
+	auto line_of(const std::string_view line) -> Line {
+		if (line.front() == '[' && line.back() == ']') {
+			return Line::Section;
+		}
+		const std::string_view header = key_of(line);
+		if (header == "path") {
+			return Line::Path;
+		}
+		if (header == "run") {
+			return Line::Run;
+		}
+		if (header == "build") {
+			return Line::Build;
+		}
+		return Line::Unknown;
 	}
 } // namespace
 
@@ -62,19 +95,20 @@ void ProjCtl::load() {
 			continue;
 		}
 
-		switch (trimmed.front()) {
-			case '[':
+		switch (line_of(trimmed)) {
+			case Line::Section:
 				if (!name.empty()) [[likely]] {
 					push_new();
 					clear();
 				}
 				name = trim(trimmed.substr(1, trimmed.size() - 2));
 				continue;
-			case 'p': path_str = value_of(trimmed); continue;
-			case 'r': run_command = non_empty(value_of(trimmed)); continue;
-			case 'b': build_command = non_empty(value_of(trimmed)); continue;
-			default:  continue;
+			case Line::Path:    path_str = value_of(trimmed); continue;
+			case Line::Run:     run_command = non_empty(value_of(trimmed)); continue;
+			case Line::Build:   build_command = non_empty(value_of(trimmed)); continue;
+			case Line::Unknown: continue;
 		}
+		std::unreachable();
 	}
 	if (!name.empty()) [[likely]] {
 		push_new();
