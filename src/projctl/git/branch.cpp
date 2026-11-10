@@ -12,14 +12,14 @@
 
 auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const
 	-> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
 
 	if (!branch_name) {
-		std::expected result = GitInterface::branch(content.path);
+		const std::expected result = GitInterface::branch(content.path);
 		if (!result) {
 			return std::unexpected(std::format("{}{}{}", paint(config.colors.error), result.error(), reset()));
 		}
@@ -27,7 +27,7 @@ auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional
 		return std::format("{}{}{}", paint(config.colors.branch), *result, reset());
 	}
 
-	std::expected result = GitInterface::branch_switch(content.path, *branch_name);
+	const std::expected result = GitInterface::branch_switch(content.path, *branch_name);
 	if (!result) {
 		return std::unexpected(
 			std::format(

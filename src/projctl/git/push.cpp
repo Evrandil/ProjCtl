@@ -11,12 +11,12 @@
 
 auto ProjCtl::push(const std::optional<std::string>& name, const bool upstream) const
 	-> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 
-	std::expected result = GitInterface::push((*project)->second.path, upstream);
+	const std::expected result = GitInterface::push((*project)->second.path, upstream);
 	if (!result) {
 		return std::unexpected(
 			std::format(

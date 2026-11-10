@@ -6,6 +6,7 @@
 
 #include <expected>
 #include <print>
+#include <string>
 
 auto ProjCtl::report(const ResultString& result) -> int {
 	if (!result) {
@@ -36,19 +37,9 @@ auto ProjCtl::report(const BatchResult& results) const -> int {
 }
 
 auto ProjCtl::report_save(const ResultString& result) const -> int {
-	if (!result) {
-		std::println(stderr, "\n\n{}\n\n", result.error());
-		return 1;
-	}
-
-	std::expected saved = save();
-	if (!saved) {
-		std::println(stderr, "\n\n{}\n\n", saved.error());
-		return 1;
-	}
-
-	std::println(stdout, "\n\n{}\n\n", *result);
-	return 0;
+	return report(result.and_then([this](const std::string& message) -> ResultString {
+		return save().transform([&] { return message; });
+	}));
 }
 
 auto ProjCtl::handle(const Cmd::Unknown& cmd) const -> int {

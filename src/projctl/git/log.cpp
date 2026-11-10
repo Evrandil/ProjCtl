@@ -11,12 +11,12 @@
 
 auto ProjCtl::log(const std::optional<std::string>& name, bool oneline) const
 	-> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 
-	std::expected result = GitInterface::log((*project)->second.path, oneline);
+	const std::expected result = GitInterface::log((*project)->second.path, oneline);
 	if (!result) {
 		return std::unexpected(
 			std::format("{}{}{}{}", paint(config.colors.error), Style::CROSS, result.error(), reset())

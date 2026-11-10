@@ -9,14 +9,14 @@
 #include <optional>
 #include <string>
 
-auto ProjCtl::issue_close(const std::optional<std::string>& name, int issue_number) const
+auto ProjCtl::issue_close(const std::optional<std::string>& name, const int issue_number) const
 	-> std::expected<std::string, std::string> {
-	std::expected project_option = project_find(name);
-	if (!project_option) {
-		return std::unexpected(project_option.error());
+	const std::expected project = project_find(name);
+	if (!project) {
+		return std::unexpected(project.error());
 	}
 
-	std::expected result = GitHostInterface::issue_close((*project_option)->second.path.string(), issue_number);
+	const std::expected result = GitHostInterface::issue_close((*project)->second.path.string(), issue_number);
 	if (!result) {
 		return std::unexpected(
 			std::format(

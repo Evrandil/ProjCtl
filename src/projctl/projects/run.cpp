@@ -9,18 +9,17 @@
 #include <format>
 #include <optional>
 #include <string>
-#include <string_view>
 #include <vector>
 
 auto ProjCtl::run(const std::optional<std::string>& name) const -> std::expected<int, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
 
-	const std::optional<std::string_view> command_option =
-		content.run_command ? content.run_command : run_command_for(content.type);
+	const std::optional command_option =
+		content.run_command.or_else([&] { return std::optional<std::string>{run_command_for(content.type)}; });
 
 	if (!command_option) {
 		return std::unexpected(

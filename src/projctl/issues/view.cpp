@@ -7,7 +7,7 @@
 #include <optional>
 #include <string>
 
-auto ProjCtl::issue_view(const std::optional<std::string>& name, int issue_number) const
+auto ProjCtl::issue_view(const std::optional<std::string>& name, const int issue_number) const
 	-> std::expected<std::string, std::string> {
 	const std::expected project = project_find(name);
 	if (!project) {

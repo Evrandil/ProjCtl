@@ -3,9 +3,9 @@
 #include "row.hpp"
 
 #include <format>
+#include <ranges>
 #include <string>
 #include <string_view>
-#include <ranges>
 #include <utility>
 
 auto TableHelper::cell_text(const Row& row, const TableField field) -> std::string {
@@ -15,7 +15,7 @@ auto TableHelper::cell_text(const Row& row, const TableField field) -> std::stri
 		case TableField::State:  return row.state;
 		case TableField::Author: return row.author;
 		case TableField::Labels:
-								 return row.labels | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>();
+			return row.labels | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>();
 		case TableField::Created: return row.created;
 		case TableField::Updated: return row.updated;
 		case TableField::Parent:  return row.parent.value_or("-");

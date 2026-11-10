@@ -10,12 +10,12 @@
 #include <string>
 
 auto ProjCtl::request_create(const std::optional<std::string>& name) const -> std::expected<int, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 
-	std::expected result = GitHostInterface::request_create((*project)->second.path.string());
+	const std::expected result = GitHostInterface::request_create((*project)->second.path.string());
 	if (!result) {
 		return std::unexpected(
 			std::format(

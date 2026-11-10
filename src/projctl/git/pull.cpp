@@ -23,7 +23,7 @@ auto ProjCtl::pull(const ProjectEntry& project) const -> std::expected<std::stri
 		project.first,
 		reset()
 	);
-	std::expected<std::string, std::string> result = GitInterface::pull(project.second.path);
+	const std::expected result = GitInterface::pull(project.second.path);
 
 	if (!result) {
 		std::format_to(
@@ -45,7 +45,7 @@ auto ProjCtl::pull(const ProjectEntry& project) const -> std::expected<std::stri
 }
 
 auto ProjCtl::pull(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
@@ -67,7 +67,7 @@ auto ProjCtl::pull_all() const -> BatchResult {
 
 	BatchResult results;
 	for (std::future<std::expected<std::string, std::string>>& task : tasks) {
-		std::expected pulled = task.get();
+		const std::expected pulled = task.get();
 		if (!pulled) {
 			std::format_to(std::back_inserter(results.output), "{}\n", pulled.error());
 			++results.failed;

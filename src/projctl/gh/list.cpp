@@ -13,7 +13,7 @@
 
 auto ProjCtl::repo_list() const -> BatchResult {
 	const auto list_one = [&](HostOption host) -> std::expected<std::string, std::string> {
-		std::expected repo_list = GitHostInterface::repo_list(host);
+		const std::expected repo_list = GitHostInterface::repo_list(host);
 		if (!repo_list) {
 			return std::unexpected(
 				std::format(
@@ -46,7 +46,7 @@ auto ProjCtl::repo_list() const -> BatchResult {
 
 	BatchResult results;
 	for (auto& task : tasks) {
-		std::expected result = task.get();
+		const std::expected result = task.get();
 		if (!result) {
 			++results.failed;
 		}

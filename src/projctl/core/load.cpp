@@ -9,13 +9,9 @@
 #include <fstream>
 #include <optional>
 #include <string>
-#include <utility>
 
 void ProjCtl::load() {
-	auto config_option = load_config(config_path);
-	if (config_option) {
-		config = std::move(*config_option);
-	}
+	config = load_config(config_path).value_or(Config{});
 
 	std::ifstream projects_file{data_path};
 	std::string   line;

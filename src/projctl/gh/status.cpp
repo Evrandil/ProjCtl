@@ -46,8 +46,8 @@ auto ProjCtl::g_status() const -> BatchResult {
 	};
 
 	BatchResult results;
-	for (auto& task : tasks) {
-		std::string result = task.get();
+	for (std::future<std::string>& task : tasks) {
+		const std::string result = task.get();
 		std::format_to(std::back_inserter(results.output), "{}\n", result);
 	}
 	return results;

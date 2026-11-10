@@ -7,7 +7,7 @@
 #include <optional>
 #include <string>
 
-auto ProjCtl::request_view(const std::optional<std::string>& name, int request_number) const
+auto ProjCtl::request_view(const std::optional<std::string>& name, const int request_number) const
 	-> std::expected<std::string, std::string> {
 	const std::expected project = project_find(name);
 	if (!project) {

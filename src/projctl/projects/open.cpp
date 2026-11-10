@@ -11,7 +11,7 @@
 #include <vector>
 
 auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
@@ -20,7 +20,7 @@ auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expecte
 
 	const std::string shell_command = std::format("{} .{}", config.general.editor, background ? " &" : "");
 
-	std::expected<int, std::string> result =
+	const std::expected result =
 		SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", shell_command}, (*project)->second.path);
 
 	if (!result) {

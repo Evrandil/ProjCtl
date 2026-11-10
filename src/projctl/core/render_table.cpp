@@ -3,14 +3,13 @@
 #include "config.hpp"
 #include "row.hpp"
 #include "style.hpp"
-#include "text.hpp"
 #include "table_helper.hpp"
+#include "text.hpp"
 
 #include <format>
 #include <iterator>
 #include <string>
 #include <vector>
-
 
 auto ProjCtl::render_table(const std::vector<Row>& rows, const std::vector<TableField>& columns) const -> std::string {
 	const auto state_color = [&](const std::string& state) -> Style::Color {

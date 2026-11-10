@@ -13,14 +13,13 @@
 
 auto ProjCtl::commit(const std::optional<std::string>& name, std::optional<std::string_view> message) const
 	-> std::expected<std::string, std::string> {
-	std::expected project = project_find(name);
+	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
 
-	std::expected<std::string, std::string> result;
-	result = GitInterface::commit(content.path, message);
+	const std::expected result = GitInterface::commit(content.path, message);
 
 	if (!result) {
 		return std::unexpected(
