@@ -35,11 +35,11 @@ struct BatchResult {
 
 class ProjCtl {
 	std::map<std::string, ProjectContent> projects;
-	std::filesystem::path                 config_path;
-	std::filesystem::path                 data_path;
-	Config                                config;
+	const std::filesystem::path                 config_path;
+	const std::filesystem::path                 data_path;
 
-	bool               use_colors = true;
+	const Config                                config;
+	const bool               use_colors;
 	[[nodiscard]] auto paint(Style::Color color) const -> std::string_view;
 	[[nodiscard]] auto reset() const -> std::string_view;
 
@@ -143,6 +143,11 @@ class ProjCtl {
 
 	public:
 	ProjCtl();
+	~ProjCtl() = default;
+	ProjCtl(const ProjCtl&) = delete;
+	auto operator=(const ProjCtl&) -> ProjCtl& = delete;
+	ProjCtl(ProjCtl&&) = delete;
+	auto operator=(ProjCtl&&) -> ProjCtl&& = delete;
 
 	auto execute(const Command& command) -> int {
 		return std::visit([this](const auto& cmd) -> auto { return handle(cmd); }, command);

@@ -1,6 +1,5 @@
 #include "projctl.hpp"
 
-#include "config.hpp"
 #include "projectcontent.hpp"
 #include "text.hpp"
 
@@ -62,8 +61,6 @@ namespace {
 } // namespace
 
 void ProjCtl::load() {
-	config = load_config(config_path).value_or(Config{});
-
 	std::ifstream              projects_file{data_path};
 	std::string                line;
 	std::string                name;
