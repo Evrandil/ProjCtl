@@ -6,7 +6,6 @@
 #include <string>
 #include <string_view>
 
-
 struct ProjectContent {
 	std::filesystem::path      path;
 	std::optional<std::string> build_command = std::nullopt;

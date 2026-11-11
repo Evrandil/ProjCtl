@@ -4,10 +4,10 @@
 #include "config.hpp"
 #include "gitinterface.hpp"
 #include "projectcontent.hpp"
+#include "projecttype.hpp"
 #include "remote_url.hpp"
 #include "style.hpp"
 #include "text.hpp"
-#include "projecttype.hpp"
 
 #include <cstdint>
 #include <expected>
@@ -74,7 +74,12 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 	}
 
 	parse_line("Exists:", Style::Mark::Tick, "Yes", Style::Color::Default);
-	parse_line("Type:", Style::Mark::None, project_type_to_string(detect_project_type(content.path)), config.colors.type);
+	parse_line(
+		"Type:",
+		Style::Mark::None,
+		project_type_to_string(detect_project_type(content.path)),
+		config.colors.type
+	);
 
 	if (!GitInterface::is_repo(content.path)) {
 		parse_line("Git:", Style::Mark::Cross, "Not a git repo", config.colors.error);

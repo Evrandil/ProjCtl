@@ -29,7 +29,7 @@ auto Ini::parse(std::istream& input, const Handler& handle) -> void {
 		if (separator == std::string_view::npos) {
 			continue;
 		}
-		const std::string_view key = trim(trimmed.substr(0, separator));
+		const std::string_view key   = trim(trimmed.substr(0, separator));
 		const std::string_view value = trim(trimmed.substr(separator + 1));
 		handle(section, key, value);
 	}

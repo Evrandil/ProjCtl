@@ -1,10 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include <string_view>
-#include <optional>
 #include <filesystem>
-
+#include <optional>
+#include <string_view>
 
 enum class ProjectType : std::uint8_t {
 	Rust,
@@ -49,4 +48,3 @@ constexpr auto run_command_for(ProjectType type) -> std::optional<std::string_vi
 }
 
 auto detect_project_type(const std::filesystem::path& path) -> ProjectType;
-
