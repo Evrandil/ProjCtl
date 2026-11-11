@@ -11,8 +11,9 @@
 #include <string>
 #include <string_view>
 
-auto ProjCtl::commit(const std::optional<std::string>& name, const bool tracked_only, const std::optional<std::string_view> message) const
-	-> std::expected<std::string, std::string> {
+auto ProjCtl::commit(
+	const std::optional<std::string>& name, const bool tracked_only, const std::optional<std::string_view> message
+) const -> std::expected<std::string, std::string> {
 	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
