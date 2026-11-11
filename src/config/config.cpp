@@ -1,13 +1,12 @@
 #include "config.hpp"
 
 #include "config_parsing.hpp"
+#include "ini.hpp"
 #include "row.hpp"
-#include "text.hpp"
 
-#include <cstddef>
 #include <expected>
 #include <filesystem>
-#include <fstream>
+#include <format>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -27,27 +26,14 @@ auto column_of(const Settings::Tables& tables, TableField field) -> const Settin
 }
 
 auto load_config(const std::filesystem::path& path) -> std::expected<Config, std::string> {
-	std::ifstream config_file(path);
-	if (!config_file) {
-		return std::unexpected("Failed to open config file: " + path.string());
-	}
-
-	Config                 config;
-	ConfigParsing::Section section = ConfigParsing::Section::Unknown;
-	std::string            line;
-	while (std::getline(config_file, line)) {
-		const std::string_view trimmed = trim(line);
-		if (trimmed.empty() || trimmed.front() == '#' || trimmed.front() == ';') {
-			continue;
-		}
-		if (trimmed.front() == '[' && trimmed.back() == ']') {
-			section = lookup(ConfigParsing::SECTIONS, trim(trimmed.substr(1, trimmed.size() - 2)))
-			              .value_or(ConfigParsing::Section::Unknown);
-			continue;
-		}
-		if (const std::size_t separator = trimmed.find('='); separator != std::string_view::npos) {
-			apply_setting(config, section, trim(trimmed.substr(0, separator)), trim(trimmed.substr(separator + 1)));
-		}
+	Config     config;
+	const bool found = Ini::read(path, [&](std::string_view section, std::string_view key, std::string_view value) {
+		const ConfigParsing::Section kind =
+			ConfigParsing::lookup(ConfigParsing::SECTIONS, section).value_or(ConfigParsing::Section::Unknown);
+		ConfigParsing::apply_setting(config, kind, key, value);
+	});
+	if (!found) {
+		return std::unexpected(std::format("Failed to open config file: {}", path.string()));
 	}
 	return config;
 }
