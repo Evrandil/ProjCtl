@@ -1,7 +1,5 @@
 
-add_library(projctl_core
-	helper.cpp
-)
+add_library(projctl_core)
 
 add_subdirectory(core)
 add_subdirectory(gh)

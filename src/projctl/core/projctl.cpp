@@ -11,5 +11,5 @@ ProjCtl::ProjCtl()
 	  data_path{SystemInterface::data_home() / "projctl/projects.ini"},
 	  config{load_config(config_path).value_or(Config{})},
 	  use_colors{config.colors.enabled && std::getenv("NO_COLOR") == nullptr && isatty(STDOUT_FILENO) != 0} {
-	load();
+	load_projects();
 }

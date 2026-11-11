@@ -51,7 +51,6 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 		actual_name,
 		ProjectContent{
 			.path = full_path,
-			.type = detect_project_type(full_path),
 		}
 	);
 

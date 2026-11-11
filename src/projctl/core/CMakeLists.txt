@@ -4,7 +4,7 @@ target_sources(projctl_core
 	PRIVATE
 		color.cpp
 		current_project_name.cpp
-		load.cpp
+		load_projects.cpp
 		projctl.cpp
 		project_find.cpp
 		render_table.cpp

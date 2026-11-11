@@ -20,8 +20,6 @@ constexpr std::string_view MARGIN       = "    ";
 constexpr int              MARGIN_WIDTH = 20;
 constexpr int              MARGIN_SIZE  = 20;
 
-auto detect_project_type(const std::filesystem::path& path) -> ProjectType;
-
 using ProjectEntry    = std::map<std::string, ProjectContent>::value_type;
 using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
 
@@ -43,7 +41,7 @@ class ProjCtl {
 	[[nodiscard]] auto paint(Style::Color color) const -> std::string_view;
 	[[nodiscard]] auto reset() const -> std::string_view;
 
-	auto               load() -> void;
+	auto               load_projects() -> void;
 	[[nodiscard]] auto save() const -> std::expected<void, std::string>;
 	[[nodiscard]] auto project_find(const std::optional<std::string>& name) const
 		-> std::expected<ProjectIterator, std::string>;

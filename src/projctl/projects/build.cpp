@@ -2,6 +2,7 @@
 
 #include "command.hpp"
 #include "projectcontent.hpp"
+#include "projecttype.hpp"
 #include "style.hpp"
 #include "systeminterface.hpp"
 
@@ -19,8 +20,9 @@ auto ProjCtl::build(const std::optional<std::string>& name) const -> std::expect
 
 	const ProjectContent& content = (*project)->second;
 
-	const std::optional command_option =
-		content.build_command.or_else([&] { return std::optional<std::string>{build_command_for(content.type)}; });
+	const std::optional command_option = content.build_command.or_else([&] {
+		return std::optional<std::string>{build_command_for(detect_project_type(content.path))};
+	});
 
 	if (!command_option) {
 		return std::unexpected(
@@ -29,7 +31,7 @@ auto ProjCtl::build(const std::optional<std::string>& name) const -> std::expect
 				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				paint(config.colors.type),
-				project_type_to_string(content.type),
+				project_type_to_string(detect_project_type(content.path)),
 				paint(config.colors.error),
 				paint(config.colors.name),
 				(*project)->first,
