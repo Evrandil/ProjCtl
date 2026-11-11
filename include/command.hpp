@@ -55,6 +55,7 @@ namespace Cmd {
 		};
 
 		struct Commit {
+			bool                       tracked_only = false;
 			std::optional<std::string> name;
 			std::optional<std::string> message;
 		};

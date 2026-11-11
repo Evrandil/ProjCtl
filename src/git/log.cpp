@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-auto GitInterface::log(const std::filesystem::path& path, bool oneline) -> std::expected<std::string, std::string> {
+auto GitInterface::log(const std::filesystem::path& path, const bool oneline) -> std::expected<std::string, std::string> {
 	std::vector<std::string> command{"git", "log"};
 	if (oneline) {
 		command.emplace_back("--oneline");

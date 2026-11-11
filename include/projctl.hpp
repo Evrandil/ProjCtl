@@ -92,7 +92,7 @@ class ProjCtl {
 	[[nodiscard]] auto log(const std::optional<std::string>& name, bool oneline) const -> ResultString;
 	[[nodiscard]] auto
 	branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const -> ResultString;
-	[[nodiscard]] auto commit(const std::optional<std::string>& name, std::optional<std::string_view> message) const
+	[[nodiscard]] auto commit(const std::optional<std::string>& name, const bool tracked_only, const std::optional<std::string_view> message) const
 		-> ResultString;
 	[[nodiscard]] auto
 	diff(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path) const -> ResultInt;

@@ -9,8 +9,8 @@
 #include <string_view>
 #include <vector>
 
-auto GitInterface::add(const std::filesystem::path& path) -> std::expected<std::string, std::string> {
-	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "add", "."}, path);
+auto GitInterface::add(const std::filesystem::path& path, const bool tracked_only) -> std::expected<std::string, std::string> {
+	std::expected result = SystemInterface::run(std::vector<std::string>{"git", "add", tracked_only ? "-u" : "."}, path);
 
 	if (!result) [[unlikely]] {
 		return std::unexpected(result.error());
@@ -22,9 +22,9 @@ auto GitInterface::add(const std::filesystem::path& path) -> std::expected<std::
 	return result->text;
 }
 
-auto GitInterface::commit(const std::filesystem::path& path, std::optional<std::string_view> message)
+auto GitInterface::commit(const std::filesystem::path& path, const bool tracked_only, const std::optional<std::string_view> message)
 	-> std::expected<std::string, std::string> {
-	std::expected add_result = add(path);
+	std::expected add_result = add(path, tracked_only);
 	if (!add_result) [[unlikely]] {
 		return std::unexpected(add_result.error());
 	}
