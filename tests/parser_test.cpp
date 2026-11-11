@@ -345,6 +345,24 @@ TEST_CASE("commit") {
 		REQUIRE(commit->message);
 		CHECK(commit->message == "Fix bug");
 	}
+	// projctl commit -u <message> <name>
+	SUBCASE("commit -u with message and name") {
+		const Command command = parse({"commit", "-u", "fix typo", "proj"});
+		const auto*   commit  = std::get_if<Cmd::Git::Commit>(&command);
+		REQUIRE(commit != nullptr);
+		CHECK(commit->tracked_only);
+		CHECK(commit->message == "fix typo");
+		CHECK(commit->name == "proj");
+	}
+	// projctl commit -u
+	SUBCASE("commit -u alone") {
+		const Command command = parse({"commit", "-u"});
+		const auto*   commit  = std::get_if<Cmd::Git::Commit>(&command);
+		REQUIRE(commit != nullptr);
+		CHECK(commit->tracked_only);
+		CHECK_FALSE(commit->name);
+		CHECK_FALSE(commit->message);
+	}
 }
 
 // projctl push [-u] [<name>]

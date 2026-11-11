@@ -161,13 +161,15 @@ namespace {
 	}
 
 	auto parse_commit(std::span<const std::string_view> args) -> Command {
-		const std::expected parts = name_with_extra(args);
+		const bool          tracked_only = !args.empty() && args.front() == "-u";
+		const std::expected parts        = name_with_extra(tracked_only ? args.subspan(1) : args);
 		if (!parts) {
 			return Cmd::Unknown{.message = parts.error()};
 		}
 		return Cmd::Git::Commit{
-			.name    = parts->name,
-			.message = parts->extra,
+			.tracked_only = tracked_only,
+			.name         = parts->name,
+			.message      = parts->extra,
 		};
 	}
 

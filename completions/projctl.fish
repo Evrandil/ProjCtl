@@ -59,6 +59,7 @@ complete -c projctl -n "__fish_seen_subcommand_from list" -s n -l names -d "Name
 
 complete -c projctl -n "__fish_seen_subcommand_from status fetch pull ilist reqlist" -s a -l all -d "All projects"
 
+complete -c projctl -n '__fish_seen_subcommand_from commit' -s u -d 'Stage only tracked files'
 complete -c projctl -n "__fish_seen_subcommand_from push" -s u -d "Set upstream"
 complete -c projctl -n "__fish_seen_subcommand_from log"  -s o -d "One line per commit"
 

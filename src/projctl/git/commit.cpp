@@ -11,15 +11,16 @@
 #include <string>
 #include <string_view>
 
-auto ProjCtl::commit(const std::optional<std::string>& name, std::optional<std::string_view> message) const
-	-> std::expected<std::string, std::string> {
+auto ProjCtl::commit(
+	const std::optional<std::string>& name, const bool tracked_only, const std::optional<std::string_view> message
+) const -> std::expected<std::string, std::string> {
 	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
 
-	const std::expected result = GitInterface::commit(content.path, message);
+	const std::expected result = GitInterface::commit(content.path, tracked_only, message);
 
 	if (!result) {
 		return std::unexpected(
@@ -30,5 +31,5 @@ auto ProjCtl::commit(const std::optional<std::string>& name, std::optional<std::
 }
 
 auto ProjCtl::handle(const Cmd::Git::Commit& cmd) const -> int {
-	return report(commit(cmd.name, cmd.message));
+	return report(commit(cmd.name, cmd.tracked_only, cmd.message));
 }
