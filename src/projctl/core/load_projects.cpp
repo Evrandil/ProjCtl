@@ -1,8 +1,8 @@
 #include "projctl.hpp"
 
 #include "projectcontent.hpp"
-#include "text.hpp"
 #include "projects_parsing.hpp"
+#include "text.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -10,7 +10,6 @@
 #include <string>
 #include <string_view>
 #include <utility>
-
 
 auto ProjCtl::load_projects() -> void {
 	std::ifstream              projects_file{data_path};
@@ -52,9 +51,13 @@ auto ProjCtl::load_projects() -> void {
 				}
 				name = trim(trimmed.substr(1, trimmed.size() - 2));
 				continue;
-			case ProjectsParsing::Line::Path:    path_str = ProjectsParsing::value_of(trimmed); continue;
-			case ProjectsParsing::Line::Run:     run_command = ProjectsParsing::non_empty(ProjectsParsing::value_of(trimmed)); continue;
-			case ProjectsParsing::Line::Build:   build_command = ProjectsParsing::non_empty(ProjectsParsing::value_of(trimmed)); continue;
+			case ProjectsParsing::Line::Path: path_str = ProjectsParsing::value_of(trimmed); continue;
+			case ProjectsParsing::Line::Run:
+				run_command = ProjectsParsing::non_empty(ProjectsParsing::value_of(trimmed));
+				continue;
+			case ProjectsParsing::Line::Build:
+				build_command = ProjectsParsing::non_empty(ProjectsParsing::value_of(trimmed));
+				continue;
 			case ProjectsParsing::Line::Unknown: continue;
 		}
 		std::unreachable();

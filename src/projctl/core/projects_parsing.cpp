@@ -2,11 +2,10 @@
 
 #include "text.hpp"
 
-#include <string_view>
-#include <optional>
 #include <cstddef>
+#include <optional>
 #include <string>
-
+#include <string_view>
 
 auto ProjectsParsing::key_of(const std::string_view entry) -> std::string_view {
 	if (const std::size_t separator = entry.find('='); separator != std::string_view::npos) {
