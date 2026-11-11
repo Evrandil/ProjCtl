@@ -3,6 +3,7 @@
 #include "projectcontent.hpp"
 #include "projects_parsing.hpp"
 #include "text.hpp"
+#include "ini.hpp"
 
 #include <filesystem>
 #include <fstream>

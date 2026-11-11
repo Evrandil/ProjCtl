@@ -1,6 +1,7 @@
 
 add_library(projctl_helpers
 	text.cpp
+	ini.cpp
 )
 
 target_include_directories(projctl_helpers
