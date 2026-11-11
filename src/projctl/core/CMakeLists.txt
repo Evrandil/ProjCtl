@@ -11,5 +11,4 @@ target_sources(projctl_core
 		report.cpp
 		save.cpp
 		table_helper.cpp
-		projects_parsing.cpp
 )

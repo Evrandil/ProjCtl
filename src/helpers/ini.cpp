@@ -2,13 +2,12 @@
 
 #include "text.hpp"
 
+#include <cstddef>
 #include <filesystem>
 #include <fstream>
 #include <istream>
 #include <string>
 #include <string_view>
-#include <cstddef>
-
 
 auto Ini::parse(std::istream& input, const Handler& handle) -> void {
 	std::string section;
@@ -20,10 +19,10 @@ auto Ini::parse(std::istream& input, const Handler& handle) -> void {
 		}
 		if (trimmed.front() == '[') {
 			if (trimmed.back() == ']') {
-				section = std::string_view{};
+				section = trim(trimmed.substr(1, trimmed.size() - 2));
 				continue;
 			}
-			section = trim(trimmed.substr(1, trimmed.size() - 2));
+			section = std::string_view{};
 			continue;
 		}
 		const std::size_t separator = trimmed.find('=');
