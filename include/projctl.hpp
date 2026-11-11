@@ -35,11 +35,11 @@ struct BatchResult {
 
 class ProjCtl {
 	std::map<std::string, ProjectContent> projects;
-	const std::filesystem::path                 config_path;
-	const std::filesystem::path                 data_path;
+	const std::filesystem::path           config_path;
+	const std::filesystem::path           data_path;
 
-	const Config                                config;
-	const bool               use_colors;
+	const Config       config;
+	const bool         use_colors;
 	[[nodiscard]] auto paint(Style::Color color) const -> std::string_view;
 	[[nodiscard]] auto reset() const -> std::string_view;
 
@@ -92,9 +92,9 @@ class ProjCtl {
 	[[nodiscard]] auto log(const std::optional<std::string>& name, bool oneline) const -> ResultString;
 	[[nodiscard]] auto
 	branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const -> ResultString;
-	[[nodiscard]] auto commit(
-		const std::optional<std::string>& name, bool tracked_only, std::optional<std::string_view> message
-	) const -> ResultString;
+	[[nodiscard]] auto
+	commit(const std::optional<std::string>& name, bool tracked_only, std::optional<std::string_view> message) const
+		-> ResultString;
 	[[nodiscard]] auto
 	diff(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::Git::Status& cmd) const -> int;
@@ -143,11 +143,11 @@ class ProjCtl {
 
 	public:
 	ProjCtl();
-	~ProjCtl() = default;
-	ProjCtl(const ProjCtl&) = delete;
+	~ProjCtl()                                 = default;
+	ProjCtl(const ProjCtl&)                    = delete;
 	auto operator=(const ProjCtl&) -> ProjCtl& = delete;
-	ProjCtl(ProjCtl&&) = delete;
-	auto operator=(ProjCtl&&) -> ProjCtl&& = delete;
+	ProjCtl(ProjCtl&&)                         = delete;
+	auto operator=(ProjCtl&&) -> ProjCtl&&     = delete;
 
 	auto execute(const Command& command) -> int {
 		return std::visit([this](const auto& cmd) -> auto { return handle(cmd); }, command);
