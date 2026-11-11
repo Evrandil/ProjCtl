@@ -43,7 +43,7 @@ class ProjCtl {
 	[[nodiscard]] auto paint(Style::Color color) const -> std::string_view;
 	[[nodiscard]] auto reset() const -> std::string_view;
 
-	auto               load() -> void;
+	auto               load_projects() -> void;
 	[[nodiscard]] auto save() const -> std::expected<void, std::string>;
 	[[nodiscard]] auto project_find(const std::optional<std::string>& name) const
 		-> std::expected<ProjectIterator, std::string>;
