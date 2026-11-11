@@ -1,6 +1,4 @@
-#include "projctl.hpp"
-
-#include "projectcontent.hpp"
+#include "projecttype.hpp"
 
 #include <filesystem>
 

@@ -7,7 +7,6 @@
 #include <optional>
 #include <string>
 #include <string_view>
-#include <utility>
 
 namespace {
 	auto non_empty(const std::string_view value) -> std::optional<std::string> {
@@ -34,7 +33,4 @@ auto ProjCtl::load_projects() -> void {
 			content.run_command = non_empty(value);
 		}
 	});
-	for (auto& [name, project] : projects) {
-		project.type = detect_project_type(project.path);
-	}
 }

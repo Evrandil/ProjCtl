@@ -20,7 +20,6 @@ constexpr std::string_view MARGIN       = "    ";
 constexpr int              MARGIN_WIDTH = 20;
 constexpr int              MARGIN_SIZE  = 20;
 
-auto detect_project_type(const std::filesystem::path& path) -> ProjectType;
 
 using ProjectEntry    = std::map<std::string, ProjectContent>::value_type;
 using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
@@ -28,10 +27,12 @@ using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
 using ResultString = std::expected<std::string, std::string>;
 using ResultInt    = std::expected<int, std::string>;
 
+
 struct BatchResult {
 	std::string output;
 	std::size_t failed = 0;
 };
+
 
 class ProjCtl {
 	std::map<std::string, ProjectContent> projects;
