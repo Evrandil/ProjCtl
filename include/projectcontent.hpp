@@ -1,10 +1,8 @@
 #pragma once
 
-#include <cstdint>
 #include <filesystem>
 #include <optional>
 #include <string>
-#include <string_view>
 
 struct ProjectContent {
 	std::filesystem::path      path;
