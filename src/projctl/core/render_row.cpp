@@ -31,7 +31,7 @@ auto ProjCtl::render_row(const Row& row, const std::vector<TableField>& fields) 
 	for (const TableField field : fields) {
 		parse_line(RenderHelper::field_name(field), RenderHelper::cell_text(row, field), [&] -> Style::Color {
 			if (field == TableField::State) {
-				return row.state == "OPEN" || row.state == "open" ? config.colors.open : config.colors.closed;
+				return row.state == "OPEN" || row.state == "opened" ? config.colors.open : config.colors.closed;
 			}
 			return column_of(config.tables, field).color;
 		}());
