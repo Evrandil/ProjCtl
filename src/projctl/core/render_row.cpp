@@ -39,5 +39,13 @@ auto ProjCtl::render_row(const Row& row, const std::vector<TableField>& fields) 
 				}()
 				);
 	}
+	std::format_to(std::back_inserter(output),
+			"\n{}{}Body\n{}{}{}",
+			Style::MARGIN,
+			paint(config.colors.header),
+			paint(config.tables.body.color),
+			row.body,
+			reset()
+			);
 	return output;
 }
