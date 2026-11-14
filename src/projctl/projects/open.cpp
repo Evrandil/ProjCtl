@@ -19,11 +19,12 @@ auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expecte
 	// TODO list of GUI editors to run noninteractively
 	const bool background = config.general.editor == "neovide" || config.general.editor == "emacs";
 
-	const std::string shell_command = std::format("{} .{}", config.general.editor, background ? " &" : "");
-
-	// TODO run shell command without sh -c with SystemInterface::run_background()
-	const std::expected result =
-		SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", shell_command}, (*project)->second.path);
+	const std::expected result = [&] -> std::expected<int, std::string> {
+		if (background) {
+			return SystemInterface::run_background(std::vector<std::string>{config.general.editor, "."}, (*project)->second.path);
+		}
+		return SystemInterface::run_interactive(std::vector<std::string>{config.general.editor, "."}, (*project)->second.path);
+	}();
 
 	if (!result) {
 		return std::unexpected(

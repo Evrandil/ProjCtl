@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <utility>
 #include <vector>
+#include <fcntl.h>
 
 auto SystemInterface::run(std::span<const std::string> args, const std::filesystem::path& cwd)
 	-> std::expected<SystemInterface::Output, std::string> {
@@ -82,7 +83,7 @@ auto SystemInterface::run(std::span<const std::string> args, const std::filesyst
 }
 
 auto SystemInterface::run_background(std::span<const std::string> args, const std::filesystem::path& cwd)
-	-> std::expected<void, std::string> {
+	-> std::expected<int, std::string> {
 	if (args.empty()) {
 		return std::unexpected("No program to run");
 	}
@@ -111,7 +112,7 @@ auto SystemInterface::run_background(std::span<const std::string> args, const st
 		return std::unexpected(std::format("Couldn't run {}: {}", args.front(), std::strerror(error)));
 	}
 
-	return {};
+	return 0;
 }
 
 auto SystemInterface::run_interactive(std::span<const std::string> args, const std::filesystem::path& cwd)
@@ -125,6 +126,10 @@ auto SystemInterface::run_interactive(std::span<const std::string> args, const s
 
 	posix_spawn_file_actions_t actions;
 	posix_spawn_file_actions_init(&actions);
+
+	posix_spawn_file_actions_addopen(&actions, STDOUT_FILENO, "/dev/null", O_WRONLY, 0);
+	posix_spawn_file_actions_addopen(&actions, STDERR_FILENO, "/dev/null", O_WRONLY, 0);
+
 	if (!cwd.empty()) {
 		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());
 	}

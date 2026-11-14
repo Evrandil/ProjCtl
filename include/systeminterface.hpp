@@ -14,7 +14,7 @@ namespace SystemInterface {
 	[[nodiscard]] auto run(std::span<const std::string> args, const std::filesystem::path& cwd = {})
 		-> std::expected<SystemInterface::Output, std::string>;
 	[[nodiscard]] auto run_background(std::span<const std::string> args, const std::filesystem::path& cwd = {})
-		-> std::expected<void, std::string>;
+		-> std::expected<int, std::string>;
 	[[nodiscard]] auto run_interactive(std::span<const std::string> args, const std::filesystem::path& cwd = {})
 		-> std::expected<int, std::string>;
 	[[nodiscard]] auto config_home() -> std::filesystem::path;
