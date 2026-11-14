@@ -43,25 +43,30 @@ auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expe
 	issues.reserve(json.size());
 
 	for (const nlohmann::json& json_issue : json) {
-		Row issue;
-		issue.number  = json_issue.at("number").get<int>();
-		issue.title   = json_issue.at("title").get<std::string>();
-		issue.state   = json_issue.at("state").get<std::string>();
-		issue.created = json_issue.at("createdAt").get<std::string>();
-		issue.updated = json_issue.at("updatedAt").get<std::string>();
-		if (!json_issue.at("parent").is_null()) {
-			issue.parent = json_issue.at("parent").at("title").get<std::string>();
-		}
+		try {
+			Row issue;
+			issue.number  = json_issue.at("number").get<int>();
+			issue.title   = json_issue.at("title").get<std::string>();
+			issue.state   = json_issue.at("state").get<std::string>();
+			issue.created = json_issue.at("createdAt").get<std::string>();
+			issue.updated = json_issue.at("updatedAt").get<std::string>();
 
-		if (!json_issue.at("author").is_null()) {
-			issue.author = json_issue.at("author").at("login").get<std::string>();
-		}
+			if (!json_issue.at("parent").is_null()) {
+				issue.parent = json_issue.at("parent").at("title").get<std::string>();
+			}
 
-		for (const nlohmann::json& label : json_issue.at("labels")) {
-			issue.labels.push_back(label.at("name").get<std::string>());
-		}
+			if (!json_issue.at("author").is_null()) {
+				issue.author = json_issue.at("author").at("login").get<std::string>();
+			}
 
-		issues.push_back(std::move(issue));
+			for (const nlohmann::json& label : json_issue.at("labels")) {
+				issue.labels.push_back(label.at("name").get<std::string>());
+			}
+
+			issues.push_back(std::move(issue));
+		} catch (const nlohmann::json::exception& error) {
+			return std::unexpected(std::format("Unexpected json from gh: {}", error.what()));
+		}
 	}
 
 	return issues;
@@ -71,7 +76,7 @@ auto GitHubInterface::issue_create(const std::filesystem::path& path) -> std::ex
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "issue", "create"}, path);
 }
 
-auto GitHubInterface::issue_edit(const std::filesystem::path& path, int issue_number)
+auto GitHubInterface::issue_edit(const std::filesystem::path& path, int const issue_number)
 	-> std::expected<int, std::string> {
 	return SystemInterface::run_interactive(
 		std::vector<std::string>{"gh", "issue", "edit", std::to_string(issue_number)},
@@ -79,7 +84,7 @@ auto GitHubInterface::issue_edit(const std::filesystem::path& path, int issue_nu
 	);
 }
 
-auto GitHubInterface::issue_view(const std::filesystem::path& path, int issue_number)
+auto GitHubInterface::issue_view(const std::filesystem::path& path, int const issue_number)
 	-> std::expected<Row, std::string> {
 	std::expected result = SystemInterface::run(
 		gh_command(
@@ -107,28 +112,30 @@ auto GitHubInterface::issue_view(const std::filesystem::path& path, int issue_nu
 		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
 	}
 
-	Row issue;
-
-	issue.number = json.at("number").get<int>();
-	issue.title  = json.at("title").get<std::string>();
-	issue.body   = json.at("body").get<std::string>();
-	issue.state  = json.at("state").get<std::string>();
-	if (!json.at("author").is_null()) {
-		issue.author = json.at("author").at("login").get<std::string>();
+	try {
+		Row issue;
+		issue.number = json.at("number").get<int>();
+		issue.title  = json.at("title").get<std::string>();
+		issue.body   = json.at("body").get<std::string>();
+		issue.state  = json.at("state").get<std::string>();
+		if (!json.at("author").is_null()) {
+			issue.author = json.at("author").at("login").get<std::string>();
+		}
+		issue.created = json.at("createdAt").get<std::string>();
+		issue.updated = json.at("updatedAt").get<std::string>();
+		if (!json.at("parent").is_null()) {
+			issue.parent = json.at("parent").at("title").get<std::string>();
+		}
+		for (const nlohmann::json& label : json.at("labels")) {
+			issue.labels.push_back(label.at("name").get<std::string>());
+		}
+		return issue;
+	} catch (const nlohmann::json::exception& error) {
+		return std::unexpected(std::format("Unexpected json from gh: {}", error.what()));
 	}
-	issue.created = json.at("createdAt").get<std::string>();
-	issue.updated = json.at("updatedAt").get<std::string>();
-	if (!json.at("parent").is_null()) {
-		issue.parent = json.at("parent").at("title").get<std::string>();
-	}
-	for (const nlohmann::json& label : json.at("labels")) {
-		issue.labels.push_back(label.at("name").get<std::string>());
-	}
-
-	return issue;
 }
 
-auto GitHubInterface::issue_close(const std::filesystem::path& path, int issue_number)
+auto GitHubInterface::issue_close(const std::filesystem::path& path, int const issue_number)
 	-> std::expected<std::string, std::string> {
 	std::expected result = SystemInterface::run(
 		gh_command(std::vector<std::string>{"gh", "issue", "close", std::to_string(issue_number)}),

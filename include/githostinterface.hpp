@@ -25,7 +25,7 @@ namespace GitHostInterface {
 	[[nodiscard]] auto request_edit(const std::filesystem::path& path, int request_number)
 		-> std::expected<int, std::string>;
 	[[nodiscard]] auto request_view(const std::filesystem::path& path, int request_number)
-		-> std::expected<std::string, std::string>;
+		-> std::expected<Row, std::string>;
 	[[nodiscard]] auto request_close(const std::filesystem::path& path, int request_number)
 		-> std::expected<std::string, std::string>;
 	[[nodiscard]] auto request_merge(const std::filesystem::path& path) -> std::expected<std::string, std::string>;

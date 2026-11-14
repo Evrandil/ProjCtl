@@ -33,19 +33,23 @@ auto GitLabInterface::request_list(const std::filesystem::path& path) -> std::ex
 	requests.reserve(json.size());
 
 	for (const nlohmann::json& json_request : json) {
-		Row request;
-		request.number  = json_request.at("iid").get<int>();
-		request.title   = json_request.at("title").get<std::string>();
-		request.state   = json_request.at("state").get<std::string>();
-		request.created = json_request.at("created_at").get<std::string>();
-		request.updated = json_request.at("updated_at").get<std::string>();
-		request.author  = json_request.at("author").at("username").get<std::string>();
+		try {
+			Row request;
+			request.number  = json_request.at("iid").get<int>();
+			request.title   = json_request.at("title").get<std::string>();
+			request.state   = json_request.at("state").get<std::string>();
+			request.created = json_request.at("created_at").get<std::string>();
+			request.updated = json_request.at("updated_at").get<std::string>();
+			request.author  = json_request.at("author").at("username").get<std::string>();
 
-		for (const nlohmann::json& label : json_request.at("labels")) {
-			request.labels.push_back(label.get<std::string>());
+			for (const nlohmann::json& label : json_request.at("labels")) {
+				request.labels.push_back(label.get<std::string>());
+			}
+
+			requests.push_back(std::move(request));
+		} catch (const nlohmann::json::exception& error) {
+			return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
 		}
-
-		requests.push_back(std::move(request));
 	}
 
 	return requests;
@@ -64,9 +68,11 @@ auto GitLabInterface::request_edit(const std::filesystem::path& path, int reques
 }
 
 auto GitLabInterface::request_view(const std::filesystem::path& path, int request_number)
-	-> std::expected<std::string, std::string> {
-	std::expected result =
-		SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
+	-> std::expected<Row, std::string> {
+	const std::expected result = SystemInterface::run(
+		std::vector<std::string>{"glab", "mr", "view", std::to_string(request_number), "--output", "json"},
+		path
+	);
 	if (!result) {
 		return std::unexpected(result.error());
 	}
@@ -74,12 +80,30 @@ auto GitLabInterface::request_view(const std::filesystem::path& path, int reques
 		return std::unexpected(result->text);
 	}
 
-	return result->text;
+	const nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
+	if (json.is_discarded()) {
+		return std::unexpected(std::format("Unexpected output from GLab:\n{}", result->text));
+	}
+
+	try {
+		Row request;
+
+		request.number  = json.at("iid").get<int>();
+		request.title   = json.at("title").get<std::string>();
+		request.state   = json.at("state").get<std::string>();
+		request.created = json.at("created_at").get<std::string>();
+		request.updated = json.at("updated_at").get<std::string>();
+		request.author  = json.at("author").at("username").get<std::string>();
+
+		return request;
+	} catch (const nlohmann::json::exception& error) {
+		return std::unexpected(std::format("Unexpected json from GLab: {}", error.what()));
+	}
 }
 
 auto GitLabInterface::request_close(const std::filesystem::path& path, int request_number)
 	-> std::expected<std::string, std::string> {
-	std::expected result =
+	const std::expected result =
 		SystemInterface::run(std::vector<std::string>{"glab", "mr", "close", std::to_string(request_number)}, path);
 	if (!result) {
 		return std::unexpected(result.error());
@@ -92,7 +116,7 @@ auto GitLabInterface::request_close(const std::filesystem::path& path, int reque
 }
 
 auto GitLabInterface::request_merge(const std::filesystem::path& path) -> std::expected<std::string, std::string> {
-	std::expected result = SystemInterface::run(
+	const std::expected result = SystemInterface::run(
 		std::vector<std::string>{"glab", "mr", "merge", "--squash", "--remove-source-branch"},
 		path
 	);

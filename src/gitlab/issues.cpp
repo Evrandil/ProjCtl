@@ -33,19 +33,23 @@ auto GitLabInterface::issue_list(const std::filesystem::path& path) -> std::expe
 	issues.reserve(json.size());
 
 	for (const nlohmann::json& json_issue : json) {
-		Row issue;
-		issue.number  = json_issue.at("iid").get<int>();
-		issue.title   = json_issue.at("title").get<std::string>();
-		issue.state   = json_issue.at("state").get<std::string>();
-		issue.created = json_issue.at("created_at").get<std::string>();
-		issue.updated = json_issue.at("updated_at").get<std::string>();
-		issue.author  = json_issue.at("author").at("username").get<std::string>();
+		try {
+			Row issue;
+			issue.number  = json_issue.at("iid").get<int>();
+			issue.title   = json_issue.at("title").get<std::string>();
+			issue.state   = json_issue.at("state").get<std::string>();
+			issue.created = json_issue.at("created_at").get<std::string>();
+			issue.updated = json_issue.at("updated_at").get<std::string>();
+			issue.author  = json_issue.at("author").at("username").get<std::string>();
 
-		for (const nlohmann::json& label : json_issue.at("labels")) {
-			issue.labels.push_back(label.get<std::string>());
+			for (const nlohmann::json& label : json_issue.at("labels")) {
+				issue.labels.push_back(label.get<std::string>());
+			}
+
+			issues.push_back(std::move(issue));
+		} catch (const nlohmann::json::exception& error) {
+			return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
 		}
-
-		issues.push_back(std::move(issue));
 	}
 
 	return issues;
@@ -55,7 +59,7 @@ auto GitLabInterface::issue_create(const std::filesystem::path& path) -> std::ex
 	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "issue", "create"}, path);
 }
 
-auto GitLabInterface::issue_edit(const std::filesystem::path& path, int issue_number)
+auto GitLabInterface::issue_edit(const std::filesystem::path& path, int const issue_number)
 	-> std::expected<int, std::string> {
 	return SystemInterface::run_interactive(
 		std::vector<std::string>{"glab", "issue", "edit", std::to_string(issue_number)},
@@ -63,9 +67,9 @@ auto GitLabInterface::issue_edit(const std::filesystem::path& path, int issue_nu
 	);
 }
 
-auto GitLabInterface::issue_view(const std::filesystem::path& path, int issue_number)
+auto GitLabInterface::issue_view(const std::filesystem::path& path, int const issue_number)
 	-> std::expected<Row, std::string> {
-	std::expected result = SystemInterface::run(
+	const std::expected result = SystemInterface::run(
 		std::vector<std::string>{"glab", "issue", "view", std::to_string(issue_number), "--output", "json"},
 		path
 	);
@@ -81,25 +85,30 @@ auto GitLabInterface::issue_view(const std::filesystem::path& path, int issue_nu
 		return std::unexpected(std::format("Unexpected output from glab:\n{}", result->text));
 	}
 
-	Row issue;
+	try {
+		Row issue;
 
-	issue.number  = json.at("iid").get<int>();
-	issue.title   = json.at("title").get<std::string>();
-	issue.body    = json.at("description").get<std::string>();
-	issue.state   = json.at("state").get<std::string>();
-	issue.author  = json.at("author").at("username").get<std::string>();
-	issue.created = json.at("created_at").get<std::string>();
-	issue.updated = json.at("updated_at").get<std::string>();
-	for (const nlohmann::json& label : json.at("labels")) {
-		issue.labels.push_back(label.get<std::string>());
+		issue.number  = json.at("iid").get<int>();
+		issue.title   = json.at("title").get<std::string>();
+		issue.body    = json.at("description").get<std::string>();
+		issue.state   = json.at("state").get<std::string>();
+		issue.author  = json.at("author").at("username").get<std::string>();
+		issue.created = json.at("created_at").get<std::string>();
+		issue.updated = json.at("updated_at").get<std::string>();
+
+		for (const nlohmann::json& label : json.at("labels")) {
+			issue.labels.push_back(label.get<std::string>());
+		}
+
+		return issue;
+	} catch (const nlohmann::json::exception& error) {
+		return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
 	}
-
-	return issue;
 }
 
-auto GitLabInterface::issue_close(const std::filesystem::path& path, int issue_number)
+auto GitLabInterface::issue_close(const std::filesystem::path& path, int const issue_number)
 	-> std::expected<std::string, std::string> {
-	std::expected result =
+	const std::expected result =
 		SystemInterface::run(std::vector<std::string>{"glab", "issue", "close", std::to_string(issue_number)}, path);
 	if (!result) {
 		return std::unexpected(result.error());

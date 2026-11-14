@@ -4,4 +4,5 @@
 - [ ] An AUR package \(PKGBUILD\)
 - [ ] pc checkout <ref> for tags and commits (git switch --detach), if you ever want it.
 - [ ] config being loaded in background while command is already running its job ?
+- [ ] headRefName/baseRefName on GitHub, source_branch/target_branch on GitLab for reqview
 
