@@ -33,6 +33,7 @@ auto GitLabInterface::issue_list(const std::filesystem::path& path) -> std::expe
 	issues.reserve(json.size());
 
 	for (const nlohmann::json& json_issue : json) {
+		try {
 		Row issue;
 		issue.number  = json_issue.at("iid").get<int>();
 		issue.title   = json_issue.at("title").get<std::string>();
@@ -46,6 +47,9 @@ auto GitLabInterface::issue_list(const std::filesystem::path& path) -> std::expe
 		}
 
 		issues.push_back(std::move(issue));
+		} catch (const nlohmann::json::exception& error) {
+			return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
+		}
 	}
 
 	return issues;
@@ -81,20 +85,24 @@ auto GitLabInterface::issue_view(const std::filesystem::path& path, int issue_nu
 		return std::unexpected(std::format("Unexpected output from glab:\n{}", result->text));
 	}
 
-	Row issue;
+	try {
+		Row issue;
 
-	issue.number  = json.at("iid").get<int>();
-	issue.title   = json.at("title").get<std::string>();
-	issue.body    = json.at("description").get<std::string>();
-	issue.state   = json.at("state").get<std::string>();
-	issue.author  = json.at("author").at("username").get<std::string>();
-	issue.created = json.at("created_at").get<std::string>();
-	issue.updated = json.at("updated_at").get<std::string>();
-	for (const nlohmann::json& label : json.at("labels")) {
-		issue.labels.push_back(label.get<std::string>());
+		issue.number  = json.at("iid").get<int>();
+		issue.title   = json.at("title").get<std::string>();
+		issue.body    = json.at("description").get<std::string>();
+		issue.state   = json.at("state").get<std::string>();
+		issue.author  = json.at("author").at("username").get<std::string>();
+		issue.created = json.at("created_at").get<std::string>();
+		issue.updated = json.at("updated_at").get<std::string>();
+		for (const nlohmann::json& label : json.at("labels")) {
+			issue.labels.push_back(label.get<std::string>());
+		}
+
+		return issue;
+	} catch (const nlohmann::json::exception& error) {
+		return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
 	}
-
-	return issue;
 }
 
 auto GitLabInterface::issue_close(const std::filesystem::path& path, int issue_number)

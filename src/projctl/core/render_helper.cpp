@@ -36,3 +36,7 @@ auto RenderHelper::field_name(const TableField field) -> std::string_view {
 	}
 	std::unreachable();
 }
+
+auto RenderHelper::is_open(const std::string_view state) -> bool {
+	return state == "OPEN" || state == "opened";
+}
