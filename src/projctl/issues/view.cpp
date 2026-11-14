@@ -7,13 +7,16 @@
 #include <optional>
 #include <string>
 
-auto ProjCtl::issue_view(const std::optional<std::string>& name, const int issue_number) const
-	-> std::expected<std::string, std::string> {
+auto ProjCtl::issue_view(const std::optional<std::string>& name, const int issue_number) const -> ResultString {
 	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
-	return GitHostInterface::issue_view((*project)->second.path, issue_number);
+	const std::expected issue = GitHostInterface::issue_view((*project)->second.path, issue_number);
+	if (!issue) {
+		return std::unexpected(issue.error());
+	}
+	return render_row(*issue, config.tables.issue_columns);
 }
 
 auto ProjCtl::handle(const Cmd::GH::IssueView& cmd) const -> int {

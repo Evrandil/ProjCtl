@@ -30,6 +30,7 @@ namespace Settings {
 	struct Tables {
 		Column number{.width = 8, .color = Style::Color::BoldMagenta};
 		Column title{.width = 40, .color = Style::Color::White};
+		Column body{.width = 70, .color = Style::Color::BoldYellow};
 		Column state{.width = 12, .color = Style::Color::Default};
 		Column author{.width = 20, .color = Style::Color::Blue};
 		Column labels{.width = 30, .color = Style::Color::Magenta};

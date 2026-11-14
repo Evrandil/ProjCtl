@@ -9,6 +9,7 @@
 #include <expected>
 #include <filesystem>
 #include <format>
+#include <print>
 #include <string>
 #include <utility>
 #include <vector>
@@ -80,9 +81,18 @@ auto GitHubInterface::issue_edit(const std::filesystem::path& path, int issue_nu
 }
 
 auto GitHubInterface::issue_view(const std::filesystem::path& path, int issue_number)
-	-> std::expected<std::string, std::string> {
+	-> std::expected<Row, std::string> {
 	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "issue", "view", std::to_string(issue_number)}),
+		gh_command(
+			std::vector<std::string>{
+				"gh",
+				"issue",
+				"view",
+				std::to_string(issue_number),
+				"--json",
+				"number,title,author,assignees,state,labels,parent,body,createdAt,updatedAt",
+			}
+		),
 		path
 	);
 
@@ -93,7 +103,30 @@ auto GitHubInterface::issue_view(const std::filesystem::path& path, int issue_nu
 		return std::unexpected(result->text);
 	}
 
-	return result->text;
+	const nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
+	if (json.is_discarded()) {
+		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
+	}
+
+	Row issue;
+
+	issue.number = json.at("number").get<int>();
+	issue.title  = json.at("title").get<std::string>();
+	issue.body   = json.at("body").get<std::string>();
+	issue.state  = json.at("state").get<std::string>();
+	if (!json.at("author").is_null()) {
+		issue.author = json.at("author").at("login").get<std::string>();
+	}
+	issue.created = json.at("createdAt").get<std::string>();
+	issue.updated = json.at("updatedAt").get<std::string>();
+	if (!json.at("parent").is_null()) {
+		issue.parent = json.at("parent").at("title").get<std::string>();
+	}
+	for (const nlohmann::json& label : json.at("labels")) {
+		issue.labels.push_back(label.at("name").get<std::string>());
+	}
+
+	return issue;
 }
 
 auto GitHubInterface::issue_close(const std::filesystem::path& path, int issue_number)
