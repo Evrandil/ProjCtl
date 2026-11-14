@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <expected>
+#include <fcntl.h>
 #include <filesystem>
 #include <format>
 #include <span>
@@ -16,7 +17,6 @@
 #include <unistd.h>
 #include <utility>
 #include <vector>
-#include <fcntl.h>
 
 auto SystemInterface::run(std::span<const std::string> args, const std::filesystem::path& cwd)
 	-> std::expected<SystemInterface::Output, std::string> {
@@ -101,9 +101,9 @@ auto SystemInterface::run_background(std::span<const std::string> args, const st
 	posix_spawnattr_init(&attr);
 	posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSID);
 
-	std::vector<char*> argv = SystemHelper::make_argv(args);
-	pid_t pid = 0;
-	const int error = posix_spawnp(&pid, argv.front(), &actions, &attr, argv.data(), environ);
+	std::vector<char*> argv  = SystemHelper::make_argv(args);
+	pid_t              pid   = 0;
+	const int          error = posix_spawnp(&pid, argv.front(), &actions, &attr, argv.data(), environ);
 
 	posix_spawn_file_actions_destroy(&actions);
 	posix_spawnattr_destroy(&attr);

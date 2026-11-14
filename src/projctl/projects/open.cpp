@@ -4,11 +4,24 @@
 #include "style.hpp"
 #include "systeminterface.hpp"
 
+#include <array>
 #include <expected>
 #include <format>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
+#include <algorithm>
+
+namespace {
+	constexpr auto BACKGROUND_EDITORS = std::to_array<std::string_view>({
+		"neovide",
+		"emacs",
+		"zed",
+		"code",
+		"sublime",
+	});
+}
 
 auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
 	const std::expected project = project_find(name);
@@ -16,14 +29,17 @@ auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expecte
 		return std::unexpected(project.error());
 	}
 
-	// TODO list of GUI editors to run noninteractively
-	const bool background = config.general.editor == "neovide" || config.general.editor == "emacs";
-
 	const std::expected result = [&] -> std::expected<int, std::string> {
-		if (background) {
-			return SystemInterface::run_background(std::vector<std::string>{config.general.editor, "."}, (*project)->second.path);
+		if (std::ranges::contains(BACKGROUND_EDITORS, config.general.editor)) {
+			return SystemInterface::run_background(
+				std::vector<std::string>{config.general.editor, "."},
+				(*project)->second.path
+			);
 		}
-		return SystemInterface::run_interactive(std::vector<std::string>{config.general.editor, "."}, (*project)->second.path);
+		return SystemInterface::run_interactive(
+			std::vector<std::string>{config.general.editor, "."},
+			(*project)->second.path
+		);
 	}();
 
 	if (!result) {
