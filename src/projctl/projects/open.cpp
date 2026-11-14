@@ -21,6 +21,7 @@ auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expecte
 	const std::string shell_command = std::format("{} .{}", config.general.editor, background ? " &" : "");
 
 	const std::expected result =
+		// TODO run shell command without sh -c
 		SystemInterface::run_interactive(std::vector<std::string>{"sh", "-c", shell_command}, (*project)->second.path);
 
 	if (!result) {

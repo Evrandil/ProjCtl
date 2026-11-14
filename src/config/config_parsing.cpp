@@ -163,6 +163,7 @@ namespace {
 
 		const std::size_t               underscore = key.rfind('_');
 		const std::optional<ColumnInfo> column     = find_column(key.substr(0, underscore));
+		// TODO this underscore chech isn't rly checking - if it's std::string::npos column will throw nullopt anyway
 		if (underscore == std::string_view::npos || !column) {
 			return;
 		}
