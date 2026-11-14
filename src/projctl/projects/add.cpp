@@ -12,8 +12,6 @@
 #include <string>
 #include <system_error>
 
-static constexpr int MARGIN_SIZE = 20;
-
 auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path)
 	-> std::expected<std::string, std::string> {
 	std::error_code             error;
@@ -28,7 +26,7 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				paint(config.colors.path),
-				truncate(path.value_or(".").string(), config.widths.max - MARGIN_SIZE),
+				truncate(path.value_or(".").string(), config.widths.max - Style::MARGIN_SIZE),
 				paint(config.colors.error),
 				reset()
 			)
@@ -78,13 +76,13 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 		"Added project:",
 		config.widths.name,
 		paint(config.colors.name),
-		truncate(entry->first, config.widths.max - MARGIN_SIZE),
+		truncate(entry->first, config.widths.max - Style::MARGIN_SIZE),
 		reset(),
 		paint(config.colors.header),
 		"With path:",
 		config.widths.name,
 		paint(config.colors.path),
-		truncate(entry->second.path.string(), config.widths.max - MARGIN_SIZE),
+		truncate(entry->second.path.string(), config.widths.max - Style::MARGIN_SIZE),
 		reset()
 	);
 }

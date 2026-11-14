@@ -41,7 +41,7 @@ auto ProjCtl::status(const ProjectEntry& project) const -> std::string {
 		std::format_to(
 			std::back_inserter(output),
 			"{}{}{:<{}}{}{}{}{}\n",
-			MARGIN,
+			Style::MARGIN,
 			paint(config.colors.header),
 			header,
 			config.widths.name,
