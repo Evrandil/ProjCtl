@@ -33,6 +33,7 @@ auto GitLabInterface::request_list(const std::filesystem::path& path) -> std::ex
 	requests.reserve(json.size());
 
 	for (const nlohmann::json& json_request : json) {
+		try {
 		Row request;
 		request.number  = json_request.at("iid").get<int>();
 		request.title   = json_request.at("title").get<std::string>();
@@ -46,6 +47,9 @@ auto GitLabInterface::request_list(const std::filesystem::path& path) -> std::ex
 		}
 
 		requests.push_back(std::move(request));
+		} catch (const nlohmann::json::exception& error) {
+			return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
+		}
 	}
 
 	return requests;
@@ -73,6 +77,12 @@ auto GitLabInterface::request_view(const std::filesystem::path& path, int reques
 	if (result->exit_code != 0) {
 		return std::unexpected(result->text);
 	}
+
+//	try {
+//	placeholder
+//	} catch (const nlohmann::json::exception& error) {
+//		return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
+//	}
 
 	return result->text;
 }

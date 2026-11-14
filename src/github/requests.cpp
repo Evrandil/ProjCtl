@@ -38,6 +38,7 @@ auto GitHubInterface::request_list(const std::filesystem::path& path) -> std::ex
 	requests.reserve(json.size());
 
 	for (const nlohmann::json& json_request : json) {
+		try {
 		Row request;
 		request.number  = json_request.at("number").get<int>();
 		request.title   = json_request.at("title").get<std::string>();
@@ -54,6 +55,9 @@ auto GitHubInterface::request_list(const std::filesystem::path& path) -> std::ex
 		}
 
 		requests.push_back(std::move(request));
+		} catch (const nlohmann::json::exception& error) {
+			return std::unexpected(std::format("Unexpecdted json from gh: {}", error.what()));
+		}
 	}
 
 	return requests;
@@ -74,7 +78,7 @@ auto GitHubInterface::request_edit(const std::filesystem::path& path, int reques
 auto GitHubInterface::request_view(const std::filesystem::path& path, int request_number)
 	-> std::expected<std::string, std::string> {
 	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "pr", "close", std::to_string(request_number)}),
+		gh_command(std::vector<std::string>{"gh", "pr", "view", std::to_string(request_number)}),
 		path
 	);
 
@@ -84,6 +88,11 @@ auto GitHubInterface::request_view(const std::filesystem::path& path, int reques
 	if (result->exit_code != 0) {
 		return std::unexpected(result->text);
 	}
+
+//	try {
+//	} catch (const nlohmann::json::exception& error) {
+//		return std::unexpected(std::format("Unexpected json from gh: {}", error.what()));
+//	}
 
 	return result->text;
 }
