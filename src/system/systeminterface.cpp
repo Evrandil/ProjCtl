@@ -93,6 +93,10 @@ auto SystemInterface::run_background(std::span<const std::string> args, const st
 
 	posix_spawn_file_actions_t actions;
 	posix_spawn_file_actions_init(&actions);
+
+	posix_spawn_file_actions_addopen(&actions, STDOUT_FILENO, "/dev/null", O_WRONLY, 0);
+	posix_spawn_file_actions_addopen(&actions, STDERR_FILENO, "/dev/null", O_WRONLY, 0);
+
 	if (!cwd.empty()) {
 		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());
 	}
@@ -126,10 +130,6 @@ auto SystemInterface::run_interactive(std::span<const std::string> args, const s
 
 	posix_spawn_file_actions_t actions;
 	posix_spawn_file_actions_init(&actions);
-
-	posix_spawn_file_actions_addopen(&actions, STDOUT_FILENO, "/dev/null", O_WRONLY, 0);
-	posix_spawn_file_actions_addopen(&actions, STDERR_FILENO, "/dev/null", O_WRONLY, 0);
-
 	if (!cwd.empty()) {
 		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());
 	}
