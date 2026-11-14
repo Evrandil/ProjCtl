@@ -16,9 +16,7 @@
 #include <variant>
 #include <vector>
 
-constexpr std::string_view MARGIN       = "    ";
-constexpr int              MARGIN_WIDTH = 20;
-constexpr int              MARGIN_SIZE  = 20;
+constexpr std::string_view MARGIN = "    ";
 
 using ProjectEntry    = std::map<std::string, ProjectContent>::value_type;
 using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;

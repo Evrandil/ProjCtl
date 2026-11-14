@@ -9,7 +9,8 @@
 #include <system_error>
 
 auto ProjCtl::current_project_name() const -> std::optional<std::string> {
-	std::error_code             error;
+	std::error_code error;
+	// TODO separate error codes for current_path and weakly_canonical
 	const std::filesystem::path cwd = std::filesystem::weakly_canonical(std::filesystem::current_path(error), error);
 	if (error) {
 		return std::nullopt;

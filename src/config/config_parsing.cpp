@@ -163,7 +163,7 @@ namespace {
 
 		const std::size_t               underscore = key.rfind('_');
 		const std::optional<ColumnInfo> column     = find_column(key.substr(0, underscore));
-		if (underscore == std::string_view::npos || !column) {
+		if (!column) {
 			return;
 		}
 		set_column_property(tables.*column->member, key.substr(underscore + 1), value);

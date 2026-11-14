@@ -19,9 +19,9 @@ auto ProjCtl::run(const std::optional<std::string>& name) const -> std::expected
 	}
 	const ProjectContent& content = (*project)->second;
 
-	const std::optional command_option = content.run_command.or_else([&] {
-		return std::optional<std::string>{run_command_for(detect_project_type(content.path))};
-	});
+	const ProjectType   type = detect_project_type(content.path);
+	const std::optional command_option =
+		content.run_command.or_else([&] { return std::optional<std::string>{run_command_for(type)}; });
 
 	if (!command_option) {
 		return std::unexpected(
@@ -30,7 +30,7 @@ auto ProjCtl::run(const std::optional<std::string>& name) const -> std::expected
 				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				paint(config.colors.type),
-				project_type_to_string(detect_project_type(content.path)),
+				project_type_to_string(type),
 				paint(config.colors.error),
 				paint(config.colors.name),
 				(*project)->first,
