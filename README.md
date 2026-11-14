@@ -15,7 +15,7 @@ ninja
 just
 ```
 C++ standard is set to 23<br>
-Git, gh cli and glab cli are not required tho like half of functionality of this project is dependant on one or other<>
+Git, gh cli and glab cli are not required tho like half of functionality of this project is dependant on one or other<br>
 # Installatoin
 ## If you have just
 ```fish
@@ -191,9 +191,9 @@ List or do smth else with issues for repo<br>
 ```fish
 projctl ilist [<name> | --all | -a]
 projctl icreate [<name>]
-projctl iedit [<name>]
-projctl iview [<name>]
-projctl iclose [<name>]
+projctl iedit <nr> [<name>]
+projctl iview <nr> [<name>]
+projctl iclose <nr> [<name>]
 ```
 
 ### Requests (PR \(GH\) / MR \(GLab\))
@@ -202,9 +202,9 @@ Reqmerge is just squash merge with delete source repo option
 ```fish
 projctl reqlist [<name> | --all | -a]
 projctl reqcreate [<name>]
-projctl reqedit [<name>]
-projctl reqview [<name>]
-projctl reqclose [<name>]
+projctl reqedit <nr> [<name>]
+projctl reqview <nr> [<name>]
+projctl reqclose <nr> [<name>]
 projctl reqmerge [<name>]
 ```
 
