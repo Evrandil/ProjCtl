@@ -20,10 +20,9 @@ auto ProjCtl::build(const std::optional<std::string>& name) const -> std::expect
 
 	const ProjectContent& content = (*project)->second;
 
-	const ProjectType type = detect_project_type(content.path);
-	const std::optional command_option = content.build_command.or_else([&] {
-		return std::optional<std::string>{build_command_for(type)};
-	});
+	const ProjectType   type = detect_project_type(content.path);
+	const std::optional command_option =
+		content.build_command.or_else([&] { return std::optional<std::string>{build_command_for(type)}; });
 
 	if (!command_option) {
 		return std::unexpected(

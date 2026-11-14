@@ -12,7 +12,7 @@
 #include <string>
 #include <system_error>
 
-static constexpr int              MARGIN_SIZE  = 20;
+static constexpr int MARGIN_SIZE = 20;
 
 auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path)
 	-> std::expected<std::string, std::string> {

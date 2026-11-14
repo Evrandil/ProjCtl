@@ -19,10 +19,9 @@ auto ProjCtl::run(const std::optional<std::string>& name) const -> std::expected
 	}
 	const ProjectContent& content = (*project)->second;
 
-	const ProjectType type = detect_project_type(content.path);
-	const std::optional command_option = content.run_command.or_else([&] {
-		return std::optional<std::string>{run_command_for(type)};
-	});
+	const ProjectType   type = detect_project_type(content.path);
+	const std::optional command_option =
+		content.run_command.or_else([&] { return std::optional<std::string>{run_command_for(type)}; });
 
 	if (!command_option) {
 		return std::unexpected(
