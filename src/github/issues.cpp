@@ -111,7 +111,6 @@ auto GitHubInterface::issue_view(const std::filesystem::path& path, int issue_nu
 		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
 	}
 
-
 	try {
 		Row issue;
 		issue.number = json.at("number").get<int>();

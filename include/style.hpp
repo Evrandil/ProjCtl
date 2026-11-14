@@ -49,7 +49,7 @@ namespace Style {
 		return "\033[39m";
 	}
 
-	static constexpr int       MARGIN_SIZE = 20;
+	inline constexpr int       MARGIN_SIZE = 20;
 	constexpr std::string_view MARGIN      = "    ";
 	constexpr std::string_view RESET       = "\033[0m";
 	constexpr std::string_view TICK        = "✓ ";

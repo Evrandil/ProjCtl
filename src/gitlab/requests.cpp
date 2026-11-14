@@ -34,19 +34,19 @@ auto GitLabInterface::request_list(const std::filesystem::path& path) -> std::ex
 
 	for (const nlohmann::json& json_request : json) {
 		try {
-		Row request;
-		request.number  = json_request.at("iid").get<int>();
-		request.title   = json_request.at("title").get<std::string>();
-		request.state   = json_request.at("state").get<std::string>();
-		request.created = json_request.at("created_at").get<std::string>();
-		request.updated = json_request.at("updated_at").get<std::string>();
-		request.author  = json_request.at("author").at("username").get<std::string>();
+			Row request;
+			request.number  = json_request.at("iid").get<int>();
+			request.title   = json_request.at("title").get<std::string>();
+			request.state   = json_request.at("state").get<std::string>();
+			request.created = json_request.at("created_at").get<std::string>();
+			request.updated = json_request.at("updated_at").get<std::string>();
+			request.author  = json_request.at("author").at("username").get<std::string>();
 
-		for (const nlohmann::json& label : json_request.at("labels")) {
-			request.labels.push_back(label.get<std::string>());
-		}
+			for (const nlohmann::json& label : json_request.at("labels")) {
+				request.labels.push_back(label.get<std::string>());
+			}
 
-		requests.push_back(std::move(request));
+			requests.push_back(std::move(request));
 		} catch (const nlohmann::json::exception& error) {
 			return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
 		}
@@ -78,11 +78,11 @@ auto GitLabInterface::request_view(const std::filesystem::path& path, int reques
 		return std::unexpected(result->text);
 	}
 
-//	try {
-//	placeholder
-//	} catch (const nlohmann::json::exception& error) {
-//		return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
-//	}
+	//	try {
+	//	placeholder
+	//	} catch (const nlohmann::json::exception& error) {
+	//		return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
+	//	}
 
 	return result->text;
 }

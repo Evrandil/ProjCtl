@@ -94,6 +94,7 @@ auto SystemInterface::run_background(std::span<const std::string> args, const st
 	posix_spawn_file_actions_t actions;
 	posix_spawn_file_actions_init(&actions);
 
+	posix_spawn_file_actions_addopen(&actions, STDIN_FILENO, "/dev/null", O_RDONLY, 0);
 	posix_spawn_file_actions_addopen(&actions, STDOUT_FILENO, "/dev/null", O_WRONLY, 0);
 	posix_spawn_file_actions_addopen(&actions, STDERR_FILENO, "/dev/null", O_WRONLY, 0);
 

@@ -39,22 +39,22 @@ auto GitHubInterface::request_list(const std::filesystem::path& path) -> std::ex
 
 	for (const nlohmann::json& json_request : json) {
 		try {
-		Row request;
-		request.number  = json_request.at("number").get<int>();
-		request.title   = json_request.at("title").get<std::string>();
-		request.state   = json_request.at("state").get<std::string>();
-		request.created = json_request.at("createdAt").get<std::string>();
-		request.updated = json_request.at("updatedAt").get<std::string>();
+			Row request;
+			request.number  = json_request.at("number").get<int>();
+			request.title   = json_request.at("title").get<std::string>();
+			request.state   = json_request.at("state").get<std::string>();
+			request.created = json_request.at("createdAt").get<std::string>();
+			request.updated = json_request.at("updatedAt").get<std::string>();
 
-		if (!json_request.at("author").is_null()) {
-			request.author = json_request.at("author").at("login").get<std::string>();
-		}
+			if (!json_request.at("author").is_null()) {
+				request.author = json_request.at("author").at("login").get<std::string>();
+			}
 
-		for (const nlohmann::json& label : json_request.at("labels")) {
-			request.labels.push_back(label.at("name").get<std::string>());
-		}
+			for (const nlohmann::json& label : json_request.at("labels")) {
+				request.labels.push_back(label.at("name").get<std::string>());
+			}
 
-		requests.push_back(std::move(request));
+			requests.push_back(std::move(request));
 		} catch (const nlohmann::json::exception& error) {
 			return std::unexpected(std::format("Unexpecdted json from gh: {}", error.what()));
 		}
@@ -89,10 +89,10 @@ auto GitHubInterface::request_view(const std::filesystem::path& path, int reques
 		return std::unexpected(result->text);
 	}
 
-//	try {
-//	} catch (const nlohmann::json::exception& error) {
-//		return std::unexpected(std::format("Unexpected json from gh: {}", error.what()));
-//	}
+	//	try {
+	//	} catch (const nlohmann::json::exception& error) {
+	//		return std::unexpected(std::format("Unexpected json from gh: {}", error.what()));
+	//	}
 
 	return result->text;
 }

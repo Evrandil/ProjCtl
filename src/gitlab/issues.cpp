@@ -34,19 +34,19 @@ auto GitLabInterface::issue_list(const std::filesystem::path& path) -> std::expe
 
 	for (const nlohmann::json& json_issue : json) {
 		try {
-		Row issue;
-		issue.number  = json_issue.at("iid").get<int>();
-		issue.title   = json_issue.at("title").get<std::string>();
-		issue.state   = json_issue.at("state").get<std::string>();
-		issue.created = json_issue.at("created_at").get<std::string>();
-		issue.updated = json_issue.at("updated_at").get<std::string>();
-		issue.author  = json_issue.at("author").at("username").get<std::string>();
+			Row issue;
+			issue.number  = json_issue.at("iid").get<int>();
+			issue.title   = json_issue.at("title").get<std::string>();
+			issue.state   = json_issue.at("state").get<std::string>();
+			issue.created = json_issue.at("created_at").get<std::string>();
+			issue.updated = json_issue.at("updated_at").get<std::string>();
+			issue.author  = json_issue.at("author").at("username").get<std::string>();
 
-		for (const nlohmann::json& label : json_issue.at("labels")) {
-			issue.labels.push_back(label.get<std::string>());
-		}
+			for (const nlohmann::json& label : json_issue.at("labels")) {
+				issue.labels.push_back(label.get<std::string>());
+			}
 
-		issues.push_back(std::move(issue));
+			issues.push_back(std::move(issue));
 		} catch (const nlohmann::json::exception& error) {
 			return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
 		}
