@@ -54,7 +54,7 @@ auto GitHostInterface::issue_edit(const std::filesystem::path& path, int issue_n
 }
 
 auto GitHostInterface::issue_view(const std::filesystem::path& path, int issue_number)
-	-> std::expected<std::string, std::string> {
+	-> std::expected<Row, std::string> {
 	return on_host(
 		path,
 		[&] { return GitHubInterface::issue_view(path, issue_number); },

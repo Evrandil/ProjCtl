@@ -19,6 +19,7 @@ enum class TableField : std::uint8_t {
 struct Row {
 	int                        number = 0;
 	std::string                title;
+	std::string                body;
 	std::string                state;
 	std::string                author;
 	std::string                created;

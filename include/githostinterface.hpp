@@ -17,7 +17,7 @@ namespace GitHostInterface {
 	[[nodiscard]] auto issue_edit(const std::filesystem::path& path, int issue_number)
 		-> std::expected<int, std::string>;
 	[[nodiscard]] auto issue_view(const std::filesystem::path& path, int issue_number)
-		-> std::expected<std::string, std::string>;
+		-> std::expected<Row, std::string>;
 	[[nodiscard]] auto issue_close(const std::filesystem::path& path, int issue_number)
 		-> std::expected<std::string, std::string>;
 	[[nodiscard]] auto request_list(const std::filesystem::path& path) -> std::expected<std::vector<Row>, std::string>;

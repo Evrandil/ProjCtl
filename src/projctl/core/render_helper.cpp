@@ -1,4 +1,4 @@
-#include "table_helper.hpp"
+#include "render_helper.hpp"
 
 #include "row.hpp"
 
@@ -8,7 +8,7 @@
 #include <string_view>
 #include <utility>
 
-auto TableHelper::cell_text(const Row& row, const TableField field) -> std::string {
+auto RenderHelper::cell_text(const Row& row, const TableField field) -> std::string {
 	switch (field) {
 		case TableField::Number: return std::format("#{}", row.number);
 		case TableField::Title:  return row.title;
@@ -23,7 +23,7 @@ auto TableHelper::cell_text(const Row& row, const TableField field) -> std::stri
 	std::unreachable();
 }
 
-auto TableHelper::field_name(const TableField field) -> std::string_view {
+auto RenderHelper::field_name(const TableField field) -> std::string_view {
 	switch (field) {
 		case TableField::Number:  return "Number";
 		case TableField::Title:   return "Title";

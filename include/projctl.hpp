@@ -16,7 +16,6 @@
 #include <variant>
 #include <vector>
 
-
 using ProjectEntry    = std::map<std::string, ProjectContent>::value_type;
 using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
 
@@ -107,6 +106,7 @@ class ProjCtl {
 	[[nodiscard]] auto repo_list() const -> BatchResult;
 	[[nodiscard]] auto render_table(const std::vector<Row>& rows, const std::vector<TableField>& columns) const
 		-> std::string;
+	[[nodiscard]] auto render_row(const Row& row, const std::vector<TableField>& fields) const -> std::string;
 	[[nodiscard]] auto issues(const ProjectEntry& project) const -> ResultString;
 	[[nodiscard]] auto requests(const ProjectEntry& project) const -> ResultString;
 	[[nodiscard]] auto issues(const std::optional<std::string>& name) const -> ResultString;

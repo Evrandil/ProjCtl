@@ -1,9 +1,9 @@
 #include "projctl.hpp"
 
 #include "config.hpp"
+#include "render_helper.hpp"
 #include "row.hpp"
 #include "style.hpp"
-#include "table_helper.hpp"
 #include "text.hpp"
 
 #include <format>
@@ -19,7 +19,7 @@ auto ProjCtl::render_table(const std::vector<Row>& rows, const std::vector<Table
 	std::string table = std::string{paint(config.colors.header)};
 	for (const TableField field : columns) {
 		const Settings::Column& column = column_of(config.tables, field);
-		std::format_to(std::back_inserter(table), "{:<{}}", TableHelper::field_name(field), column.width);
+		std::format_to(std::back_inserter(table), "{:<{}}", RenderHelper::field_name(field), column.width);
 	}
 	std::format_to(std::back_inserter(table), "{}\n", reset());
 	for (const Row& row : rows) {
@@ -31,7 +31,7 @@ auto ProjCtl::render_table(const std::vector<Row>& rows, const std::vector<Table
 				std::back_inserter(table),
 				"{}{:<{}}{}",
 				paint(color),
-				truncate(TableHelper::cell_text(row, field), column.width - 1),
+				truncate(RenderHelper::cell_text(row, field), column.width - 1),
 				column.width,
 				reset()
 			);
