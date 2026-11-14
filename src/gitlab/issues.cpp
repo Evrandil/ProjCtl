@@ -59,7 +59,7 @@ auto GitLabInterface::issue_create(const std::filesystem::path& path) -> std::ex
 	return SystemInterface::run_interactive(std::vector<std::string>{"glab", "issue", "create"}, path);
 }
 
-auto GitLabInterface::issue_edit(const std::filesystem::path& path, int issue_number)
+auto GitLabInterface::issue_edit(const std::filesystem::path& path, int const issue_number)
 	-> std::expected<int, std::string> {
 	return SystemInterface::run_interactive(
 		std::vector<std::string>{"glab", "issue", "edit", std::to_string(issue_number)},
@@ -67,7 +67,7 @@ auto GitLabInterface::issue_edit(const std::filesystem::path& path, int issue_nu
 	);
 }
 
-auto GitLabInterface::issue_view(const std::filesystem::path& path, int issue_number)
+auto GitLabInterface::issue_view(const std::filesystem::path& path, int const issue_number)
 	-> std::expected<Row, std::string> {
 	const std::expected result = SystemInterface::run(
 		std::vector<std::string>{"glab", "issue", "view", std::to_string(issue_number), "--output", "json"},
@@ -106,7 +106,7 @@ auto GitLabInterface::issue_view(const std::filesystem::path& path, int issue_nu
 	}
 }
 
-auto GitLabInterface::issue_close(const std::filesystem::path& path, int issue_number)
+auto GitLabInterface::issue_close(const std::filesystem::path& path, int const issue_number)
 	-> std::expected<std::string, std::string> {
 	const std::expected result =
 		SystemInterface::run(std::vector<std::string>{"glab", "issue", "close", std::to_string(issue_number)}, path);

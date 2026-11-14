@@ -44,7 +44,7 @@ auto GitHostInterface::issue_create(const std::filesystem::path& path) -> std::e
 	);
 }
 
-auto GitHostInterface::issue_edit(const std::filesystem::path& path, int issue_number)
+auto GitHostInterface::issue_edit(const std::filesystem::path& path, const int issue_number)
 	-> std::expected<int, std::string> {
 	return on_host(
 		path,
@@ -53,7 +53,7 @@ auto GitHostInterface::issue_edit(const std::filesystem::path& path, int issue_n
 	);
 }
 
-auto GitHostInterface::issue_view(const std::filesystem::path& path, int issue_number)
+auto GitHostInterface::issue_view(const std::filesystem::path& path, const int issue_number)
 	-> std::expected<Row, std::string> {
 	return on_host(
 		path,
@@ -62,7 +62,7 @@ auto GitHostInterface::issue_view(const std::filesystem::path& path, int issue_n
 	);
 }
 
-auto GitHostInterface::issue_close(const std::filesystem::path& path, int issue_number)
+auto GitHostInterface::issue_close(const std::filesystem::path& path, const int issue_number)
 	-> std::expected<std::string, std::string> {
 	return on_host(
 		path,
@@ -87,7 +87,7 @@ auto GitHostInterface::request_create(const std::filesystem::path& path) -> std:
 	);
 }
 
-auto GitHostInterface::request_edit(const std::filesystem::path& path, int request_number)
+auto GitHostInterface::request_edit(const std::filesystem::path& path, int const request_number)
 	-> std::expected<int, std::string> {
 	return on_host(
 		path,
@@ -96,7 +96,7 @@ auto GitHostInterface::request_edit(const std::filesystem::path& path, int reque
 	);
 }
 
-auto GitHostInterface::request_view(const std::filesystem::path& path, int request_number)
+auto GitHostInterface::request_view(const std::filesystem::path& path, int const request_number)
 	-> std::expected<Row, std::string> {
 	return on_host(
 		path,
@@ -105,7 +105,7 @@ auto GitHostInterface::request_view(const std::filesystem::path& path, int reque
 	);
 }
 
-auto GitHostInterface::request_close(const std::filesystem::path& path, int request_number)
+auto GitHostInterface::request_close(const std::filesystem::path& path, int const request_number)
 	-> std::expected<std::string, std::string> {
 	return on_host(
 		path,

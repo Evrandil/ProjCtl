@@ -8,5 +8,5 @@
 namespace RenderHelper {
 	auto field_name(TableField field) -> std::string_view;
 	auto cell_text(const Row& row, TableField field) -> std::string;
-	auto is_open(const std::string_view state) -> bool;
+	auto is_open(std::string_view state) -> bool;
 } // namespace RenderHelper

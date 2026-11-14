@@ -67,7 +67,7 @@ auto GitHubInterface::request_create(const std::filesystem::path& path) -> std::
 	return SystemInterface::run_interactive(std::vector<std::string>{"gh", "pr", "create"}, path);
 }
 
-auto GitHubInterface::request_edit(const std::filesystem::path& path, int request_number)
+auto GitHubInterface::request_edit(const std::filesystem::path& path, int const request_number)
 	-> std::expected<int, std::string> {
 	return SystemInterface::run_interactive(
 		std::vector<std::string>{"gh", "pr", "edit", std::to_string(request_number)},
@@ -75,10 +75,19 @@ auto GitHubInterface::request_edit(const std::filesystem::path& path, int reques
 	);
 }
 
-auto GitHubInterface::request_view(const std::filesystem::path& path, int request_number)
+auto GitHubInterface::request_view(const std::filesystem::path& path, int const request_number)
 	-> std::expected<Row, std::string> {
 	std::expected result = SystemInterface::run(
-		gh_command(gh_command(std::vector<std::string>{"gh", "pr", "view", std::to_string(request_number), "--json", "number,body,title,state,author,labels,createdAt,updatedAt"})),
+		gh_command(gh_command(
+			std::vector<std::string>{
+				"gh",
+				"pr",
+				"view",
+				std::to_string(request_number),
+				"--json",
+				"number,body,title,state,author,labels,createdAt,updatedAt",
+			}
+		)),
 		path
 	);
 
@@ -99,7 +108,7 @@ auto GitHubInterface::request_view(const std::filesystem::path& path, int reques
 
 		request.number  = json.at("number").get<int>();
 		request.title   = json.at("title").get<std::string>();
-		request.body = json.at("body").get<std::string>();
+		request.body    = json.at("body").get<std::string>();
 		request.state   = json.at("state").get<std::string>();
 		request.created = json.at("createdAt").get<std::string>();
 		request.updated = json.at("updatedAt").get<std::string>();
@@ -118,7 +127,7 @@ auto GitHubInterface::request_view(const std::filesystem::path& path, int reques
 	}
 }
 
-auto GitHubInterface::request_close(const std::filesystem::path& path, int request_number)
+auto GitHubInterface::request_close(const std::filesystem::path& path, int const request_number)
 	-> std::expected<std::string, std::string> {
 	std::expected result = SystemInterface::run(
 		gh_command(std::vector<std::string>{"gh", "pr", "close", std::to_string(request_number)}),

@@ -69,8 +69,10 @@ auto GitLabInterface::request_edit(const std::filesystem::path& path, int reques
 
 auto GitLabInterface::request_view(const std::filesystem::path& path, int request_number)
 	-> std::expected<Row, std::string> {
-	const std::expected result =
-		SystemInterface::run(std::vector<std::string>{"glab", "mr", "view", std::to_string(request_number), "--output", "json"}, path);
+	const std::expected result = SystemInterface::run(
+		std::vector<std::string>{"glab", "mr", "view", std::to_string(request_number), "--output", "json"},
+		path
+	);
 	if (!result) {
 		return std::unexpected(result.error());
 	}
