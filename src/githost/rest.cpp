@@ -97,7 +97,7 @@ auto GitHostInterface::request_edit(const std::filesystem::path& path, int reque
 }
 
 auto GitHostInterface::request_view(const std::filesystem::path& path, int request_number)
-	-> std::expected<std::string, std::string> {
+	-> std::expected<Row, std::string> {
 	return on_host(
 		path,
 		[&] { return GitHubInterface::request_view(path, request_number); },

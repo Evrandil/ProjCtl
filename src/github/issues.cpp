@@ -50,6 +50,7 @@ auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expe
 			issue.state   = json_issue.at("state").get<std::string>();
 			issue.created = json_issue.at("createdAt").get<std::string>();
 			issue.updated = json_issue.at("updatedAt").get<std::string>();
+
 			if (!json_issue.at("parent").is_null()) {
 				issue.parent = json_issue.at("parent").at("title").get<std::string>();
 			}

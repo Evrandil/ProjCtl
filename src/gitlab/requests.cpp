@@ -95,7 +95,7 @@ auto GitLabInterface::request_view(const std::filesystem::path& path, int reques
 
 		return request;
 	} catch (const nlohmann::json::exception& error) {
-		return std::unexpected(std::format("Unexpected json from glab: {}", error.what()));
+		return std::unexpected(std::format("Unexpected json from GLab: {}", error.what()));
 	}
 }
 

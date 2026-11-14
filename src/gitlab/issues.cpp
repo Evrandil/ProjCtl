@@ -95,6 +95,7 @@ auto GitLabInterface::issue_view(const std::filesystem::path& path, int issue_nu
 		issue.author  = json.at("author").at("username").get<std::string>();
 		issue.created = json.at("created_at").get<std::string>();
 		issue.updated = json.at("updated_at").get<std::string>();
+
 		for (const nlohmann::json& label : json.at("labels")) {
 			issue.labels.push_back(label.get<std::string>());
 		}

@@ -31,7 +31,7 @@ auto GitHubInterface::request_list(const std::filesystem::path& path) -> std::ex
 
 	const nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
 	if (json.is_discarded()) {
-		return std::unexpected(std::format("Unexpected output from gh:\n{}", result->text));
+		return std::unexpected(std::format("Unexpected output from GH:\n{}", result->text));
 	}
 
 	std::vector<Row> requests;
@@ -56,7 +56,7 @@ auto GitHubInterface::request_list(const std::filesystem::path& path) -> std::ex
 
 			requests.push_back(std::move(request));
 		} catch (const nlohmann::json::exception& error) {
-			return std::unexpected(std::format("Unexpecdted json from gh: {}", error.what()));
+			return std::unexpected(std::format("Unexpecdted json from GH: {}", error.what()));
 		}
 	}
 
@@ -76,9 +76,9 @@ auto GitHubInterface::request_edit(const std::filesystem::path& path, int reques
 }
 
 auto GitHubInterface::request_view(const std::filesystem::path& path, int request_number)
-	-> std::expected<std::string, std::string> {
+	-> std::expected<Row, std::string> {
 	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "pr", "view", std::to_string(request_number)}),
+		gh_command(std::vector<std::string>{"gh", "pr", "view", std::to_string(request_number), "--output", "json"}),
 		path
 	);
 
@@ -89,12 +89,32 @@ auto GitHubInterface::request_view(const std::filesystem::path& path, int reques
 		return std::unexpected(result->text);
 	}
 
-	//	try {
-	//	} catch (const nlohmann::json::exception& error) {
-	//		return std::unexpected(std::format("Unexpected json from gh: {}", error.what()));
-	//	}
+	const nlohmann::json json = nlohmann::json::parse(result->text, nullptr, false);
+	if (json.is_discarded()) {
+		return std::unexpected(std::format("Unexpected output from GH: {}", result->text));
+	}
 
-	return result->text;
+	try {
+		Row request;
+
+		request.number  = json.at("number").get<int>();
+		request.title   = json.at("title").get<std::string>();
+		request.state   = json.at("state").get<std::string>();
+		request.created = json.at("createdAt").get<std::string>();
+		request.updated = json.at("updatedAt").get<std::string>();
+
+		if (!json.at("author").is_null()) {
+			request.author = json.at("author").at("login").get<std::string>();
+		}
+
+		for (const nlohmann::json& label : json.at("labels")) {
+			request.labels.push_back(label.at("name").get<std::string>());
+		}
+
+		return request;
+	} catch (const nlohmann::json::exception& error) {
+		return std::unexpected(std::format("Unexpected json from GH: {}", error.what()));
+	}
 }
 
 auto GitHubInterface::request_close(const std::filesystem::path& path, int request_number)
