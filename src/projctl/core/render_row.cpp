@@ -15,7 +15,7 @@
 
 auto ProjCtl::render_row(const Row& row, const std::vector<TableField>& fields) const -> std::string {
 	std::string output;
-	auto output_inserter = std::back_inserter(output);
+	std::back_insert_iterator output_inserter = std::back_inserter(output);
 	const auto  parse_line =
 		[&](const std::string_view header, const std::string_view text, const Style::Color color) -> void {
 		std::format_to(
@@ -47,7 +47,7 @@ auto ProjCtl::render_row(const Row& row, const std::vector<TableField>& fields) 
 	for (const auto part : row.body | std::views::split('\n')) {
 		std::format_to(
 				output_inserter,
-				"{}{}{}{}",
+				"{}{}{}{}\n",
 				Style::MARGIN,
 				paint(config.tables.body.color),
 				trim(std::string_view{part}),
