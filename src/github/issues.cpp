@@ -9,10 +9,10 @@
 #include <expected>
 #include <filesystem>
 #include <format>
+#include <print>
 #include <string>
 #include <utility>
 #include <vector>
-#include <print>
 
 auto GitHubInterface::issue_list(const std::filesystem::path& path) -> std::expected<std::vector<Row>, std::string> {
 	const std::expected result = SystemInterface::run(
