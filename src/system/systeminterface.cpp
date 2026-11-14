@@ -1,4 +1,5 @@
 #include "systeminterface.hpp"
+
 #include "system_helper.hpp"
 
 #include <array>
@@ -6,6 +7,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <expected>
+#include <fcntl.h>
 #include <filesystem>
 #include <format>
 #include <span>
@@ -80,6 +82,39 @@ auto SystemInterface::run(std::span<const std::string> args, const std::filesyst
 	return Output{.exit_code = SystemHelper::wait_for(pid), .text = std::move(text)};
 }
 
+auto SystemInterface::run_background(std::span<const std::string> args, const std::filesystem::path& cwd)
+	-> std::expected<int, std::string> {
+	if (args.empty()) {
+		return std::unexpected("No program to run");
+	}
+	if (!cwd.empty() && !std::filesystem::is_directory(cwd)) {
+		return std::unexpected(std::format("Directory doesn't exist: {}", cwd.string()));
+	}
+
+	posix_spawn_file_actions_t actions;
+	posix_spawn_file_actions_init(&actions);
+	if (!cwd.empty()) {
+		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());
+	}
+
+	posix_spawnattr_t attr;
+	posix_spawnattr_init(&attr);
+	posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSID);
+
+	std::vector<char*> argv  = SystemHelper::make_argv(args);
+	pid_t              pid   = 0;
+	const int          error = posix_spawnp(&pid, argv.front(), &actions, &attr, argv.data(), environ);
+
+	posix_spawn_file_actions_destroy(&actions);
+	posix_spawnattr_destroy(&attr);
+
+	if (error != 0) {
+		return std::unexpected(std::format("Couldn't run {}: {}", args.front(), std::strerror(error)));
+	}
+
+	return 0;
+}
+
 auto SystemInterface::run_interactive(std::span<const std::string> args, const std::filesystem::path& cwd)
 	-> std::expected<int, std::string> {
 	if (args.empty()) {
@@ -91,6 +126,10 @@ auto SystemInterface::run_interactive(std::span<const std::string> args, const s
 
 	posix_spawn_file_actions_t actions;
 	posix_spawn_file_actions_init(&actions);
+
+	posix_spawn_file_actions_addopen(&actions, STDOUT_FILENO, "/dev/null", O_WRONLY, 0);
+	posix_spawn_file_actions_addopen(&actions, STDERR_FILENO, "/dev/null", O_WRONLY, 0);
+
 	if (!cwd.empty()) {
 		posix_spawn_file_actions_addchdir_np(&actions, cwd.c_str());
 	}
