@@ -8,15 +8,15 @@
 
 #include <format>
 #include <iterator>
+#include <ranges>
 #include <string>
 #include <string_view>
 #include <vector>
-#include <ranges>
 
 auto ProjCtl::render_row(const Row& row, const std::vector<TableField>& fields) const -> std::string {
-	std::string output;
+	std::string               output;
 	std::back_insert_iterator output_inserter = std::back_inserter(output);
-	const auto  parse_line =
+	const auto                parse_line =
 		[&](const std::string_view header, const std::string_view text, const Style::Color color) -> void {
 		std::format_to(
 			output_inserter,
@@ -46,13 +46,13 @@ auto ProjCtl::render_row(const Row& row, const std::vector<TableField>& fields) 
 	parse_line("Body", "", Style::Color::Default);
 	for (const auto part : row.body | std::views::split('\n')) {
 		std::format_to(
-				output_inserter,
-				"{}{}{}{}\n",
-				Style::MARGIN,
-				paint(config.tables.body.color),
-				trim(std::string_view{part}),
-				reset()
-				);
+			output_inserter,
+			"{}{}{}{}\n",
+			Style::MARGIN,
+			paint(config.tables.body.color),
+			trim(std::string_view{part}),
+			reset()
+		);
 	}
 	return output;
 }
