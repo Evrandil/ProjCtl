@@ -21,7 +21,7 @@ namespace GitHubInterface {
 	auto request_list(const std::filesystem::path& path) -> std::expected<std::vector<Row>, std::string>;
 	auto request_create(const std::filesystem::path& path) -> std::expected<int, std::string>;
 	auto request_edit(const std::filesystem::path& path, int request_number) -> std::expected<int, std::string>;
-	auto request_view(const std::filesystem::path& path, int request_number) -> std::expected<std::string, std::string>;
+	auto request_view(const std::filesystem::path& path, int request_number) -> std::expected<Row, std::string>;
 	auto request_close(const std::filesystem::path& path, int request_number)
 		-> std::expected<std::string, std::string>;
 	auto request_merge(const std::filesystem::path& path) -> std::expected<std::string, std::string>;

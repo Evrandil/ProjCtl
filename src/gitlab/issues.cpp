@@ -69,7 +69,7 @@ auto GitLabInterface::issue_edit(const std::filesystem::path& path, int issue_nu
 
 auto GitLabInterface::issue_view(const std::filesystem::path& path, int issue_number)
 	-> std::expected<Row, std::string> {
-	std::expected result = SystemInterface::run(
+	const std::expected result = SystemInterface::run(
 		std::vector<std::string>{"glab", "issue", "view", std::to_string(issue_number), "--output", "json"},
 		path
 	);
@@ -107,7 +107,7 @@ auto GitLabInterface::issue_view(const std::filesystem::path& path, int issue_nu
 
 auto GitLabInterface::issue_close(const std::filesystem::path& path, int issue_number)
 	-> std::expected<std::string, std::string> {
-	std::expected result =
+	const std::expected result =
 		SystemInterface::run(std::vector<std::string>{"glab", "issue", "close", std::to_string(issue_number)}, path);
 	if (!result) {
 		return std::unexpected(result.error());
