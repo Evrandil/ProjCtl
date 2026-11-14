@@ -4,6 +4,7 @@
 #include "style.hpp"
 #include "systeminterface.hpp"
 
+#include <algorithm>
 #include <array>
 #include <expected>
 #include <format>
@@ -11,7 +12,6 @@
 #include <string>
 #include <string_view>
 #include <vector>
-#include <algorithm>
 
 namespace {
 	constexpr auto BACKGROUND_EDITORS = std::to_array<std::string_view>({
