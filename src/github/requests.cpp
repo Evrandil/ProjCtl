@@ -78,7 +78,7 @@ auto GitHubInterface::request_edit(const std::filesystem::path& path, int reques
 auto GitHubInterface::request_view(const std::filesystem::path& path, int request_number)
 	-> std::expected<Row, std::string> {
 	std::expected result = SystemInterface::run(
-		gh_command(std::vector<std::string>{"gh", "pr", "view", std::to_string(request_number), "--output", "json"}),
+		gh_command(gh_command(std::vector<std::string>{"gh", "pr", "view", std::to_string(request_number), "--json", "number,body,title,state,author,labels,createdAt,updatedAt"})),
 		path
 	);
 
@@ -99,6 +99,7 @@ auto GitHubInterface::request_view(const std::filesystem::path& path, int reques
 
 		request.number  = json.at("number").get<int>();
 		request.title   = json.at("title").get<std::string>();
+		request.body = json.at("body").get<std::string>();
 		request.state   = json.at("state").get<std::string>();
 		request.created = json.at("createdAt").get<std::string>();
 		request.updated = json.at("updatedAt").get<std::string>();
