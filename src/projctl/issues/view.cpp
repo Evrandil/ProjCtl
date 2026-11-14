@@ -2,8 +2,10 @@
 
 #include "command.hpp"
 #include "githostinterface.hpp"
+#include "style.hpp"
 
 #include <expected>
+#include <format>
 #include <optional>
 #include <string>
 
@@ -14,7 +16,15 @@ auto ProjCtl::issue_view(const std::optional<std::string>& name, const int issue
 	}
 	const std::expected issue = GitHostInterface::issue_view((*project)->second.path, issue_number);
 	if (!issue) {
-		return std::unexpected(issue.error());
+		return std::unexpected(
+			std::format(
+				"{}{}{}{}",
+				paint(config.colors.error),
+				Style::symbol(Style::Mark::Cross),
+				issue.error(),
+				reset()
+			)
+		);
 	}
 	return render_row(*issue, config.tables.issue_columns);
 }
