@@ -43,7 +43,7 @@ class ProjCtl {
 		-> std::expected<ProjectIterator, std::string>;
 	[[nodiscard]] auto current_project_name() const -> std::optional<std::string>;
 
-	[[nodiscard]] auto batch_to_string(const BatchResult& results) const -> ResultString;
+	[[nodiscard]] auto        batch_to_string(const BatchResult& results) const -> ResultString;
 	[[nodiscard]] auto        with_save(const ResultString& result) const -> ResultString;
 	[[nodiscard]] static auto report(const ResultString& result) -> int;
 	[[nodiscard]] static auto report(const ResultInt& result) -> int;

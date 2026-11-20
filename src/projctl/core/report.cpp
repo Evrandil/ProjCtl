@@ -32,7 +32,16 @@ auto ProjCtl::batch_to_string(const BatchResult& results) const -> ResultString 
 	if (results.failed == 0) {
 		return results.output;
 	}
-	return std::unexpected(std::format("{}{}{}{}{} failed", results.output, paint(config.colors.error), Style::CROSS, results.failed, reset()));
+	return std::unexpected(
+		std::format(
+			"{}{}{}{}{} failed",
+			results.output,
+			paint(config.colors.error),
+			Style::CROSS,
+			results.failed,
+			reset()
+		)
+	);
 }
 
 auto ProjCtl::with_save(const ResultString& result) const -> ResultString {
@@ -42,9 +51,7 @@ auto ProjCtl::with_save(const ResultString& result) const -> ResultString {
 }
 
 auto ProjCtl::handle(const Cmd::Unknown& cmd) const -> ResultInt {
-	return std::unexpected(
-		std::format("{}{}{}{}", paint(config.colors.error), Style::CROSS, cmd.message, reset())
-	);
+	return std::unexpected(std::format("{}{}{}{}", paint(config.colors.error), Style::CROSS, cmd.message, reset()));
 }
 
 auto ProjCtl::handle(const Cmd::Version& /*unused*/) const -> ResultString {
