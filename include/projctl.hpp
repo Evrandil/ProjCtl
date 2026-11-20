@@ -124,17 +124,17 @@ class ProjCtl {
 	[[nodiscard]] auto request_merge(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::GH::Status& /*unused*/) const -> int;
 	[[nodiscard]] auto handle(const Cmd::GH::RepoList& /*unused*/) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::IssueList& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::IssueCreate& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::IssueEdit& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::IssueView& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::IssueClose& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::RequestList& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::RequestCreate& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::RequestEdit& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::RequestView& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::RequestClose& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::RequestMerge& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Issue::List& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Issue::Create& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Issue::Edit& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Issue::View& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Issue::Close& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::List& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::Create& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::Edit& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::View& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::Close& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::Merge& cmd) const -> int;
 
 	public:
 	ProjCtl();

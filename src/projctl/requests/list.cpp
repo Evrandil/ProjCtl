@@ -86,6 +86,6 @@ auto ProjCtl::requests_all() const -> BatchResult {
 	return results;
 }
 
-auto ProjCtl::handle(const Cmd::GH::RequestList& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Request::List& cmd) const -> int {
 	return cmd.all ? report(requests_all()) : report(requests(cmd.name));
 }

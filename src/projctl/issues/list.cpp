@@ -86,6 +86,6 @@ auto ProjCtl::issues_all() const -> BatchResult {
 	return results;
 }
 
-auto ProjCtl::handle(const Cmd::GH::IssueList& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Issue::List& cmd) const -> int {
 	return cmd.all ? report(issues_all()) : report(issues(cmd.name));
 }

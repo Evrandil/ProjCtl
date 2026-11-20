@@ -33,6 +33,6 @@ auto ProjCtl::issue_edit(const std::optional<std::string>& name, const int issue
 	return *result;
 }
 
-auto ProjCtl::handle(const Cmd::GH::IssueEdit& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Issue::Edit& cmd) const -> int {
 	return report(issue_edit(cmd.name, cmd.number));
 }

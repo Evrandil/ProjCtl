@@ -30,6 +30,6 @@ auto ProjCtl::request_view(const std::optional<std::string>& name, const int req
 	return render_row(*request, config.tables.request_columns);
 }
 
-auto ProjCtl::handle(const Cmd::GH::RequestView& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Request::View& cmd) const -> int {
 	return report(request_view(cmd.name, cmd.number));
 }

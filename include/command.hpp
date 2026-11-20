@@ -103,57 +103,65 @@ namespace Cmd {
 
 		struct RepoList {};
 
-		struct IssueList {
-			bool                       all = false;
-			std::optional<std::string> name;
-		};
+		namespace Issue {
 
-		struct IssueCreate {
-			std::optional<std::string> name;
-		};
+			struct List {
+				bool                       all = false;
+				std::optional<std::string> name;
+			};
 
-		struct IssueEdit {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+			struct Create {
+				std::optional<std::string> name;
+			};
 
-		struct IssueView {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+			struct Edit {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
 
-		struct IssueClose {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+			struct View {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
 
-		struct RequestList {
-			bool                       all = false;
-			std::optional<std::string> name;
-		};
+			struct Close {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
 
-		struct RequestCreate {
-			std::optional<std::string> name;
-		};
+		}
 
-		struct RequestEdit {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+		namespace Request {
 
-		struct RequestView {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+			struct List {
+				bool                       all = false;
+				std::optional<std::string> name;
+			};
 
-		struct RequestClose {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+			struct Create {
+				std::optional<std::string> name;
+			};
 
-		struct RequestMerge {
-			std::optional<std::string> name;
-		};
+			struct Edit {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
+
+			struct View {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
+
+			struct Close {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
+
+			struct Merge {
+				std::optional<std::string> name;
+			};
+
+		}
 
 	} // namespace GH
 
@@ -181,16 +189,16 @@ using Command = std::variant<
 	Cmd::Git::Diff,
 	Cmd::GH::Status,
 	Cmd::GH::RepoList,
-	Cmd::GH::IssueList,
-	Cmd::GH::IssueCreate,
-	Cmd::GH::IssueEdit,
-	Cmd::GH::IssueView,
-	Cmd::GH::IssueClose,
-	Cmd::GH::RequestList,
-	Cmd::GH::RequestCreate,
-	Cmd::GH::RequestEdit,
-	Cmd::GH::RequestView,
-	Cmd::GH::RequestClose,
-	Cmd::GH::RequestMerge
+	Cmd::GH::Issue::List,
+	Cmd::GH::Issue::Create,
+	Cmd::GH::Issue::Edit,
+	Cmd::GH::Issue::View,
+	Cmd::GH::Issue::Close,
+	Cmd::GH::Request::List,
+	Cmd::GH::Request::Create,
+	Cmd::GH::Request::Edit,
+	Cmd::GH::Request::View,
+	Cmd::GH::Request::Close,
+	Cmd::GH::Request::Merge
 	>;
 // clang-format on

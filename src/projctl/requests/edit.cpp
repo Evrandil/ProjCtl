@@ -33,6 +33,6 @@ auto ProjCtl::request_edit(const std::optional<std::string>& name, const int req
 	return *result;
 }
 
-auto ProjCtl::handle(const Cmd::GH::RequestEdit& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Request::Edit& cmd) const -> int {
 	return report(request_edit(cmd.name, cmd.number));
 }
