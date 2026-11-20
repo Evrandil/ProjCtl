@@ -11,7 +11,7 @@
 #include <iterator>
 #include <string>
 
-auto ProjCtl::handle(const Cmd::GH::RepoList& /*unused*/) const -> ResultString {
+auto ProjCtl::handle(const Cmd::GH::RepoList& /*unused*/) const -> BatchResult {
 	const auto list_one = [&](HostOption host) -> std::expected<std::string, std::string> {
 		const std::expected repo_list = GitHostInterface::repo_list(host);
 		if (!repo_list) {
@@ -52,5 +52,5 @@ auto ProjCtl::handle(const Cmd::GH::RepoList& /*unused*/) const -> ResultString 
 		}
 		std::format_to(std::back_inserter(results.output), "{}\n\n", result ? *result : result.error());
 	}
-	return batch_to_string(results);
+	return results;
 }

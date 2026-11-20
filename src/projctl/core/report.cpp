@@ -8,6 +8,7 @@
 #include <format>
 #include <print>
 #include <string>
+#include <variant>
 
 auto ProjCtl::report(const ResultString& result) -> int {
 	if (!result) {
@@ -28,17 +29,21 @@ auto ProjCtl::report(const ResultInt& result) -> int {
 	return *result;
 }
 
-auto ProjCtl::report(const BatchResult& results) -> int {
-	if (results.failed == 0) {
-		println(stdout, "\n\n{}\n\n", results.output);
+auto ProjCtl::report(const OneOrAll& result) -> int {
+	return std::visit([this, &result] -> int { return report(result); });
+}
+
+auto ProjCtl::report(const BatchResult& result) -> int {
+	if (result.failed == 0) {
+		println(stdout, "\n\n{}\n\n", result.output);
 		return 0;
 	}
 	println(stderr,
 			"{}{}{}{}{} failed",
-			results.output,
+			result.output,
 			paint(config.colors.error),
 			Style::CROSS,
-			results.failed,
+			result.failed,
 			reset()
 		);
 	return 1;

@@ -47,6 +47,7 @@ class ProjCtl {
 	[[nodiscard]] static auto report(const ResultString& result) -> int;
 	[[nodiscard]] static auto report(const ResultInt& result) -> int;
 	[[nodiscard]] auto report(const BatchResult& result) -> int;
+	[[nodiscard]] auto report(const OneOrAll& result) -> int;
 
 	// Program's functionality
 	[[nodiscard]] auto handle(const Cmd::Unknown& cmd) const -> ResultInt;
@@ -93,8 +94,8 @@ class ProjCtl {
 	[[nodiscard]] auto requests(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto issues_all() const -> BatchResult;
 	[[nodiscard]] auto requests_all() const -> BatchResult;
-	[[nodiscard]] auto handle(const Cmd::GH::Status& /*unused*/) const -> ResultString;
-	[[nodiscard]] auto handle(const Cmd::GH::RepoList& /*unused*/) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::GH::Status& /*unused*/) const -> BatchResult;
+	[[nodiscard]] auto handle(const Cmd::GH::RepoList& /*unused*/) const -> BatchResult;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::List& cmd) const -> OneOrAll;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Create& cmd) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Edit& cmd) const -> ResultInt;
