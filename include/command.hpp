@@ -103,57 +103,65 @@ namespace Cmd {
 
 		struct RepoList {};
 
-		struct IssueList {
-			bool                       all = false;
-			std::optional<std::string> name;
-		};
+		namespace Issue {
 
-		struct IssueCreate {
-			std::optional<std::string> name;
-		};
+			struct List {
+				bool                       all = false;
+				std::optional<std::string> name;
+			};
 
-		struct IssueEdit {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+			struct Create {
+				std::optional<std::string> name;
+			};
 
-		struct IssueView {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+			struct Edit {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
 
-		struct IssueClose {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+			struct View {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
 
-		struct RequestList {
-			bool                       all = false;
-			std::optional<std::string> name;
-		};
+			struct Close {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
 
-		struct RequestCreate {
-			std::optional<std::string> name;
-		};
+		}
 
-		struct RequestEdit {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+		namespace Request {
 
-		struct RequestView {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+			struct List {
+				bool                       all = false;
+				std::optional<std::string> name;
+			};
 
-		struct RequestClose {
-			int                        number = 0;
-			std::optional<std::string> name;
-		};
+			struct Create {
+				std::optional<std::string> name;
+			};
 
-		struct RequestMerge {
-			std::optional<std::string> name;
-		};
+			struct Edit {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
+
+			struct View {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
+
+			struct Close {
+				int                        number = 0;
+				std::optional<std::string> name;
+			};
+
+			struct Merge {
+				std::optional<std::string> name;
+			};
+
+		}
 
 	} // namespace GH
 
