@@ -44,10 +44,12 @@ class ProjCtl {
 	[[nodiscard]] auto current_project_name() const -> std::optional<std::string>;
 
 	[[nodiscard]] auto        with_save(const ResultString& result) const -> ResultString;
-	[[nodiscard]] static auto report(const ResultString& result) -> int;
+	[[nodiscard]] auto report(const ResultString& result) -> int;
 	[[nodiscard]] static auto report(const ResultInt& result) -> int;
 	[[nodiscard]] auto report(const BatchResult& result) -> int;
-	[[nodiscard]] auto report(const OneOrAll& result) -> int;
+	auto report(const OneOrAll& result) -> int {
+		return std::visit([this](const auto& res) -> int { return report(res); }, result);
+	}
 
 	// Program's functionality
 	[[nodiscard]] auto handle(const Cmd::Unknown& cmd) const -> ResultInt;
