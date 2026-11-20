@@ -75,6 +75,6 @@ auto ProjCtl::fetch_all() const -> BatchResult {
 	return results;
 }
 
-auto ProjCtl::handle(const Cmd::Git::Fetch& cmd) const -> int {
-	return cmd.all ? report(fetch_all()) : report(fetch(cmd.name));
+auto ProjCtl::handle(const Cmd::Git::Fetch& cmd) const -> ResultString {
+	return cmd.all ? batch_to_string(fetch_all()) : fetch(cmd.name);
 }

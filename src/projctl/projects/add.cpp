@@ -12,11 +12,10 @@
 #include <string>
 #include <system_error>
 
-auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path)
-	-> std::expected<std::string, std::string> {
+auto ProjCtl::handle(const Cmd::Base::Add& cmd) -> ResultString {
 	std::error_code             error;
 	const std::filesystem::path full_path = std::filesystem::weakly_canonical(
-		std::filesystem::absolute(path.value_or(std::filesystem::current_path())),
+		std::filesystem::absolute(cmd.path.value_or(std::filesystem::current_path())),
 		error
 	);
 	if (error || !std::filesystem::is_directory(full_path)) {
@@ -26,14 +25,14 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				paint(config.colors.path),
-				truncate(path.value_or(".").string(), config.widths.max - Style::MARGIN_SIZE),
+				truncate(cmd.path.value_or(".").string(), config.widths.max - Style::MARGIN_SIZE),
 				paint(config.colors.error),
 				reset()
 			)
 		);
 	}
 
-	const std::string actual_name = name.value_or(full_path.filename().string());
+	const std::string actual_name = cmd.name.value_or(full_path.filename().string());
 	if (actual_name.empty()) {
 		return std::unexpected(
 			std::format(
@@ -41,7 +40,7 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
 				paint(config.colors.path),
-				path.value_or(".").string(),
+				cmd.path.value_or(".").string(),
 				reset()
 			)
 		);
@@ -68,25 +67,23 @@ auto ProjCtl::add(const std::optional<std::string>& name, const std::optional<st
 		);
 	}
 
-	return std::format(
-		"{}{}{}{:<{}}{}{}{}\n{}{:<{}}{}{}{}",
-		paint(config.colors.tick),
-		symbol(Style::Mark::Tick),
-		paint(config.colors.header),
-		"Added project:",
-		config.widths.name,
-		paint(config.colors.name),
-		truncate(entry->first, config.widths.max - Style::MARGIN_SIZE),
-		reset(),
-		paint(config.colors.header),
-		"With path:",
-		config.widths.name,
-		paint(config.colors.path),
-		truncate(entry->second.path.string(), config.widths.max - Style::MARGIN_SIZE),
-		reset()
+	return with_save(
+		std::format(
+			"{}{}{}{:<{}}{}{}{}\n{}{:<{}}{}{}{}",
+			paint(config.colors.tick),
+			symbol(Style::Mark::Tick),
+			paint(config.colors.header),
+			"Added project:",
+			config.widths.name,
+			paint(config.colors.name),
+			truncate(entry->first, config.widths.max - Style::MARGIN_SIZE),
+			reset(),
+			paint(config.colors.header),
+			"With path:",
+			config.widths.name,
+			paint(config.colors.path),
+			truncate(entry->second.path.string(), config.widths.max - Style::MARGIN_SIZE),
+			reset()
+		)
 	);
-}
-
-auto ProjCtl::handle(const Cmd::Base::Add& cmd) -> int {
-	return report_save(add(cmd.name, cmd.path));
 }

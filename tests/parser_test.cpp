@@ -1,8 +1,8 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
 
-#include "parser.hpp"
 #include "command.hpp"
+#include "parser.hpp"
 
 #include <string_view>
 #include <variant>

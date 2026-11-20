@@ -6,17 +6,14 @@
 
 #include <expected>
 #include <format>
-#include <optional>
-#include <string>
 
-auto ProjCtl::push(const std::optional<std::string>& name, const bool upstream) const
-	-> std::expected<std::string, std::string> {
-	const std::expected project = project_find(name);
+auto ProjCtl::handle(const Cmd::Git::Push& cmd) const -> ResultString {
+	const std::expected project = project_find(cmd.name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 
-	const std::expected result = GitInterface::push((*project)->second.path, upstream);
+	const ResultString result = GitInterface::push((*project)->second.path, cmd.branch_upstream);
 	if (!result) {
 		return std::unexpected(
 			std::format(
@@ -31,8 +28,4 @@ auto ProjCtl::push(const std::optional<std::string>& name, const bool upstream) 
 		);
 	}
 	return std::format("{}{}{}{}", paint(config.colors.tick), Style::TICK, *result, reset());
-}
-
-auto ProjCtl::handle(const Cmd::Git::Push& cmd) const -> int {
-	return report(push(cmd.name, cmd.branch_upstream));
 }

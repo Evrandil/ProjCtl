@@ -8,7 +8,6 @@
 #include <array>
 #include <expected>
 #include <format>
-#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -23,13 +22,13 @@ namespace {
 	});
 }
 
-auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
-	const std::expected project = project_find(name);
+auto ProjCtl::handle(const Cmd::Base::Open& cmd) const -> ResultString {
+	const std::expected project = project_find(cmd.name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 
-	const std::expected result = [&] -> std::expected<int, std::string> {
+	const std::expected result = [&] -> ResultInt {
 		if (std::ranges::contains(BACKGROUND_EDITORS, config.general.editor)) {
 			return SystemInterface::run_background(
 				std::vector<std::string>{config.general.editor, "."},
@@ -70,8 +69,4 @@ auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expecte
 		(*project)->first,
 		reset()
 	);
-}
-
-auto ProjCtl::handle(const Cmd::Base::Open& cmd) const -> int {
-	return report(open(cmd.name));
 }

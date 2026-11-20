@@ -6,16 +6,14 @@
 
 #include <expected>
 #include <format>
-#include <optional>
-#include <string>
 
-auto ProjCtl::request_view(const std::optional<std::string>& name, const int request_number) const
-	-> std::expected<std::string, std::string> {
-	const std::expected project = project_find(name);
+auto ProjCtl::handle(const Cmd::GH::Request::View& cmd) const -> ResultString {
+	const std::expected project = project_find(cmd.name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
-	std::expected request = GitHostInterface::request_view((*project)->second.path, request_number);
+
+	std::expected request = GitHostInterface::request_view((*project)->second.path, cmd.number);
 	if (!request) {
 		return std::unexpected(
 			std::format(
@@ -28,8 +26,4 @@ auto ProjCtl::request_view(const std::optional<std::string>& name, const int req
 		);
 	}
 	return render_row(*request, config.tables.request_columns);
-}
-
-auto ProjCtl::handle(const Cmd::GH::Request::View& cmd) const -> int {
-	return report(request_view(cmd.name, cmd.number));
 }

@@ -6,32 +6,25 @@
 
 #include <expected>
 #include <format>
-#include <optional>
-#include <string>
 
-auto ProjCtl::request_close(const std::optional<std::string>& name, const int request_number) const
-	-> std::expected<std::string, std::string> {
-	const std::expected project = project_find(name);
+auto ProjCtl::handle(const Cmd::GH::Request::Close& cmd) const -> ResultString {
+	const std::expected project = project_find(cmd.name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 
-	const std::expected result = GitHostInterface::request_close((*project)->second.path.string(), request_number);
+	const ResultString result = GitHostInterface::request_close((*project)->second.path.string(), cmd.number);
 	if (!result) {
 		return std::unexpected(
 			std::format(
 				"{}{} Failed to close request {}: {}{}",
 				paint(config.colors.error),
 				symbol(Style::Mark::Cross),
-				request_number,
+				cmd.number,
 				result.error(),
 				reset()
 			)
 		);
 	}
 	return *result;
-}
-
-auto ProjCtl::handle(const Cmd::GH::Request::Close& cmd) const -> int {
-	return report(request_close(cmd.name, cmd.number));
 }
