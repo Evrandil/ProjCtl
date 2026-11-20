@@ -22,7 +22,6 @@ namespace {
 	});
 }
 
-
 auto ProjCtl::handle(const Cmd::Base::Open& cmd) const -> ResultString {
 	const std::expected project = project_find(cmd.name);
 	if (!project) {

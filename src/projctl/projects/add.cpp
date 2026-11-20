@@ -12,7 +12,6 @@
 #include <string>
 #include <system_error>
 
-
 auto ProjCtl::handle(const Cmd::Base::Add& cmd) -> ResultString {
 	std::error_code             error;
 	const std::filesystem::path full_path = std::filesystem::weakly_canonical(
@@ -68,21 +67,23 @@ auto ProjCtl::handle(const Cmd::Base::Add& cmd) -> ResultString {
 		);
 	}
 
-	return std::format(
-		"{}{}{}{:<{}}{}{}{}\n{}{:<{}}{}{}{}",
-		paint(config.colors.tick),
-		symbol(Style::Mark::Tick),
-		paint(config.colors.header),
-		"Added project:",
-		config.widths.name,
-		paint(config.colors.name),
-		truncate(entry->first, config.widths.max - Style::MARGIN_SIZE),
-		reset(),
-		paint(config.colors.header),
-		"With path:",
-		config.widths.name,
-		paint(config.colors.path),
-		truncate(entry->second.path.string(), config.widths.max - Style::MARGIN_SIZE),
-		reset()
+	return with_save(
+		std::format(
+			"{}{}{}{:<{}}{}{}{}\n{}{:<{}}{}{}{}",
+			paint(config.colors.tick),
+			symbol(Style::Mark::Tick),
+			paint(config.colors.header),
+			"Added project:",
+			config.widths.name,
+			paint(config.colors.name),
+			truncate(entry->first, config.widths.max - Style::MARGIN_SIZE),
+			reset(),
+			paint(config.colors.header),
+			"With path:",
+			config.widths.name,
+			paint(config.colors.path),
+			truncate(entry->second.path.string(), config.widths.max - Style::MARGIN_SIZE),
+			reset()
+		)
 	);
 }

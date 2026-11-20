@@ -129,7 +129,7 @@ namespace Cmd {
 				std::optional<std::string> name;
 			};
 
-		}
+		} // namespace Issue
 
 		namespace Request {
 
@@ -161,7 +161,7 @@ namespace Cmd {
 				std::optional<std::string> name;
 			};
 
-		}
+		} // namespace Request
 
 	} // namespace GH
 

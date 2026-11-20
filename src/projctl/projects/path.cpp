@@ -5,7 +5,6 @@
 #include <expected>
 #include <print>
 
-
 auto ProjCtl::handle(const Cmd::Base::Path& cmd) const -> ResultInt {
 	const std::expected project = project_find(cmd.name);
 	if (!project) {

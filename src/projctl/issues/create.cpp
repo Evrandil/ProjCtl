@@ -7,7 +7,6 @@
 #include <expected>
 #include <format>
 
-
 auto ProjCtl::handle(const Cmd::GH::Issue::Create& cmd) const -> ResultInt {
 	const std::expected project = project_find(cmd.name);
 	if (!project) {

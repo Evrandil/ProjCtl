@@ -43,10 +43,11 @@ class ProjCtl {
 		-> std::expected<ProjectIterator, std::string>;
 	[[nodiscard]] auto current_project_name() const -> std::optional<std::string>;
 
+	[[nodiscard]] auto batch_to_string(const BatchResult& results) const -> ResultString;
+	[[nodiscard]] auto        with_save(const ResultString& result) const -> ResultString;
 	[[nodiscard]] static auto report(const ResultString& result) -> int;
 	[[nodiscard]] static auto report(const ResultInt& result) -> int;
-	[[nodiscard]] auto        report(const BatchResult& result) const -> int;
-	[[nodiscard]] auto        with_save(const ResultString& result) const -> ResultString;
+//	[[nodiscard]] auto        report(const BatchResult& result) const -> int;
 
 	// Program's functionality
 	[[nodiscard]] auto handle(const Cmd::Unknown& cmd) const -> ResultInt;
@@ -62,7 +63,6 @@ class ProjCtl {
 	[[nodiscard]] auto handle(const Cmd::Base::Open& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::Base::Build& cmd) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::Base::Run& cmd) const -> ResultInt;
-	// clang-format on
 
 	// Git functionality
 	[[nodiscard]] auto status(const ProjectEntry& project) const -> std::string;
@@ -75,10 +75,10 @@ class ProjCtl {
 	[[nodiscard]] auto fetch(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto pull(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::Git::Status& cmd) const -> ResultString;
-	[[nodiscard]] auto handle(const Cmd::Git::Fetch& cmd) const -> int;	// TODO different types
+	[[nodiscard]] auto handle(const Cmd::Git::Fetch& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::Git::Commit& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::Git::Push& cmd) const -> ResultString;
-	[[nodiscard]] auto handle(const Cmd::Git::Pull& cmd) const -> int;				// TODO different types
+	[[nodiscard]] auto handle(const Cmd::Git::Pull& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::Git::Branch& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::Git::Merge& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::Git::Log& cmd) const -> ResultString;
@@ -94,14 +94,14 @@ class ProjCtl {
 	[[nodiscard]] auto requests(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto issues_all() const -> BatchResult;
 	[[nodiscard]] auto requests_all() const -> BatchResult;
-	[[nodiscard]] auto handle(const Cmd::GH::Status& /*unused*/) const -> BatchResult;
-	[[nodiscard]] auto handle(const Cmd::GH::RepoList& /*unused*/) const -> BatchResult;
-	[[nodiscard]] auto handle(const Cmd::GH::Issue::List& cmd) const -> int;			// TODO different types
+	[[nodiscard]] auto handle(const Cmd::GH::Status& /*unused*/) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::GH::RepoList& /*unused*/) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::GH::Issue::List& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Create& cmd) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Edit& cmd) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::View& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Close& cmd) const -> ResultString;
-	[[nodiscard]] auto handle(const Cmd::GH::Request::List& cmd) const -> int;			// TODO different types
+	[[nodiscard]] auto handle(const Cmd::GH::Request::List& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::GH::Request::Create& cmd) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::GH::Request::Edit& cmd) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::GH::Request::View& cmd) const -> ResultString;

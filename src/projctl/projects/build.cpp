@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-
 auto ProjCtl::handle(const Cmd::Base::Build& cmd) const -> ResultInt {
 	const std::expected project = project_find(cmd.name);
 	if (!project) {

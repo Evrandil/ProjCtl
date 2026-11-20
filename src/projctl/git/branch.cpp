@@ -9,7 +9,6 @@
 #include <format>
 #include <optional>
 
-
 auto ProjCtl::handle(const Cmd::Git::Branch& cmd) const -> ResultString {
 	const std::expected project = project_find(cmd.name);
 	if (!project) {
