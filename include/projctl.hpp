@@ -21,11 +21,11 @@ using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
 
 using ResultString = std::expected<std::string, std::string>;
 using ResultInt    = std::expected<int, std::string>;
-
 struct BatchResult {
 	std::string output;
 	std::size_t failed = 0;
 };
+using OneOrAll = std::variant<BatchResult, ResultString>;
 
 class ProjCtl {
 	std::map<std::string, ProjectContent> projects;
@@ -95,12 +95,12 @@ class ProjCtl {
 	[[nodiscard]] auto requests_all() const -> BatchResult;
 	[[nodiscard]] auto handle(const Cmd::GH::Status& /*unused*/) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::GH::RepoList& /*unused*/) const -> ResultString;
-	[[nodiscard]] auto handle(const Cmd::GH::Issue::List& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::GH::Issue::List& cmd) const -> OneOrAll;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Create& cmd) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Edit& cmd) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::View& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Close& cmd) const -> ResultString;
-	[[nodiscard]] auto handle(const Cmd::GH::Request::List& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::List& cmd) const -> OneOrAll;
 	[[nodiscard]] auto handle(const Cmd::GH::Request::Create& cmd) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::GH::Request::Edit& cmd) const -> ResultInt;
 	[[nodiscard]] auto handle(const Cmd::GH::Request::View& cmd) const -> ResultString;
