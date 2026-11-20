@@ -75,7 +75,7 @@ auto ProjCtl::fetch_all() const -> BatchResult {
 	return results;
 }
 
-auto ProjCtl::handle(const Cmd::Git::Fetch& cmd) const -> ResultString {
+auto ProjCtl::handle(const Cmd::Git::Fetch& cmd) const -> OneOrAll {
 	if (cmd.all) {
 		return fetch_all();
 	}

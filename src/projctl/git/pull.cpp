@@ -79,7 +79,7 @@ auto ProjCtl::pull_all() const -> BatchResult {
 	return results;
 }
 
-auto ProjCtl::handle(const Cmd::Git::Pull& cmd) const -> ResultString {
+auto ProjCtl::handle(const Cmd::Git::Pull& cmd) const -> OneOrAll {
 	if (cmd.all) {
 		return pull_all();
 	}
