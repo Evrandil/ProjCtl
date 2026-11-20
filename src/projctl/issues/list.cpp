@@ -87,5 +87,8 @@ auto ProjCtl::issues_all() const -> BatchResult {
 }
 
 auto ProjCtl::handle(const Cmd::GH::Issue::List& cmd) const -> ResultString {
-	return cmd.all ? batch_to_string(issues_all()) : issues(cmd.name);
+	if (cmd.all) {
+		return issues_all();
+	}
+	return issues(cmd.name);
 }

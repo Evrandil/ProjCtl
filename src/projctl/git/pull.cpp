@@ -80,5 +80,8 @@ auto ProjCtl::pull_all() const -> BatchResult {
 }
 
 auto ProjCtl::handle(const Cmd::Git::Pull& cmd) const -> ResultString {
-	return cmd.all ? batch_to_string(pull_all()) : pull(cmd.name);
+	if (cmd.all) {
+		return pull_all();
+	}
+	return pull(cmd.name);
 }

@@ -28,20 +28,20 @@ auto ProjCtl::report(const ResultInt& result) -> int {
 	return *result;
 }
 
-auto ProjCtl::batch_to_string(const BatchResult& results) const -> ResultString {
+auto ProjCtl::report(const BatchResult& results) -> int {
 	if (results.failed == 0) {
-		return results.output;
+		println(stdout, "\n\n{}\n\n", results.output);
+		return 0;
 	}
-	return std::unexpected(
-		std::format(
+	println(stderr,
 			"{}{}{}{}{} failed",
 			results.output,
 			paint(config.colors.error),
 			Style::CROSS,
 			results.failed,
 			reset()
-		)
-	);
+		);
+	return 1;
 }
 
 auto ProjCtl::with_save(const ResultString& result) const -> ResultString {
