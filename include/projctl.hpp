@@ -75,7 +75,7 @@ class ProjCtl {
 	[[nodiscard]] auto fetch(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto pull(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::Git::Status& cmd) const -> ResultString;
-	[[nodiscard]] auto handle(const Cmd::Git::Fetch& cmd) const -> ResultString;	// TODO different types
+	[[nodiscard]] auto handle(const Cmd::Git::Fetch& cmd) const -> int;	// TODO different types
 	[[nodiscard]] auto handle(const Cmd::Git::Commit& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::Git::Push& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::Git::Pull& cmd) const -> int;				// TODO different types
@@ -85,8 +85,6 @@ class ProjCtl {
 	[[nodiscard]] auto handle(const Cmd::Git::Diff& cmd) const -> ResultInt;
 
 	// GH functionality
-	[[nodiscard]] auto g_status() const -> BatchResult;
-	[[nodiscard]] auto repo_list() const -> BatchResult;
 	[[nodiscard]] auto render_table(const std::vector<Row>& rows, const std::vector<TableField>& columns) const
 		-> std::string;
 	[[nodiscard]] auto render_row(const Row& row, const std::vector<TableField>& fields) const -> std::string;
@@ -105,8 +103,8 @@ class ProjCtl {
 	[[nodiscard]] auto issue_close(const std::optional<std::string>& name, int issue_number) const -> ResultString;
 	[[nodiscard]] auto request_close(const std::optional<std::string>& name, int request_number) const -> ResultString;
 	[[nodiscard]] auto request_merge(const std::optional<std::string>& name) const -> ResultString;
-	[[nodiscard]] auto handle(const Cmd::GH::Status& /*unused*/) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::RepoList& /*unused*/) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Status& /*unused*/) const -> BatchResult;
+	[[nodiscard]] auto handle(const Cmd::GH::RepoList& /*unused*/) const -> BatchResult;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::List& cmd) const -> int;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Create& cmd) const -> int;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Edit& cmd) const -> int;

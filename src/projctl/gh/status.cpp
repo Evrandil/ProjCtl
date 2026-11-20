@@ -12,7 +12,8 @@
 #include <iterator>
 #include <string>
 
-auto ProjCtl::g_status() const -> BatchResult {
+
+auto ProjCtl::handle(const Cmd::GH::Status& /*unused*/) const -> BatchResult {
 	const auto status_one = [&](const HostOption host) -> std::string {
 		std::string    output;
 		const CliState state = GitHostInterface::state(host);
@@ -51,8 +52,4 @@ auto ProjCtl::g_status() const -> BatchResult {
 		std::format_to(std::back_inserter(results.output), "{}\n", result);
 	}
 	return results;
-}
-
-auto ProjCtl::handle(const Cmd::GH::Status& /*unused*/) const -> int {
-	return report(g_status());
 }
