@@ -14,7 +14,7 @@ auto ProjCtl::handle(const Cmd::GH::Request::Create& cmd) const -> ResultInt {
 		return std::unexpected(project.error());
 	}
 
-	const std::expected result = GitHostInterface::request_create((*project)->second.path.string());
+	const ResultInt result = GitHostInterface::request_create((*project)->second.path.string());
 	if (!result) {
 		return std::unexpected(
 			std::format(

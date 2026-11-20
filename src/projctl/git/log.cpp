@@ -14,7 +14,7 @@ auto ProjCtl::handle(const Cmd::Git::Log& cmd) const -> ResultString {
 		return std::unexpected(project.error());
 	}
 
-	const std::expected result = GitInterface::log((*project)->second.path, cmd.oneline);
+	const ResultString result = GitInterface::log((*project)->second.path, cmd.oneline);
 	if (!result) {
 		return std::unexpected(
 			std::format("{}{}{}{}", paint(config.colors.error), Style::CROSS, result.error(), reset())

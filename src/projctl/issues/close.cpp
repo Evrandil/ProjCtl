@@ -14,7 +14,7 @@ auto ProjCtl::handle(const Cmd::GH::Issue::Close& cmd) const -> ResultString {
 		return std::unexpected(project.error());
 	}
 
-	const std::expected result = GitHostInterface::issue_close((*project)->second.path.string(), cmd.number);
+	const ResultString result = GitHostInterface::issue_close((*project)->second.path.string(), cmd.number);
 	if (!result) {
 		return std::unexpected(
 			std::format(

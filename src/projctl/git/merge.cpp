@@ -16,7 +16,7 @@ auto ProjCtl::handle(const Cmd::Git::Merge& cmd) const -> ResultString {
 	}
 	const ProjectContent& content = (*project)->second;
 
-	const std::expected result = GitInterface::default_merge(content.path);
+	const ResultString result = GitInterface::default_merge(content.path);
 	if (!result) {
 		return std::unexpected(
 			std::format("{}{}{}{}", paint(config.colors.error), Style::CROSS, result.error(), reset())

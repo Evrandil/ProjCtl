@@ -13,6 +13,7 @@ auto ProjCtl::handle(const Cmd::GH::Issue::View& cmd) const -> ResultString {
 	if (!project) {
 		return std::unexpected(project.error());
 	}
+
 	const std::expected issue = GitHostInterface::issue_view((*project)->second.path, cmd.number);
 	if (!issue) {
 		return std::unexpected(

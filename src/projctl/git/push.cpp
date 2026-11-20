@@ -14,7 +14,7 @@ auto ProjCtl::handle(const Cmd::Git::Push& cmd) const -> ResultString {
 		return std::unexpected(project.error());
 	}
 
-	const std::expected result = GitInterface::push((*project)->second.path, cmd.branch_upstream);
+	const ResultString result = GitInterface::push((*project)->second.path, cmd.branch_upstream);
 	if (!result) {
 		return std::unexpected(
 			std::format(

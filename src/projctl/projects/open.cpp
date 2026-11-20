@@ -29,7 +29,7 @@ auto ProjCtl::handle(const Cmd::Base::Open& cmd) const -> ResultString {
 		return std::unexpected(project.error());
 	}
 
-	const std::expected result = [&] -> std::expected<int, std::string> {
+	const std::expected result = [&] -> ResultInt {
 		if (std::ranges::contains(BACKGROUND_EDITORS, config.general.editor)) {
 			return SystemInterface::run_background(
 				std::vector<std::string>{config.general.editor, "."},

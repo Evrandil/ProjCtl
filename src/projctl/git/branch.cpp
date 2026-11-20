@@ -26,7 +26,7 @@ auto ProjCtl::handle(const Cmd::Git::Branch& cmd) const -> ResultString {
 		return std::format("{}{}{}", paint(config.colors.branch), *result, reset());
 	}
 
-	const std::expected result = GitInterface::branch_switch(content.path, *cmd.branch_name);
+	const ResultString result = GitInterface::branch_switch(content.path, *cmd.branch_name);
 	if (!result) {
 		return std::unexpected(
 			std::format(

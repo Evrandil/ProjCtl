@@ -94,11 +94,6 @@ class ProjCtl {
 	[[nodiscard]] auto requests(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto issues_all() const -> BatchResult;
 	[[nodiscard]] auto requests_all() const -> BatchResult;
-	[[nodiscard]] auto request_create(const std::optional<std::string>& name) const -> ResultInt;
-	[[nodiscard]] auto request_edit(const std::optional<std::string>& name, int request_number) const -> ResultInt;
-	[[nodiscard]] auto request_view(const std::optional<std::string>& name, int request_number) const -> ResultString;
-	[[nodiscard]] auto request_close(const std::optional<std::string>& name, int request_number) const -> ResultString;
-	[[nodiscard]] auto request_merge(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::GH::Status& /*unused*/) const -> BatchResult;
 	[[nodiscard]] auto handle(const Cmd::GH::RepoList& /*unused*/) const -> BatchResult;
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::List& cmd) const -> int;			// TODO different types
@@ -108,10 +103,10 @@ class ProjCtl {
 	[[nodiscard]] auto handle(const Cmd::GH::Issue::Close& cmd) const -> ResultString;
 	[[nodiscard]] auto handle(const Cmd::GH::Request::List& cmd) const -> int;			// TODO different types
 	[[nodiscard]] auto handle(const Cmd::GH::Request::Create& cmd) const -> ResultInt;
-	[[nodiscard]] auto handle(const Cmd::GH::Request::Edit& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::Request::View& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::Request::Close& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::GH::Request::Merge& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::Edit& cmd) const -> ResultInt;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::View& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::Close& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::GH::Request::Merge& cmd) const -> ResultString;
 
 	public:
 	ProjCtl();
