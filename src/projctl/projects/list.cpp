@@ -61,6 +61,6 @@ auto ProjCtl::list(bool names_only) const -> std::expected<std::string, std::str
 	return output;
 }
 
-auto ProjCtl::handle(const Cmd::Base::List& cmd) const -> int {
-	return cmd.gits_only ? report(list_gits(cmd.names_only)) : report(list(cmd.names_only));
+auto ProjCtl::handle(const Cmd::Base::List& cmd) const -> ResultString {
+	return cmd.gits_only ? list_gits(cmd.names_only) : list(cmd.names_only);
 }

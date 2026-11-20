@@ -7,6 +7,7 @@
 #include <expected>
 #include <print>
 #include <string>
+#include <format>
 
 auto ProjCtl::report(const ResultString& result) -> int {
 	if (!result) {
@@ -36,18 +37,16 @@ auto ProjCtl::report(const BatchResult& results) const -> int {
 	return 0;
 }
 
-auto ProjCtl::report_save(const ResultString& result) const -> int {
-	return report(result.and_then([this](const std::string& message) -> ResultString {
+auto ProjCtl::with_save(const ResultString& result) const -> ResultString {
+	return result.and_then([this](const std::string& message) -> ResultString {
 		return save().transform([&] { return message; });
-	}));
+	});
 }
 
-auto ProjCtl::handle(const Cmd::Unknown& cmd) const -> int {
-	std::println(stderr, "\n\n{}{}{}{}\n\n", paint(config.colors.error), Style::CROSS, cmd.message, reset());
-	return 1;
+auto ProjCtl::handle(const Cmd::Unknown& cmd) const -> ResultInt {
+	return std::unexpected(std::format("\n\n{}{}{}{}\n\n", paint(config.colors.error), Style::CROSS, cmd.message, reset()));
 }
 
-auto ProjCtl::handle(const Cmd::Version& /*unused*/) const -> int {
-	std::println(stdout, "\n\n{}ProjCtl version: {}{}\n\n", paint(config.colors.header), Version::STRING, reset());
-	return 0;
+auto ProjCtl::handle(const Cmd::Version& /*unused*/) const -> ResultString {
+	return std::format("\n\n{}ProjCtl version: {}{}\n\n", paint(config.colors.header), Version::STRING, reset());
 }

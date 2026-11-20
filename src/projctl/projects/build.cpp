@@ -12,8 +12,9 @@
 #include <string>
 #include <vector>
 
-auto ProjCtl::build(const std::optional<std::string>& name) const -> std::expected<int, std::string> {
-	const std::expected project = project_find(name);
+
+auto ProjCtl::handle(const Cmd::Base::Build& cmd) const -> ResultInt {
+	const std::expected project = project_find(cmd.name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
@@ -44,8 +45,4 @@ auto ProjCtl::build(const std::optional<std::string>& name) const -> std::expect
 		std::vector<std::string>{"sh", "-c", std::string{*command_option}},
 		content.path
 	);
-}
-
-auto ProjCtl::handle(const Cmd::Base::Build& cmd) const -> int {
-	return report(build(cmd.name));
 }

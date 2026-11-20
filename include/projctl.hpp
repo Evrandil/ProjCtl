@@ -46,29 +46,22 @@ class ProjCtl {
 	[[nodiscard]] static auto report(const ResultString& result) -> int;
 	[[nodiscard]] static auto report(const ResultInt& result) -> int;
 	[[nodiscard]] auto        report(const BatchResult& result) const -> int;
-	[[nodiscard]] auto        report_save(const ResultString& result) const -> int;
+	[[nodiscard]] auto        with_save(const ResultString& result) const -> ResultString;
 
 	// Program's functionality
-	[[nodiscard]] auto handle(const Cmd::Unknown& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Version& /*unused*/) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Unknown& cmd) const -> ResultInt;
+	[[nodiscard]] auto handle(const Cmd::Version& /*unused*/) const -> ResultString;
 
 	// Base functionality
 	[[nodiscard]] auto list(bool names_only) const -> ResultString;
 	[[nodiscard]] auto list_gits(bool names_only) const -> ResultString;
-	[[nodiscard]] auto path_show(const std::optional<std::string>& name) const -> ResultString;
-	[[nodiscard]] auto add(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path)
-		-> ResultString;
-	[[nodiscard]] auto remove(const std::string& name) -> ResultString;
-	[[nodiscard]] auto open(const std::optional<std::string>& name) const -> ResultString;
-	[[nodiscard]] auto build(const std::optional<std::string>& name) const -> ResultInt;
-	[[nodiscard]] auto run(const std::optional<std::string>& name) const -> ResultInt;
-	[[nodiscard]] auto handle(const Cmd::Base::List& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Base::Path& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Base::Add& cmd) -> int;
-	[[nodiscard]] auto handle(const Cmd::Base::Remove& cmd) -> int;
-	[[nodiscard]] auto handle(const Cmd::Base::Open& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Base::Build& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Base::Run& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Base::List& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::Base::Path& cmd) const -> ResultInt;
+	[[nodiscard]] auto handle(const Cmd::Base::Add& cmd) -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::Base::Remove& cmd) -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::Base::Open& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::Base::Build& cmd) const -> ResultInt;
+	[[nodiscard]] auto handle(const Cmd::Base::Run& cmd) const -> ResultInt;
 	// clang-format on
 
 	// Git functionality
@@ -145,6 +138,6 @@ class ProjCtl {
 	auto operator=(ProjCtl&&) -> ProjCtl&&     = delete;
 
 	auto execute(const Command& command) -> int {
-		return std::visit([this](const auto& cmd) -> auto { return handle(cmd); }, command);
+		return std::visit([this](const auto& cmd) -> int { return report(handle(cmd)); }, command);
 	}
 };

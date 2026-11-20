@@ -8,7 +8,6 @@
 #include <array>
 #include <expected>
 #include <format>
-#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -23,8 +22,9 @@ namespace {
 	});
 }
 
-auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
-	const std::expected project = project_find(name);
+
+auto ProjCtl::handle(const Cmd::Base::Open& cmd) const -> ResultString {
+	const std::expected project = project_find(cmd.name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
@@ -70,8 +70,4 @@ auto ProjCtl::open(const std::optional<std::string>& name) const -> std::expecte
 		(*project)->first,
 		reset()
 	);
-}
-
-auto ProjCtl::handle(const Cmd::Base::Open& cmd) const -> int {
-	return report(open(cmd.name));
 }
