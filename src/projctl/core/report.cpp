@@ -33,14 +33,15 @@ auto ProjCtl::report(const BatchResult& result) const -> int {
 		println(stdout, "\n\n{}\n\n", result.output);
 		return 0;
 	}
-	println(stderr,
-			"{}{}{}{}{} failed",
-			result.output,
-			paint(config.colors.error),
-			Style::CROSS,
-			result.failed,
-			reset()
-		);
+	println(
+		stderr,
+		"{}{}{}{}{} failed",
+		result.output,
+		paint(config.colors.error),
+		Style::CROSS,
+		result.failed,
+		reset()
+	);
 	return 1;
 }
 

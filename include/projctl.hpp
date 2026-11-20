@@ -21,10 +21,12 @@ using ProjectIterator = std::map<std::string, ProjectContent>::const_iterator;
 
 using ResultString = std::expected<std::string, std::string>;
 using ResultInt    = std::expected<int, std::string>;
+
 struct BatchResult {
 	std::string output;
 	std::size_t failed = 0;
 };
+
 using OneOrAll = std::variant<BatchResult, ResultString>;
 
 class ProjCtl {
@@ -46,7 +48,8 @@ class ProjCtl {
 	[[nodiscard]] auto        with_save(const ResultString& result) const -> ResultString;
 	[[nodiscard]] static auto report(const ResultString& result) -> int;
 	[[nodiscard]] static auto report(const ResultInt& result) -> int;
-	[[nodiscard]] auto report(const BatchResult& result) const -> int;
+	[[nodiscard]] auto        report(const BatchResult& result) const -> int;
+
 	[[nodiscard]] auto report(const OneOrAll& result) const -> int {
 		return std::visit([this](const auto& bat) -> int { return this->report(bat); }, result);
 	}
