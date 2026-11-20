@@ -8,17 +8,16 @@
 #include <expected>
 #include <format>
 #include <optional>
-#include <string>
 
-auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const
-	-> std::expected<std::string, std::string> {
-	const std::expected project = project_find(name);
+
+auto ProjCtl::handle(const Cmd::Git::Branch& cmd) const -> ResultString {
+	const std::expected project = project_find(cmd.name);
 	if (!project) {
 		return std::unexpected(project.error());
 	}
 	const ProjectContent& content = (*project)->second;
 
-	if (!branch_name) {
+	if (!cmd.branch_name) {
 		const std::expected result = GitInterface::branch(content.path);
 		if (!result) {
 			return std::unexpected(std::format("{}{}{}", paint(config.colors.error), result.error(), reset()));
@@ -27,7 +26,7 @@ auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional
 		return std::format("{}{}{}", paint(config.colors.branch), *result, reset());
 	}
 
-	const std::expected result = GitInterface::branch_switch(content.path, *branch_name);
+	const std::expected result = GitInterface::branch_switch(content.path, *cmd.branch_name);
 	if (!result) {
 		return std::unexpected(
 			std::format(
@@ -42,8 +41,4 @@ auto ProjCtl::branch(const std::optional<std::string>& name, const std::optional
 		);
 	}
 	return std::format("{}{}{}{}", paint(config.colors.tick), Style::TICK, *result, reset());
-}
-
-auto ProjCtl::handle(const Cmd::Git::Branch& cmd) const -> int {
-	return report(branch(cmd.name, cmd.branch_name));
 }

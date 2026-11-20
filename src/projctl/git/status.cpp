@@ -144,6 +144,6 @@ auto ProjCtl::status_all() const -> std::expected<std::string, std::string> {
 	return output;
 }
 
-auto ProjCtl::handle(const Cmd::Git::Status& cmd) const -> int {
-	return cmd.all ? report(status_all()) : report(status(cmd.name));
+auto ProjCtl::handle(const Cmd::Git::Status& cmd) const -> ResultString {
+	return cmd.all ? status_all() : status(cmd.name);
 }

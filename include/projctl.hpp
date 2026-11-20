@@ -74,25 +74,15 @@ class ProjCtl {
 	[[nodiscard]] auto status(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto fetch(const std::optional<std::string>& name) const -> ResultString;
 	[[nodiscard]] auto pull(const std::optional<std::string>& name) const -> ResultString;
-	[[nodiscard]] auto push(const std::optional<std::string>& name, bool upstream) const -> ResultString;
-	[[nodiscard]] auto git_merge(const std::optional<std::string>& name) const -> ResultString;
-	[[nodiscard]] auto log(const std::optional<std::string>& name, bool oneline) const -> ResultString;
-	[[nodiscard]] auto
-	branch(const std::optional<std::string>& name, const std::optional<std::string>& branch_name) const -> ResultString;
-	[[nodiscard]] auto
-	commit(const std::optional<std::string>& name, bool tracked_only, std::optional<std::string_view> message) const
-		-> ResultString;
-	[[nodiscard]] auto
-	diff(const std::optional<std::string>& name, const std::optional<std::filesystem::path>& path) const -> ResultInt;
-	[[nodiscard]] auto handle(const Cmd::Git::Status& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Git::Fetch& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Git::Commit& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Git::Push& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Git::Pull& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Git::Branch& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Git::Merge& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Git::Log& cmd) const -> int;
-	[[nodiscard]] auto handle(const Cmd::Git::Diff& cmd) const -> int;
+	[[nodiscard]] auto handle(const Cmd::Git::Status& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::Git::Fetch& cmd) const -> ResultString;	// TODO different types
+	[[nodiscard]] auto handle(const Cmd::Git::Commit& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::Git::Push& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::Git::Pull& cmd) const -> int;				// TODO different types
+	[[nodiscard]] auto handle(const Cmd::Git::Branch& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::Git::Merge& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::Git::Log& cmd) const -> ResultString;
+	[[nodiscard]] auto handle(const Cmd::Git::Diff& cmd) const -> ResultInt;
 
 	// GH functionality
 	[[nodiscard]] auto g_status() const -> BatchResult;
