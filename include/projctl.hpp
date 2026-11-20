@@ -47,7 +47,6 @@ class ProjCtl {
 	[[nodiscard]] auto        with_save(const ResultString& result) const -> ResultString;
 	[[nodiscard]] static auto report(const ResultString& result) -> int;
 	[[nodiscard]] static auto report(const ResultInt& result) -> int;
-//	[[nodiscard]] auto        report(const BatchResult& result) const -> int;
 
 	// Program's functionality
 	[[nodiscard]] auto handle(const Cmd::Unknown& cmd) const -> ResultInt;

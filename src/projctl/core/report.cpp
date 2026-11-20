@@ -8,7 +8,6 @@
 #include <format>
 #include <print>
 #include <string>
-#include <iterator>
 
 auto ProjCtl::report(const ResultString& result) -> int {
 	if (!result) {
@@ -30,21 +29,11 @@ auto ProjCtl::report(const ResultInt& result) -> int {
 }
 
 auto ProjCtl::batch_to_string(const BatchResult& results) const -> ResultString {
-	ResultString output{results.output};
-	if (results.failed > 0) {
-		std::format_to(std::back_inserter(*output), "{}{}{}{} failed\n\n", paint(config.colors.error), Style::CROSS, results.failed, reset());
+	if (results.failed == 0) {
+		return results.output;
 	}
-	return output;
+	return std::unexpected(std::format("{}{}{}{}{} failed", results.output, paint(config.colors.error), Style::CROSS, results.failed, reset()));
 }
-
-// auto ProjCtl::report(const BatchResult& results) const -> int {
-// 	std::println(stdout, "\n\n{}\n\n", results.output);
-// 	if (results.failed > 0) {
-// 		std::println(stderr, "{}{}{}{} failed\n\n", paint(config.colors.error), Style::CROSS, results.failed, reset());
-// 		return 1;
-// 	}
-// 	return 0;
-// }
 
 auto ProjCtl::with_save(const ResultString& result) const -> ResultString {
 	return result.and_then([this](const std::string& message) -> ResultString {
@@ -54,10 +43,10 @@ auto ProjCtl::with_save(const ResultString& result) const -> ResultString {
 
 auto ProjCtl::handle(const Cmd::Unknown& cmd) const -> ResultInt {
 	return std::unexpected(
-		std::format("\n\n{}{}{}{}\n\n", paint(config.colors.error), Style::CROSS, cmd.message, reset())
+		std::format("{}{}{}{}", paint(config.colors.error), Style::CROSS, cmd.message, reset())
 	);
 }
 
 auto ProjCtl::handle(const Cmd::Version& /*unused*/) const -> ResultString {
-	return std::format("\n\n{}ProjCtl version: {}{}\n\n", paint(config.colors.header), Version::STRING, reset());
+	return std::format("{}ProjCtl version: {}{}", paint(config.colors.header), Version::STRING, reset());
 }
