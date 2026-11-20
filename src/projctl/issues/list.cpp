@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-auto ProjCtl::issues(const ProjectEntry& project) const -> std::expected<std::string, std::string> {
+auto ProjCtl::issues(const ProjectEntry& project) const -> ResultString {
 	const ProjectContent& content      = project.second;
 	const std::string&    project_name = project.first;
 
@@ -51,7 +51,7 @@ auto ProjCtl::issues(const ProjectEntry& project) const -> std::expected<std::st
 	return output;
 }
 
-auto ProjCtl::issues(const std::optional<std::string>& name) const -> std::expected<std::string, std::string> {
+auto ProjCtl::issues(const std::optional<std::string>& name) const -> ResultString {
 	const std::expected project = project_find(name);
 	if (!project) {
 		return std::unexpected(project.error());
