@@ -1,5 +1,5 @@
 ![CI](https://github.com/Evrandil/ProjCtl/actions/workflows/ci.yml/badge.svg)<br>
-Just for record I did have [this](https://github.com/Projctl/projctl) repo stolen by some guy that got my auth token so until I get my org with repo back here's gonna be continuation
+Just for record this is mainly just a project for me to learn and have fun with C++, don't try to get your head around exact design choices
 # Project Control
 Have you ever wondered if you're in gh or glab repo so what command to run?<br>
 Have you ever mistook one for other?<br>
