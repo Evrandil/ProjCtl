@@ -189,16 +189,16 @@ using Command = std::variant<
 	Cmd::Git::Diff,
 	Cmd::GH::Status,
 	Cmd::GH::RepoList,
-	Cmd::GH::IssueList,
-	Cmd::GH::IssueCreate,
-	Cmd::GH::IssueEdit,
-	Cmd::GH::IssueView,
-	Cmd::GH::IssueClose,
-	Cmd::GH::RequestList,
-	Cmd::GH::RequestCreate,
-	Cmd::GH::RequestEdit,
-	Cmd::GH::RequestView,
-	Cmd::GH::RequestClose,
-	Cmd::GH::RequestMerge
+	Cmd::GH::Issue::List,
+	Cmd::GH::Issue::Create,
+	Cmd::GH::Issue::Edit,
+	Cmd::GH::Issue::View,
+	Cmd::GH::Issue::Close,
+	Cmd::GH::Request::List,
+	Cmd::GH::Request::Create,
+	Cmd::GH::Request::Edit,
+	Cmd::GH::Request::View,
+	Cmd::GH::Request::Close,
+	Cmd::GH::Request::Merge
 	>;
 // clang-format on

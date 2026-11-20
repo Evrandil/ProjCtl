@@ -24,6 +24,6 @@ auto ProjCtl::request_merge(const std::optional<std::string>& name) const -> std
 	return std::format("{}{}{}{}", paint(config.colors.tick), Style::TICK, *result, reset());
 }
 
-auto ProjCtl::handle(const Cmd::GH::RequestMerge& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Request::Merge& cmd) const -> int {
 	return report(request_merge(cmd.name));
 }

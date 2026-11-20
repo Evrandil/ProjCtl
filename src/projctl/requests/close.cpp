@@ -32,6 +32,6 @@ auto ProjCtl::request_close(const std::optional<std::string>& name, const int re
 	return *result;
 }
 
-auto ProjCtl::handle(const Cmd::GH::RequestClose& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Request::Close& cmd) const -> int {
 	return report(request_close(cmd.name, cmd.number));
 }

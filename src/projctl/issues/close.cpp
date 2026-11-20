@@ -33,6 +33,6 @@ auto ProjCtl::issue_close(const std::optional<std::string>& name, const int issu
 	return *result;
 }
 
-auto ProjCtl::handle(const Cmd::GH::IssueClose& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Issue::Close& cmd) const -> int {
 	return report(issue_close(cmd.name, cmd.number));
 }

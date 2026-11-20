@@ -29,6 +29,6 @@ auto ProjCtl::issue_view(const std::optional<std::string>& name, const int issue
 	return render_row(*issue, config.tables.issue_columns);
 }
 
-auto ProjCtl::handle(const Cmd::GH::IssueView& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Issue::View& cmd) const -> int {
 	return report(issue_view(cmd.name, cmd.number));
 }

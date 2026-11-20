@@ -31,6 +31,6 @@ auto ProjCtl::request_create(const std::optional<std::string>& name) const -> st
 	return *result;
 }
 
-auto ProjCtl::handle(const Cmd::GH::RequestCreate& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Request::Create& cmd) const -> int {
 	return report(request_create(cmd.name));
 }

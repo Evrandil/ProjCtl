@@ -31,6 +31,6 @@ auto ProjCtl::issue_create(const std::optional<std::string>& name) const -> std:
 	return *result;
 }
 
-auto ProjCtl::handle(const Cmd::GH::IssueCreate& cmd) const -> int {
+auto ProjCtl::handle(const Cmd::GH::Issue::Create& cmd) const -> int {
 	return report(issue_create(cmd.name));
 }

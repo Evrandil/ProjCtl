@@ -2,6 +2,7 @@
 #include <doctest/doctest.h>
 
 #include "parser.hpp"
+#include "command.hpp"
 
 #include <string_view>
 #include <variant>
@@ -433,7 +434,7 @@ TEST_CASE("gh issue commands") {
 	// projctl ilist
 	SUBCASE("gh issue list with no name") {
 		const Command command       = parse({"ilist"});
-		const auto*   gh_issue_list = std::get_if<Cmd::GH::IssueList>(&command);
+		const auto*   gh_issue_list = std::get_if<Cmd::GH::Issue::List>(&command);
 		REQUIRE(gh_issue_list != nullptr);
 		CHECK_FALSE(gh_issue_list->name);
 		CHECK_FALSE(gh_issue_list->all);
@@ -441,7 +442,7 @@ TEST_CASE("gh issue commands") {
 	// projctl ilist <name>
 	SUBCASE("gh issue list with name") {
 		const Command command       = parse({"ilist", "proj"});
-		const auto*   gh_issue_list = std::get_if<Cmd::GH::IssueList>(&command);
+		const auto*   gh_issue_list = std::get_if<Cmd::GH::Issue::List>(&command);
 		REQUIRE(gh_issue_list != nullptr);
 		REQUIRE(gh_issue_list->name);
 		CHECK(gh_issue_list->name == "proj");
@@ -450,7 +451,7 @@ TEST_CASE("gh issue commands") {
 	// projctl ilist --all
 	SUBCASE("gh issue list --all") {
 		const Command command       = parse({"ilist", "--all"});
-		const auto*   gh_issue_list = std::get_if<Cmd::GH::IssueList>(&command);
+		const auto*   gh_issue_list = std::get_if<Cmd::GH::Issue::List>(&command);
 		REQUIRE(gh_issue_list != nullptr);
 		CHECK_FALSE(gh_issue_list->name);
 		CHECK(gh_issue_list->all);
@@ -458,7 +459,7 @@ TEST_CASE("gh issue commands") {
 	// projctl ilist -a
 	SUBCASE("gh issue list -a") {
 		const Command command       = parse({"ilist", "-a"});
-		const auto*   gh_issue_list = std::get_if<Cmd::GH::IssueList>(&command);
+		const auto*   gh_issue_list = std::get_if<Cmd::GH::Issue::List>(&command);
 		REQUIRE(gh_issue_list != nullptr);
 		CHECK_FALSE(gh_issue_list->name);
 		CHECK(gh_issue_list->all);
@@ -466,14 +467,14 @@ TEST_CASE("gh issue commands") {
 	// projctl icreate
 	SUBCASE("gh issue create with no name") {
 		const Command command         = parse({"icreate"});
-		const auto*   gh_issue_create = std::get_if<Cmd::GH::IssueCreate>(&command);
+		const auto*   gh_issue_create = std::get_if<Cmd::GH::Issue::Create>(&command);
 		REQUIRE(gh_issue_create != nullptr);
 		CHECK_FALSE(gh_issue_create->name);
 	}
 	// projctl icreate <name>
 	SUBCASE("gh issue create with name") {
 		const Command command         = parse({"icreate", "proj"});
-		const auto*   gh_issue_create = std::get_if<Cmd::GH::IssueCreate>(&command);
+		const auto*   gh_issue_create = std::get_if<Cmd::GH::Issue::Create>(&command);
 		REQUIRE(gh_issue_create != nullptr);
 		REQUIRE(gh_issue_create->name);
 		CHECK(gh_issue_create->name == "proj");
@@ -487,7 +488,7 @@ TEST_CASE("gh request commands") {
 	// projctl reqlist
 	SUBCASE("gh request list with no name") {
 		const Command command         = parse({"reqlist"});
-		const auto*   gh_request_list = std::get_if<Cmd::GH::RequestList>(&command);
+		const auto*   gh_request_list = std::get_if<Cmd::GH::Request::List>(&command);
 		REQUIRE(gh_request_list != nullptr);
 		CHECK_FALSE(gh_request_list->name);
 		CHECK_FALSE(gh_request_list->all);
@@ -495,7 +496,7 @@ TEST_CASE("gh request commands") {
 	// projctl reqlist <name>
 	SUBCASE("gh request list with name") {
 		const Command command         = parse({"reqlist", "proj"});
-		const auto*   gh_request_list = std::get_if<Cmd::GH::RequestList>(&command);
+		const auto*   gh_request_list = std::get_if<Cmd::GH::Request::List>(&command);
 		REQUIRE(gh_request_list != nullptr);
 		REQUIRE(gh_request_list->name);
 		CHECK(gh_request_list->name == "proj");
@@ -504,7 +505,7 @@ TEST_CASE("gh request commands") {
 	// projctl reqlist --all
 	SUBCASE("gh request list --all") {
 		const Command command         = parse({"reqlist", "--all"});
-		const auto*   gh_request_list = std::get_if<Cmd::GH::RequestList>(&command);
+		const auto*   gh_request_list = std::get_if<Cmd::GH::Request::List>(&command);
 		REQUIRE(gh_request_list != nullptr);
 		CHECK_FALSE(gh_request_list->name);
 		CHECK(gh_request_list->all);
@@ -512,7 +513,7 @@ TEST_CASE("gh request commands") {
 	// projctl reqlist -a
 	SUBCASE("gh request list -a") {
 		const Command command         = parse({"reqlist", "-a"});
-		const auto*   gh_request_list = std::get_if<Cmd::GH::RequestList>(&command);
+		const auto*   gh_request_list = std::get_if<Cmd::GH::Request::List>(&command);
 		REQUIRE(gh_request_list != nullptr);
 		CHECK_FALSE(gh_request_list->name);
 		CHECK(gh_request_list->all);
@@ -520,14 +521,14 @@ TEST_CASE("gh request commands") {
 	// projctl reqcreate
 	SUBCASE("gh request create with no name") {
 		const Command command           = parse({"reqcreate"});
-		const auto*   gh_request_create = std::get_if<Cmd::GH::RequestCreate>(&command);
+		const auto*   gh_request_create = std::get_if<Cmd::GH::Request::Create>(&command);
 		REQUIRE(gh_request_create != nullptr);
 		CHECK_FALSE(gh_request_create->name);
 	}
 	// projctl reqcreate <name>
 	SUBCASE("gh request create with name") {
 		const Command command           = parse({"reqcreate", "proj"});
-		const auto*   gh_request_create = std::get_if<Cmd::GH::RequestCreate>(&command);
+		const auto*   gh_request_create = std::get_if<Cmd::GH::Request::Create>(&command);
 		REQUIRE(gh_request_create != nullptr);
 		REQUIRE(gh_request_create->name);
 		CHECK(gh_request_create->name == "proj");
@@ -535,14 +536,14 @@ TEST_CASE("gh request commands") {
 	// projctl reqmerge
 	SUBCASE("gh request merge with no name") {
 		const Command command          = parse({"reqmerge"});
-		const auto*   gh_request_merge = std::get_if<Cmd::GH::RequestMerge>(&command);
+		const auto*   gh_request_merge = std::get_if<Cmd::GH::Request::Merge>(&command);
 		REQUIRE(gh_request_merge != nullptr);
 		CHECK_FALSE(gh_request_merge->name);
 	}
 	// projctl reqmerge <name>
 	SUBCASE("gh request merge with name") {
 		const Command command          = parse({"reqmerge", "proj"});
-		const auto*   gh_request_merge = std::get_if<Cmd::GH::RequestMerge>(&command);
+		const auto*   gh_request_merge = std::get_if<Cmd::GH::Request::Merge>(&command);
 		REQUIRE(gh_request_merge != nullptr);
 		REQUIRE(gh_request_merge->name);
 		CHECK(gh_request_merge->name == "proj");
